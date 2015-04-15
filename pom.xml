@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <name>Wildfire Management Tool - Web</name>
+    <description>NASA WORLD WIND Europa Challange 2015 Project</description>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.emxsys</groupId>
+    <artifactId>webwmt</artifactId>
+    <version>4.0-WEB</version>
+    <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        
+        <brandingToken>webwmt</brandingToken>
+        
+        <project.build.sourceVersion>1.7</project.build.sourceVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- DEPENDENCY VERSIONS -->
+        <netbeans.version>RELEASE80</netbeans.version>
+        <visad.version>2.0.1</visad.version>
+        <jfreechart.version>1.0.17</jfreechart.version>
+        <jcommon.version>1.0.21</jcommon.version>
+        <worldwind.version>2.0.0</worldwind.version>
+        <jogl.version>2.1.5-01</jogl.version>
+        <slf4j.version>1.7.7</slf4j.version>
+                
+        <!-- PLUGIN VERSIONS -->
+        <checkstyle.plugin.version>2.12</checkstyle.plugin.version>
+        <compiler.plugin.version>3.1</compiler.plugin.version>
+        <dependency.plugin.version>2.8</dependency.plugin.version>
+        <deploy.plugin.version>2.8</deploy.plugin.version>
+        <jar.plugin.version>2.4</jar.plugin.version>
+        <nbm.plugin.version>3.13</nbm.plugin.version>
+        <resources.plugin.version>2.6</resources.plugin.version>
+        <surefire.plugin.version>2.17</surefire.plugin.version>
+    </properties>
+
+    <repositories>
+        <!--
+        Repository hosting NetBeans modules, especially APIs.
+        Versions are based on IDE releases, e.g.: RELEASE691
+        To create your own repository, use: nbm:populate-repository
+        -->
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>netbeans-snapshot</id>
+            <name>NetBeans Snapshots</name>
+            <url>http://bits.netbeans.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <!--Apache snapshots - for commons-imaging-->
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshots</name>
+            <url>http://repository.apache.org/snapshots/</url>
+        </repository>        
+    </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>visad</groupId>
+                <artifactId>visad</artifactId>
+                <version>${visad.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+                <version>${jfreechart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jfree</groupId>
+                <artifactId>jcommon</artifactId>
+                <version>${jcommon.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${project.build.sourceVersion}</source>
+                        <target>${project.build.sourceVersion}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>                
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${dependency.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${resources.plugin.version}</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${jar.plugin.version}</version>
+                    <configuration>
+                        <!-- to have the jar plugin pickup the nbm generated manifest -->
+                        <useDefaultManifestFile>true</useDefaultManifestFile>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <version>${nbm.plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <useOSGiDependencies>false</useOSGiDependencies>
+                        <brandingToken>${brandingToken}</brandingToken>
+                        <cluster>${brandingToken}</cluster>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${deploy.plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+  <modules>
+    <module>wmt-application-web</module>
+  </modules>
+</project>
