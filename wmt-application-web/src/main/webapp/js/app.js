@@ -8,7 +8,7 @@
 
 requirejs.config({
     "paths": {
-        "WMT": "WMT"
+        WMT: "WMT"
     }
 });
 

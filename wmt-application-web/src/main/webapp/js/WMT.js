@@ -8,7 +8,7 @@
 define(['../thirdparty/webworldwind/WorldWind',
         './layermanager/LayerManager',
         './globe/CoordinateController'],
-    function (ww,
+    function (WorldWind,
               LayerManager,
               CoordinateController) {
         "use strict";
