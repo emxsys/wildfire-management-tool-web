@@ -59,9 +59,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
                 <div class="col-sm-9">
                     <ul class="nav nav-pills">
-                        <li><a href="#">Menu 1</a></li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu 2
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Submenu 2-1</a></li>
@@ -69,8 +68,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <li><a href="#">Submenu 2-3</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Menu 3</a></li>
-                        <li><a href="#">Menu 4</a></li>
+                        <li><a href="#">Date/Time: </a></li>
+                        <li><a id="crosshairsCoord2D" href="#">Location</a></li>
                     </ul>
                     <div>
                         <canvas id="canvasOne" width="1000" height="1000" style="width: 100%; height: auto">
