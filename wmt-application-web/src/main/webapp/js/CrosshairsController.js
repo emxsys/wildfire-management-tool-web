@@ -58,9 +58,9 @@ define(function () {
         // Look for the DOM elements to update, and exit if none exist.
         var crosshairsLat = $("#crosshairsLatitude"),
                 crosshairsLon = $("#crosshairsLongitude"),
-                crosshairsElev = $("crosshairsElevation"),
-                crosshairs2D = $("crosshairsCoord2D"),
-                crosshairs3D = $("crosshairsCoord3D");
+                crosshairsElev = $("#crosshairsElevation"),
+                crosshairs2D = $("#crosshairsCoord2D"),
+                crosshairs3D = $("#crosshairsCoord3D");
         if (!crosshairsLat && !crosshairsLon && !crosshairsElev && !crosshairs2D && !crosshairs3D) {
             return;
         }
