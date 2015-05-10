@@ -32,10 +32,8 @@
  * Based on CoordinateController.js by dcollins.
  * @exports CrosshairsController
  */
-define([
-    '../util/WmtUtil'],
-    function (
-        WmtUtil) {
+define(['../util/Formatter'],
+    function (Formatter) {
         "use strict";
 
         /**
@@ -131,11 +129,11 @@ define([
         };
 
         CrosshairsController.prototype.coord2DFormat = function (lat, lon) {
-            return "Location: " + WmtUtil.formatDMSLatitude(lat, 0) + ", " + WmtUtil.formatDMSLongitude(lon, 0);
+            return "Location: " + Formatter.formatDMSLatitude(lat, 0) + ", " + Formatter.formatDMSLongitude(lon, 0);
         };
 
         CrosshairsController.prototype.locationFormat = function (number) {
-            return WmtUtil.formatDegreesMinutesSeconds(number, 1);
+            return Formatter.formatDegreesMinutesSeconds(number, 1);
         };
 
         CrosshairsController.prototype.altitudeFormat = function (number, units) {
