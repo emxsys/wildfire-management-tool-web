@@ -31,6 +31,7 @@
 /**
  * Based on CoordinateController.js by dcollins.
  * @exports CrosshairsController
+ * @author Bruce Schubert
  */
 define(['../util/Formatter'],
     function (Formatter) {
@@ -93,7 +94,11 @@ define(['../util/Formatter'],
                 terrainObject;
 
             terrainObject = wwd.pickTerrain(centerPoint).terrainObject();
-            this.crosshairsPosition = terrainObject.position;
+            if (!terrainObject) {
+                return;
+            }
+            this.crosshairsPosition.latitude = terrainObject.position.latitude;
+            this.crosshairsPosition.longitude = terrainObject.position.longitude;
 
             // Look for the DOM elements to update, and exit if none exist.
             var crosshairsLat = $("#crosshairsLatitude"),
