@@ -29,41 +29,18 @@
  */
 
 /**
- * Renders orosshairs centered on the WorldWindow.
- * Based on Compass.js 2939 2015-03-30 16:50:49Z by tgaskins.
+ * Top-level script file that does not define a module containing a configuration object.
+ * @link http://requirejs.org/docs/api.html#config
  * @author Bruce Schubert
- * @exports Crosshairs
  */
-define(['../../thirdparty/webworldwind/WorldWind'],
-    function (WorldWind) {
-        "use strict";
-
-        /**
-         * Constructs crosshairs.
-         * @alias Crosshairs
-         * @constructor
-         * @augments ScreenImage
-         * @classdesc Displays a crosshairs image centered in the World Window. 
-         * @param {String} imagePath The URL of the image to display. If null or undefined, a default crosshairs image is used.
-         */
-        var Crosshairs = function (imagePath) {
-
-            var sOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, .5, WorldWind.OFFSET_FRACTION, .5);
-            var iPath = imagePath ? imagePath : WorldWind.WWUtil.currentUrlSansFilePart() + "/../images/32x32-crosshair-outline.png";
-
-            WorldWind.ScreenImage.call(this, sOffset, iPath);
-            // Must set the default image offset and scale after calling the constructor above.
-            // Align the center of the image with the center of the screen
-            this.imageOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5);
-            // Use full scale image
-//            if (!imagePath) {
-//                // Scale the default image.
-//                this.imageScale = 0.4;
-//            }
-        };
-
-        Crosshairs.prototype = Object.create(WorldWind.ScreenImage.prototype);
-
-        return Crosshairs;
+requirejs.config({
+    baseUrl: "scripts/wmt",
+    "paths": {
+        WMT: "WMT",
+        //WorldWind: "../webworldwind/WorldWind"  -- load times out!?
     }
-);
+});
+
+requirejs(["WMT"], function (WMT) {
+    new WMT();
+});

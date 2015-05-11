@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 define([
-    '../../thirdparty/webworldwind/util/WWMath'],
+    '../../webworldwind/util/WWMath'],
     function (
         WWMath) {
         "use strict";

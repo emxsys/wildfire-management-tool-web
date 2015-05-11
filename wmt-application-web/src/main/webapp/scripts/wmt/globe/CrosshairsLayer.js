@@ -6,8 +6,9 @@
  * @exports CrosshairsLayer
  * @version $Id: CrosshairsLayer.js 2978 2015-04-03 22:55:55Z tgaskins $
  */
-define(['../globe/Crosshairs',
-    '../../thirdparty/webworldwind/WorldWind'],
+define([
+    '../globe/Crosshairs',
+    '../../webworldwind/WorldWind'],
     function (
         Crosshairs,
         WorldWind) {
