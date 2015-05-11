@@ -1,9 +1,9 @@
 /* @version $Id: Explorer.css 3067 2015-05-06 00:17:49Z dcollins $ */
 
 #coordinateOverlay {
-    position: absolute; /* inset the coordinate overlay's top right relative to the container's top right */
+    position: absolute; /* inset the coordinate overlay's top right relative to the container's top left */
     top: 180px;
-    right: 20px;
+    left: 20px;
     table-layout: fixed; /* fixed column widths specified below */
     pointer-events: none; /* ignore mouse and touch events in the coordinate overlay */
 }
