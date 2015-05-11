@@ -30,122 +30,145 @@
 
 /**
  * WMT Application.
+ * 
+ * Uses the Asynchronous Module Definition (AMD) pattern via RequireJS.
+ * AMD addresses these issues by:
+ * - Register the factory function by calling define(), instead of immediately executing it.
+ * - Pass dependencies as an array of string values, do not grab globals.
+ * - Only execute the factory function once all the dependencies have been loaded and executed.
+ * - Pass the dependent modules as arguments to the factory function.
+ * 
  * @author Bruce Schubert
  */
 define([
     '../webworldwind/WorldWind',
     './layermanager/LayerManager',
+    './util/Cookie',
     './globe/CoordinateController',
     './globe/CrosshairsLayer',
-    './globe/CrosshairsController'], function (
-    WorldWind,
-    LayerManager,
-    CoordinateController,
-    CrosshairsLayer,
-    CrosshairsController
-    ) {
-    "use strict";
-    var WMT = function () {
-        WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-        // Create the World Window.
-        this.wwd = new WorldWind.WorldWindow("canvasOne");
+    './globe/CrosshairsController'],
+    function (
+        WorldWind,
+        LayerManager,
+        Cookie,
+        CoordinateController,
+        CrosshairsLayer,
+        CrosshairsController) {
+        "use strict";
+        var WMT = function () {
+            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+            // Create the World Window.
+            this.wwd = new WorldWind.WorldWindow("canvasOne");
+            /**
+             * Added imagery layers.
+             */
+            var layers = [
+                {layer: new WorldWind.BMNGLayer(), enabled: true},
+                {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
+                {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
+                {layer: new CrosshairsLayer(), enabled: true},
+                {layer: new WorldWind.CompassLayer(), enabled: true},
+                {layer: new WorldWind.ViewControlsLayer(this.wwd), enabled: true}
+            ];
+            for (var l = 0; l < layers.length; l++) {
+                layers[l].layer.enabled = layers[l].enabled;
+                this.wwd.addLayer(layers[l].layer);
+            }
+            this.wwd.redraw();
+
+            this.layerManager = new LayerManager(this.wwd);
+            // Create mouse coordinate tracker - updates DOM elements
+            this.coordinateController = new CoordinateController(this.wwd);
+            // Create crosshairs coordinate tracker - updates DOM elements
+            this.crosshairsController = new CrosshairsController(this.wwd);
+
+            // Restore the view (eye position) from the last session
+            this.restoreSavedState();
+
+            // Save the current view (eye position) when the window closes
+            var self = this;
+            window.onbeforeunload = function (evt) {
+                self.saveCurrentState();
+            };
+
+        };
+
+
         /**
-         * Added imagery layers.
+         * Restores the application state from a cookie.
+         * @returns {undefined}
          */
-        var layers = [
-            {layer: new WorldWind.BMNGLayer(), enabled: true},
-            {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
-            {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
-            {layer: new CrosshairsLayer(), enabled: true},
-            {layer: new WorldWind.CompassLayer(), enabled: true},
-            {layer: new WorldWind.ViewControlsLayer(this.wwd), enabled: true}
-        ];
-        for (var l = 0; l < layers.length; l++) {
-            layers[l].layer.enabled = layers[l].enabled;
-            this.wwd.addLayer(layers[l].layer);
-        }
+        WMT.prototype.restoreSavedState = function () {
+            if (!navigator.cookieEnabled) {
+                return;
+            }
+            var lat = Cookie.read("latitude"),
+                lon = Cookie.read("longitude"),
+                alt = Cookie.read("altitude"),
+                head = Cookie.read("heading"),
+                tilt = Cookie.read("tilt"),
+                roll = Cookie.read("roll");
 
-        this.wwd.redraw();
-        this.layerManager = new LayerManager(this.wwd);
-        this.coordinateController = new CoordinateController(this.wwd);
-        this.crosshairsController = new CrosshairsController(this.wwd);
-
-        var pos = this.crosshairsController.crosshairsPosition;
-
-        window.alert(pos.latitude);
-
-
-        var self = this;
-        // Setup event handlers 
-        window.onbeforeunload = self.handleUnload;
-        // Restore the location of the crosshairs
-        self.restoreLocation();
-    };
-
-
-    WMT.prototype.restoreLocation = function () {
-        if (!navigator.cookieEnabled) {
-            return;
-        }
-        var lat = getCookie("latitude"),
-            lon = getCookie("longitude");
-
-        if (!lat || !lon) {
-            return;
-        }
-        this.wwd.navigator.lookAtPosition = new Position(lat, lon, 0);
-    };
+            if (!lat || !lon) {
+                // Set the default location to KOXR airport
+                lat = 34.2;
+                lon = -119.2083;
+            }
+            if (!alt) {
+                // Set default altitude to 1km
+                alt = 10000;
+            }
+            if (!head || !tilt || !roll) {
+                // Set defaults to true north, look down.
+                head = 0;
+                tilt = 0;
+                roll = 0;
+            }
+            this.wwd.navigator.lookAtPosition.latitude = lat;
+            this.wwd.navigator.lookAtPosition.longitude = lon;
+            this.wwd.navigator.range = alt;
+            this.wwd.navigator.heading = head;
+            this.wwd.navigator.tilt = tilt;
+            this.wwd.navigator.roll = roll;
+            
+        };
 
 
-    WMT.prototype.handleUnload = function () {
-        // Store date/time and eye position in a cookie.
-        // Precondition: Cookies must be enabled
-        if (!navigator.cookieEnabled) {
+        /**
+         * Saves the current view settings in a cookie
+         */
+        WMT.prototype.saveCurrentState = function () {
+            // Store date/time and eye position in a cookie.
+            // Precondition: Cookies must be enabled
+            if (!navigator.cookieEnabled) {
+                return null;
+            }
+            var pos = this.wwd.navigator.lookAtPosition,
+                alt = this.wwd.navigator.range,
+                heading = this.wwd.navigator.heading,
+                tilt = this.wwd.navigator.tilt,
+                roll = this.wwd.navigator.roll,
+                numDays = 100;
+
+            // Save the eye position
+            Cookie.save("latitude", pos.latitude, numDays);
+            Cookie.save("longitude", pos.longitude, numDays);
+            Cookie.save("altitude", alt, numDays);
+
+            // Save the globe orientation.
+            Cookie.save("heading", heading, numDays);
+            Cookie.save("tilt", tilt, numDays);
+            Cookie.save("roll", roll, numDays);
+            
+            // TODO: save date/time
+
+            // return null to close quietly
             return null;
-        }
-        // TODO: save position...
-        //var pos = this.crosshairsController.crosshairsPosition;
-        //setCookie("latitude", pos.latitude, 100);
-        //setCookie("longitude", pos.longitude, 100);
-
-        // TODO: save eye altitude...
-
-        // TODO: globe rotation and tilt...
-
-        // TODO: save date/time
-
-        // return null to close quietly
-        return null;
-    };
+        };
 
 
-    function setCookie(cookieName, cookieValue, expirationDays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cookieName + "=" + cookieValue + "; " + expires;
-    }
+        window.WMT = WMT;
 
-
-    function getCookie(cookieName) {
-        // Establish the text to search for
-        var name = cookieName + "=";
-        // Split the cookie property into an array 
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookieKeyValue = cookies[i];
-            // Strip/trim spaces
-            while (cookieKeyValue.charAt(0) == ' ') {
-                cookieKeyValue = cookieKeyValue.substring(1);
-            }
-
-            if (cookieKeyValue.indexOf(name) == 0) {
-                return cookieKeyValue.substring(name.length, cookieKeyValue.length);
-            }
-        }
-        return "";
-    }
-
-    return WMT;
-});
+        return WMT;
+    });
         
