@@ -49,7 +49,7 @@ define([
     './globe/CoordinateController',
     './Wmt'],
     function (
-        ww,
+        WorldWind,
         Cookie,
         LayerManager,
         CrosshairsLayer,
@@ -58,7 +58,7 @@ define([
         Wmt) {
         "use strict";
         var WmtWeb = function () {
-            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_INFO);
             // Create the World Window.
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             /**
@@ -103,7 +103,7 @@ define([
         WmtWeb.prototype.restoreSavedState = function () {
             try {
                 if (!navigator.cookieEnabled) {
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, "WmtWeb", "restoreSavedState",
+                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtWeb", "restoreSavedState",
                         "Cookies not enabled!");
                     return;
                 }
@@ -150,7 +150,7 @@ define([
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, "WmtWeb", "saveCurrentState",
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtWeb", "saveCurrentState",
                     "Cookies not enabled!");
                 return;
             }
