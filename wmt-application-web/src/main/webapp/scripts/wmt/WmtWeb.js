@@ -76,6 +76,8 @@ define([
                 layers[l].layer.enabled = layers[l].enabled;
                 this.wwd.addLayer(layers[l].layer);
             }
+            // Restore the view (eye position) from the last session
+            //this.restoreSavedState();
             this.wwd.redraw();
 
             this.layerManager = new LayerManager(this.wwd);
@@ -83,9 +85,6 @@ define([
             this.coordinateController = new CoordinateController(this.wwd);
             // Create crosshairs coordinate tracker - updates DOM elements
             this.crosshairsController = new CrosshairsController(this.wwd);
-
-            // Restore the view (eye position) from the last session
-            //this.restoreSavedState();
 
             // Save the current view (eye position) when the window closes
             var self = this;
