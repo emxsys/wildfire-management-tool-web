@@ -55,7 +55,7 @@ define([
         CrosshairsLayer,
         CrosshairsController) {
         "use strict";
-        var WMT = function () {
+        var WmtWeb = function () {
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
             // Create the World Window.
             this.wwd = new WorldWind.WorldWindow("canvasOne");
@@ -89,8 +89,9 @@ define([
             var self = this;
             window.onbeforeunload = function (evt) {
                 self.saveCurrentState();
+                // Return null to close quietly
+                return null;
             };
-
         };
 
 
@@ -98,7 +99,7 @@ define([
          * Restores the application state from a cookie.
          * @returns {undefined}
          */
-        WMT.prototype.restoreSavedState = function () {
+        WmtWeb.prototype.restoreSavedState = function () {
             if (!navigator.cookieEnabled) {
                 return;
             }
@@ -137,11 +138,11 @@ define([
         /**
          * Saves the current view settings in a cookie
          */
-        WMT.prototype.saveCurrentState = function () {
+        WmtWeb.prototype.saveCurrentState = function () {
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
-                return null;
+                return;
             }
             var pos = this.wwd.navigator.lookAtPosition,
                 alt = this.wwd.navigator.range,
@@ -161,14 +162,11 @@ define([
             Cookie.save("roll", roll, numDays);
             
             // TODO: save date/time
-
-            // return null to close quietly
-            return null;
         };
 
 
-        window.WMT = WMT;
+        window.WMT = WmtWeb;
 
-        return WMT;
+        return WmtWeb;
     });
         

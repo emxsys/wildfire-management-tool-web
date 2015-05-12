@@ -50,7 +50,8 @@ define([],
             },
             /**
              * Gets the value for the given cookie name.
-             * @returns {String} cookieName The value or an empty string if not found.
+             * @param {String) cookieName The cookie name to search for.
+             * @returns {String} The cookie value or an empty string if not found.
              */
             read: function (cookieName) {
                 // Establish the text to search for
@@ -60,11 +61,11 @@ define([],
                 for (var i = 0; i < cookies.length; i++) {
                     var cookieKeyValue = cookies[i];
                     // Strip/trim spaces
-                    while (cookieKeyValue.charAt(0) == ' ') {
+                    while (cookieKeyValue.charAt(0) === ' ') {
                         cookieKeyValue = cookieKeyValue.substring(1);
                     }
-
-                    if (cookieKeyValue.indexOf(name) == 0) {
+                    // Return the value associated with the name
+                    if (cookieKeyValue.indexOf(name) === 0) {
                         return cookieKeyValue.substring(name.length, cookieKeyValue.length);
                     }
                 }

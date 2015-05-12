@@ -36,11 +36,11 @@
 requirejs.config({
     baseUrl: "scripts/wmt",
     "paths": {
-        WMT: "WMT",
+        WmtWeb: "WmtWeb",
         //WorldWind: "../webworldwind/WorldWind"  -- load times out!?
     }
 });
 
-requirejs(["WMT"], function (WMT) {
-    new WMT();
+requirejs(["WmtWeb"], function (WmtWeb) {
+    new WmtWeb();
 });
