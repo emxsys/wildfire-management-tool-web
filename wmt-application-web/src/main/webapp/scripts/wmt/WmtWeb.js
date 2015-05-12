@@ -42,18 +42,20 @@
  */
 define([
     '../webworldwind/WorldWind',
-    './layermanager/LayerManager',
     './util/Cookie',
-    './globe/CoordinateController',
+    './layermanager/LayerManager',
     './globe/CrosshairsLayer',
-    './globe/CrosshairsController'],
+    './globe/CrosshairsController',
+    './globe/CoordinateController',
+    './Wmt'],
     function (
-        WorldWind,
-        LayerManager,
+        ww,
         Cookie,
-        CoordinateController,
+        LayerManager,
         CrosshairsLayer,
-        CrosshairsController) {
+        CrosshairsController,
+        CoordinateController,
+        Wmt) {
         "use strict";
         var WmtWeb = function () {
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
@@ -83,7 +85,7 @@ define([
             this.crosshairsController = new CrosshairsController(this.wwd);
 
             // Restore the view (eye position) from the last session
-            this.restoreSavedState();
+            //this.restoreSavedState();
 
             // Save the current view (eye position) when the window closes
             var self = this;
@@ -107,31 +109,28 @@ define([
                 lon = Cookie.read("longitude"),
                 alt = Cookie.read("altitude"),
                 head = Cookie.read("heading"),
-                tilt = Cookie.read("tilt"),
-                roll = Cookie.read("roll");
+                tlt = Cookie.read("tilt"),
+                rll = Cookie.read("roll");
 
             if (!lat || !lon) {
-                // Set the default location to KOXR airport
-                lat = 34.2;
-                lon = -119.2083;
+                lat = Wmt.configuration.startupLatitude;
+                lon = Wmt.configuration.startupLongitude;
             }
             if (!alt) {
-                // Set default altitude to 1km
-                alt = 10000;
+                alt = Wmt.configuration.startupAltitude;
             }
-            if (!head || !tilt || !roll) {
-                // Set defaults to true north, look down.
-                head = 0;
-                tilt = 0;
-                roll = 0;
+            if (!head || !tlt || !rll) {
+                head = Wmt.configuration.startupHeading;
+                tlt = Wmt.configuration.startupTilt;
+                rll = Wmt.configuration.startupRoll;
             }
             this.wwd.navigator.lookAtPosition.latitude = lat;
             this.wwd.navigator.lookAtPosition.longitude = lon;
             this.wwd.navigator.range = alt;
             this.wwd.navigator.heading = head;
-            this.wwd.navigator.tilt = tilt;
-            this.wwd.navigator.roll = roll;
-            
+            this.wwd.navigator.tilt = tlt;
+            this.wwd.navigator.roll = rll;
+
         };
 
 
@@ -160,13 +159,11 @@ define([
             Cookie.save("heading", heading, numDays);
             Cookie.save("tilt", tilt, numDays);
             Cookie.save("roll", roll, numDays);
-            
+
             // TODO: save date/time
         };
 
-
-        window.WMT = WmtWeb;
-
+        
         return WmtWeb;
     });
         
