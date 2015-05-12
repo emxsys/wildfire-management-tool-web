@@ -75,7 +75,8 @@ define([
              * @default "vertical"
              */
             this.orientation = "vertical";
-            this.placement = new Offset(WorldWind.OFFSET_FRACTION, 0.98, WorldWind.OFFSET_FRACTION, 0.9);
+            // Leave a little room on the right so the user has room to "drag right"
+            this.placement = new Offset(WorldWind.OFFSET_FRACTION, .95, WorldWind.OFFSET_FRACTION, 1);
             this.alignment = new Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
 
             // Set defaults from configuration
