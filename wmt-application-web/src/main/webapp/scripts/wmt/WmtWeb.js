@@ -77,7 +77,7 @@ define([
                 this.wwd.addLayer(layers[l].layer);
             }
             // Restore the view (eye position) from the last session
-            //this.restoreSavedState();
+            this.restoreSavedState();
             this.wwd.redraw();
 
             this.layerManager = new LayerManager(this.wwd);
@@ -101,35 +101,45 @@ define([
          * @returns {undefined}
          */
         WmtWeb.prototype.restoreSavedState = function () {
-            if (!navigator.cookieEnabled) {
-                return;
-            }
-            var lat = Cookie.read("latitude"),
-                lon = Cookie.read("longitude"),
-                alt = Cookie.read("altitude"),
-                head = Cookie.read("heading"),
-                tlt = Cookie.read("tilt"),
-                rll = Cookie.read("roll");
+            try {
+                if (!navigator.cookieEnabled) {
+                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, "WmtWeb", "restoreSavedState",
+                        "Cookies not enabled!");
+                    return;
+                }
+                var latStr = (Cookie.read("latitude")),
+                    lonStr = (Cookie.read("longitude")),
+                    altStr = (Cookie.read("altitude")),
+                    headStr = (Cookie.read("heading")),
+                    tiltStr = (Cookie.read("tilt")),
+                    rollStr = (Cookie.read("roll"));
 
-            if (!lat || !lon) {
-                lat = Wmt.configuration.startupLatitude;
-                lon = Wmt.configuration.startupLongitude;
-            }
-            if (!alt) {
-                alt = Wmt.configuration.startupAltitude;
-            }
-            if (!head || !tlt || !rll) {
-                head = Wmt.configuration.startupHeading;
-                tlt = Wmt.configuration.startupTilt;
-                rll = Wmt.configuration.startupRoll;
-            }
-            this.wwd.navigator.lookAtPosition.latitude = lat;
-            this.wwd.navigator.lookAtPosition.longitude = lon;
-            this.wwd.navigator.range = alt;
-            this.wwd.navigator.heading = head;
-            this.wwd.navigator.tilt = tlt;
-            this.wwd.navigator.roll = rll;
+                if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
+                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default lat/lon.");
+                    latStr = Wmt.configuration.startupLatitude;
+                    lonStr = Wmt.configuration.startupLongitude;
+                }
+                if (!altStr || isNaN(altStr)) {
+                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default altitude.");
+                    altStr = Wmt.configuration.startupAltitude;
+                }
+                if (!headStr || !tiltStr || !rollStr || isNaN(headStr) || isNaN(tiltStr) || isNaN(rollStr)) {
+                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default view angles.");
+                    headStr = Wmt.configuration.startupHeading;
+                    tiltStr = Wmt.configuration.startupTilt;
+                    rollStr = Wmt.configuration.startupRoll;
+                }
+                this.wwd.navigator.lookAtPosition.latitude = Number(latStr);
+                this.wwd.navigator.lookAtPosition.longitude = Number(lonStr);
+                this.wwd.navigator.range = Number(altStr);
+                this.wwd.navigator.heading = Number(headStr);
+                this.wwd.navigator.tilt = Number(tiltStr);
+                this.wwd.navigator.roll = Number(rollStr);
 
+            } catch (exception) {
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "WmtWeb", "restoreSavedState",
+                    "Exception occurred processing cookie: " + exception.toString());
+            }
         };
 
 
@@ -140,6 +150,8 @@ define([
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, "WmtWeb", "saveCurrentState",
+                    "Cookies not enabled!");
                 return;
             }
             var pos = this.wwd.navigator.lookAtPosition,
@@ -162,7 +174,7 @@ define([
             // TODO: save date/time
         };
 
-        
+
         return WmtWeb;
     });
         
