@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WWUtil.js 2965 2015-04-02 18:20:23Z tgaskins $
+ * @version $Id: WWUtil.js 3072 2015-05-06 22:30:41Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -60,6 +60,25 @@ define([
                 }
 
                 return protocol + "//" + host + newPath;
+            },
+
+            /**
+             * Returns the URL of the directory containing the World Wind library.
+             * @returns {String} The URL of the directory containing the World Wind library, or null if that directory
+             * cannot be determined.
+             */
+            worldwindlibLocation: function () {
+                var scripts = document.getElementsByTagName("script"),
+                    libraryName = "/worldwindlib.";
+
+                for (var i = 0; i < scripts.length; i++) {
+                    var index = scripts[i].src.indexOf(libraryName);
+                    if (index >= 0) {
+                        return scripts[i].src.substring(0, index) + "/";
+                    }
+                }
+
+                return null;
             },
 
             /**

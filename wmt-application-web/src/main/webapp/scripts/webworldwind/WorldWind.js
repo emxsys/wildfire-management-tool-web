@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WorldWind.js 3054 2015-04-29 19:29:02Z tgaskins $
+ * @version $Id: WorldWind.js 3070 2015-05-06 20:05:26Z tgaskins $
  */
 define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
         './error/AbstractError',
@@ -542,12 +542,14 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
          * their first World Wind objects. Configuration properties are:
          * <ul>
          *     <li><code>gpuCacheSize</code>: A Number indicating the size in bytes to allocate from GPU memory for
-         *     resources such as textures, GLSL programs and buffer objects. Default is 250e6 (250 MB).
+         *     resources such as textures, GLSL programs and buffer objects. Default is 250e6 (250 MB).</li>
+         *     <li><code>baseUrl</code>: The URL of the directory containing the World Wind Library and its resources.</li>
          * </ul>
          * @type {{gpuCacheSize: number}}
          */
         WorldWind.configuration = {
-            gpuCacheSize: 250e6
+            gpuCacheSize: 250e6,
+            baseUrl: (WWUtil.worldwindlibLocation()) || (WWUtil.currentUrlSansFilePart() + '/../')
         };
 
         /**
@@ -561,5 +563,4 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
 
         return WorldWind;
     }
-)
-;
+);

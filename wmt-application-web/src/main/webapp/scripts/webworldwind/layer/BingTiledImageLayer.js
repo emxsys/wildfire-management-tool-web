@@ -4,7 +4,7 @@
  */
 /**
  * @exports BingTiledImageLayer
- * @version $Id: BingTiledImageLayer.js 2889 2015-03-11 17:35:58Z tgaskins $
+ * @version $Id: BingTiledImageLayer.js 3070 2015-05-06 20:05:26Z tgaskins $
  */
 define([
         '../geom/Angle',
@@ -61,7 +61,7 @@ define([
                 new Vec2(235, 235)
             ];
 
-            this.creditImage = WWUtil.currentUrlSansFilePart() + "/../images/powered-by-bing.png"
+            this.creditImage = WorldWind.configuration.baseUrl + "images/powered-by-bing.png"
         };
 
         BingTiledImageLayer.prototype = Object.create(TiledImageLayer.prototype);

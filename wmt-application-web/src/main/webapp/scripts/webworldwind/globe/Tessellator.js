@@ -4,7 +4,7 @@
  */
 /**
  * @exports Tessellator
- * @version $Id: Tessellator.js 3018 2015-04-14 17:50:06Z dcollins $
+ * @version $Id: Tessellator.js 3068 2015-05-06 19:23:44Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -549,9 +549,12 @@ define([
                 }
             }
 
-            // Draw the pickable tiles in a unique pick color.
-            color = dc.uniquePickColor();
-            this.drawPickTiles(dc, pickableTiles, color);
+            // Draw the pickable tiles in a unique pick color. Suppress this step when picking the terrain only. In this
+            // case drawing to the pick framebuffer is unnecessary.
+            if (!dc.pickTerrainOnly) {
+                color = dc.uniquePickColor();
+                this.drawPickTiles(dc, pickableTiles, color);
+            }
 
             // Determine the terrain position at the pick point. If the terrain is picked, add a corresponding picked
             // object to the draw context. Suppress this step in region picking mode.
