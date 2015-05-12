@@ -36,11 +36,11 @@
 requirejs.config({
     baseUrl: "scripts/wmt",
     "paths": {
-        //WorldWind: "../webworldwind/WorldWind",
-        WmtWeb: "WmtWeb"
+        WorldWind: "../webworldwind/WorldWind",
+        WmtClient: "WmtClient"
     }
 });
 
-requirejs(["WmtWeb"], function (WmtWeb) {
-    new WmtWeb();
+requirejs(["WmtClient"], function (WmtClient) {
+    new WmtClient();
 });

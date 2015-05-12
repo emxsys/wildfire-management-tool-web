@@ -58,6 +58,7 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
          *     <li><code>startupHeading</code>: Initial view heading. Default 0.
          *     <li><code>startupTilt</code>: Initial view tilt. Default 0.
          *     <li><code>startupRoll</code>: Initial view roll. Default 0.
+         *     <li><code>showExaggerationControl</code>: Show vertical exaggeration controls. Default false.
          * </ul>
          */
         Wmt.configuration = {
@@ -66,7 +67,8 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
             startupAltitude: 5000,
             startupHeading: 0,
             startupTilt: 0,
-            startupRoll: 0
+            startupRoll: 0,
+            showExaggerationControl: false
         };
         
         window.Wmt = Wmt;

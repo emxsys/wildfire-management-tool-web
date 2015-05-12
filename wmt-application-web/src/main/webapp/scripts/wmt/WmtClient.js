@@ -41,28 +41,33 @@
  * @author Bruce Schubert
  */
 define([
-    '../webworldwind/WorldWind',
     './util/Cookie',
-    './layermanager/LayerManager',
     './globe/CrosshairsLayer',
     './globe/CrosshairsController',
     './globe/CoordinateController',
-    './Wmt'],
+    './globe/EnhancedViewControlsLayer',
+    './layermanager/LayerManager',
+    './Wmt',
+    '../webworldwind/WorldWind'],
     function (
-        WorldWind,
         Cookie,
-        LayerManager,
         CrosshairsLayer,
         CrosshairsController,
         CoordinateController,
-        Wmt) {
+        EnhancedViewControlsLayer,
+        LayerManager,
+        wmt,    // don't hide Wmt global 
+        ww) {   // don't hide WorldWind global
         "use strict";
-        var WmtWeb = function () {
-            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_INFO);
+        var WmtClient = function () {
+            // Set the logging level for the application
+            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+
             // Create the World Window.
             this.wwd = new WorldWind.WorldWindow("canvasOne");
+
             /**
-             * Added imagery layers.
+             * Add imagery layers to WorldWindow
              */
             var layers = [
                 {layer: new WorldWind.BMNGLayer(), enabled: true},
@@ -71,6 +76,7 @@ define([
                 {layer: new CrosshairsLayer(), enabled: true},
                 {layer: new WorldWind.CompassLayer(), enabled: true},
                 {layer: new WorldWind.ViewControlsLayer(this.wwd), enabled: true}
+                //{layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
             ];
             for (var l = 0; l < layers.length; l++) {
                 layers[l].layer.enabled = layers[l].enabled;
@@ -100,19 +106,19 @@ define([
          * Restores the application state from a cookie.
          * @returns {undefined}
          */
-        WmtWeb.prototype.restoreSavedState = function () {
+        WmtClient.prototype.restoreSavedState = function () {
             try {
                 if (!navigator.cookieEnabled) {
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtWeb", "restoreSavedState",
+                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtClient", "restoreSavedState",
                         "Cookies not enabled!");
                     return;
                 }
-                var latStr = (Cookie.read("latitude")),
-                    lonStr = (Cookie.read("longitude")),
-                    altStr = (Cookie.read("altitude")),
-                    headStr = (Cookie.read("heading")),
-                    tiltStr = (Cookie.read("tilt")),
-                    rollStr = (Cookie.read("roll"));
+                var latStr = Cookie.read("latitude"),
+                    lonStr = Cookie.read("longitude"),
+                    altStr = Cookie.read("altitude"),
+                    headStr = Cookie.read("heading"),
+                    tiltStr = Cookie.read("tilt"),
+                    rollStr = Cookie.read("roll");
 
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
                     WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default lat/lon.");
@@ -137,7 +143,7 @@ define([
                 this.wwd.navigator.roll = Number(rollStr);
 
             } catch (exception) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "WmtWeb", "restoreSavedState",
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "WmtClient", "restoreSavedState",
                     "Exception occurred processing cookie: " + exception.toString());
             }
         };
@@ -146,11 +152,11 @@ define([
         /**
          * Saves the current view settings in a cookie
          */
-        WmtWeb.prototype.saveCurrentState = function () {
+        WmtClient.prototype.saveCurrentState = function () {
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtWeb", "saveCurrentState",
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtClient", "saveCurrentState",
                     "Cookies not enabled!");
                 return;
             }
@@ -175,6 +181,6 @@ define([
         };
 
 
-        return WmtWeb;
+        return WmtClient;
     });
         
