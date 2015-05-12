@@ -36,8 +36,8 @@
 requirejs.config({
     baseUrl: "scripts/wmt",
     "paths": {
-        WmtWeb: "WmtWeb",
-        //WorldWind: "../webworldwind/WorldWind"  -- load times out!?
+        //WorldWind: "../webworldwind/WorldWind",
+        WmtWeb: "WmtWeb"
     }
 });
 
