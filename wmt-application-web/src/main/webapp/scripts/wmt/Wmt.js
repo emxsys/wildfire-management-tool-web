@@ -52,8 +52,8 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
          * Holds configuration parameters for WMT. Applications may modify these parameters prior to creating
          * their first World Wind objects. Configuration properties are:
          * <ul>
-         *     <li><code>startupLatitude</code>: Initial "look at" latitude. Default is KOXR airport.
-         *     <li><code>startupLongitude</code>: Initial "look at" longitude. Default is KOXR airport.
+         *     <li><code>startupLatitude</code>: Initial "look at" latitude. Default is Ventura, CA.
+         *     <li><code>startupLongitude</code>: Initial "look at" longitude. Default is Venura, CA.
          *     <li><code>startupLongitude</code>: Initial altitude/eye position. Default 0.
          *     <li><code>startupHeading</code>: Initial view heading. Default 0.
          *     <li><code>startupTilt</code>: Initial view tilt. Default 0.
@@ -61,8 +61,8 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
          * </ul>
          */
         Wmt.configuration = {
-            startupLatitude: 34.2,
-            startupLongitude: -119.2083,
+            startupLatitude: 34.29,
+            startupLongitude: -119.29,
             startupAltitude: 5000,
             startupHeading: 0,
             startupTilt: 0,
