@@ -94,11 +94,17 @@ define(['../util/Formatter'],
                 terrainObject;
 
             terrainObject = wwd.pickTerrain(centerPoint).terrainObject();
-            if (!terrainObject) {
-                return;
+            if (terrainObject) {
+                this.crosshairsPosition.latitude = terrainObject.position.latitude;
+                this.crosshairsPosition.longitude = terrainObject.position.longitude;
+                this.crosshairsPosition.altitude = terrainObject.position.altitude;
+            } else {
+                // TODO: Set values to null? Set position to null?
+                this.crosshairsPosition.latitude = Number.NaN;
+                this.crosshairsPosition.longitude = Number.NaN;
+                this.crosshairsPosition.altitude = Number.NaN;
             }
-            this.crosshairsPosition.latitude = terrainObject.position.latitude;
-            this.crosshairsPosition.longitude = terrainObject.position.longitude;
+
 
             // Look for the DOM elements to update, and exit if none exist.
             var crosshairsLat = $("#crosshairsLatitude"),
@@ -112,8 +118,8 @@ define(['../util/Formatter'],
 
             // Update the DOM elements with the current terrain position.
             if (terrainObject) {
-                crosshairs2D.html(this.coord2DFormat(terrainObject.position.latitude, terrainObject.position.longitude));
-                crosshairs3D.html(this.coord2DFormat(terrainObject.position.latitude, terrainObject.position.longitude));
+                crosshairs2D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
+                crosshairs3D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
                 crosshairsLat.html(this.locationFormat(terrainObject.position.latitude));
                 crosshairsLon.html(this.locationFormat(terrainObject.position.longitude));
                 crosshairsElev.html(this.altitudeFormat(terrainObject.position.altitude, "m"));
@@ -133,7 +139,7 @@ define(['../util/Formatter'],
             }
         };
 
-        CrosshairsController.prototype.coord2DFormat = function (lat, lon) {
+        CrosshairsController.prototype.formatCoord2D = function (lat, lon) {
             return "Location: " + Formatter.formatDMSLatitude(lat, 0) + ", " + Formatter.formatDMSLongitude(lon, 0);
         };
 
