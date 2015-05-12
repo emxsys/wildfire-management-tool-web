@@ -31,27 +31,13 @@
  * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
  */
 define([
-    '../../webworldwind/geom/Angle',
-    '../../webworldwind/error/ArgumentError',
-    '../../webworldwind/layer/Layer',
-    '../../webworldwind/geom/Location',
-    '../../webworldwind/util/Logger',
     '../../webworldwind/util/Offset',
     '../../webworldwind/shapes/ScreenImage',
-    '../../webworldwind/geom/Vec2',
-    '../../webworldwind/layer/ViewControlsLayer',
-    '../../webworldwind/util/WWUtil'
-],
-    function (Angle,
-        ArgumentError,
-        Layer,
-        Location,
-        Logger,
+    '../../webworldwind/layer/ViewControlsLayer'],
+    function (
         Offset,
         ScreenImage,
-        Vec2,
-        ViewControlsLayer,
-        WWUtil) {
+        ViewControlsLayer) {
         "use strict";
 
         /**
@@ -67,6 +53,7 @@ define([
         var EnhancedViewControlsLayer = function (worldWindow) {
 
             // Classic Pattern #2 - Rent-a-Constructor. See JavaScript Patterns - Code Reuse Patterns
+            // Creates a copy of parent members
             ViewControlsLayer.call(this, worldWindow);
 
             /**
@@ -81,22 +68,39 @@ define([
 
             // Set defaults from configuration
             this.showExaggerationControl = Wmt.configuration.showExaggerationControl;
+
+            // Set the screen and image offsets of each control to the lower left corner.
+            // Use same offset values as parent ViewControlsLayer.
+            var screenOffset = new Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
+                imagePath = WorldWind.configuration.baseUrl + "images/";
+
+            // These controls are all internal and intentionally not documented.
+            this.gotoControl = new ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
+            this.locateControl = new ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
+            this.gotoControl.imageOffset = screenOffset.clone();
+            this.locateControl.imageOffset = screenOffset.clone();
+            this.gotoControl.size = 32;
+            this.locateControl.size = 32;
+            this.gotoControl.opacity = this._inactiveOpacity;
+            this.locateControl.opacity = this._inactiveOpacity;
+            this.controls.push(this.gotoControl);
+            this.controls.push(this.locateControl);
+
         };
 
         // Classic Pattern #3 - Rent and Set Prototype. See JavaScript Patterns - Code Reuse Patterns
         EnhancedViewControlsLayer.prototype = Object.create(ViewControlsLayer.prototype);
 
-        // Documented in superclass.
-        EnhancedViewControlsLayer.prototype.doRender = function (dc) {
 
+        // Copied from parent. Modified to perform vertical layout.
+        EnhancedViewControlsLayer.prototype.doRender = function (dc) {
             // Let the parent perform the default horizontal layout
             if (this.orientation !== "vertical") {
                 ViewControlsLayer.prototype.doRender(dc);
                 return;
             }
-
-            // Do vertical layout (copied from ViewControlsLayer and edited).
-
+            // Othewise, do vertical layout (copied from ViewControlsLayer and edited).
+            
             var controlPanelWidth = 64, controlPanelHeight = 0,
                 panelOffset, screenOffset,
                 x, y;
@@ -195,7 +199,67 @@ define([
                 this.fovNarrowControl.render(dc);
                 this.fovWideControl.render(dc);
             }
+            if (true) {
+                this.gotoControl.screenOffset.x = x;
+                this.gotoControl.screenOffset.y = y;
+                this.locateControl.screenOffset.x = x + this.gotoControl.size;
+                this.locateControl.screenOffset.y = y;
+                this.gotoControl.render(dc);
+                this.locateControl.render(dc);
+            }
         };
+
+        // Copied from parent. Augmented to include goto and locate controls
+        EnhancedViewControlsLayer.prototype.determineOperation = function (e, topObject) {
+            var operation = null;
+
+            if (topObject && (topObject instanceof ScreenImage)) {
+                if (topObject === this.panControl) {
+                    operation = this.handlePan;
+                } else if (topObject === this.zoomInControl
+                    || topObject === this.zoomOutControl) {
+                    operation = this.handleZoom;
+                } else if (topObject === this.headingLeftControl
+                    || topObject === this.headingRightControl) {
+                    operation = this.handleHeading;
+                } else if (topObject === this.tiltUpControl
+                    || topObject === this.tiltDownControl) {
+                    operation = this.handleTilt;
+                } else if (topObject === this.exaggerationUpControl
+                    || topObject === this.exaggerationDownControl) {
+                    operation = this.handleExaggeration;
+                } else if (topObject === this.fovNarrowControl
+                    || topObject === this.fovWideControl) {
+                    operation = this.handleFov;
+                } else if (topObject === this.gotoControl) {
+                    operation = this.handleGoto;
+                } else if (topObject === this.locateControl) {
+                    operation = this.handleLocate;
+                }
+            }
+
+            return operation;
+        };
+
+
+        EnhancedViewControlsLayer.prototype.handleLocate = function (e, control) {
+            // Start an operation on left button down or touch start.
+            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
+                e.preventDefault();
+                setTimeout(alert("handleLocate here..."), 100);
+            }
+        };
+
+        // Intentionally not documented.
+        EnhancedViewControlsLayer.prototype.handleGoto = function (e, control) {
+            // Start an operation on left button down or touch start.
+            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
+                e.preventDefault();
+                setTimeout(alert("handleGoto here..."), 100);
+            }
+        };
+
+
         return EnhancedViewControlsLayer;
     }
 );
