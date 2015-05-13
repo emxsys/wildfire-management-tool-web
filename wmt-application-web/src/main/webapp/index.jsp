@@ -106,12 +106,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--Prime UI Notify Widget--> 
         <div id="notify"/>  
         <!--Prime UI Location Dialog--> 
-        <div id="location-dlg" title="Set Location" style="display: none;">>
-            <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding. 
-                His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. 
-                Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, 
-                kind and benevolent to those who give respect, 
-                but given to ruthless violence whenever anything stands against the good of the family.</p>
+        <div id="location-dlg" title="Set Location" style="display: none;">
+            <div class="latitude">
+                <label for="latitude" class="required">Latitude:</label>
+                <input type="text" placeholder="Enter a N/S latitude" 
+                       name="latitude" id="latitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
+            </div>
+            <div class="longitude">
+                <label for="longitude" class="required">Longitude:</label>
+                <input type="text" placeholder="Enter an E/W longitude" 
+                       name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
+            </div>
         </div>        
     </body>
 </html>
