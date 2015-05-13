@@ -31,13 +31,15 @@
  * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
  */
 define([
-    '../util/Locator',
+    '../location/Locator',
     '../../webworldwind/util/Offset',
+    '../location/Navigator',
     '../../webworldwind/shapes/ScreenImage',
     '../../webworldwind/layer/ViewControlsLayer'],
     function (
         Locator,
         Offset,
+        Navigator,
         ScreenImage,
         ViewControlsLayer) {
         "use strict";
@@ -57,8 +59,8 @@ define([
             // Classic Pattern #2 - Rent-a-Constructor. See JavaScript Patterns - Code Reuse Patterns
             // Creates a copy of parent members
             ViewControlsLayer.call(this, worldWindow);
-            
-            this.locator = new Locator(worldWindow);
+
+            this.locator = new Locator(new Navigator(worldWindow));
 
             /**
              * The orientation for the view controls layout.
@@ -104,7 +106,7 @@ define([
                 return;
             }
             // Othewise, do vertical layout (copied from ViewControlsLayer and edited).
-            
+
             var controlPanelWidth = 64, controlPanelHeight = 0,
                 panelOffset, screenOffset,
                 x, y;
@@ -246,7 +248,7 @@ define([
         };
 
 
-      
+
         /**
          * Locate handler.
          * @private
@@ -257,7 +259,7 @@ define([
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
                 e.preventDefault();
-                setTimeout(this.locator.locateCurrentPosition(), 100);
+                setTimeout(this.locator.locateCurrentPosition(), 50);
             }
         };
 
@@ -271,11 +273,11 @@ define([
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
                 e.preventDefault();
-                setTimeout(alert("handleGoto here..."), 100);
+                setTimeout(this.locator.locateCoordinates(), 50);
             }
         };
 
- 
+
         return EnhancedViewControlsLayer;
     }
 );
