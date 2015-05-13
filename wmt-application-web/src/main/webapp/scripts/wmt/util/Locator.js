@@ -31,8 +31,12 @@
 /**
  *  GeoLocation utiltiies.
  */
-define(['../../webworldwind/WorldWindow'],
-    function (WorldWindow) {
+define([
+    '../../../thirdparty/primeui-1.1/development/primeui-1.1',
+    '../../webworldwind/WorldWindow'],
+    function (
+        PrimeUI,
+        WorldWindow) {
         "use strict";
         /**
          * @constructor
@@ -40,7 +44,9 @@ define(['../../webworldwind/WorldWindow'],
          * @returns {Locator_L35.Locator}
          */
         var Locator = function (worldWindow) {
+
             this.wwd = worldWindow;
+            // Perform the locate
             Locator.prototype.locateCurrentPosition = function () {
                 var self = this;
                 navigator.geolocation.getCurrentPosition(
@@ -66,7 +72,15 @@ define(['../../webworldwind/WorldWindow'],
              * @param {type} positionError
              */
             Locator.prototype.onFailure = function (positionError) {
-                window.alert(positionError.message);
+                //initialize
+                $('#growl').puigrowl();
+                //show messages
+                $('#growl').puigrowl('show',
+                    [{
+                            severity: 'warn',
+                            summary: 'Locate Failed',
+                            detail: positionError.message}]
+                    );
             };
         };
         return Locator;

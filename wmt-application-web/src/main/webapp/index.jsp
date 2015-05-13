@@ -37,8 +37,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
         <link rel="stylesheet" href="./css/WMT.css">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+
+        <link rel="stylesheet" href="./thirdparty/jquery-ui.css" />   
+        <link rel="stylesheet" href="./thirdparty/primeui-1.1/development/primeui-1.1.css" />   
+
+        <script src="./thirdparty/jquery-2.1.4.js" type="text/javascript"></script>
+        <script src="./thirdparty/jquery-ui-1.11.4.js" type="text/javascript"></script>
+        <script src="./thirdparty/primeui-1.1/development/primeui-1.1.js" type="text/javascript"></script>
+
+        <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>-->
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
         <script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
     </head>
     <body>
@@ -71,7 +80,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <li><a href="#">Date/Time: </a></li>
                         <li><a id="crosshairsCoord2D" href="#">Location</a></li>
                     </ul>
-                    <div>
+                    <div id="globe">
                         <canvas id="canvasOne" width="1000" height="1000" style="width: 100%; height: auto">
                             Your browser does not support HTML5 Canvas.
                         </canvas>
@@ -85,5 +94,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </div>
+        <!--Prime UI Growl Widget--> 
+        <div id="growl"/>  
+        <!--Prime UI Notify Widget--> 
+        <div id="notify"/>  
     </body>
 </html>
