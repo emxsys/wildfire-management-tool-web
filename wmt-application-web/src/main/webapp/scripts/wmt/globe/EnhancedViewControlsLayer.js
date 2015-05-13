@@ -31,10 +31,12 @@
  * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
  */
 define([
+    '../util/Locator',
     '../../webworldwind/util/Offset',
     '../../webworldwind/shapes/ScreenImage',
     '../../webworldwind/layer/ViewControlsLayer'],
     function (
+        Locator,
         Offset,
         ScreenImage,
         ViewControlsLayer) {
@@ -55,6 +57,8 @@ define([
             // Classic Pattern #2 - Rent-a-Constructor. See JavaScript Patterns - Code Reuse Patterns
             // Creates a copy of parent members
             ViewControlsLayer.call(this, worldWindow);
+            
+            this.locator = new Locator(worldWindow);
 
             /**
              * The orientation for the view controls layout.
@@ -242,15 +246,27 @@ define([
         };
 
 
+      
+        /**
+         * Locate handler.
+         * @private
+         * @param {type} e
+         * @param {type} control Not used.
+         */
         EnhancedViewControlsLayer.prototype.handleLocate = function (e, control) {
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
                 e.preventDefault();
-                setTimeout(alert("handleLocate here..."), 100);
+                setTimeout(this.locator.locateCurrentPosition(), 100);
             }
         };
 
-        // Intentionally not documented.
+        /**
+         * Goto handler.
+         * @private
+         * @param {type} e
+         * @param {type} control Not used.
+         */
         EnhancedViewControlsLayer.prototype.handleGoto = function (e, control) {
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
@@ -259,7 +275,7 @@ define([
             }
         };
 
-
+ 
         return EnhancedViewControlsLayer;
     }
 );
