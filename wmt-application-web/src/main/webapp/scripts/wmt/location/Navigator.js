@@ -34,8 +34,9 @@
 define([
     '../../webworldwind/WorldWindow'],
     function (
-        WorldWindow) {
+        ww) {
         "use strict";
+        
         /**
          * @constructor
          * @param {WorldWindow} worldWindow Contains the globe that will be moved.
@@ -47,18 +48,8 @@ define([
                     WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Navigator", "constructor", "missingWorldWindow"));
             }
             this.wwd = worldWindow;
-
         };
 
-        /**
-         * @public
-         * @param {GeoLocation.Position} geoPosition
-         */
-        Navigator.prototype.lookAtGeoPosition = function (geoPosition) {
-            this.wwd.navigator.lookAtPosition.latitude = geoPosition.coords.latitude;
-            this.wwd.navigator.lookAtPosition.longitude = geoPosition.coords.longitude;
-            this.wwd.redraw();
-        };
         /**
          * @public
          * @param {Number} latitude
