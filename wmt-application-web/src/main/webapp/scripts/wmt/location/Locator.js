@@ -33,13 +33,19 @@
  *  and centering the globe's crosshairs on this location.
  */
 define([
-    '../util/Messenger'],
+    './LocationDialog',
+    '../util/Messenger',
+    './Navigator',
+    '../../webworldwind/geom/Position'],
     function (
-        Messenger) {
+        LocationDialog,
+        Messenger,
+        Navigator,
+        Position) {
         "use strict";
         /**
          * @constructor
-         * @param {Navigator} Location navigator object.
+         * @param {Navigator} Navigator object that will be updated by the Locator.
          * @returns {Locator}
          */
         var Locator = function (navigator) {
@@ -47,102 +53,94 @@ define([
                 throw new ArgumentError(
                     WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Locator", "constructor", "missingNavigator"));
             }
-
             /**
-             * A WMT Navigator object (as opposed to GeoLocation navigator).
+             * The locate...() methods update the globe via the navigator.
              */
             this.navigator = navigator;
-
-            /**
-             * Center's the globe on the user's current position using the GeoLocation API.
-             * @public
-             * @description Centers the globe on the user's current position.
-             */
-            Locator.prototype.locateCurrentPosition = function () {
-                if (!window.navigator.geolocation) {
-                    Messenger.growl("warn", "Locate Not Supported",
-                        "Sorry, your system doesn't support GeoLocation.");
-                    return;
-                }
-                Messenger.growl("info", "Locating...", "Checking your location.", 1500);
-                var self = this;
-                window.navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        self.onSuccess(position);
-                    },
-                    function (positionError) {
-                        self.onFailure(positionError);
-                    });
-            };
-            /**
-             * Initiates a modal dialog with the user to go to a set of coordinates.
-             * @public
-             */
-            Locator.prototype.locateCoordinates = function () {
-                $('#location-dlg').puidialog({
-                    showEffect: 'fade',
-                    hideEffect: 'fade',
-                    minimizable: true,
-                    maximizable: true,
-                    modal: true,
-                    buttons: [{
-                            text: 'Yes',
-                            icon: 'ui-icon-check',
-                            click: function () {
-                                $('#location-dlg').puidialog('hide');
-                            }
-                        },
-                        {
-                            text: 'No',
-                            icon: 'ui-icon-close',
-                            click: function () {
-                                $('#location-dlg').puidialog('hide');
-                            }
-                        }
-                    ]
-                });
-
-                $('#location-dlg').puidialog('show');
-
-            };
-            
-            
-            /**
-             * @private
-             * @param {GeoPosition Position} position
-             */
-            Locator.prototype.onSuccess = function (position) {
-                //console.log("GeoLocation: " + position.coords.latitude + ", " + position.coords.longitude);
-                this.navigator.lookAtGeoPosition(position);
-            };
-            /**
-             * @private
-             * @param {PositionError} error
-             */
-            Locator.prototype.onFailure = function (error) {
-                var reason, message;
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        reason = "User denied the request for Geolocation.";
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        reason = "Location information is unavailable.";
-                        break;
-                    case error.TIMEOUT:
-                        reason = "The request to get user location timed out.";
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        reason = "An unknown error occurred.";
-                        break;
-                    default:
-                        reason = "An unhandled error occurred.";
-                }
-                message = "<p><b>Sorry, we're unabled to get your position.</b></p>"
-                    + "<p>Reason: " + reason + "</p>"
-                    + "<p>Details: " + error.message + "</p>";
-                Messenger.notify(message);
-            };
         };
+        /**
+         * Center's the globe on the user's current position using the GeoLocation API.
+         * @description Centers the globe on the user's current position.
+         * @public
+         */
+        Locator.prototype.locateCurrentPosition = function () {
+            // Prerequisite: GeoLocation API
+            if (!window.navigator.geolocation) {
+                Messenger.growl("warn", "Locate Not Supported",
+                    "Sorry, your system doesn't support GeoLocation.", 5000);
+                return;
+            }
+
+            Messenger.growl("info", "Locating...", "Setting your location.", 1500);
+
+            // Use the GeoLocation API to get the current position.
+            var self = this;
+            window.navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    /**
+                     * onSuccess callback centers the crosshairs on the given position
+                     * @param {GeoLocation.Position} position Coordinates and accuracy information.
+                     */
+                    self.navigator.lookAtLatLon(
+                        position.coords.latitude,
+                        position.coords.longitude);
+                },
+                function (error) {
+                    /**
+                     * onFail callback notifies the user of the error
+                     * @param {GeoLocation.PositionError} error Error message and code.
+                     */
+                    var reason, message;
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            reason = "User denied the request for Geolocation.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            reason = "Location information is unavailable.";
+                            break;
+                        case error.TIMEOUT:
+                            reason = "The request to get user location timed out.";
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            reason = "An unknown error occurred in Geolocation.";
+                            break;
+                        default:
+                            reason = "An unhandled error occurred in Geolocation.";
+                    }
+                    message = "<h3>Sorry. " + reason + "</h3>"
+                        + "<p>Details: " + error.message + "</p>";
+                    Messenger.notify(message);
+
+                });
+        };
+        /**
+         * Initiates a modal dialog with the user to go to a set of coordinates.
+         * @description Displays a dialog that allows the user to navigate 
+         * to a set of coordinates.
+         * @public
+         */
+        Locator.prototype.locateCoordinates = function () {
+            var dlg = new LocationDialog(),
+                self = this;
+            dlg.show(
+                function (position) {
+                    /**
+                     * onSuccess callback centers the crosshairs on the given position.
+                     * @param {WorldWind.Position} position Coordinates.
+                     */
+                    self.navigator.lookAtLatLon(position.latitude, position.longitude);
+                },
+                function (error) {
+                    /**
+                     * onFailuer callback notifies the user of error.
+                     * @param {undefined} error
+                     */
+                    // onFailure callback: Inform the user.
+                    Messenger.growl("warn", "Error", "Something went wrong in locateCoordinates.", 4000);
+                });
+        };
+
+
         return Locator;
     }
 );
