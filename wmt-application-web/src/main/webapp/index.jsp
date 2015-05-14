@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!--During development, using local copies of libraries-->
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
-        <link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterdark/theme.css" />   
+        <link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />   
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/production/primeui-1.1-min.css" />   
         <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="./css/WMT.css">
@@ -109,12 +109,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div id="location-dlg" title="Set Location" style="display: none;">
             <div class="latitude">
                 <label for="latitude" class="required">Latitude:</label>
-                <input type="text" placeholder="Enter a N/S latitude" 
+                <input type="text" placeholder="[+/-] Latitude" 
                        name="latitude" id="latitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
             </div>
             <div class="longitude">
                 <label for="longitude" class="required">Longitude:</label>
-                <input type="text" placeholder="Enter an E/W longitude" 
+                <input type="text" placeholder="[+/-] Longitude" 
                        name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
             </div>
         </div>        
