@@ -32,6 +32,7 @@
  * The LocationDialog obtains a set of coordinates from the user.
  * 
  * @@author Bruce Schubert
+ * @@author Theodore Walton
  */
 
 define([
@@ -49,6 +50,12 @@ define([
         };
         /**
          * @description Shows the Location modal dialog.
+         */
+        var ShowDialog = function (){
+            $('#location-dlg').puidialog('show');
+        };
+        /**
+         * @description Generates, then shows the Location modal dialog.
          * @param {function(Position)} success Callback function accepting a WorldWind Position.
          * @param {type} fail Callback function accepting an error.
          */
@@ -92,7 +99,8 @@ define([
                         }
                     }]
             });
-            $('#location-dlg').puidialog('show');
+//            setTimeout($('#location-dlg').puidialog('show'),50); I can stagger the execution this way, but the time based execution is unreliable.
+            ShowDialog(); //This way, the operations above are guarenteed to be completed before the dialog is shown.
         };
         return LocationDialog;
     }
