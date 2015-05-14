@@ -30,6 +30,8 @@
 
 /**
  * The Messenger module is responsible for user notifications.
+ * 
+ * @author Bruce Schubert
  */
 define([
     '../../../thirdparty/primeui-1.1/production/primeui-1.1-min'],

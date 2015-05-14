@@ -30,6 +30,8 @@
 
 /**
  * The Navigator module is responsible for centering the globe on a given location.
+ *  
+ * @author Bruce Schubert
  */
 define([
     '../../webworldwind/WorldWindow'],

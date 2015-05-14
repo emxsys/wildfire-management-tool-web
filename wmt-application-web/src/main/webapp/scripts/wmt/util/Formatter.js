@@ -27,16 +27,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/**
+ * The Formatter utiltity provides convienient methods for obtaining pretty strings. 
+ * 
+ * @author Bruce Schubert
+ */
 define([
-    '../../webworldwind/util/WWMath'],
+    '../../webworldwind/WorldWind'],
     function (
-        WWMath) {
+        ww) {
         "use strict";
         /**
          * Provides useful utilities specicially for WMT.
          * @exports WmtUtil
          */
-        var WmtUtil = {
+        var Formatter = {
             /**
              * Returns a number formatted as decimal degrees: [+/-]DD.DDDD°.
              * @param {Number} number The value to be formatted.
@@ -133,6 +139,6 @@ define([
                 return this.formatDegreesMinutesSeconds(number, decimals) + (longitude >= 0 ? "E" : "W");
             }
         };
-        return WmtUtil;
+        return Formatter;
     }
 );

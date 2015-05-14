@@ -29,8 +29,10 @@
  */
 
 /**
- *  The Locator module is responsble for locating the host device's geographic location
- *  and centering the globe's crosshairs on this location.
+ * The Locator module is responsble for locating the host device's geographic location
+ * and centering the globe's crosshairs on this location.
+ * 
+ * @author Bruce Schubert
  */
 define([
     './LocationDialog',

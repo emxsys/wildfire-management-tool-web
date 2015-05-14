@@ -30,4 +30,6 @@
 
 /**
  * The SessionState module is responsible for saving and restoring the globe view between sessions.
+ * 
+ * @author Bruce Schubert
  */

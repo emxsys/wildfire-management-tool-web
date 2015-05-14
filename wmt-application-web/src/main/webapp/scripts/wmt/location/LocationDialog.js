@@ -30,6 +30,8 @@
 
 /**
  * The LocationDialog obtains a set of coordinates from the user.
+ * 
+ * @@author Bruce Schubert
  */
 
 define([
