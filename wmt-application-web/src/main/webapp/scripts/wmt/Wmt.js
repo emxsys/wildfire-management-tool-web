@@ -27,11 +27,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/*global define*/
+
 /**
  * WMT Configuration and constants
+ * 
+ * @author Bruce Schubert
  */
-define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
-],
+define([],
     function () {
         "use strict";
         /**
@@ -45,8 +49,7 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
              * @default "0.0.0"
              * @constant
              */
-            VERSION: "0.0.0",
-            // PLEASE KEEP THE ENTRIES BELOW IN ALPHABETICAL ORDER
+            VERSION: "0.0.0"
         };
         /**
          * Holds configuration parameters for WMT. Applications may modify these parameters prior to creating
@@ -58,6 +61,8 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
          *     <li><code>startupHeading</code>: Initial view heading. Default 0.
          *     <li><code>startupTilt</code>: Initial view tilt. Default 0.
          *     <li><code>startupRoll</code>: Initial view roll. Default 0.
+         *     <li><code>viewControlOrientation</code>: horizontal or vertical. Default vertical.
+         *     <li><code>showPanControl</code>: Show pan (left/right/up/down) controls. Default false.
          *     <li><code>showExaggerationControl</code>: Show vertical exaggeration controls. Default false.
          * </ul>
          */
@@ -68,11 +73,13 @@ define([// PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direct
             startupHeading: 0,
             startupTilt: 0,
             startupRoll: 0,
+            viewControlOrientation: "vertical",
+            showPanControl: false,
             showExaggerationControl: false
         };
-        
+
         window.Wmt = Wmt;
-        
+
         return Wmt;
     }
 );
