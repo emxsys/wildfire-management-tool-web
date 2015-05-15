@@ -66,7 +66,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </canvas>
                 <!--DOM UI elements go here!-->
                 <div class='row'>
-                    
+
                 </div>
                 <!--/DOM UI elements-->
             </div>
@@ -92,46 +92,52 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--            <div class="jumbotron">
                         <h1 style="text-align:center">Wildfire Management Tool</h1>
                     </div>-->  
-        <!--        <div class='row'>
-                    <div class="col-sm-3 col-md-3 hidden-xs">
-                        <h4>Projection</h4>
-                        <div class="dropdown" id="projectionDropdown">
+        <!--               <div class='row'>
+                            <div class="col-sm-3 col-md-3 hidden-xs">
+                                <h4>Projection</h4>
+                                <div class="dropdown" id="projectionDropdown">
+                                </div>
+                                <br>
+                                <h4>Layers</h4>
+                                <div class="list-group" id="layerList">
+                                </div>
+                            </div>
                         </div>
-                        <br>
-                        <h4>Layers</h4>
-                        <div class="list-group" id="layerList">
-                        </div>
-                    </div>
+                        <ul class="nav nav-pills hidden-xs">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
+                                    <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Submenu 2-1</a></li>
+                                    <li><a href="#">Submenu 2-2</a></li>
+                                    <li><a href="#">Submenu 2-3</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Date/Time: </a></li>
+                            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
+                        </ul>-->
+        <div class='row'>
+            <div id="coordinateOverlay" class="col-xs-4">
+                <div class="row">
+                    <span>Eye Alt: </span><span id="eyeAltitude"></span>
                 </div>
-                <ul class="nav nav-pills hidden-xs">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
-                            <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Submenu 2-1</a></li>
-                            <li><a href="#">Submenu 2-2</a></li>
-                            <li><a href="#">Submenu 2-3</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Date/Time: </a></li>
-                    <li><a id="crosshairsCoord2D" href="#">Location</a></li>
-                </ul>
-            <div class='row'>
-                    <div id="coordinateOverlay" class="col-xs-4">
-                        <div class="row">
-                            <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Lat: </span><span id="terrainLatitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Lon: </span><span id="terrainLongitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Height: </span><span id="terrainElevation"></span>
-                        </div>
-                    </div>
-                </div>                                        
--->
+                <div class="row">
+                    <span>Lat: </span><span id="reticuleLatitude"></span>
+                </div>
+                <div class="row">
+                    <span>Lon: </span><span id="reticuleLongitude"></span>
+                </div>
+                <div class="row">
+                    <span>Height: </span><span id="reticuleElevation"></span>
+                </div>
+                <div class="row">
+                    <span>Aspect: </span><span id="reticuleAspect"></span>
+                </div>
+                <div class="row">
+                    <span>Slope: </span><span id="reticuleSlope"></span>
+                </div>
+            </div>
+        </div>                                        
+
     </body>
 </html>
