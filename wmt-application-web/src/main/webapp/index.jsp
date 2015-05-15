@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/production/primeui-1.1-min.css" />   
         <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="./css/WMT.css">
-        
+
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
         <script src="./thirdparty/jquery-2.1.4.min.js" type="text/javascript"></script>
         <script src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
@@ -59,46 +59,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </head>
     <body>
 
-        <div class="container">
-            <div class="jumbotron">
-                <h1 style="text-align:center">Wildfire Management Tool</h1>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <h4>Projection</h4>
-                    <div class="dropdown" id="projectionDropdown">
-                    </div>
-                    <br>
-                    <h4>Layers</h4>
-                    <div class="list-group" id="layerList">
-                    </div>
+        <div id="globe" class="container-full">
+            <div id='canvas-wrap'>
+                <canvas id="canvasOne">
+                    Your browser does not support HTML5 Canvas.
+                </canvas>
+                <!--DOM UI elements go here!-->
+                <div class='row'>
+                    
                 </div>
-                <div class="col-sm-9">
-                    <ul class="nav nav-pills">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Submenu 2-1</a></li>
-                                <li><a href="#">Submenu 2-2</a></li>
-                                <li><a href="#">Submenu 2-3</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Date/Time: </a></li>
-                        <li><a id="crosshairsCoord2D" href="#">Location</a></li>
-                    </ul>
-                    <div id="globe">
-                        <canvas id="canvasOne" width="1000" height="768" style="width: 100%; height: auto">
-                            Your browser does not support HTML5 Canvas.
-                        </canvas>
-                        <table id="coordinateOverlay">
-                            <tr><td>Eye Alt</td><td id="eyeAltitude"></td></tr>
-                            <tr><td>Lat</td><td id="terrainLatitude"></td></tr>
-                            <tr><td>Lon</td><td id="terrainLongitude"></td></tr>
-                            <tr><td>Height</td><td id="terrainElevation"></td></tr>
-                        </table>
-                    </div>
-                </div>
+                <!--/DOM UI elements-->
             </div>
         </div>
         <!--Prime UI Growl Widget--> 
@@ -117,6 +87,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <input type="text" placeholder="[+/-] Longitude" 
                        name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
             </div>
-        </div>        
+        </div> 
+        <!--Removed for purpose of testing fullscreen canvas and getting overlays to work-->
+        <!--            <div class="jumbotron">
+                        <h1 style="text-align:center">Wildfire Management Tool</h1>
+                    </div>-->  
+        <!--        <div class='row'>
+                    <div class="col-sm-3 col-md-3 hidden-xs">
+                        <h4>Projection</h4>
+                        <div class="dropdown" id="projectionDropdown">
+                        </div>
+                        <br>
+                        <h4>Layers</h4>
+                        <div class="list-group" id="layerList">
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-pills hidden-xs">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Submenu 2-1</a></li>
+                            <li><a href="#">Submenu 2-2</a></li>
+                            <li><a href="#">Submenu 2-3</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Date/Time: </a></li>
+                    <li><a id="crosshairsCoord2D" href="#">Location</a></li>
+                </ul>
+            <div class='row'>
+                    <div id="coordinateOverlay" class="col-xs-4">
+                        <div class="row">
+                            <span>Eye Alt: </span><span id="eyeAltitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Lat: </span><span id="terrainLatitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Lon: </span><span id="terrainLongitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Height: </span><span id="terrainElevation"></span>
+                        </div>
+                    </div>
+                </div>                                        
+-->
     </body>
 </html>

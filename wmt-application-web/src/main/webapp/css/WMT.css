@@ -1,14 +1,14 @@
 /* @version $Id: Explorer.css 3067 2015-05-06 00:17:49Z dcollins $ */
 
-#coordinateOverlay {
-    position: absolute;  /* inset the coordinate overlay's top right relative to the container's top left */
+/*#coordinateOverlay {
+    position: absolute;   inset the coordinate overlay's top right relative to the container's top left 
     top: 50px;
     left: 40%;
-    table-layout: fixed; /* fixed column widths specified below */
-    pointer-events: none; /* ignore mouse and touch events in the coordinate overlay */
-}
+    table-layout: fixed;  fixed column widths specified below 
+    pointer-events: none;  ignore mouse and touch events in the coordinate overlay 
+}*/
 
-#coordinateOverlay td {
+#coordinateOverlay {
     text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
     text-align: right;
     color: white;
@@ -20,4 +20,13 @@
 
 #coordinateOverlay tr td:last-child {
     width: 75px; /* width of coordinate overlay value column */
+}
+
+#canvas-wrap canvas { position:absolute; top:0; left:0; z-index:0 !important; width:100%; height:100% }
+
+.container-full {
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  min-height:100%;
 }
