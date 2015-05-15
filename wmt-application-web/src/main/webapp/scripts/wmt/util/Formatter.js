@@ -28,15 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global WorldWind, define*/
+
 /**
  * The Formatter utiltity provides convienient methods for obtaining pretty strings. 
  * 
  * @author Bruce Schubert
  */
-define([
-    '../../webworldwind/WorldWind'],
-    function (
-        ww) {
+define([],
+    function () {
         "use strict";
         /**
          * Provides useful utilities specicially for WMT.
@@ -60,8 +60,9 @@ define([
              */
             formatDecimalMinutes: function (number, decimals) {
                 // Truncate degrees, keeping the sign.
-                var degrees = Math.floor(number) + (number < 0 ? 1 : 0);
-                var minutes = WorldWind.WWMath.fabs(number - degrees) * 60;
+                var degrees = Math.floor(number) + (number < 0 ? 1 : 0),
+                    minutes = WorldWind.WWMath.fabs(number - degrees) * 60;
+
                 return degrees + "\u00b0" + minutes.toFixed(decimals) + "\'";
             },
             /**
@@ -72,10 +73,11 @@ define([
              */
             formatDegreesMinutesSeconds: function (number, decimals) {
                 // Truncate degrees, keeping the sign.
-                var degrees = Math.floor(number) + (number < 0 ? 1 : 0);
-                var minutesNum = WorldWind.WWMath.fabs(number - degrees) * 60;
-                var minutesInt = Math.floor(minutesNum);
-                var seconds = WorldWind.WWMath.fabs(minutesNum - minutesInt) * 60;
+                var degrees = Math.floor(number) + (number < 0 ? 1 : 0),
+                    minutesNum = WorldWind.WWMath.fabs(number - degrees) * 60,
+                    minutesInt = Math.floor(minutesNum),
+                    seconds = WorldWind.WWMath.fabs(minutesNum - minutesInt) * 60;
+
                 return degrees + "\u00b0" + minutesInt + "\'" + seconds.toFixed(decimals) + "\"";
             },
             /**
@@ -137,6 +139,36 @@ define([
             formatDMSLongitude: function (longitude, decimals) {
                 var number = WorldWind.WWMath.fabs(longitude);
                 return this.formatDegreesMinutesSeconds(number, decimals) + (longitude >= 0 ? "E" : "W");
+            },
+            /**
+             * Returns a number formatted as degrees: DD.DDD°
+             * @param {Number} angle The value to be formatted.
+             * @param {Number} decimals The number decimal places.
+             * @returns {String} The number formatted as decimal degrees.
+             */
+            formatAngle360: function (angle, decimals) {
+                while (angle < 0) {
+                    angle += 360;
+                }
+                while (angle >= 360) {
+                    angle -= 360;
+                }
+                return angle.toFixed(decimals) + "\u00b0";
+            },
+            /**
+             * Returns a number formatted as +/- 180 degrees: DD.DDD°
+             * @param {Number} angle The value to be formatted.
+             * @param {Number} decimals The number decimal places.
+             * @returns {String} The number formatted as +/- decimal degrees.
+             */
+            formatAngle180: function (angle, decimals) {
+                while (angle > 180) {
+                    angle -= 360;
+                }
+                while (angle < -180) {
+                    angle += 360;
+                }
+                return angle.toFixed(decimals) + "\u00b0";
             }
         };
         return Formatter;
