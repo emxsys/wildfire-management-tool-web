@@ -28,13 +28,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global WorldWind, define, $ */
+
+
 /**
  * Based on CoordinateController.js by dcollins.
  * @exports CrosshairsController
+ * 
+ * @param {Formattter} Formatter
+ * @param {Terrain} Terrain
+ * @returns {CrosshairsController}
+ * 
  * @author Bruce Schubert
  */
-define(['../util/Formatter'],
-    function (Formatter) {
+define([
+    '../util/Formatter',
+    './Terrain'],
+    function (
+        Formatter,
+        Terrain) {
         "use strict";
 
         /**
@@ -51,12 +63,13 @@ define(['../util/Formatter'],
              * @type {WorldWindow}
              */
             this.worldWindow = worldWindow;
+            this.terrain = new Terrain(worldWindow);
 
             /**
              * The current position under the crosshairs.
              * @type {Position}
              */
-            this.crosshairsPosition = new WorldWind.Position();
+            this.currentPosition = new WorldWind.Position();
 
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
@@ -90,52 +103,73 @@ define(['../util/Formatter'],
         CrosshairsController.prototype.updateTerrainPosition = function () {
             // Pick the center of the World Window's canvas.
             var wwd = this.worldWindow,
-                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
-                terrainObject;
+                centerPoint,    // screen center
+                terrainObject,  // WW Terrain object
+                topograhy,      // Wmt Terrain object
+                reticuleLat,    // DOM elements....
+                reticuleLon,
+                reticuleElev,
+                reticule2D,
+                reticule3D,
+                reticuleAspect,
+                reticuleSlope;
 
+            centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
             terrainObject = wwd.pickTerrain(centerPoint).terrainObject();
             if (terrainObject) {
-                this.crosshairsPosition.latitude = terrainObject.position.latitude;
-                this.crosshairsPosition.longitude = terrainObject.position.longitude;
-                this.crosshairsPosition.altitude = terrainObject.position.altitude;
+                this.currentPosition.latitude = terrainObject.position.latitude;
+                this.currentPosition.longitude = terrainObject.position.longitude;
+                this.currentPosition.altitude = terrainObject.position.altitude;
             } else {
-                // TODO: Set values to null? Set position to null?
-                this.crosshairsPosition.latitude = Number.NaN;
-                this.crosshairsPosition.longitude = Number.NaN;
-                this.crosshairsPosition.altitude = Number.NaN;
+                this.currentPosition.latitude = Number.NaN;
+                this.currentPosition.longitude = Number.NaN;
+                this.currentPosition.altitude = Number.NaN;
             }
 
+            topograhy = this.terrain.terrainAtLatLon(
+                terrainObject.position.latitude,
+                terrainObject.position.longitude);
 
             // Look for the DOM elements to update, and exit if none exist.
-            var crosshairsLat = $("#crosshairsLatitude"),
-                crosshairsLon = $("#crosshairsLongitude"),
-                crosshairsElev = $("#crosshairsElevation"),
-                crosshairs2D = $("#crosshairsCoord2D"),
-                crosshairs3D = $("#crosshairsCoord3D");
-            if (!crosshairsLat && !crosshairsLon && !crosshairsElev && !crosshairs2D && !crosshairs3D) {
+            reticuleLat = $("#reticuleLatitude");
+            reticuleLon = $("#reticuleLongitude");
+            reticuleElev = $("#reticuleElevation");
+            reticule2D = $("#reticuleCoord2D");
+            reticule3D = $("#reticuleCoord3D");
+            reticuleAspect = $("#reticuleAspect");
+            reticuleSlope = $("#reticuleSlope");
+            if (!reticuleLat && !reticuleLon && !reticuleElev && !reticule2D && !reticule3D && !reticuleAspect && !reticuleSlope) {
                 return;
             }
 
             // Update the DOM elements with the current terrain position.
             if (terrainObject) {
-                crosshairs2D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
-                crosshairs3D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
-                crosshairsLat.html(this.locationFormat(terrainObject.position.latitude));
-                crosshairsLon.html(this.locationFormat(terrainObject.position.longitude));
-                crosshairsElev.html(this.altitudeFormat(terrainObject.position.altitude, "m"));
+                reticule2D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
+                reticule3D.html(this.formatCoord2D(terrainObject.position.latitude, terrainObject.position.longitude));
+                reticuleLat.html(this.locationFormat(terrainObject.position.latitude));
+                reticuleLon.html(this.locationFormat(terrainObject.position.longitude));
+                reticuleElev.html(this.altitudeFormat(terrainObject.position.altitude, "m"));
+                reticuleAspect.html(Formatter.formatAngle360(topograhy.aspect, 0));
+                reticuleSlope.html(Formatter.formatAngle360(topograhy.slope, 0));
             } else {
-                crosshairs2D.empty();
-                crosshairs3D.empty();
-                crosshairsLat.empty();
-                crosshairsLon.empty();
-                crosshairsElev.empty();
+                reticule2D.empty();
+                reticule3D.empty();
+                reticuleLat.empty();
+                reticuleLon.empty();
+                reticuleElev.empty();
+                reticuleAspect.empty();
+                reticuleSlope.empty();
             }
 
             // Hide the terrain elevation coordinate and its associated label in 2D mode.
             if (wwd.globe.is2D()) {
-                crosshairsElev.parent().hide();
+                reticuleElev.parent().hide();
+                reticuleAspect.parent().hide();
+                reticuleSlope.parent().hide();
             } else {
-                crosshairsElev.parent().show();
+                reticuleElev.parent().show();
+                reticuleAspect.parent().show();
+                reticuleSlope.parent().show();
             }
         };
 
