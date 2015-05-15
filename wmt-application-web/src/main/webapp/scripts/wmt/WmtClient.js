@@ -28,6 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define, Wmt, WorldWind*/
+
 /**
  * WMT Application.
  * 
@@ -39,6 +41,14 @@
  * - Pass the dependent modules as arguments to the factory function.
  * 
  * @author Bruce Schubert
+ * 
+ * @param {type} Cookie
+ * @param {type} CrosshairsLayer
+ * @param {type} CrosshairsController
+ * @param {type} CoordinateController
+ * @param {type} EnhancedViewControlsLayer
+ * @param {type} LayerManager
+ * @returns {WmtClient_L55.WmtClient}
  */
 define([
     './util/Cookie',
@@ -46,18 +56,14 @@ define([
     './globe/CrosshairsController',
     './globe/CoordinateController',
     './globe/EnhancedViewControlsLayer',
-    './layermanager/LayerManager',
-    './Wmt',
-    '../webworldwind/WorldWind'],
+    './layermanager/LayerManager'],
     function (
         Cookie,
         CrosshairsLayer,
         CrosshairsController,
         CoordinateController,
         EnhancedViewControlsLayer,
-        LayerManager,
-        wmt,    // don't hide Wmt global 
-        ww) {   // don't hide WorldWind global
+        LayerManager) {
         "use strict";
         var WmtClient = function () {
             // Set the logging level for the application
@@ -66,21 +72,24 @@ define([
             // Create the World Window.
             this.wwd = new WorldWind.WorldWindow("canvasOne");
 
+            var self = this,
+                layer,
+                layers = [
+                    {layer: new WorldWind.BMNGLayer(), enabled: true},
+                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
+                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
+                    {layer: new CrosshairsLayer(), enabled: true},
+                    {layer: new WorldWind.CompassLayer(), enabled: true},
+                    {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
+                ];
             /**
              * Add imagery layers to WorldWindow
              */
-            var layers = [
-                {layer: new WorldWind.BMNGLayer(), enabled: true},
-                {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
-                {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
-                {layer: new CrosshairsLayer(), enabled: true},
-                //{layer: new WorldWind.CompassLayer(), enabled: true},
-                {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
-            ];
-            for (var l = 0; l < layers.length; l++) {
-                layers[l].layer.enabled = layers[l].enabled;
-                this.wwd.addLayer(layers[l].layer);
+            for (layer = 0; layer < layers.length; layer++) {
+                layers[layer].layer.enabled = layers[layer].enabled;
+                this.wwd.addLayer(layers[layer].layer);
             }
+
             // Restore the view (eye position) from the last session
             this.restoreSavedState();
             this.wwd.redraw();
@@ -92,13 +101,13 @@ define([
             this.crosshairsController = new CrosshairsController(this.wwd);
 
             // Save the current view (eye position) when the window closes
-            var self = this;
             window.onbeforeunload = function (evt) {
                 self.saveCurrentState();
                 // Return null to close quietly
                 return null;
             };
         };
+
 
 
         /**
@@ -141,9 +150,9 @@ define([
                 this.wwd.navigator.tilt = Number(tiltStr);
                 this.wwd.navigator.roll = Number(rollStr);
 
-            } catch (exception) {
+            } catch (e) {
                 WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "WmtClient", "restoreSavedState",
-                    "Exception occurred processing cookie: " + exception.toString());
+                    "Exception occurred processing cookie: " + e.toString());
             }
         };
 
@@ -176,10 +185,10 @@ define([
             Cookie.save("tilt", tilt, numDays);
             Cookie.save("roll", roll, numDays);
 
-            // TODO: save date/time
+            //TODO: save date/time
         };
 
-
         return WmtClient;
-    });
+    }
+);
         
