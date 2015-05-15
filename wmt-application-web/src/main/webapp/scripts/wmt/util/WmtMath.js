@@ -28,15 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global WorldWind, define*/
+
 /**
- * Math utiltities for WMT.
+ * Math utiltities module for WMT.
  * @author Bruce Schubert
  */
-define([
-    '../../webworldwind/geom/Vec3'],
-    function (
-        Vec3
-        ) {
+define(
+    [],
+    function () {
         "use strict";
         var WmtMath = {
             /**
@@ -47,7 +47,7 @@ define([
              */
             angleBetween: function (a, b) {
                 if (!a || !b) {
-                    throw new ArgumentError(
+                    throw new WorldWind.ArgumentError(
                         WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "projectOnty", "missingVector"));
                 }
                 var dot = a.dot(b),
@@ -64,7 +64,7 @@ define([
                 else if (dot > 1.0) {
                     dot = 1.0;
                 }
-                // Angle is arc-cosine of normalized dot product.
+                // Angle is arc-cosine of normalized dot product ack.
                 return Math.acos(dot) * WorldWind.Angle.RADIANS_TO_DEGREES;
             },
             /**
@@ -76,7 +76,7 @@ define([
              */
             projectOnto: function (a, b, result) {
                 if (!a || !b || !result) {
-                    throw new ArgumentError(
+                    throw new WorldWind.ArgumentError(
                         WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "projectOnty", "missingVector"));
                 }
                 var dot = a.dot(b),
@@ -97,7 +97,7 @@ define([
              */
             perpendicularTo: function (a, b, result) {
                 if (!a || !b || !result) {
-                    throw new ArgumentError(
+                    throw new WorldWind.ArgumentError(
                         WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "projectOnty", "missingVector"));
                 }
                 var projected = new WorldWind.Vec3();
