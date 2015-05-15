@@ -27,8 +27,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/*global define, WorldWind, Wmt*/
+
 /**
  * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
+ * 
+ * @param {type} Locator
+ * @param {type} Offset
+ * @param {type} Navigator
+ * @param {type} ScreenImage
+ * @param {type} ViewControlsLayer
+ * @returns {EnhancedViewControlsLayer_L46.EnhancedViewControlsLayer}
+ * 
+ * @author Bruce Schubert
  */
 define([
     '../location/Locator',
@@ -43,7 +55,6 @@ define([
         ScreenImage,
         ViewControlsLayer) {
         "use strict";
-
         /**
          * Constructs a view controls layer.
          * @alias VerticalViewControlsLayer
@@ -55,25 +66,28 @@ define([
          * instance of this layer if each window is to have view controls.
          */
         var EnhancedViewControlsLayer = function (worldWindow) {
-
             // Classic Pattern #2 - Rent-a-Constructor. See JavaScript Patterns - Code Reuse Patterns
             // Creates a copy of parent members
             ViewControlsLayer.call(this, worldWindow);
 
+            // TODO: Depreciate Locator in favor of separate UI control for invoking Set Location.
+
+            /**  Updates the view */
             this.locator = new Locator(new Navigator(worldWindow));
 
-            /**
-             * The orientation for the view controls layout.
-             * @type {String} Either "horizontal" or "vertical"
-             * @default "vertical"
-             */
-            this.orientation = "vertical";
-            // Leave a little room on the right so the user has room to "drag right"
-            this.placement = new Offset(WorldWind.OFFSET_FRACTION, .95, WorldWind.OFFSET_FRACTION, 1);
-            this.alignment = new Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
-
             // Set defaults from configuration
+            this.showPanControl = Wmt.configuration.showPanControl;
             this.showExaggerationControl = Wmt.configuration.showExaggerationControl;
+            this.orientation = Wmt.configuration.viewControlOrientation;
+
+            // Top-right placement
+//            this.placement = new Offset(
+//                WorldWind.OFFSET_FRACTION, 0.973, // Align with Compass width
+//                WorldWind.OFFSET_FRACTION, 0.95); // Move down to make room for compass
+            this.placement = new Offset(
+                WorldWind.OFFSET_INSET_PIXELS, 30,  // Align with Compass width
+                WorldWind.OFFSET_INSET_PIXELS, 50); // Move down to make room for compass
+            this.alignment = new Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
 
             // Set the screen and image offsets of each control to the lower left corner.
             // Use same offset values as parent ViewControlsLayer.
@@ -107,9 +121,12 @@ define([
             }
             // Othewise, do vertical layout (copied from ViewControlsLayer and edited).
 
-            var controlPanelWidth = 64, controlPanelHeight = 0,
-                panelOffset, screenOffset,
-                x, y;
+            var controlPanelWidth = 64,
+                controlPanelHeight = 0,
+                panelOffset,
+                screenOffset,
+                x,
+                y;
 
             this.inCurrentFrame = false; // to track whether any control is displayed this frame
 
@@ -205,6 +222,7 @@ define([
                 this.fovNarrowControl.render(dc);
                 this.fovWideControl.render(dc);
             }
+            // TODO: following block to be depreciated in favor of stand alone Goto/Set Location button.
             if (true) {
                 this.gotoControl.screenOffset.x = x;
                 this.gotoControl.screenOffset.y = y;
@@ -216,7 +234,7 @@ define([
         };
 
         // Copied from parent. Augmented to include goto and locate controls
-        EnhancedViewControlsLayer.prototype.determineOperation = function (e, topObject) {
+        EnhancedViewControlsLayer.prototype.determineOperation = function (ignore, topObject) {
             var operation = null;
 
             if (topObject && (topObject instanceof ScreenImage)) {
@@ -253,9 +271,9 @@ define([
          * Locate handler.
          * @private
          * @param {type} e
-         * @param {type} control Not used.
+         * @param {type} ignore Control.
          */
-        EnhancedViewControlsLayer.prototype.handleLocate = function (e, control) {
+        EnhancedViewControlsLayer.prototype.handleLocate = function (e, ignore) {
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
                 e.preventDefault();
@@ -267,9 +285,9 @@ define([
          * Goto handler.
          * @private
          * @param {type} e
-         * @param {type} control Not used.
+         * @param {type} ignore Control.
          */
-        EnhancedViewControlsLayer.prototype.handleGoto = function (e, control) {
+        EnhancedViewControlsLayer.prototype.handleGoto = function (e, ignore) {
             // Start an operation on left button down or touch start.
             if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
                 e.preventDefault();
