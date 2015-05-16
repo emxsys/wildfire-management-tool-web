@@ -78,7 +78,10 @@ define([],
             showExaggerationControl: false
         };
 
-        window.Wmt = Wmt;
+        /**
+         * Declaration of the Wmt global.
+         */
+        //window.Wmt = Wmt;
 
         return Wmt;
     }
