@@ -2,13 +2,17 @@
  * Copyright (C) 2014 United States Government as represented by the Administrator of the
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
+
+/*global define, $ */
+
 /**
- * @exports LayerManager
+ * The LayerManager manifests buttons to show/hide the World Wind layers.
+ * @module LayerManager
+ * @param {Object} WorldWind
  * @version $Id: LayerManager.js 3064 2015-05-05 20:54:52Z tgaskins $
  */
-define(function () {
+define(['../../webworldwind/WorldWind'], function (WorldWind) {
     "use strict";
-
     /**
      * Constructs a layer manager for a specified {@link WorldWindow}.
      * @alias LayerManager
@@ -75,11 +79,14 @@ define(function () {
     };
 
     LayerManager.prototype.onLayerClick = function (layerButton) {
-        var layerName = layerButton.text();
+        var layerName = layerButton.text(),
+            i,
+            len,
+            layer;
 
         // Update the layer state for the selected layer.
-        for (var i = 0, len = this.wwd.layers.length; i < len; i++) {
-            var layer = this.wwd.layers[i];
+        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+            layer = this.wwd.layers[i];
             if (layer.displayName === layerName) {
                 layer.enabled = !layer.enabled;
                 if (layer.enabled) {
@@ -93,14 +100,18 @@ define(function () {
     };
 
     LayerManager.prototype.synchronizeLayerList = function () {
-        var layerListItem = $("#layerList");
+        var layerListItem = $("#layerList"),
+            layerItem,
+            layer,
+            i,
+            len;
 
         layerListItem.remove('a');
 
         // Synchronize the displayed layer list with the World Window's layer list.
-        for (var i = 0, len = this.wwd.layers.length; i < len; i++) {
-            var layer = this.wwd.layers[i];
-            var layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
+        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+            layer = this.wwd.layers[i];
+            layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
             layerListItem.append(layerItem);
 
             if (layer.enabled) {
@@ -120,18 +131,17 @@ define(function () {
             "North Polar",
             "South Polar",
             "North UPS",
-            "Soutn UPS"
-        ];
-        var projectionDropdown = $("#projectionDropdown");
+            "Soutn UPS"],
+            projectionDropdown = $("#projectionDropdown"),
+            ulItem = $('<ul class="dropdown-menu">'),
+            dropdownButton = $('<button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">3D<span class="caret"></span></button>'),
+            projectionItem,
+            i;
 
-        var dropdownButton = $('<button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">3D<span class="caret"></span></button>');
         projectionDropdown.append(dropdownButton);
-
-        var ulItem = $('<ul class="dropdown-menu">');
         projectionDropdown.append(ulItem);
-
-        for (var i = 0; i < projectionNames.length; i++) {
-            var projectionItem = $('<li><a >' + projectionNames[i] + '</a></li>');
+        for (i = 0; i < projectionNames.length; i++) {
+            projectionItem = $('<li><a >' + projectionNames[i] + '</a></li>');
             ulItem.append(projectionItem);
         }
 
