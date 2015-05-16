@@ -28,17 +28,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define */
 /**
  * The Navigator module is responsible for centering the globe on a given location.
- *  
+ * @module Navigator
+ * @param {Object} WorldWind 
  * @author Bruce Schubert
  */
 define([
     '../../webworldwind/WorldWindow'],
     function (
-        ww) {
+        WorldWind) {
         "use strict";
-        
+
         /**
          * @constructor
          * @param {WorldWindow} worldWindow Contains the globe that will be moved.
@@ -46,8 +48,9 @@ define([
          */
         var Navigator = function (worldWindow) {
             if (!worldWindow) {
-                throw new ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Navigator", "constructor", "missingWorldWindow"));
+                throw new WorldWind.ArgumentError(
+                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
+                        "Navigator", "constructor", "missingWorldWindow"));
             }
             this.wwd = worldWindow;
         };
