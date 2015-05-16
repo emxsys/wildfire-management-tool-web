@@ -61,8 +61,8 @@ define([
          * @param {Number} longitude
          */
         Navigator.prototype.lookAtLatLon = function (latitude, longitude) {
-            this.wwd.navigator.lookAtPosition.latitude = latitude;
-            this.wwd.navigator.lookAtPosition.longitude = longitude;
+            this.wwd.navigator.lookAtLocation.latitude = latitude;
+            this.wwd.navigator.lookAtLocation.longitude = longitude;
             this.wwd.redraw();
         };
 
