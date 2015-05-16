@@ -28,133 +28,108 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define */
+/*global define*/
 
-/**
- * The Terrain module is responsible for obtaining the terrain at a given latitude and longitude.
- * 
- * @module Terrain
- * @param {Object} WmtMath 
- * @param {Object} WorldWind 
- * @author Bruce Schubert
- */
-define([
-    '../util/WmtMath',
-    '../../webworldwind/WorldWind'],
-    function (
-        WmtMath,
-        WorldWind) {
+define(['../../webworldwind/WorldWind'],
+    function (WorldWind) {
         "use strict";
-        /**
-         * @constructor
-         * @param {WorldWindow} worldWindow Contains the globe that supplies the terrain model..
-         * @returns {Terrain}
-         */
-        var Terrain = function (worldWindow) {
-            if (!worldWindow) {
-                throw new WorldWind.ArgumentError(WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
-                    "Navigator", "constructor", "missingWorldWindow"));
-            }
-            this.globe = worldWindow.globe;
-        };
-        /**
-         * Computes a normal vector for a point on the terrain.
-         * @param {Number} latitude Degrees.
-         * @param {Number} longitude Degrees.
-         * @returns {Vec3} terrain normal vector.
-         */
-        Terrain.prototype.terrainNormalAtLatLon = function (latitude, longitude) {
-            if (!latitude || !longitude) {
-                throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "terrainNormalAtLatLon", "missingCoordinate(s)"));
-            }
-            var n0 = new WorldWind.Location(latitude, longitude),
-                n1 = new WorldWind.Location(),
-                n2 = new WorldWind.Location(),
-                n3 = new WorldWind.Location(),
-                p1 = new WorldWind.Vec3(),
-                p2 = new WorldWind.Vec3(),
-                p3 = new WorldWind.Vec3(),
-                SOUTH = 180,
-                NW = -60,
-                NE = 60,
-                terrainNormal;
-            // Establish three points that define a triangle around the center position
-            // to be used for determining the slope and aspect of the terrain (roughly 10 meters per side)        
-            WorldWind.Location.rhumbLocation(n0, SOUTH, -0.00005 * WorldWind.Angle.DEGREES_TO_RADIANS, n1);
-            WorldWind.Location.rhumbLocation(n1, NW, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n2);
-            WorldWind.Location.rhumbLocation(n1, NE, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n3);
-            // Get the cartesian coords for the points
-            this.globe.computePointFromPosition(n1.latitude, n1.longitude, this.elevationAtLatLon(n1.latitude, n1.longitude), p1);
-            this.globe.computePointFromPosition(n2.latitude, n2.longitude, this.elevationAtLatLon(n2.latitude, n2.longitude), p2);
-            this.globe.computePointFromPosition(n3.latitude, n3.longitude, this.elevationAtLatLon(n3.latitude, n3.longitude), p3);
-            // Compute an upward pointing normal 
-            terrainNormal = WorldWind.Vec3.computeTriangleNormal(p1, p2, p3);
-            terrainNormal.negate(); // flip the direction
 
-            return terrainNormal;
-        };
         /**
-         * Gets the elevation (meters) at the given latitude and longitude.
-         * @public
-         * @param {Number} latitude Latitude in degrees.
-         * @param {Number} longitude Longitude in degrees.
-         * @returns {Number} elevation in meters.
+         * Constructs a terrain from a specified latitude and longitude in degrees and elevation in meters, 
+         * and aspect and slope in degrees.
+         * @alias Terrain
+         * @constructor
+         * @classdesc Represents a latitude, longitude, elevation triple, with latitude, longitude, 
+         * aspect and slope in degrees and elevation in meters.
+         * @param {Number} latitude The latitude in degrees.
+         * @param {Number} longitude The longitude in degrees.
+         * @param {Number} elevation The elevation in meters.
+         * @param {Number} aspect The aspect in degrees.
+         * @param {Number} slope The elevation in degrees.
          */
-        Terrain.prototype.elevationAtLatLon = function (latitude, longitude) {
-            return this.globe.elevationAtLocation(latitude, longitude);
+        var Terrain = function (latitude, longitude, elevation, aspect, slope) {
+            /**
+             * The latitude in degrees.
+             * @type {Number}
+             */
+            this.latitude = latitude;
+            /**
+             * The longitude in degrees.
+             * @type {Number}
+             */
+            this.longitude = longitude;
+            /**
+             * The elevation in meters.
+             * @type {Number}
+             */
+            this.elevation = elevation;
+            /**
+             * The elevation in degrees.
+             * @type {Number}
+             */
+            this.aspect = aspect;
+            /**
+             * The slope in degrees.
+             * @type {Number}
+             */
+            this.slope = slope;
         };
+
         /**
-         * Gets the elevation, aspect and slope at the at the given latitude and longitude.
-         * @@public
-         * @param {Number} latitude Latitude in degrees.
-         * @param {Number} longitude Longitude in degrees.
-         * @returns {Object} elevation (meters), aspect (degrees), slope(degrees)
+         * A Terrain with latitude, longitude, elevation, aspect and slope all 0.
+         * @constant
+         * @type {Terrain}
          */
-        Terrain.prototype.terrainAtLatLon = function (latitude, longitude) {
-            if (!latitude || !longitude) {
+        Terrain.ZERO = new Terrain(0, 0, 0, 0, 0);
+
+        /**
+         * Sets this position to the latitude, longitude and elevation of a specified position.
+         * @param {Position} terrain The terrain to copy.
+         * @returns {Position} This position, set to the values of the specified position.
+         * @throws {ArgumentError} If the specified position is null or undefined.
+         */
+        Terrain.prototype.copy = function (terrain) {
+            if (!terrain) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "terrainLatLon", "missingCoordinate(s)"));
+                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "copy", "missingTerrain"));
             }
-            var terrainNormal = new WorldWind.Vec3(),
-                surfaceNormal = new WorldWind.Vec3(),
-                northNormal = new WorldWind.Vec3(),
-                perpendicular = new WorldWind.Vec3(),
-                tempcross = new WorldWind.Vec3(),
-                slope,
-                aspect,
-                direction;
-            // Compute normal vectors for terrain, surface and north.
-            terrainNormal = this.terrainNormalAtLatLon(latitude, longitude);
-            this.globe.surfaceNormalAtLocation(latitude, longitude, surfaceNormal);
-            this.globe.northTangentAtLocation(latitude, longitude, northNormal);
-            // Compute terrain slope -- the delta between surface normal and terrain normal
-            slope = WmtMath.angleBetween(terrainNormal, surfaceNormal);
-            // Compute the terrain aspect -- get a perpendicular vector projected onto
-            // surface normal which is in the same plane as the north vector and get delta.
-            WmtMath.perpendicularTo(terrainNormal, surfaceNormal, perpendicular);
-            aspect = WmtMath.angleBetween(perpendicular, northNormal);
-            // Use dot product to determine aspect angle's sign (+/- 180)            
-            tempcross.copy(surfaceNormal).cross(northNormal);
-            direction = (tempcross.dot(perpendicular) < 0) ? 1 : -1;
-            aspect = aspect * direction;
-            //console.log("Slope: " + slope + ", Aspect: " + aspect);
-            return {
-                /**
-                 * Elevation in meters.
-                 */
-                elevation: this.elevationAtLatLon(latitude, longitude),
-                /**
-                 * Aspect in degrees.
-                 */
-                aspect: aspect,
-                /**
-                 * Slope in degrees.
-                 */
-                slope: slope
-            };
+
+            this.latitude = terrain.latitude;
+            this.longitude = terrain.longitude;
+            this.elevation = terrain.elevation;
+            this.aspect = terrain.aspect;
+            this.slope = terrain.slope;
+
+            return this;
         };
+
+        /**
+         * Indicates whether this terrrain has the same values as a specified terran.
+         * @param {Terrain} terrain The terrain to compare with this one.
+         * @returns {Boolean} true if this terrain is equal to the specified one, otherwise false.
+         */
+        Terrain.prototype.equals = function (terrain) {
+            return terrain
+                && terrain.latitude === this.latitude
+                && terrain.longitude === this.longitude
+                && terrain.elevation === this.elevation
+                && terrain.aspect === this.aspect
+                && terrain.slope === this.slope;
+        };
+
+
+        /**
+         * Returns a string representation of this terrain.
+         * @returns {String}
+         */
+        Terrain.prototype.toString = function () {
+            return "(" + this.latitude.toString() + "\u00b0, "
+                + this.longitude.toString() + "\u00b0, "
+                + this.elevation.toString() + "m, "
+                + this.aspect.toString() + "\u00b0, "
+                + this.slope.toString() + "\u00b0)";
+        };
+
         return Terrain;
     }
 );
-
