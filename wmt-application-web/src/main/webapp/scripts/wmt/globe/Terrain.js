@@ -28,18 +28,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global WorldWind, define */
+/*global define */
 
 /**
  * The Terrain module is responsible for obtaining the terrain at a given latitude and longitude.
  * 
- * @param {WmtMath} WmtMath 
- * @returns {Terrain}
- * 
+ * @module Terrain
+ * @param {Object} WmtMath 
+ * @param {Object} WorldWind 
  * @author Bruce Schubert
  */
-define(['../util/WmtMath'],
-    function (WmtMath) {
+define([
+    '../util/WmtMath',
+    '../../webworldwind/WorldWind'],
+    function (
+        WmtMath,
+        WorldWind) {
         "use strict";
         /**
          * @constructor
@@ -53,8 +57,6 @@ define(['../util/WmtMath'],
             }
             this.globe = worldWindow.globe;
         };
-
-
         /**
          * Computes a normal vector for a point on the terrain.
          * @param {Number} latitude Degrees.
@@ -77,7 +79,6 @@ define(['../util/WmtMath'],
                 NW = -60,
                 NE = 60,
                 terrainNormal;
-
             // Establish three points that define a triangle around the center position
             // to be used for determining the slope and aspect of the terrain (roughly 10 meters per side)        
             WorldWind.Location.rhumbLocation(n0, SOUTH, -0.00005 * WorldWind.Angle.DEGREES_TO_RADIANS, n1);
@@ -87,14 +88,12 @@ define(['../util/WmtMath'],
             this.globe.computePointFromPosition(n1.latitude, n1.longitude, this.elevationAtLatLon(n1.latitude, n1.longitude), p1);
             this.globe.computePointFromPosition(n2.latitude, n2.longitude, this.elevationAtLatLon(n2.latitude, n2.longitude), p2);
             this.globe.computePointFromPosition(n3.latitude, n3.longitude, this.elevationAtLatLon(n3.latitude, n3.longitude), p3);
-
             // Compute an upward pointing normal 
             terrainNormal = WorldWind.Vec3.computeTriangleNormal(p1, p2, p3);
             terrainNormal.negate(); // flip the direction
 
             return terrainNormal;
         };
-
         /**
          * Gets the elevation (meters) at the given latitude and longitude.
          * @public
@@ -105,7 +104,6 @@ define(['../util/WmtMath'],
         Terrain.prototype.elevationAtLatLon = function (latitude, longitude) {
             return this.globe.elevationAtLocation(latitude, longitude);
         };
-
         /**
          * Gets the elevation, aspect and slope at the at the given latitude and longitude.
          * @@public
@@ -126,15 +124,12 @@ define(['../util/WmtMath'],
                 slope,
                 aspect,
                 direction;
-
             // Compute normal vectors for terrain, surface and north.
             terrainNormal = this.terrainNormalAtLatLon(latitude, longitude);
             this.globe.surfaceNormalAtLocation(latitude, longitude, surfaceNormal);
             this.globe.northTangentAtLocation(latitude, longitude, northNormal);
-
             // Compute terrain slope -- the delta between surface normal and terrain normal
             slope = WmtMath.angleBetween(terrainNormal, surfaceNormal);
-
             // Compute the terrain aspect -- get a perpendicular vector projected onto
             // surface normal which is in the same plane as the north vector and get delta.
             WmtMath.perpendicularTo(terrainNormal, surfaceNormal, perpendicular);
@@ -143,7 +138,6 @@ define(['../util/WmtMath'],
             tempcross.copy(surfaceNormal).cross(northNormal);
             direction = (tempcross.dot(perpendicular) < 0) ? 1 : -1;
             aspect = aspect * direction;
-
             //console.log("Slope: " + slope + ", Aspect: " + aspect);
             return {
                 /**
@@ -159,7 +153,6 @@ define(['../util/WmtMath'],
                  */
                 slope: slope
             };
-
         };
         return Terrain;
     }
