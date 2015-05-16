@@ -28,15 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global WorldWind, define*/
+/*global define*/
 
 /**
  * The Formatter utiltity provides convienient methods for obtaining pretty strings. 
- * 
+ * @module {Formatter}
  * @author Bruce Schubert
  */
-define([],
-    function () {
+define(['../../webworldwind/WorldWind'],
+    function (WorldWind) {
         "use strict";
         /**
          * Provides useful utilities specicially for WMT.
