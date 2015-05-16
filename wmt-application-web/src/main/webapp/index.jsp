@@ -116,6 +116,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <li><a href="#">Date/Time: </a></li>
                             <li><a id="crosshairsCoord2D" href="#">Location</a></li>
                         </ul>-->
+        <!--Coordinates under mouse-->
+        <div class='row'>
+            <div id="coordinateOverlay" class="col-xs-4">
+                <div class="row">
+                    <span>Eye Alt: </span><span id="eyeAltitude"></span>
+                </div>
+                <div class="row">
+                    <span>Lat: </span><span id="terrainLatitude"></span>
+                </div>
+                <div class="row">
+                    <span>Lon: </span><span id="terrainLongitude"></span>
+                </div>
+                <div class="row">
+                    <span>Height: </span><span id="terrainElevation"></span>
+                </div>
+            </div>
+        </div>   
+        
+        <!--Coordinates under reticule-->
+<!-- 
         <div class='row'>
             <div id="coordinateOverlay" class="col-xs-4">
                 <div class="row">
@@ -138,6 +158,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </div>                                        
+-->
 
     </body>
 </html>
