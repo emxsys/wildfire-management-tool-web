@@ -28,31 +28,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define */
+
 /**
  * The Locator module is responsble for locating the host device's geographic location
  * and centering the globe's crosshairs on this location.
- * 
+ * @module Locator
  * @author Bruce Schubert
  */
 define([
     './LocationDialog',
     '../util/Messenger',
-    './Navigator',
-    '../../webworldwind/geom/Position'],
+    '../../webworldwind/WorldWind'],
     function (
         LocationDialog,
         Messenger,
-        Navigator,
-        Position) {
+        WorldWind) {
         "use strict";
         /**
          * @constructor
-         * @param {Navigator} Navigator object that will be updated by the Locator.
+         * @param {Navigator} navigator Object that will be updated by the Locator.
          * @returns {Locator}
          */
         var Locator = function (navigator) {
             if (!navigator) {
-                throw new ArgumentError(
+                throw new WorldWind.ArgumentError(
                     WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Locator", "constructor", "missingNavigator"));
             }
             /**
@@ -137,7 +137,6 @@ define([
                      * onFailuer callback notifies the user of error.
                      * @param {undefined} error
                      */
-                    // onFailure callback: Inform the user.
                     Messenger.growl("warn", "Error", "Something went wrong in locateCoordinates.", 4000);
                 });
         };
