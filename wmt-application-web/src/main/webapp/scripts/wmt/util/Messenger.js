@@ -28,15 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define, $ */
+
 /**
  * The Messenger module is responsible for user notifications.
- * 
+ * @module {util/Messenger}
  * @author Bruce Schubert
  */
-define([
-    '../../../thirdparty/primeui-1.1/production/primeui-1.1-min'],
-    function (
-        PrimeUI) {
+define([],
+    function () {
         "use strict";
         /**
          * @constructor
