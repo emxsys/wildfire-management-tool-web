@@ -35,7 +35,8 @@
  * 
  * @module {WmtClient}
  * @param {Object} Cookie
- * @param {Object} CrosshairsLayer
+ * @param {Object} Controller
+ * @param {Object} ReticuleLayer
  * @param {Object} EnhancedViewControlsLayer
  * @param {Object} LayerManager
  * @param {Object} Logger
@@ -46,19 +47,17 @@
 define([
     './util/Cookie',
     './controller/Controller',
-    './globe/CrosshairsLayer',
     './globe/EnhancedViewControlsLayer',
-    './layermanager/LayerManager',
     './util/Logger',
+    './globe/ReticuleLayer',
     './Wmt',
     '../nasa/WorldWind'],
     function (
         Cookie,
         Controller,
-        CrosshairsLayer,
         EnhancedViewControlsLayer,
-        LayerManager,
         Logger,
+        ReticuleLayer,
         Wmt,
         WorldWind) {
         "use strict";
@@ -74,8 +73,8 @@ define([
                     {layer: new WorldWind.BMNGLayer(), enabled: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
-                    {layer: new CrosshairsLayer(), enabled: true},
                     {layer: new WorldWind.CompassLayer(), enabled: true},
+                    {layer: new ReticuleLayer(), enabled: true},
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
                 ];
             /**
@@ -85,12 +84,9 @@ define([
                 layers[layer].layer.enabled = layers[layer].enabled;
                 this.wwd.addLayer(layers[layer].layer);
             }
-
             // Restore the view (eye position) from the last session
             this.restoreSavedState();
             this.wwd.redraw();
-
-            this.layerManager = new LayerManager(this.wwd);
 
             // The Controller will create Model and the Views
             this.controller = new Controller(this.wwd);
@@ -161,7 +157,7 @@ define([
                 Logger.warning("WmtClient", "saveCurrentState", "Cookies not enabled!");
                 return;
             }
-            var pos = this.wwd.navigator.lookAtPosition,
+            var pos = this.wwd.navigator.lookAtLocation,
                 alt = this.wwd.navigator.range,
                 heading = this.wwd.navigator.heading,
                 tilt = this.wwd.navigator.tilt,
