@@ -28,25 +28,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global WorldWind, define, $ */
-
+/*global define, $ */
 
 /**
+ * The CrosshairsController tracks the postion underneath of the reticule.
  * Based on CoordinateController.js by dcollins.
+ * 
  * @exports CrosshairsController
  * 
- * @param {Formattter} Formatter
- * @param {Terrain} Terrain
- * @returns {CrosshairsController}
+ * @param {Object} Formatter
+ * @param {Object} Terrain
  * 
  * @author Bruce Schubert
  */
 define([
     '../util/Formatter',
-    './Terrain'],
+    './Terrain',
+    '../../webworldwind/WorldWind'],
     function (
         Formatter,
-        Terrain) {
+        Terrain,
+        WorldWind) {
         "use strict";
 
         /**
