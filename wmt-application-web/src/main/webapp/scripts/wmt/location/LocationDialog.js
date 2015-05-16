@@ -28,34 +28,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define, $ */
+
 /**
  * The LocationDialog obtains a set of coordinates from the user.
- * 
- * @@author Bruce Schubert
- * @@author Theodore Walton
+ * @module LocationDialog
+ * @param {Object} WorldWind 
+ * @author Bruce Schubert
+ * @author Theodore Walton
  */
-
-define([
-    '../../webworldwind/WorldWindow'],
-    function (
-        ww) {
+define(['../../webworldwind/WorldWind'],
+    function (WorldWind) {
         "use strict";
         /**
          * @constructor
-         * @param {Navigator} Location navigator object.
-         * @returns {Locator}
+         * @returns {LocationDialog}
          */
         var LocationDialog = function () {
             this.position = new WorldWind.Position();
         };
         /**
-         * @description Shows the Location modal dialog.
+         * Shows the Location modal dialog.
          */
-        var ShowDialog = function (){
+        LocationDialog.prototype.showDialog = function () {
             $('#location-dlg').puidialog('show');
         };
         /**
-         * @description Generates, then shows the Location modal dialog.
+         * Generates, then shows the Location modal dialog.
          * @param {function(Position)} success Callback function accepting a WorldWind Position.
          * @param {type} fail Callback function accepting an error.
          */
@@ -73,9 +72,7 @@ define([
                         click: function () {
 
                             var lat = $('#latitude').val(),
-                                lon = $('#longitude').val(),
-                                pos = null;
-                                
+                                lon = $('#longitude').val();
 
                             console.log("Location Dialog values: " + lat + ", " + lon);
 
@@ -84,10 +81,10 @@ define([
                             }
                             // Ok to close
                             $('#location-dlg').puidialog('hide');
-                            
+
                             // Invoke the callback with the user's position.
                             success(new WorldWind.Position(Number(lat), Number(lon), 0));
-                            
+
                         }
                     },
                     {
@@ -100,7 +97,7 @@ define([
                     }]
             });
 //            setTimeout($('#location-dlg').puidialog('show'),50); I can stagger the execution this way, but the time based execution is unreliable.
-            ShowDialog(); //This way, the operations above are guarenteed to be completed before the dialog is shown.
+            this.showDialog(); //This way, the operations above are guarenteed to be completed before the dialog is shown.
         };
         return LocationDialog;
     }
