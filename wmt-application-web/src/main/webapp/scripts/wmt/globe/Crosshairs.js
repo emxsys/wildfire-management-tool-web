@@ -28,6 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define*/
+
 /**
  * Renders orosshairs centered on the WorldWindow.
  * Based on Compass.js 2939 2015-03-30 16:50:49Z by tgaskins.
@@ -48,8 +50,8 @@ define(['../../webworldwind/WorldWind'],
          */
         var Crosshairs = function (imagePath) {
 
-            var sOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, .5, WorldWind.OFFSET_FRACTION, .5);
-            var iPath = imagePath ? imagePath : WorldWind.WWUtil.currentUrlSansFilePart() + "/../images/32x32-crosshair-outline.png";
+            var sOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5),
+                iPath = imagePath || WorldWind.WWUtil.currentUrlSansFilePart() + "/../images/32x32-crosshair-outline.png";
 
             WorldWind.ScreenImage.call(this, sOffset, iPath);
             // Must set the default image offset and scale after calling the constructor above.
