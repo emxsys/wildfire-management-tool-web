@@ -2,9 +2,16 @@
  * Copyright (C) 2014 United States Government as represented by the Administrator of the
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
+
+/*global define */
+
 /**
+ * The CrosshairsLayer renders a reticule (e.g., crosshairs) in the center of the World Wind globe.
  * @exports CrosshairsLayer
- * @version $Id: CrosshairsLayer.js 2978 2015-04-03 22:55:55Z tgaskins $
+ * 
+ * @param {Object} Crosshairs
+ * @param {Object} WorldWind
+ * @returns {CrosshairsLayer}
  */
 define([
     '../globe/Crosshairs',
