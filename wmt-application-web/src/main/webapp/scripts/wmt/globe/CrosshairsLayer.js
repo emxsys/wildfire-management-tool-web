@@ -15,7 +15,7 @@
  */
 define([
     '../globe/Crosshairs',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Crosshairs,
         WorldWind) {

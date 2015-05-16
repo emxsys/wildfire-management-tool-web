@@ -36,7 +36,7 @@
 requirejs.config({
     baseUrl: "scripts/wmt",
     "paths": {
-        WorldWind: "../webworldwind/WorldWind",
+        WorldWind: "../nasa/WorldWind",
         WmtClient: "WmtClient"
     }
 });

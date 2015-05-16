@@ -44,9 +44,9 @@
 define([
     '../location/Locator',
     '../location/Navigator',
-    '../../webworldwind/layer/ViewControlsLayer',
+    '../../nasa/layer/ViewControlsLayer',
     '../Wmt',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Locator,
         Navigator,

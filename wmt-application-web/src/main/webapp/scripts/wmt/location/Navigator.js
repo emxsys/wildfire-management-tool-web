@@ -36,7 +36,7 @@
  * @author Bruce Schubert
  */
 define([
-    '../../webworldwind/WorldWindow'],
+    '../../nasa/WorldWindow'],
     function (
         WorldWind) {
         "use strict";

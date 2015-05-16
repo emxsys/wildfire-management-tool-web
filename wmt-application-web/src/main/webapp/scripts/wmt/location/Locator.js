@@ -39,7 +39,7 @@
 define([
     './LocationDialog',
     '../util/Messenger',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         LocationDialog,
         Messenger,

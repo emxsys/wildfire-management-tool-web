@@ -49,7 +49,7 @@ define([
     './globe/EnhancedViewControlsLayer',
     './layermanager/LayerManager',
     './Wmt',
-    '../webworldwind/WorldWind'],
+    '../nasa/WorldWind'],
     function (
         Cookie,
         Controller,
@@ -89,10 +89,6 @@ define([
             this.wwd.redraw();
 
             this.layerManager = new LayerManager(this.wwd);
-            // Create mouse coordinate tracker - updates DOM elements
-            //this.coordinateController = new CoordinateController(this.wwd);
-            // Create crosshairs coordinate tracker - updates DOM elements
-            //this.crosshairsController = new CrosshairsController(this.wwd);
             
             // The Controller will create Model and the Views
             this.controller = new Controller(this.wwd);

@@ -40,7 +40,7 @@
  */
 define([
     '../util/Formatter',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Formatter,
         WorldWind) {

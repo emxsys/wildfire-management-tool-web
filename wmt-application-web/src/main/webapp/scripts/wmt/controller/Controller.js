@@ -34,7 +34,7 @@ define([
     '../model/Model',
     '../view/CoordinatesView',
     '../view/ReticuleView',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Model,
         CoordinatesView,

@@ -37,7 +37,7 @@
  * @author Bruce Schubert
  * @author Theodore Walton
  */
-define(['../../webworldwind/WorldWind'],
+define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
         /**

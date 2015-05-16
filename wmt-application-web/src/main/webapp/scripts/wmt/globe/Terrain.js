@@ -30,7 +30,7 @@
 
 /*global define*/
 
-define(['../../webworldwind/WorldWind'],
+define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
 

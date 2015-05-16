@@ -42,7 +42,7 @@
 define([
     '../util/Formatter',
     '../globe/Terrain',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Formatter,
         Terrain,

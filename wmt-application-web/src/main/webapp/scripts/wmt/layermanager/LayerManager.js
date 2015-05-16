@@ -11,7 +11,7 @@
  * @param {Object} WorldWind
  * @version $Id: LayerManager.js 3064 2015-05-05 20:54:52Z tgaskins $
  */
-define(['../../webworldwind/WorldWind'], function (WorldWind) {
+define(['../../nasa/WorldWind'], function (WorldWind) {
     "use strict";
     /**
      * Constructs a layer manager for a specified {@link WorldWindow}.

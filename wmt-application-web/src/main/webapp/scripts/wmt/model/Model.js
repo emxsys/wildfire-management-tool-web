@@ -44,7 +44,7 @@ define([
     '../util/Publisher',
     '../globe/Terrain',
     '../globe/TerrainProvider',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Publisher,
         Terrain,

@@ -42,7 +42,7 @@
 define([
     './Terrain',
     '../util/WmtMath',
-    '../../webworldwind/WorldWind'],
+    '../../nasa/WorldWind'],
     function (
         Terrain,
         WmtMath,

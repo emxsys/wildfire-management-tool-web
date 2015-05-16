@@ -36,7 +36,7 @@
  * @author Bruce Schubert
  * @exports Crosshairs
  */
-define(['../../webworldwind/WorldWind'],
+define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
 

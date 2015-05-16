@@ -36,7 +36,7 @@
  * @module {util/WmtMath}
  * @param {Object} WorldWind
  */
-define(['../../webworldwind/WorldWind'],
+define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
         var WmtMath = {

@@ -35,7 +35,7 @@
  * @module {Formatter}
  * @author Bruce Schubert
  */
-define(['../../webworldwind/WorldWind'],
+define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
         /**
