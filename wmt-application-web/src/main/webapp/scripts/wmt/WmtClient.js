@@ -38,6 +38,7 @@
  * @param {Object} CrosshairsLayer
  * @param {Object} EnhancedViewControlsLayer
  * @param {Object} LayerManager
+ * @param {Object} Logger
  * @param {Object} Wmt
  * @param {Object} WorldWind
  * @author Bruce Schubert
@@ -48,6 +49,7 @@ define([
     './globe/CrosshairsLayer',
     './globe/EnhancedViewControlsLayer',
     './layermanager/LayerManager',
+    './util/Logger',
     './Wmt',
     '../nasa/WorldWind'],
     function (
@@ -56,13 +58,13 @@ define([
         CrosshairsLayer,
         EnhancedViewControlsLayer,
         LayerManager,
+        Logger,
         Wmt,
         WorldWind) {
         "use strict";
         var WmtClient = function () {
             // Set the logging level for the application
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-
             // Create the World Window.
             this.wwd = new WorldWind.WorldWindow("canvasOne");
 
@@ -89,10 +91,10 @@ define([
             this.wwd.redraw();
 
             this.layerManager = new LayerManager(this.wwd);
-            
+
             // The Controller will create Model and the Views
             this.controller = new Controller(this.wwd);
-            
+
             // Save the current view (eye position) when the window closes
             window.onbeforeunload = function (evt) {
                 self.saveCurrentState();
@@ -110,8 +112,7 @@ define([
         WmtClient.prototype.restoreSavedState = function () {
             try {
                 if (!navigator.cookieEnabled) {
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtClient", "restoreSavedState",
-                        "Cookies not enabled!");
+                    Logger.warning("WmtClient", "restoreSavedState", "Cookies not enabled!");
                     return;
                 }
                 var latStr = Cookie.read("latitude"),
@@ -122,30 +123,30 @@ define([
                     rollStr = Cookie.read("roll");
 
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
-                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default lat/lon.");
+                    Logger.log("Previous state invalid: Using default lat/lon.");
                     latStr = Wmt.configuration.startupLatitude;
                     lonStr = Wmt.configuration.startupLongitude;
                 }
                 if (!altStr || isNaN(altStr)) {
-                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default altitude.");
+                    Logger.log("Previous state invalid: Using default altitude.");
                     altStr = Wmt.configuration.startupAltitude;
                 }
                 if (!headStr || !tiltStr || !rollStr || isNaN(headStr) || isNaN(tiltStr) || isNaN(rollStr)) {
-                    WorldWind.Logger.log(WorldWind.Logger.LEVEL_INFO, "Previous state invalid: Using default view angles.");
+                    Logger.log("Previous state invalid: Using default view angles.");
                     headStr = Wmt.configuration.startupHeading;
                     tiltStr = Wmt.configuration.startupTilt;
                     rollStr = Wmt.configuration.startupRoll;
                 }
-                this.wwd.navigator.lookAtPosition.latitude = Number(latStr);
-                this.wwd.navigator.lookAtPosition.longitude = Number(lonStr);
+                this.wwd.navigator.lookAtLocation.latitude = Number(latStr);
+                this.wwd.navigator.lookAtLocation.longitude = Number(lonStr);
                 this.wwd.navigator.range = Number(altStr);
                 this.wwd.navigator.heading = Number(headStr);
                 this.wwd.navigator.tilt = Number(tiltStr);
                 this.wwd.navigator.roll = Number(rollStr);
 
             } catch (e) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
-                    "WmtClient", "restoreSavedState", "Exception occurred processing cookie: " + e.toString());
+                Logger.error("WmtClient", "restoreSavedState",
+                    "Exception occurred processing cookie: " + e.toString());
             }
         };
 
@@ -157,16 +158,14 @@ define([
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, "WmtClient", "saveCurrentState",
-                    "Cookies not enabled!");
+                Logger.warning("WmtClient", "saveCurrentState", "Cookies not enabled!");
                 return;
             }
             var pos = this.wwd.navigator.lookAtPosition,
                 alt = this.wwd.navigator.range,
                 heading = this.wwd.navigator.heading,
                 tilt = this.wwd.navigator.tilt,
-                roll = this.wwd.navigator.roll,
-                numDays = 100;
+                roll = this.wwd.navigator.roll, numDays = 100;
 
             // Save the eye position
             Cookie.save("latitude", pos.latitude, numDays);
