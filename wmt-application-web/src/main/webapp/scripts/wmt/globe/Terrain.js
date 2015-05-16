@@ -81,6 +81,12 @@ define(['../../webworldwind/WorldWind'],
          * @type {Terrain}
          */
         Terrain.ZERO = new Terrain(0, 0, 0, 0, 0);
+        /**
+         * A Terrain with latitude, longitude, elevation, aspect and slope all Number.NaN.
+         * @constant
+         * @type {Terrain}
+         */
+        Terrain.INVALID = new Terrain(Number.NaN, Number.NaN, Number.NaN, Number.NaN, Number.NaN);
 
         /**
          * Sets this position to the latitude, longitude and elevation of a specified position.
