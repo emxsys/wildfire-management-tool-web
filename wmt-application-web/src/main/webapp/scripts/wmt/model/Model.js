@@ -67,12 +67,25 @@ define([
          * Updates the reticuleTerrain property and fires a "reticuleMoved" event.
          */
         Model.prototype.updateTerrainUnderReticule = function () {
-            var pos = this.wwd.navigator.lookAtPosition,
-                terrain = this.terrainProvider.terrainAtLatLon(
-                    pos.latitude,
-                    pos.longitude);
+// The look-at-position is in question... 
+//            var pos = this.wwd.navigator.lookAtPosition,
+//                terrain = this.terrainProvider.terrainAtLatLon(
+//                    pos.latitude,
+//                    pos.longitude),
+            var centerPoint = new WorldWind.Vec2(this.wwd.canvas.width / 2, this.wwd.canvas.height / 2),
+                terrainObject = this.wwd.pickTerrain(centerPoint).terrainObject(),
+                terrain;
 
-            // Persist a copy of the terrain in our model
+            if (terrainObject) {
+                terrain = this.terrainProvider.terrainAtLatLon(
+                    terrainObject.position.latitude,
+                    terrainObject.position.longitude);
+            } else {
+                terrain = new Terrain();
+                terrain.copy(Terrain.INVALID);
+            }
+
+            // Persist a copy of the terrain in our model for non-subscribers
             this.reticuleTerrain.copy(terrain);
 
             // Update subscribers
