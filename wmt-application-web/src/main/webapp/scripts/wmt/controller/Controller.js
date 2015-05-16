@@ -33,11 +33,13 @@
 define([
     '../model/Model',
     '../view/CoordinatesView',
+    '../view/LayerManager',
     '../view/ReticuleView',
     '../../nasa/WorldWind'],
     function (
         Model,
         CoordinatesView,
+        LayerManager,
         ReticuleView,
         WorldWind) {
         "use strict";
@@ -48,10 +50,12 @@ define([
             this.model = new Model(worldWindow);
 
             // Create MVC Views
-            this.coordinatesView = new CoordinatesView(worldWindow);
-            this.reticuleView = new ReticuleView(worldWindow);
+            this.coordinatesView = new CoordinatesView(this.wwd);
+            this.reticuleView = new ReticuleView(this.wwd);
+            this.layerManager = new LayerManager(this.wwd);
 
-            // Assemble MVC connections
+
+          // Assemble MVC connections
             this.model.on("mouseMoved", this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on("reticuleMoved", this.reticuleView.handleReticuleMoved, this.reticuleView);
 
