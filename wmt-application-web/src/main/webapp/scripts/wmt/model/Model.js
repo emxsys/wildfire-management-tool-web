@@ -60,7 +60,8 @@ define([
             this.terrainProvider = new TerrainProvider(worldWindow);
 
             // Terrain property available for non-subscribers
-            this.reticuleTerrain = new Terrain();
+            this.terrainAtReticule = new Terrain();
+            this.terrainAtMouse = new Terrain();
         };
 
         /**
@@ -85,11 +86,39 @@ define([
                 terrain.copy(Terrain.INVALID);
             }
 
-            // Persist a copy of the terrain in our model for non-subscribers
-            this.reticuleTerrain.copy(terrain);
+            // Persist a copies of the terrain in our model for non-subscribers
+            this.terrainAtReticule.copy(terrain);
 
             // Update subscribers
             this.fire("reticuleMoved", terrain);
+        };
+
+        /**
+         * Updates the mouseTerrain property and fires a "mousedMoved" event.
+         * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
+         */
+        Model.prototype.updateTerrainUnderMouse = function (mousePoint) {
+            var wwd = this.wwd,
+                terrainObject,
+                terrain;
+
+
+            terrainObject = wwd.pickTerrain(mousePoint).terrainObject();
+
+            if (terrainObject) {
+                terrain = this.terrainProvider.terrainAtLatLon(
+                    terrainObject.position.latitude,
+                    terrainObject.position.longitude);
+            } else {
+                terrain = new Terrain();
+                terrain.copy(Terrain.INVALID);
+            }
+
+            // Persist a copy of the terrain in our model for non-subscribers
+            this.terrainAtMouse.copy(terrain);
+
+            // Update subscribers
+            this.fire("mouseMoved", terrain);
         };
         return Model;
     }

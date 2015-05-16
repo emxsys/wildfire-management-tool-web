@@ -36,8 +36,6 @@
  * @module {WmtClient}
  * @param {Object} Cookie
  * @param {Object} CrosshairsLayer
- * @param {Object} CrosshairsController
- * @param {Object} CoordinateController
  * @param {Object} EnhancedViewControlsLayer
  * @param {Object} LayerManager
  * @param {Object} Wmt
@@ -46,18 +44,16 @@
  */
 define([
     './util/Cookie',
+    './controller/Controller',
     './globe/CrosshairsLayer',
-    './globe/CrosshairsController',
-    './globe/CoordinateController',
     './globe/EnhancedViewControlsLayer',
     './layermanager/LayerManager',
     './Wmt',
     '../webworldwind/WorldWind'],
     function (
         Cookie,
+        Controller,
         CrosshairsLayer,
-        CrosshairsController,
-        CoordinateController,
         EnhancedViewControlsLayer,
         LayerManager,
         Wmt,
@@ -94,10 +90,13 @@ define([
 
             this.layerManager = new LayerManager(this.wwd);
             // Create mouse coordinate tracker - updates DOM elements
-            this.coordinateController = new CoordinateController(this.wwd);
+            //this.coordinateController = new CoordinateController(this.wwd);
             // Create crosshairs coordinate tracker - updates DOM elements
-            this.crosshairsController = new CrosshairsController(this.wwd);
-
+            //this.crosshairsController = new CrosshairsController(this.wwd);
+            
+            // The Controller will create Model and the Views
+            this.controller = new Controller(this.wwd);
+            
             // Save the current view (eye position) when the window closes
             window.onbeforeunload = function (evt) {
                 self.saveCurrentState();

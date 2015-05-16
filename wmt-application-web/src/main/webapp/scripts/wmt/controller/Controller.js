@@ -32,20 +32,27 @@
 
 define([
     '../model/Model',
+    '../view/CoordinatesView',
     '../view/ReticuleView',
     '../../webworldwind/WorldWind'],
     function (
         Model,
+        CoordinatesView,
         ReticuleView,
         WorldWind) {
         "use strict";
         var Controller = function (worldWindow) {
             this.wwd = worldWindow;
+
+            // Create the MVC Model
             this.model = new Model(worldWindow);
 
+            // Create MVC Views
+            this.coordinatesView = new CoordinatesView(worldWindow);
             this.reticuleView = new ReticuleView(worldWindow);
 
             // Assemble MVC connections
+            this.model.on("mouseMoved", this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on("reticuleMoved", this.reticuleView.handleReticuleMoved, this.reticuleView);
 
             // Internal. Intentionally not documented.
@@ -57,6 +64,16 @@ define([
             this.wwd.redrawCallbacks.push(function () {
                 self.handleRedraw();
             });
+
+            // Setup to track the cursor position relative to the World Window's canvas. Listen to touch events in order
+            // to recognize and ignore simulated mouse events in mobile browsers.
+            window.addEventListener("mousemove", function (event) {
+                self.handleMouseEvent(event);
+            });
+            window.addEventListener("touchstart", function (event) {
+                self.handleTouchEvent(event);
+            });
+
 
         };
 
@@ -72,9 +89,34 @@ define([
             }, self.updateInterval);
         };
 
-        Controller.prototype.update = function () {
-            this.model.updateTerrainUnderReticule();
+        Controller.prototype.handleMouseEvent = function (event) {
+            if (this.isTouchDevice) {
+                return; // ignore simulated mouse events in mobile browsers
+            }
+            this.mousePoint = this.wwd.canvasCoordinates(event.clientX, event.clientY);
+            this.wwd.redraw();
+        };
 
+        //noinspection JSUnusedLocalSymbols
+        Controller.prototype.handleTouchEvent = function (event) {
+            this.isTouchDevice = true; // suppress simulated mouse events in mobile browsers
+            this.mousePoint = null;
+        };
+
+
+        Controller.prototype.update = function () {
+            var wwd = this.wwd,
+                mousePoint = this.mousePoint,
+                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
+
+            // Pick the terrain at the mouse point when we've received at least one mouse event. Otherwise assume that we're
+            // on a touch device and pick at the center of the World Window's canvas.
+            if (!mousePoint) {
+                this.model.updateTerrainUnderMouse(centerPoint);
+            } else if (wwd.viewport.containsPoint(mousePoint)) {
+                this.model.updateTerrainUnderMouse(mousePoint);
+            }
+            this.model.updateTerrainUnderReticule();
         };
         return Controller;
     }
