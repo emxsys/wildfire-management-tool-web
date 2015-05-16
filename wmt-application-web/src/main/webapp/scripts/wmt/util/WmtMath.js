@@ -28,19 +28,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global WorldWind, define*/
+/*global define*/
 
 /**
  * Math utiltities module for WMT.
  * @author Bruce Schubert
+ * @module {util/WmtMath}
+ * @param {Object} WorldWind
  */
-define(
-    [],
-    function () {
+define(['../../webworldwind/WorldWind'],
+    function (WorldWind) {
         "use strict";
         var WmtMath = {
             /**
-             * @description Computes the angle between two Vec3 objects.
+             * Computes the angle between two Vec3 objects.
              * @param {Vec3} a
              * @param {Vec3} b
              * @returns {Number} Degrees.
@@ -48,7 +49,8 @@ define(
             angleBetween: function (a, b) {
                 if (!a || !b) {
                     throw new WorldWind.ArgumentError(
-                        WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "projectOnty", "missingVector"));
+                        WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
+                            "Terrain", "projectOnty", "missingVector"));
                 }
                 var dot = a.dot(b),
                     length = a.magnitude() * b.magnitude();
