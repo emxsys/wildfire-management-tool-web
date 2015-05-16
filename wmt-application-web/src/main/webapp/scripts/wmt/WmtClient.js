@@ -28,28 +28,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WorldWind*/
+/*global define*/
 
 /**
- * WMT Application.
+ * WMT Client Application.
  * 
- * Uses the Asynchronous Module Definition (AMD) pattern via RequireJS.
- * AMD addresses these issues by:
- * - Register the factory function by calling define(), instead of immediately executing it.
- * - Pass dependencies as an array of string values, do not grab globals.
- * - Only execute the factory function once all the dependencies have been loaded and executed.
- * - Pass the dependent modules as arguments to the factory function.
- * 
+ * @module {WmtClient}
+ * @param {Object} Cookie
+ * @param {Object} CrosshairsLayer
+ * @param {Object} CrosshairsController
+ * @param {Object} CoordinateController
+ * @param {Object} EnhancedViewControlsLayer
+ * @param {Object} LayerManager
+ * @param {Object} Wmt
+ * @param {Object} WorldWind
  * @author Bruce Schubert
- * 
- * @param {type} Cookie
- * @param {type} CrosshairsLayer
- * @param {type} CrosshairsController
- * @param {type} CoordinateController
- * @param {type} EnhancedViewControlsLayer
- * @param {type} LayerManager
- * @param {type} Wmt description
- * @returns {WmtClient_L55.WmtClient}
  */
 define([
     './util/Cookie',
@@ -58,7 +51,8 @@ define([
     './globe/CoordinateController',
     './globe/EnhancedViewControlsLayer',
     './layermanager/LayerManager',
-    './Wmt'],
+    './Wmt',
+    '../webworldwind/WorldWind'],
     function (
         Cookie,
         CrosshairsLayer,
@@ -66,7 +60,8 @@ define([
         CoordinateController,
         EnhancedViewControlsLayer,
         LayerManager,
-        Wmt) {
+        Wmt,
+        WorldWind) {
         "use strict";
         var WmtClient = function () {
             // Set the logging level for the application
@@ -154,8 +149,8 @@ define([
                 this.wwd.navigator.roll = Number(rollStr);
 
             } catch (e) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "WmtClient", "restoreSavedState",
-                    "Exception occurred processing cookie: " + e.toString());
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
+                    "WmtClient", "restoreSavedState", "Exception occurred processing cookie: " + e.toString());
             }
         };
 
