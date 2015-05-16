@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, Wmt, WorldWind*/
+/*global define, WorldWind*/
 
 /**
  * WMT Application.
@@ -48,6 +48,7 @@
  * @param {type} CoordinateController
  * @param {type} EnhancedViewControlsLayer
  * @param {type} LayerManager
+ * @param {type} Wmt description
  * @returns {WmtClient_L55.WmtClient}
  */
 define([
@@ -56,14 +57,16 @@ define([
     './globe/CrosshairsController',
     './globe/CoordinateController',
     './globe/EnhancedViewControlsLayer',
-    './layermanager/LayerManager'],
+    './layermanager/LayerManager',
+    './Wmt'],
     function (
         Cookie,
         CrosshairsLayer,
         CrosshairsController,
         CoordinateController,
         EnhancedViewControlsLayer,
-        LayerManager) {
+        LayerManager,
+        Wmt) {
         "use strict";
         var WmtClient = function () {
             // Set the logging level for the application
