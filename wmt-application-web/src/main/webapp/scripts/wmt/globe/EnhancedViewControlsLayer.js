@@ -28,32 +28,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WorldWind, Wmt*/
+/*global define, WorldWind*/
 
 /**
  * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
  * 
  * @param {type} Locator
- * @param {type} Offset
  * @param {type} Navigator
- * @param {type} ScreenImage
  * @param {type} ViewControlsLayer
+ * @param {type} Wmt
  * @returns {EnhancedViewControlsLayer_L46.EnhancedViewControlsLayer}
  * 
  * @author Bruce Schubert
  */
 define([
     '../location/Locator',
-    '../../webworldwind/util/Offset',
     '../location/Navigator',
-    '../../webworldwind/shapes/ScreenImage',
-    '../../webworldwind/layer/ViewControlsLayer'],
+    '../../webworldwind/layer/ViewControlsLayer',
+    '../Wmt'],
     function (
         Locator,
-        Offset,
         Navigator,
-        ScreenImage,
-        ViewControlsLayer) {
+        ViewControlsLayer,
+        Wmt) {
         "use strict";
         /**
          * Constructs a view controls layer.
@@ -84,19 +81,19 @@ define([
 //            this.placement = new Offset(
 //                WorldWind.OFFSET_FRACTION, 0.973, // Align with Compass width
 //                WorldWind.OFFSET_FRACTION, 0.95); // Move down to make room for compass
-            this.placement = new Offset(
-                WorldWind.OFFSET_INSET_PIXELS, 30,  // Align with Compass width
+            this.placement = new WorldWind.Offset(
+                WorldWind.OFFSET_INSET_PIXELS, 30, // Align with Compass width
                 WorldWind.OFFSET_INSET_PIXELS, 50); // Move down to make room for compass
-            this.alignment = new Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
+            this.alignment = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
 
             // Set the screen and image offsets of each control to the lower left corner.
             // Use same offset values as parent ViewControlsLayer.
-            var screenOffset = new Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
+            var screenOffset = new WorldWind.Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
                 imagePath = WorldWind.configuration.baseUrl + "images/";
 
             // These controls are all internal and intentionally not documented.
-            this.gotoControl = new ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
-            this.locateControl = new ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
+            this.gotoControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
+            this.locateControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
             this.gotoControl.imageOffset = screenOffset.clone();
             this.locateControl.imageOffset = screenOffset.clone();
             this.gotoControl.size = 32;
@@ -237,7 +234,7 @@ define([
         EnhancedViewControlsLayer.prototype.determineOperation = function (ignore, topObject) {
             var operation = null;
 
-            if (topObject && (topObject instanceof ScreenImage)) {
+            if (topObject && (topObject instanceof WorldWind.ScreenImage)) {
                 if (topObject === this.panControl) {
                     operation = this.handlePan;
                 } else if (topObject === this.zoomInControl
