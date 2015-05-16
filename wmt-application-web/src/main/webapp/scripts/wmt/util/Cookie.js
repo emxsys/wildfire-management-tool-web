@@ -28,13 +28,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define*/
+
+/**
+ * Provides utilities for working with cookies.
+ * 
+ * @module {Cookie}
+ */
 define([],
     function () {
         "use strict";
-        /**
-         * Provides utilities for working with cookies.
-         * @exports Cookie
-         */
         var Cookie = {
             /**
              * Saves the name/value pair in a cookie.
@@ -43,9 +46,10 @@ define([],
              * @param {Number} expirationDays The number days before the cookie expires.
              */
             save: function (cookieName, cookieValue, expirationDays) {
-                var d = new Date();
+                var d = new Date(),
+                    expires;
                 d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
-                var expires = "expires=" + d.toUTCString();
+                expires = "expires=" + d.toUTCString();
                 document.cookie = cookieName + "=" + cookieValue + "; " + expires;
             },
             /**
@@ -54,12 +58,16 @@ define([],
              * @returns {String} The cookie value or an empty string if not found.
              */
             read: function (cookieName) {
+                var name,
+                    cookies,
+                    cookieKeyValue,
+                    i;
                 // Establish the text to search for
-                var name = cookieName + "=";
+                name = cookieName + "=";
                 // Split the cookie property into an array 
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookieKeyValue = cookies[i];
+                cookies = document.cookie.split(';');
+                for (i = 0; i < cookies.length; i++) {
+                    cookieKeyValue = cookies[i];
                     // Strip/trim spaces
                     while (cookieKeyValue.charAt(0) === ' ') {
                         cookieKeyValue = cookieKeyValue.substring(1);
