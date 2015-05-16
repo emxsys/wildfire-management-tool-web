@@ -28,29 +28,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WorldWind*/
+/*global define*/
 
 /**
- * The World Wind View Controls are horizontal in nature, this implementation orients the controls vertically.
+ * The World Wind view controls are horizontal in nature, this implementation orients the controls vertically.
  * 
- * @param {type} Locator
- * @param {type} Navigator
- * @param {type} ViewControlsLayer
- * @param {type} Wmt
- * @returns {EnhancedViewControlsLayer_L46.EnhancedViewControlsLayer}
- * 
+ * @exports EnhancedViewControlsLayer
+ * @param {Object} Locator
+ * @param {Object} Navigator
+ * @param {Object} ViewControlsLayer
+ * @param {Object} Wmt
+ * @param {Object} WorldWind
  * @author Bruce Schubert
  */
 define([
     '../location/Locator',
     '../location/Navigator',
     '../../webworldwind/layer/ViewControlsLayer',
-    '../Wmt'],
+    '../Wmt',
+    '../../webworldwind/WorldWind'],
     function (
         Locator,
         Navigator,
         ViewControlsLayer,
-        Wmt) {
+        Wmt,
+        WorldWind) {
         "use strict";
         /**
          * Constructs a view controls layer.
@@ -220,14 +222,12 @@ define([
                 this.fovWideControl.render(dc);
             }
             // TODO: following block to be depreciated in favor of stand alone Goto/Set Location button.
-            if (true) {
-                this.gotoControl.screenOffset.x = x;
-                this.gotoControl.screenOffset.y = y;
-                this.locateControl.screenOffset.x = x + this.gotoControl.size;
-                this.locateControl.screenOffset.y = y;
-                this.gotoControl.render(dc);
-                this.locateControl.render(dc);
-            }
+            this.gotoControl.screenOffset.x = x;
+            this.gotoControl.screenOffset.y = y;
+            this.locateControl.screenOffset.x = x + this.gotoControl.size;
+            this.locateControl.screenOffset.y = y;
+            this.gotoControl.render(dc);
+            this.locateControl.render(dc);
         };
 
         // Copied from parent. Augmented to include goto and locate controls
