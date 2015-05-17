@@ -35,17 +35,21 @@ define(['../../nasa/WorldWind'],
         "use strict";
         var Logger = {
             log: function (message) {
-                WorldWind.Logger.log(null, message);
+                WorldWind.Logger.log(null, this.messageTable[message] || message);
             },
             info: function (className, functionName, message) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, className, functionName, message);
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_INFO, className, functionName, this.messageTable[message] || message);
             },
             warning: function (className, functionName, message) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, className, functionName, message);
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_WARNING, className, functionName, this.messageTable[message] || message);
             },
             error: function (className, functionName, message) {
-                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, className, functionName, message);
+                WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, className, functionName, this.messageTable[message] || message);
+            },
+            messageTable: {// KEEP THIS TABLE IN ALPHABETICAL ORDER
+                missingTerrain: "The specified terrain is null or undefined."
             }
+
         };
         return Logger;
     }
