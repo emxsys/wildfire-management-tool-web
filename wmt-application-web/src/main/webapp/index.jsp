@@ -35,7 +35,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <meta charset="utf-8">
         <title>Wildfire Management Tool (WMT)</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="icon" type="image/x-icon" href="./favicon.png">
+        
         <!--During development, using local copies of libraries-->
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />   
@@ -117,6 +118,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <li><a id="crosshairsCoord2D" href="#">Location</a></li>
                         </ul>-->
         <!--Coordinates under mouse-->
+<!--
         <div class='row'>
             <div id="coordinateOverlay" class="col-xs-4">
                 <div class="row">
@@ -133,9 +135,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </div>   
+        -->
         
         <!--Coordinates under reticule-->
-<!-- 
+ 
         <div class='row'>
             <div id="coordinateOverlay" class="col-xs-4">
                 <div class="row">
@@ -158,7 +161,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </div>                                        
--->
+
 
     </body>
 </html>
