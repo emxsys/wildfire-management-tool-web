@@ -49,7 +49,18 @@ define([],
              * @default "0.0.0"
              * @constant
              */
-            VERSION: "0.0.0"
+            VERSION: "0.0.0",
+            /**
+             * Base URL for Web World Wind SDK. (Do not use a reltive path.)
+             * @default "scripts/nasa/"
+             * @constant
+             */
+            WORLD_WIND_PATH: "scripts/nasa/",
+            /**
+             * Base URL for WMT application images. (Do not use a relative path.)
+             */
+            IMAGE_PATH: "scripts/wmt/images/"
+            
         };
         /**
          * Holds configuration parameters for WMT. Applications may modify these parameters prior to creating
