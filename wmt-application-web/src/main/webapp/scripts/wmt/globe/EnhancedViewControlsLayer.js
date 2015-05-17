@@ -91,7 +91,7 @@ define([
             // Set the screen and image offsets of each control to the lower left corner.
             // Use same offset values as parent ViewControlsLayer.
             var screenOffset = new WorldWind.Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
-                imagePath = WorldWind.configuration.baseUrl + "images/";
+                imagePath = Wmt.IMAGE_PATH;
 
             // These controls are all internal and intentionally not documented.
             this.gotoControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");

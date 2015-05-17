@@ -33,16 +33,15 @@
 /**
  * Renders orosshairs centered on the WorldWindow.
  * Based on Compass.js 2939 2015-03-30 16:50:49Z by tgaskins.
- * @author Bruce Schubert
+ * @param WorldWind 
  * @exports Crosshairs
+ * @author Bruce Schubert
  */
 define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
-
         /**
          * Constructs crosshairs.
-         * @alias Crosshairs
          * @constructor
          * @augments ScreenImage
          * @classdesc Displays a crosshairs image centered in the World Window. 
@@ -51,9 +50,10 @@ define(['../../nasa/WorldWind'],
         var Crosshairs = function (imagePath) {
 
             var sOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5),
-                iPath = imagePath || WorldWind.WWUtil.currentUrlSansFilePart() + "/../images/32x32-crosshair-outline.png";
+                iPath = imagePath + "32x32-crosshair-outline.png";
 
             WorldWind.ScreenImage.call(this, sOffset, iPath);
+
             // Must set the default image offset and scale after calling the constructor above.
             // Align the center of the image with the center of the screen
             this.imageOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5);
