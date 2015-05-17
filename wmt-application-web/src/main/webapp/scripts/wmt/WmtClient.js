@@ -36,10 +36,9 @@
  * @module {WmtClient}
  * @param {Object} Cookie
  * @param {Object} Controller
- * @param {Object} ReticuleLayer
  * @param {Object} EnhancedViewControlsLayer
- * @param {Object} LayerManager
  * @param {Object} Logger
+ * @param {Object} ReticuleLayer
  * @param {Object} Wmt
  * @param {Object} WorldWind
  * @author Bruce Schubert
@@ -64,7 +63,9 @@ define([
         var WmtClient = function () {
             // Set the logging level for the application
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-            // Create the World Window.
+            // Specify the where the World Wind resources are located.
+            WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
+            // Create the World Window (the globe).
             this.wwd = new WorldWind.WorldWindow("canvasOne");
 
             var self = this,
