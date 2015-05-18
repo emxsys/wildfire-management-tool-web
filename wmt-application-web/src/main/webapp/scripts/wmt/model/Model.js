@@ -41,11 +41,13 @@
  * @author Bruce Schubert
  */
 define([
+    '../util/Log',
     '../util/Publisher',
     '../globe/Terrain',
     '../globe/TerrainProvider',
     '../../nasa/WorldWind'],
     function (
+        Log,
         Publisher,
         Terrain,
         TerrainProvider,
@@ -59,9 +61,39 @@ define([
             this.wwd = worldWindow;
             this.terrainProvider = new TerrainProvider(worldWindow);
 
-            // Terrain property available for non-subscribers
+            // Properties available for non-subscribers
             this.terrainAtReticule = new Terrain();
             this.terrainAtMouse = new Terrain();
+            this.eyePosition = new WorldWind.Position();
+
+        };
+
+        Model.prototype.updateEyePosition = function () {
+            // Compute the World Window's current eye position.
+            var wwd = this.wwd,
+                navigatorState = wwd.navigator.currentState(),
+                eyePoint = navigatorState.eyePoint,
+                eyePos = new WorldWind.Position(),
+                terrainElev,
+                safeEyePoint = new WorldWind.Vec3();
+
+            wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
+
+            if (!eyePos.equals(this.eyePosition)) {
+                // Validate the eye position to ensure it doesn't go below the terrain surface
+                terrainElev = wwd.globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
+                if (eyePos.altitude < terrainElev) {
+                    Log.error("Model", "updateEyePosition", "eyePos (" + eyePos.altitude + ") is below ground level (" + terrainElev + ").");
+
+                    wwd.globe.computePointFromPosition(eyePos.latitude, eyePos.longitude, terrainElev + 1, safeEyePoint);
+
+                }
+
+                // Persist a copy of the new position in our model for non-subscribers
+                this.eyePosition.copy(eyePos);
+                // Update eyeMoved subscribers
+                this.fire("eyeMoved", eyePos);
+            }
         };
 
         /**

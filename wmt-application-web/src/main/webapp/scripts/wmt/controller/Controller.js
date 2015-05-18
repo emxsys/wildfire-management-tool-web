@@ -55,9 +55,10 @@ define([
             this.layerManager = new LayerManager(this.wwd);
 
 
-          // Assemble MVC connections
+            // Assemble MVC connections
             this.model.on("mouseMoved", this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on("reticuleMoved", this.reticuleView.handleReticuleMoved, this.reticuleView);
+            this.model.on("eyeMoved", this.reticuleView.handleEyeMoved, this.reticuleView);
 
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
@@ -113,6 +114,8 @@ define([
                 mousePoint = this.mousePoint,
                 centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
 
+            this.model.updateEyePosition();
+            
             // Pick the terrain at the mouse point when we've received at least one mouse event. Otherwise assume that we're
             // on a touch device and pick at the center of the World Window's canvas.
             if (!mousePoint) {
