@@ -34,17 +34,20 @@
  * The ReticuleLayer renders a reticule (e.g., reticule) in the center of the World Wind globe.
  * @exports ReticuleLayer
  * 
- * @param {Object} Crosshairs
- * @param {Object} Wmt
+ * @param {Crosshairs} Crosshairs
+ * @param {Compass} Crosshairs
+ * @param {Object} Wmt - Provides image path.
  * @param {Object} WorldWind
  * @returns {ReticuleLayer}
  */
 
 define([
+    './Compass',
     './Crosshairs',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
+        Compass,
         Crosshairs,
         Wmt,
         WorldWind) {
@@ -61,8 +64,11 @@ define([
         var ReticuleLayer = function () {
             WorldWind.RenderableLayer.call(this, "Crosshairs");
 
+            this._compass = new Compass(Wmt.IMAGE_PATH);
             this._reticule = new Crosshairs(Wmt.IMAGE_PATH);
 
+            // Put crosshairs on top of the globe
+            this.addRenderable(this._compass);
             this.addRenderable(this._reticule);
         };
 
@@ -84,6 +90,18 @@ define([
                         this.removeAllRenderables();
                         this.addRenderable(reticule);
                         this._reticule = reticule;
+                    }
+                }
+            },
+            compass: {
+                get: function () {
+                    return this._compass;
+                },
+                set: function (compass) {
+                    if (compass && compass instanceof Compass) {
+                        this.removeAllRenderables();
+                        this.addRenderable(compass);
+                        this._compass = compass;
                     }
                 }
             }

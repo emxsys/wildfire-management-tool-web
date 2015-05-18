@@ -56,12 +56,9 @@ define(['../../nasa/WorldWind'],
 
             // Must set the default image offset and scale after calling the constructor above.
             // Align the center of the image with the center of the screen
-            this.imageOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5);
-            // Use full scale image
-//            if (!imagePath) {
-//                // Scale the default image.
-//                this.imageScale = 0.4;
-//            }
+            this.imageOffset = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0.5, WorldWind.OFFSET_FRACTION, 0.5);               
+            // Scale the default image.
+            this.imageScale = 1.2;
         };
 
         Crosshairs.prototype = Object.create(WorldWind.ScreenImage.prototype);
