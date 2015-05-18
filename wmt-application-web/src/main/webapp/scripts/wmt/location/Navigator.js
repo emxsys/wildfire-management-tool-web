@@ -36,8 +36,10 @@
  * @author Bruce Schubert
  */
 define([
+    '../util/Log',
     '../../nasa/WorldWindow'],
     function (
+        Log,
         WorldWind) {
         "use strict";
 
@@ -49,8 +51,7 @@ define([
         var Navigator = function (worldWindow) {
             if (!worldWindow) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
-                        "Navigator", "constructor", "missingWorldWindow"));
+                    Log.error("Navigator", "constructor", "missingWorldWindow"));
             }
             this.wwd = worldWindow;
         };

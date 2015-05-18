@@ -30,8 +30,10 @@
 
 /*global define*/
 
-define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+define([
+    '../util/Log'
+    , '../../nasa/WorldWind'],
+    function (Log, WorldWind) {
         "use strict";
 
         /**
@@ -97,7 +99,7 @@ define(['../../nasa/WorldWind'],
         Terrain.prototype.copy = function (terrain) {
             if (!terrain) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "copy", "missingTerrain"));
+                    Log.error("Terrain", "copy", "missingTerrain"));
             }
 
             this.latitude = terrain.latitude;

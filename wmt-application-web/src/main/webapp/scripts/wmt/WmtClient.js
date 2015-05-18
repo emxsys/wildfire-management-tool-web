@@ -46,27 +46,32 @@
 define([
     './util/Cookie',
     './controller/Controller',
+    './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
-    './util/Logger',
+    './util/Log',
     './globe/ReticuleLayer',
     './Wmt',
     '../nasa/WorldWind'],
     function (
         Cookie,
         Controller,
+        EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
-        Logger,
+        Log,
         ReticuleLayer,
         Wmt,
         WorldWind) {
         "use strict";
         var WmtClient = function () {
-            // Set the logging level for the application
-            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+            Log.info("WmtClient", null, "constructor");
             // Specify the where the World Wind resources are located.
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
-            // Create the World Window (the globe).
+            // Set the logging level for the World Wind library
+            WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+
+            // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
+            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
 
             var self = this,
                 layer,
@@ -109,7 +114,7 @@ define([
         WmtClient.prototype.restoreSavedState = function () {
             try {
                 if (!navigator.cookieEnabled) {
-                    Logger.warning("WmtClient", "restoreSavedState", "Cookies not enabled!");
+                    Log.warning("WmtClient", "restoreSavedState", "Cookies not enabled!");
                     return;
                 }
                 var latStr = Cookie.read("latitude"),
@@ -120,16 +125,16 @@ define([
                     rollStr = Cookie.read("roll");
 
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
-                    Logger.log("Previous state invalid: Using default lat/lon.");
+                    Log.log("Previous state invalid: Using default lat/lon.");
                     latStr = Wmt.configuration.startupLatitude;
                     lonStr = Wmt.configuration.startupLongitude;
                 }
                 if (!altStr || isNaN(altStr)) {
-                    Logger.log("Previous state invalid: Using default altitude.");
+                    Log.log("Previous state invalid: Using default altitude.");
                     altStr = Wmt.configuration.startupAltitude;
                 }
                 if (!headStr || !tiltStr || !rollStr || isNaN(headStr) || isNaN(tiltStr) || isNaN(rollStr)) {
-                    Logger.log("Previous state invalid: Using default view angles.");
+                    Log.log("Previous state invalid: Using default view angles.");
                     headStr = Wmt.configuration.startupHeading;
                     tiltStr = Wmt.configuration.startupTilt;
                     rollStr = Wmt.configuration.startupRoll;
@@ -142,7 +147,7 @@ define([
                 this.wwd.navigator.roll = Number(rollStr);
 
             } catch (e) {
-                Logger.error("WmtClient", "restoreSavedState",
+                Log.error("WmtClient", "restoreSavedState",
                     "Exception occurred processing cookie: " + e.toString());
             }
         };
@@ -155,7 +160,7 @@ define([
             // Store date/time and eye position in a cookie.
             // Precondition: Cookies must be enabled
             if (!navigator.cookieEnabled) {
-                Logger.warning("WmtClient", "saveCurrentState", "Cookies not enabled!");
+                Log.warning("WmtClient", "saveCurrentState", "Cookies not enabled!");
                 return;
             }
             var pos = this.wwd.navigator.lookAtLocation,

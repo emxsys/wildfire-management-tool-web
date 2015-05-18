@@ -40,10 +40,12 @@
  * @author Bruce Schubert
  */
 define([
+    '../util/Log',
     './Terrain',
     '../util/WmtMath',
     '../../nasa/WorldWind'],
     function (
+        Log,
         Terrain,
         WmtMath,
         WorldWind) {
@@ -55,8 +57,7 @@ define([
          */
         var TerrainProvider = function (worldWindow) {
             if (!worldWindow) {
-                throw new WorldWind.ArgumentError(WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE,
-                    "Navigator", "constructor", "missingWorldWindow"));
+                throw new WorldWind.ArgumentError(Log.error("Navigator", "constructor", "missingWorldWindow"));
             }
             this.globe = worldWindow.globe;
         };
@@ -69,7 +70,7 @@ define([
         TerrainProvider.prototype.terrainNormalAtLatLon = function (latitude, longitude) {
             if (!latitude || !longitude) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "terrainNormalAtLatLon", "missingCoordinate(s)"));
+                    Log.error("Terrain", "terrainNormalAtLatLon", "missingCoordinate(s)"));
             }
             var n0 = new WorldWind.Location(latitude, longitude),
                 n1 = new WorldWind.Location(),
@@ -117,7 +118,7 @@ define([
         TerrainProvider.prototype.terrainAtLatLon = function (latitude, longitude) {
             if (!latitude || !longitude) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Terrain", "terrainLatLon", "missingCoordinate(s)"));
+                    Log.error("Terrain", "terrainLatLon", "missingCoordinate(s)"));
             }
             var terrainNormal = new WorldWind.Vec3(),
                 surfaceNormal = new WorldWind.Vec3(),
@@ -128,29 +129,29 @@ define([
                 aspect,
                 direction,
                 elevation;
-            
+
             elevation = this.elevationAtLatLon(latitude, longitude);
-            
+
             // Compute normal vectors for terrain, surface and north.
             terrainNormal = this.terrainNormalAtLatLon(latitude, longitude);
             this.globe.surfaceNormalAtLocation(latitude, longitude, surfaceNormal);
             this.globe.northTangentAtLocation(latitude, longitude, northNormal);
-            
+
             // Compute terrain slope -- the delta between surface normal and terrain normal
             slope = WmtMath.angleBetween(terrainNormal, surfaceNormal);
-            
+
             // Compute the terrain aspect -- get a perpendicular vector projected onto
             // surface normal which is in the same plane as the north vector and get delta.
             WmtMath.perpendicularTo(terrainNormal, surfaceNormal, perpendicular);
             aspect = WmtMath.angleBetween(perpendicular, northNormal);
-            
+
             // Use dot product to determine aspect angle's sign (+/- 180)            
             tempcross.copy(surfaceNormal).cross(northNormal);
             direction = (tempcross.dot(perpendicular) < 0) ? 1 : -1;
             aspect = aspect * direction;
-            
+
             //console.log("Slope: " + slope + ", Aspect: " + aspect);
-            
+
             return new Terrain(latitude, longitude, elevation, aspect, slope);
         };
         return TerrainProvider;

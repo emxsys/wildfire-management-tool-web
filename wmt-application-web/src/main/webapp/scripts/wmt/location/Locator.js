@@ -38,10 +38,12 @@
  */
 define([
     './LocationDialog',
+    '../util/Log',
     '../util/Messenger',
     '../../nasa/WorldWind'],
     function (
         LocationDialog,
+        Log,
         Messenger,
         WorldWind) {
         "use strict";
@@ -53,7 +55,7 @@ define([
         var Locator = function (navigator) {
             if (!navigator) {
                 throw new WorldWind.ArgumentError(
-                    WorldWind.Logger.logMessage(WorldWind.Logger.LEVEL_SEVERE, "Locator", "constructor", "missingNavigator"));
+                    Log.error("Locator", "constructor", "missingNavigator"));
             }
             /**
              * The locate...() methods update the globe via the navigator.
