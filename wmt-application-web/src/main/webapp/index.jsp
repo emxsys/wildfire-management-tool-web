@@ -145,19 +145,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span>Eye Alt: </span><span id="eyeAltitude"></span>
                 </div>
                 <div class="row">
-                    <span>Lat: </span><span id="reticuleLatitude"></span>
+                    <span>Lat: </span><span id="targetLatitude"></span>
                 </div>
                 <div class="row">
-                    <span>Lon: </span><span id="reticuleLongitude"></span>
+                    <span>Lon: </span><span id="targetLongitude"></span>
                 </div>
                 <div class="row">
-                    <span>Height: </span><span id="reticuleElevation"></span>
+                    <span>Height: </span><span id="targetElevation"></span>
                 </div>
                 <div class="row">
-                    <span>Aspect: </span><span id="reticuleAspect"></span>
+                    <span>Aspect: </span><span id="targetAspect"></span>
                 </div>
                 <div class="row">
-                    <span>Slope: </span><span id="reticuleSlope"></span>
+                    <span>Slope: </span><span id="targetSlope"></span>
                 </div>
             </div>
         </div>                                        
