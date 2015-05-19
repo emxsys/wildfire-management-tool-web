@@ -51,15 +51,25 @@ define([],
              */
             VERSION: "0.0.0",
             /**
+             * Publish/subscribe event name for notification of changes in the globe viewpoint.
+             * @constant
+             */
+            EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
+            /**
+             * Publish/subscibe event name for notifcation of mouse  position on the globe.
+             * @constant
+             */
+            EVENT_MOUSE_MOVED:  "mouseMoved",
+            /**
+             * Base URL for WMT application images. (Do not use a relative path.)
+             */
+            IMAGE_PATH: "scripts/wmt/images/",
+            /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
              * @constant
              */
-            WORLD_WIND_PATH: "scripts/nasa/",
-            /**
-             * Base URL for WMT application images. (Do not use a relative path.)
-             */
-            IMAGE_PATH: "scripts/wmt/images/"
+            WORLD_WIND_PATH: "scripts/nasa/"
             
         };
         /**

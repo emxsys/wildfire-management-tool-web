@@ -43,14 +43,20 @@
 define([
     '../util/Log',
     '../util/Publisher',
+    './SolarResource',
     '../globe/Terrain',
     '../globe/TerrainProvider',
+    '../globe/Viewpoint',
+    '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Log,
         Publisher,
+        SolarResource,
         Terrain,
         TerrainProvider,
+        Viewpoint,
+        Wmt,
         WorldWind) {
         "use strict";
         var Model = function (worldWindow) {
@@ -62,95 +68,93 @@ define([
             this.terrainProvider = new TerrainProvider(worldWindow);
 
             // Properties available for non-subscribers
-            this.terrainAtReticule = new Terrain();
             this.terrainAtMouse = new Terrain();
-            this.eyePosition = new WorldWind.Position();
+            this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
 
+
+            // Internals
+            this.lastEyePoint = new WorldWind.Vec3();
+            this.lastMousePoint = new WorldWind.Vec2();
         };
 
+        /**
+         * 
+         * @returns {undefined}
+         */
         Model.prototype.updateEyePosition = function () {
             // Compute the World Window's current eye position.
             var wwd = this.wwd,
+                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
                 navigatorState = wwd.navigator.currentState(),
                 eyePoint = navigatorState.eyePoint,
                 eyePos = new WorldWind.Position(),
-                terrainElev,
-                safeEyePoint = new WorldWind.Vec3();
+                target,
+                viewpoint;
 
+            // Avoid costly computations if nothing changed
+            if (eyePoint.equals(this.lastEyePoint)) {
+                return;
+            }
+            this.lastEyePoint.copy(eyePoint);
+            
+            // Get the attributes for eye position and the target (the point under the reticule)
             wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
+            //eyeGroundElev = wwd.globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
+            target = this.terrainAtScreenPoint(centerPoint);
+            viewpoint = new Viewpoint(eyePos, target);
 
-            if (!eyePos.equals(this.eyePosition)) {
-                // Validate the eye position to ensure it doesn't go below the terrain surface
-                terrainElev = wwd.globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
-                if (eyePos.altitude < terrainElev) {
-                    Log.error("Model", "updateEyePosition", "eyePos (" + eyePos.altitude + ") is below ground level (" + terrainElev + ").");
+            //SolarResource.update(target);
 
-                    wwd.globe.computePointFromPosition(eyePos.latitude, eyePos.longitude, terrainElev + 1, safeEyePoint);
-
-                }
-
-                // Persist a copy of the new position in our model for non-subscribers
-                this.eyePosition.copy(eyePos);
-                // Update eyeMoved subscribers
-                this.fire("eyeMoved", eyePos);
-            }
+            // Persist a copy of the new position in our model for non-subscribers
+            this.viewpoint.copy(viewpoint);
+            
+            // Update viewpointChanged subscribers
+            this.fire(Wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
         };
 
-        /**
-         * Updates the reticuleTerrain property and fires a "reticuleMoved" event.
-         */
-        Model.prototype.updateTerrainUnderReticule = function () {
-// The look-at-position is in question... 
-//            var pos = this.wwd.navigator.lookAtPosition,
-//                terrain = this.terrainProvider.terrainAtLatLon(
-//                    pos.latitude,
-//                    pos.longitude),
-            var centerPoint = new WorldWind.Vec2(this.wwd.canvas.width / 2, this.wwd.canvas.height / 2),
-                terrainObject = this.wwd.pickTerrain(centerPoint).terrainObject(),
-                terrain;
-
-            if (terrainObject) {
-                terrain = this.terrainProvider.terrainAtLatLon(
-                    terrainObject.position.latitude,
-                    terrainObject.position.longitude);
-            } else {
-                terrain = new Terrain();
-                terrain.copy(Terrain.INVALID);
-            }
-
-            // Persist a copies of the terrain in our model for non-subscribers
-            this.terrainAtReticule.copy(terrain);
-
-            // Update subscribers
-            this.fire("reticuleMoved", terrain);
-        };
 
         /**
-         * Updates the mouseTerrain property and fires a "mousedMoved" event.
+         * Updates the terrainAtMouse property and fires a "mousedMoved" event.
          * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
          */
-        Model.prototype.updateTerrainUnderMouse = function (mousePoint) {
+        Model.prototype.updateMousePosition = function (mousePoint) {
+            var terrain;
+
+            if (mousePoint.equals(this.lastMousePoint)) {
+                return;
+            }
+            this.lastMousePoint.copy(mousePoint);
+
+            terrain = this.terrainAtScreenPoint(mousePoint);
+
+            // Persist a copy of the terrain in our model for non-subscribers
+            this.terrainAtMouse.copy(terrain);
+            // Update subscribers
+            this.fire(Wmt.EVENT_MOUSE_MOVED, terrain);
+        };
+
+        /**
+         * Gets terrain at the screen point.
+         * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
+         */
+        Model.prototype.terrainAtScreenPoint = function (screenPoint) {
             var wwd = this.wwd,
                 terrainObject,
                 terrain;
 
-
-            terrainObject = wwd.pickTerrain(mousePoint).terrainObject();
-
+            // Get the WW terrain at the screen point, it supplies the lat/lon
+            terrainObject = wwd.pickTerrain(screenPoint).terrainObject();
             if (terrainObject) {
+                // Get the WMT terrain at the picked lat/lon
                 terrain = this.terrainProvider.terrainAtLatLon(
                     terrainObject.position.latitude,
                     terrainObject.position.longitude);
             } else {
+                // Probably above the horizon.
                 terrain = new Terrain();
                 terrain.copy(Terrain.INVALID);
             }
-
-            // Persist a copy of the terrain in our model for non-subscribers
-            this.terrainAtMouse.copy(terrain);
-
-            // Update subscribers
-            this.fire("mouseMoved", terrain);
+            return terrain;
         };
         return Model;
     }

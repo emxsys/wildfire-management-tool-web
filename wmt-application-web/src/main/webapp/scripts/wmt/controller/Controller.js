@@ -35,12 +35,14 @@ define([
     '../view/CoordinatesView',
     '../view/LayerManager',
     '../view/ReticuleView',
+    '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Model,
         CoordinatesView,
         LayerManager,
         ReticuleView,
+        Wmt,
         WorldWind) {
         "use strict";
         var Controller = function (worldWindow) {
@@ -55,10 +57,9 @@ define([
             this.layerManager = new LayerManager(this.wwd);
 
 
-            // Assemble MVC connections
-            this.model.on("mouseMoved", this.coordinatesView.handleMouseMoved, this.coordinatesView);
-            this.model.on("reticuleMoved", this.reticuleView.handleReticuleMoved, this.reticuleView);
-            this.model.on("eyeMoved", this.reticuleView.handleEyeMoved, this.reticuleView);
+            // Assemble the associations between model and views
+            this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
+            this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
 
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
@@ -109,21 +110,23 @@ define([
         };
 
 
+        /**
+         * Updates the model when the globe changes.
+         */
         Controller.prototype.update = function () {
             var wwd = this.wwd,
                 mousePoint = this.mousePoint,
                 centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
 
-            this.model.updateEyePosition();
-            
-            // Pick the terrain at the mouse point when we've received at least one mouse event. Otherwise assume that we're
-            // on a touch device and pick at the center of the World Window's canvas.
+            // Use the mouse point when we've received at least one mouse event. Otherwise assume that we're
+            // on a touch device and use the center of the World Window's canvas.
             if (!mousePoint) {
-                this.model.updateTerrainUnderMouse(centerPoint);
+                this.model.updateMousePosition(centerPoint);
             } else if (wwd.viewport.containsPoint(mousePoint)) {
-                this.model.updateTerrainUnderMouse(mousePoint);
+                this.model.updateMousePosition(mousePoint);
             }
-            this.model.updateTerrainUnderReticule();
+            // Update the view coordinates
+            this.model.updateEyePosition();
         };
         return Controller;
     }
