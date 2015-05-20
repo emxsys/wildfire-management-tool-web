@@ -70,7 +70,9 @@ define([
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
             // Set the logging level for the World Wind library
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-
+            // Make ready our general purpose notification
+            Messenger.initialize();
+            
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);

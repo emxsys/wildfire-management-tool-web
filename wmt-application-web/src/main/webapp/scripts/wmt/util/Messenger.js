@@ -43,6 +43,10 @@ define([],
          * @exports Messenger
          */
         var Messenger = {
+            initialize: function () {
+                $('#growl').puigrowl();
+                $('#notify').puinotify();                
+            },
             /**
              * Displays popup message for a few seconds.
              * @param {String} style "info", "warn" or "error".
@@ -51,7 +55,7 @@ define([],
              * @param {Number} duration Time to show message in milliseconds.
              */
             growl: function (style, title, message, duration) {
-                //initialize
+                //options
                 $('#growl').puigrowl({life: duration});
                 //show messages
                 $('#growl').puigrowl('show',
@@ -62,8 +66,6 @@ define([],
                     );
             },
             notify: function (html) {
-                //initialize
-                //$('#notify').puinotify();
                 $('#notify').puinotify({
                     easing: 'easeInOutCirc',
                     position: 'bottom'
