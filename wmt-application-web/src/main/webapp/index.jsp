@@ -159,6 +159,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="row">
                     <span>Slope: </span><span id="targetSlope"></span>
                 </div>
+                <div class="row">
+                    <span>Sunrise: </span><span id="sunrise"></span>
+                </div>
+                <div class="row">
+                    <span>Sunset: </span><span id="sunset"></span>
+                </div>
             </div>
         </div>                                        
 
