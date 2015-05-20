@@ -49,6 +49,7 @@ define([
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
     './util/Log',
+    './util/Messenger',
     './globe/ReticuleLayer',
     './Wmt',
     '../nasa/WorldWind'],
@@ -58,12 +59,13 @@ define([
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
         Log,
+        Messenger,
         ReticuleLayer,
         Wmt,
         WorldWind) {
         "use strict";
         var WmtClient = function () {
-            Log.info("WmtClient", null, "constructor");
+            Log.info("WmtClient", "constructor", "started");
             // Specify the where the World Wind resources are located.
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
             // Set the logging level for the World Wind library
@@ -82,26 +84,26 @@ define([
                     {layer: new ReticuleLayer(), enabled: true},
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
                 ];
-            /**
-             * Add imagery layers to WorldWindow
-             */
+            // Add imagery layers to WorldWindow
             for (layer = 0; layer < layers.length; layer++) {
                 layers[layer].layer.enabled = layers[layer].enabled;
                 this.wwd.addLayer(layers[layer].layer);
             }
-            // Restore the view (eye position) from the last session
+            // Restore the globe (eye position) from the last session
             this.restoreSavedState();
             this.wwd.redraw();
 
-            // The Controller will create Model and the Views
+            // Now that the globe is setup, initialize the Model-View-Controller framework.
+            // The controller will create model and the views
             this.controller = new Controller(this.wwd);
 
-            // Save the current view (eye position) when the window closes
+            // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function (evt) {
                 self.saveCurrentState();
                 // Return null to close quietly
                 return null;
             };
+            Log.info("WmtClient", "constructor", "finished.");
         };
 
 
