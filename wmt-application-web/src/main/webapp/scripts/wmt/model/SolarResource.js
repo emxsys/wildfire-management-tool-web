@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define, $ */
 
 define([
     '../util/Log',
@@ -35,6 +36,7 @@ define([
     '../Wmt'],
     function (
         Log,
+        WmtUtil,
         Wmt) {
         "use strict";
         var SolarResource = {
@@ -76,7 +78,7 @@ define([
             formatOffset: function (offset) {
                 var total = Math.abs(offset),
                     hours = Math.floor(total / 60),
-                    minutes = total - (hours * 60)
+                    minutes = total - (hours * 60);
                 return (offset < 0) ? "+" : "-" + this.pad(hours) + ":" + this.pad(minutes);
             },
             pad: function (value) {
