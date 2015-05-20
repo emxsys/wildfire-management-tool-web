@@ -59,10 +59,11 @@ define([
             this.layerManager = new LayerManager(this.wwd);
 
 
-            // Assemble the associations between model and views
+            // MVC: Assemble the associations between model and views
             this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
-            this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlight, SolarView);
+            this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlightChanged, SolarView);
+            this.model.on(Wmt.EVENT_TIME_CHANGED, SolarView.handleTimeChanged, SolarView);
 
 
             // Internal. Intentionally not documented.
@@ -84,6 +85,8 @@ define([
                 self.handleTouchEvent(event);
             });
 
+            // Initialize the model with current time
+            this.model.updateAppTime(new Date());
 
         };
 
