@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <title>Wildfire Management Tool (WMT)</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/x-icon" href="./favicon.png">
-        
+
         <!--During development, using local copies of libraries-->
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />   
@@ -59,7 +59,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--<script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
     </head>
     <body>
-
         <div id="globe" class="container-full">
             <div id='canvas-wrap'>
                 <canvas id="canvasOne">
@@ -73,9 +72,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </div>
         <!--Prime UI Growl Widget--> 
-        <div id="growl"/>  
+        <div id="growl"></div>  
         <!--Prime UI Notify Widget--> 
-        <div id="notify"/>  
+        <div id="notify"></div>
         <!--Prime UI Location Dialog--> 
         <div id="location-dlg" title="Set Location" style="display: none;">
             <div class="latitude">
@@ -89,56 +88,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                        name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
             </div>
         </div> 
-        <!--Removed for purpose of testing fullscreen canvas and getting overlays to work-->
-        <!--            <div class="jumbotron">
-                        <h1 style="text-align:center">Wildfire Management Tool</h1>
-                    </div>-->  
-        <!--               <div class='row'>
-                            <div class="col-sm-3 col-md-3 hidden-xs">
-                                <h4>Projection</h4>
-                                <div class="dropdown" id="projectionDropdown">
-                                </div>
-                                <br>
-                                <h4>Layers</h4>
-                                <div class="list-group" id="layerList">
-                                </div>
-                            </div>
-                        </div>
-                        <ul class="nav nav-pills hidden-xs">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
-                                    <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Submenu 2-1</a></li>
-                                    <li><a href="#">Submenu 2-2</a></li>
-                                    <li><a href="#">Submenu 2-3</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Date/Time: </a></li>
-                            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
-                        </ul>-->
-        <!--Coordinates under mouse-->
-<!--
-        <div class='row'>
-            <div id="coordinateOverlay" class="col-xs-4">
-                <div class="row">
-                    <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                </div>
-                <div class="row">
-                    <span>Lat: </span><span id="terrainLatitude"></span>
-                </div>
-                <div class="row">
-                    <span>Lon: </span><span id="terrainLongitude"></span>
-                </div>
-                <div class="row">
-                    <span>Height: </span><span id="terrainElevation"></span>
-                </div>
+        <!--Prime UI Date/Time Dialog--> 
+        <div id="datetime-dlg" title="Set Date and Time" style="display: none;">
+            <div class="appdate">
+                <label for="datepicker" class="required">Date:</label>
+                <input type="text" name="datepicker" id="datepicker">
             </div>
-        </div>   
-        -->
-        
-        <!--Coordinates under reticule-->
- 
+            <div class="apptime">
+                <label for="time" class="required">Time:</label>
+                <input type="text" name="timepicker" id="timepicker" >
+            </div>
+        </div>        
+        <ul class="nav nav-pills hidden-xs">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Submenu 1</a></li>
+                    <li><a href="#">Submenu 2</a></li>
+                    <li><a href="#">Submenu 3</a></li>
+                </ul>
+            </li>
+            <li><a id="datetime" href="#">Date/Time</a></li>
+            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
+        </ul>
+        <!--Coordinates Overlay-->
         <div class='row'>
             <div id="coordinateOverlay" class="col-xs-4">
                 <div class="row">
@@ -169,8 +143,71 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span>Sunset: </span><span id="sunset"></span>
                 </div>
             </div>
-        </div>                                        
+        </div>             
+        <!--        
+                <div class='row'>
+                    <div class="col-sm-3 col-md-3 hidden-xs">
+                        <h4>Projection</h4>
+                        <div class="dropdown" id="projectionDropdown">
+                        </div>
+                        <br>
+                        <h4>Layers</h4>
+                        <div class="list-group" id="layerList">
+                        </div>
+                    </div>
+                </div>
+        -->
 
+        <!--Removed for purpose of testing fullscreen canvas and getting overlays to work-->
+        <!--            <div class="jumbotron">
+                        <h1 style="text-align:center">Wildfire Management Tool</h1>
+                    </div>-->  
+        <!--               <div class='row'>
+                            <div class="col-sm-3 col-md-3 hidden-xs">
+                                <h4>Projection</h4>
+                                <div class="dropdown" id="projectionDropdown">
+                                </div>
+                                <br>
+                                <h4>Layers</h4>
+                                <div class="list-group" id="layerList">
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="nav nav-pills hidden-xs">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
+                                    <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Submenu 2-1</a></li>
+                                    <li><a href="#">Submenu 2-2</a></li>
+                                    <li><a href="#">Submenu 2-3</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Date/Time: </a></li>
+                            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
+                        </ul>-->
+        <!--Coordinates under mouse-->
+        <!--
+                <div class='row'>
+                    <div id="coordinateOverlay" class="col-xs-4">
+                        <div class="row">
+                            <span>Eye Alt: </span><span id="eyeAltitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Lat: </span><span id="terrainLatitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Lon: </span><span id="terrainLongitude"></span>
+                        </div>
+                        <div class="row">
+                            <span>Height: </span><span id="terrainElevation"></span>
+                        </div>
+                    </div>
+                </div>   
+        -->
+
+
+        <div id="growl"class="pui-growl ui-widget"></div>  
 
     </body>
 </html>
