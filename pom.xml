@@ -4,7 +4,7 @@
     <description>NASA WORLD WIND Europa Challange 2015 Project</description>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.emxsys</groupId>
-    <artifactId>webwmt</artifactId>
+    <artifactId>wmtweb</artifactId>
     <version>4.0-WEB</version>
     <packaging>pom</packaging>
     <properties>
@@ -151,7 +151,15 @@
         </plugins>
     </build>
     
-  <modules>
-    <module>wmt-application-web</module>
-  </modules>
+    <modules>
+        <module>wmt-application-web</module>
+        <module>wmt-wildfire</module>
+        <module>wmt-weather</module>
+        <module>wmt-visad</module>
+        <module>wmt-utilities</module>
+        <module>wmt-solar</module>
+        <module>wmt-libraries</module>
+        <module>wmt-gis</module>
+        <module>wmt-application-rest</module>
+    </modules>
 </project>

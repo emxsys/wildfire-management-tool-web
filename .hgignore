@@ -1,6 +1,10 @@
+syntax: glob
 target
 \.orig\..*$
 \.orig$
 \.chg\..*$
 \.rej$
 \.conflict\~$
+.vpp~*
+*.vpp~*
+*.vpp.bak*
