@@ -40,6 +40,22 @@ define(['../../nasa/WorldWind'],
     function (WorldWind) {
         "use strict";
         var WmtMath = {
+            METERS_TO_FEET: 3.28084,
+            METERS_TO_MILES: 0.000621371,
+            /**
+             * Gets the computed linear distance in meters between two lat/lons.
+             * @param {Number} lat1 First latitude in degrees.
+             * @param {Number} lon1 First longitude in degrees.
+             * @param {Mumber} lat2 Second latitude in degrees.
+             * @param {Number} lon2 Second longitude in degrees.
+             * @returns {Number} Distance in meters between the two coordinates.
+             */
+            distanceBetweenLatLons: function (lat1, lon1, lat2, lon2) {
+                var angleRad = WorldWind.Location.linearDistance(
+                    new WorldWind.Location(lat1, lon1),
+                    new WorldWind.Location(lat2, lon2));
+                return angleRad * WorldWind.EARTH_RADIUS;
+            },
             /**
              * Computes the angle between two Vec3 objects.
              * @param {Vec3} a
