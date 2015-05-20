@@ -36,6 +36,7 @@ define([
     '../view/LayerManager',
     '../view/ReticuleView',
     '../view/SolarView',
+    '../view/TimeManager',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
@@ -44,22 +45,25 @@ define([
         LayerManager,
         ReticuleView,
         SolarView,
+        TimeManager,
         Wmt,
         WorldWind) {
         "use strict";
         var Controller = function (worldWindow) {
-            this.wwd = worldWindow;
+            // The WorldWindow (globe) is the spatial input 
+            this.wwd = worldWindow; 
+            // Create the Date/Time input manager
+            this.timeManager = new TimeManager(this);
 
             // Create the MVC Model
             this.model = new Model(worldWindow);
-
+            
             // Create MVC Views
             this.coordinatesView = new CoordinatesView(this.wwd);
             this.reticuleView = new ReticuleView(this.wwd);
             this.layerManager = new LayerManager(this.wwd);
-
-
-            // MVC: Assemble the associations between model and views
+            
+            // MVC: Assemble the associations between the model and views
             this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
             this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlightChanged, SolarView);
@@ -86,8 +90,35 @@ define([
             });
 
             // Initialize the model with current time
-            this.model.updateAppTime(new Date());
+            this.updateTemporalData(new Date());
 
+        };
+
+        /**
+         * Updates the model with the given time.
+         * @param {Date} date
+         */
+        Controller.prototype.updateTemporalData = function (date) {
+            this.model.updateAppTime(date);
+        };
+
+        /**
+         * Updates the model with current globe viewpoint.
+         */
+        Controller.prototype.updateSpatialData = function () {
+            var wwd = this.wwd,
+                mousePoint = this.mousePoint,
+                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
+
+            // Use the mouse point when we've received at least one mouse event. Otherwise assume that we're
+            // on a touch device and use the center of the World Window's canvas.
+            if (!mousePoint) {
+                this.model.updateMousePosition(centerPoint);
+            } else if (wwd.viewport.containsPoint(mousePoint)) {
+                this.model.updateMousePosition(mousePoint);
+            }
+            // Update the viewpoint
+            this.model.updateEyePosition();
         };
 
         Controller.prototype.handleRedraw = function () {
@@ -97,7 +128,7 @@ define([
             }
 
             self.updateTimeout = window.setTimeout(function () {
-                self.update();
+                self.updateSpatialData();
                 self.updateTimeout = null;
             }, self.updateInterval);
         };
@@ -116,25 +147,6 @@ define([
             this.mousePoint = null;
         };
 
-
-        /**
-         * Updates the model when the globe changes.
-         */
-        Controller.prototype.update = function () {
-            var wwd = this.wwd,
-                mousePoint = this.mousePoint,
-                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2);
-
-            // Use the mouse point when we've received at least one mouse event. Otherwise assume that we're
-            // on a touch device and use the center of the World Window's canvas.
-            if (!mousePoint) {
-                this.model.updateMousePosition(centerPoint);
-            } else if (wwd.viewport.containsPoint(mousePoint)) {
-                this.model.updateMousePosition(mousePoint);
-            }
-            // Update the view coordinates
-            this.model.updateEyePosition();
-        };
         return Controller;
     }
 );
