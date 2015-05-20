@@ -38,7 +38,7 @@ define([
         WorldWind) {
         "use strict";
         var SolarView = {
-            handleSunlight: function (sunlight) {
+            handleSunlightChanged: function (sunlight) {
                 var sunrise = $("#sunrise"),
                     sunset = $("#sunset");
 
@@ -53,6 +53,20 @@ define([
                 } else {
                     sunrise.empty();
                     sunset.empty();
+                }
+            },
+            handleTimeChanged: function (time) {
+                var apptime = $("#apptime");
+
+                // Look for the DOM elements to update, and exit if none exist.
+                if (!apptime) {
+                    return;
+                }
+                // Update the DOM element(s) with the current time.
+                if (apptime) {
+                    apptime.html(time.toLocaleString());
+                } else {
+                    apptime.empty();
                 }
             }
 

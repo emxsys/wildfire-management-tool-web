@@ -63,7 +63,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div id="globe" class="container-full">
             <div id='canvas-wrap'>
                 <canvas id="canvasOne">
-                    Your browser does not support HTML5 Canvas.
+                    <h1>Your browser does not support HTML5 Canvas.</h1>
                 </canvas>
                 <!--DOM UI elements go here!-->
                 <div class='row'>
@@ -158,6 +158,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
                 <div class="row">
                     <span>Slope: </span><span id="targetSlope"></span>
+                </div>
+                <div class="row">
+                    <span>Time: </span><span id="apptime"></span>
                 </div>
                 <div class="row">
                     <span>Sunrise: </span><span id="sunrise"></span>
