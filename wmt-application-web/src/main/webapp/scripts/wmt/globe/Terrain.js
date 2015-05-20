@@ -32,11 +32,11 @@
 
 define([
     '../util/Log',
-    '../util/WmtMath',
-    , '../../nasa/WorldWind'],
+    '../util/WmtUtil',
+    '../../nasa/WorldWind'],
     function (
         Log,
-        WmtMath,
+        WmtUtil,
         WorldWind) {
         "use strict";
 
@@ -100,7 +100,7 @@ define([
          * @returns {Number} Linear distance in meters.
          */
         Terrain.prototype.distanceBetween = function (terrain) {
-            return WmtMath.distanceBetweenLatLons(this.latitude, this.longitude, terrain.latitude, terrain.longitude);
+            return WmtUtil.distanceBetweenLatLons(this.latitude, this.longitude, terrain.latitude, terrain.longitude);
         };
         /**
          * Sets this position to the latitude, longitude and elevation of a specified position.

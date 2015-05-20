@@ -47,6 +47,7 @@ define([
     '../globe/Terrain',
     '../globe/TerrainProvider',
     '../globe/Viewpoint',
+    '../util/WmtUtil',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
@@ -56,6 +57,7 @@ define([
         Terrain,
         TerrainProvider,
         Viewpoint,
+        WmtUtil,
         Wmt,
         WorldWind) {
         "use strict";
@@ -155,17 +157,15 @@ define([
         Model.prototype.updateAppTime = function (time) {
             var self = this;
 
-            this.applicationTime = time;
-
-            // Initate a request to update the sunlight property when we've moved a significant distance
-            if (Math.abs(time.getTime() - this.lastSolarTime.getTime()) / Wmt.MILLISEC_PER_MINUTE > this.SUNLIGHT_TIME_THRESHOLD) {
+            // Update the sunlight property when the elapsed time has gone past the threshold
+            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
                 SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
                     function (sunlight) {
                         self.handleSunlight(sunlight);  // callback
                     });
                 this.lastSolarTime = time;
             }
-
+            this.applicationTime = time;
             this.fire(Wmt.EVENT_TIME_CHANGED, time);
         };
 
