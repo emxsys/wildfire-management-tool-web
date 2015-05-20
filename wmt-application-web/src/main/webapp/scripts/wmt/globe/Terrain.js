@@ -31,9 +31,13 @@
 /*global define*/
 
 define([
-    '../util/Log'
+    '../util/Log',
+    '../util/WmtMath',
     , '../../nasa/WorldWind'],
-    function (Log, WorldWind) {
+    function (
+        Log,
+        WmtMath,
+        WorldWind) {
         "use strict";
 
         /**
@@ -90,6 +94,14 @@ define([
          */
         Terrain.INVALID = new Terrain(Number.NaN, Number.NaN, Number.NaN, Number.NaN, Number.NaN);
 
+        /**
+         * Returns the computed linear distance between this terrain and another terrain object.
+         * @param {Terrain} terrain The other terrain.
+         * @returns {Number} Linear distance in meters.
+         */
+        Terrain.prototype.distanceBetween = function (terrain) {
+            return WmtMath.distanceBetweenLatLons(this.latitude, this.longitude, terrain.latitude, terrain.longitude);
+        };
         /**
          * Sets this position to the latitude, longitude and elevation of a specified position.
          * @param {Position} terrain The terrain to copy.
