@@ -54,22 +54,24 @@ define([],
              * Publish/subscibe event name for notifcation of mouse position on the globe.
              * @constant
              */
-            EVENT_MOUSE_MOVED:  "mouseMoved",
+            EVENT_MOUSE_MOVED: "mouseMoved",
             /**
              * Publish/subscibe event name for notifcation of changes in the sunlight.
              * @constant
              */
-            EVENT_SUNLIGHT_CHANGED:  "sunlightChanged",
+            EVENT_SUNLIGHT_CHANGED: "sunlightChanged",
             /**
              * Publish/subscibe event name for notifcation of changes in the application time.
              * @constant
              */
-            EVENT_TIME_CHANGED:  "timeChanged",
+            EVENT_TIME_CHANGED: "timeChanged",
             /**
              * Publish/subscribe event name for notification of changes in the globe viewpoint.
              * @constant
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
+            MILLISEC_PER_MINUTE: 1000 * 60,
+            MILLISEC_PER_HOUR:  1000 * 60 * 60,
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
@@ -77,14 +79,14 @@ define([],
             /**
              * The URL for the sunlight REST service.
              */
-            SUNLIGHT_REST_SERVICE: "http://localhost:8080/wmt-rest/rs/sunlight",
+            SUNLIGHT_REST_SERVICE: "/wmt-rest/rs/sunlight",
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
              * @constant
              */
             WORLD_WIND_PATH: "scripts/nasa/"
-            
+
         };
         /**
          * Holds configuration parameters for WMT. Applications may modify these parameters prior to creating

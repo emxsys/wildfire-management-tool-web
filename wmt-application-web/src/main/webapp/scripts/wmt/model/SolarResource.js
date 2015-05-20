@@ -46,7 +46,7 @@ define([
              */
             sunlightAtLatLonTime: function (latitude, longitude, datetime, callback) {
 
-                var url = Wmt.SUNLIGHT_REST_SERVICE,
+                var url = location.protocol + "//" + window.location.host + Wmt.SUNLIGHT_REST_SERVICE,
                     query = "mime-type=application/json"
                     + "&time=" + this.toOffsetTime(datetime)
                     + "&latitude=" + latitude
