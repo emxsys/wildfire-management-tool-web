@@ -59,6 +59,12 @@ define([
         Wmt,
         WorldWind) {
         "use strict";
+        /**
+         * Creates a Model object that's assocaited with the given WorldWindow globe.
+         * @constructor
+         * @param {WorldWindo} worldWindow The canvas and globe.
+         * @returns {Model}
+         */
         var Model = function (worldWindow) {
 
             // Mix-in Publisher capability (publish/subscribe pattern)
@@ -68,22 +74,23 @@ define([
             this.terrainProvider = new TerrainProvider(worldWindow);
 
             // Properties available for non-subscribers
-            this.terrainAtMouse = new Terrain();
+            this.terrainAtMouse = new Terrain(0,0,0,0,0);
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
-
+            this.sunlight = {};
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
             this.lastMousePoint = new WorldWind.Vec2();
+            this.lastSolarTarget = new Terrain(0,0,0,0,0);
         };
 
         /**
-         * 
-         * @returns {undefined}
+         * Updates model propeties associated with the globe's view.
          */
         Model.prototype.updateEyePosition = function () {
             // Compute the World Window's current eye position.
             var wwd = this.wwd,
+                self = this,
                 centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
                 navigatorState = wwd.navigator.currentState(),
                 eyePoint = navigatorState.eyePoint,
@@ -96,18 +103,24 @@ define([
                 return;
             }
             this.lastEyePoint.copy(eyePoint);
-            
+
             // Get the attributes for eye position and the target (the point under the reticule)
             wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
             //eyeGroundElev = wwd.globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
             target = this.terrainAtScreenPoint(centerPoint);
             viewpoint = new Viewpoint(eyePos, target);
 
-            //SolarResource.update(target);
-
+            // Initate a request to update the sunlight property when we've moved a significant distance
+            if (!this.lastSolarTarget || this.lastSolarTarget.distanceBetween(target) > 10000) {
+                SolarResource.sunlightAtLatLonTime(target.latitude, target.longitude, new Date(),
+                    function (sunlight) {
+                        self.handleSunlight(sunlight);  // callback
+                    });
+                this.lastSolarTarget.copy(target);
+            }
             // Persist a copy of the new position in our model for non-subscribers
             this.viewpoint.copy(viewpoint);
-            
+
             // Update viewpointChanged subscribers
             this.fire(Wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
         };
@@ -118,15 +131,12 @@ define([
          * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
          */
         Model.prototype.updateMousePosition = function (mousePoint) {
-            var terrain;
-
             if (mousePoint.equals(this.lastMousePoint)) {
                 return;
             }
             this.lastMousePoint.copy(mousePoint);
 
-            terrain = this.terrainAtScreenPoint(mousePoint);
-
+            var terrain = this.terrainAtScreenPoint(mousePoint);
             // Persist a copy of the terrain in our model for non-subscribers
             this.terrainAtMouse.copy(terrain);
             // Update subscribers
@@ -135,7 +145,7 @@ define([
 
         /**
          * Gets terrain at the screen point.
-         * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
+         * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
          */
         Model.prototype.terrainAtScreenPoint = function (screenPoint) {
             var wwd = this.wwd,
@@ -155,6 +165,17 @@ define([
                 terrain.copy(Terrain.INVALID);
             }
             return terrain;
+        };
+
+        /**
+         * Callback function that receives sunlight data from a REST resource
+         * @param {JSON Object} sunlight
+         */
+        Model.prototype.handleSunlight = function (sunlight) {
+            this.sunlight = sunlight;
+            Log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
+            // Update sunlightChanged subscribers
+            this.fire(Wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
         };
         return Model;
     }
