@@ -35,12 +35,46 @@
  * @author Bruce Schubert
  * @module {util/WmtUtil}
  */
-define([],
-    function () {
+define(['../../nasa/WorldWind'],
+    function (WorldWind) {
         "use strict";
         var WmtUtil = {
+            METERS_TO_FEET: 3.28084,
+            METERS_TO_MILES: 0.000621371,
+            MILLISECS_TO_MINUTES: 1 / (1000 * 60),
+            MILLISECS_TO_HOURS: 1 / (1000 * 60 * 60),
+            /**
+             * Gets the computed linear distance in meters between two lat/lons.
+             * @param {Number} lat1 First latitude in degrees.
+             * @param {Number} lon1 First longitude in degrees.
+             * @param {Mumber} lat2 Second latitude in degrees.
+             * @param {Number} lon2 Second longitude in degrees.
+             * @returns {Number} Distance in meters between the two coordinates.
+             */
+            distanceBetweenLatLons: function (lat1, lon1, lat2, lon2) {
+                var angleRad = WorldWind.Location.linearDistance(
+                    new WorldWind.Location(lat1, lon1),
+                    new WorldWind.Location(lat2, lon2));
+                return angleRad * WorldWind.EARTH_RADIUS;
+            },
+            /**
+             * Gets the number of minutes between two times.
+             * @param {Date} time1
+             * @param {Date} time2
+             * @returns {Number} Minutes (floating point).
+             */
+            minutesBetween: function (time1, time2) {
+                return Math.abs(time1.getTime() - time2.getTime()) * this.MILLISECS_TO_MINUTES;
+            },
+            /**
+             * Gets the number of minutes between two times.
+             */
+            /**
+             * Gets the current domain from the active browser window.
+             * @returns {String} E.g., returns http://emxsys.com from http://emxsys.com/documentation/index.html
+             */
             currentDomain: function () {
-                return location.protocol + "//" + window.location.host;
+                return window.location.protocol + "//" + window.location.host;
             }
         };
         return WmtUtil;
