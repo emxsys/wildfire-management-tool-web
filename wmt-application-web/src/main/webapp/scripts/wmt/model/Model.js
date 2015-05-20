@@ -66,7 +66,6 @@ define([
          * @returns {Model}
          */
         var Model = function (worldWindow) {
-
             // Mix-in Publisher capability (publish/subscribe pattern)
             Publisher.makePublisher(this);
 
@@ -74,15 +73,20 @@ define([
             this.terrainProvider = new TerrainProvider(worldWindow);
 
             // Properties available for non-subscribers
-            this.terrainAtMouse = new Terrain(0,0,0,0,0);
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
+            this.terrainAtMouse = new Terrain(0, 0, 0, 0, 0);
+            this.applicationTime = new Date();
             this.sunlight = {};
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
             this.lastMousePoint = new WorldWind.Vec2();
-            this.lastSolarTarget = new Terrain(0,0,0,0,0);
+            this.lastSolarTarget = new Terrain(0, 0, 0, 0, 0);
+            this.lastSolarTime = new Date(0);
+            this.SUNLIGHT_DISTANCE_THRESHOLD = 10000; // meters
+            this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
         };
+
 
         /**
          * Updates model propeties associated with the globe's view.
@@ -111,7 +115,7 @@ define([
             viewpoint = new Viewpoint(eyePos, target);
 
             // Initate a request to update the sunlight property when we've moved a significant distance
-            if (!this.lastSolarTarget || this.lastSolarTarget.distanceBetween(target) > 10000) {
+            if (!this.lastSolarTarget || this.lastSolarTarget.distanceBetween(target) > this.SUNLIGHT_DISTANCE_THRESHOLD) {
                 SolarResource.sunlightAtLatLonTime(target.latitude, target.longitude, new Date(),
                     function (sunlight) {
                         self.handleSunlight(sunlight);  // callback
@@ -120,7 +124,6 @@ define([
             }
             // Persist a copy of the new position in our model for non-subscribers
             this.viewpoint.copy(viewpoint);
-
             // Update viewpointChanged subscribers
             this.fire(Wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
         };
@@ -142,6 +145,30 @@ define([
             // Update subscribers
             this.fire(Wmt.EVENT_MOUSE_MOVED, terrain);
         };
+
+
+        /**
+         * 
+         * @param {type} time
+         * @returns {undefined}
+         */
+        Model.prototype.updateAppTime = function (time) {
+            var self = this;
+
+            this.applicationTime = time;
+
+            // Initate a request to update the sunlight property when we've moved a significant distance
+            if (Math.abs(time.getTime() - this.lastSolarTime.getTime()) / Wmt.MILLISEC_PER_MINUTE > this.SUNLIGHT_TIME_THRESHOLD) {
+                SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
+                    function (sunlight) {
+                        self.handleSunlight(sunlight);  // callback
+                    });
+                this.lastSolarTime = time;
+            }
+
+            this.fire(Wmt.EVENT_TIME_CHANGED, time);
+        };
+
 
         /**
          * Gets terrain at the screen point.
@@ -166,6 +193,7 @@ define([
             }
             return terrain;
         };
+
 
         /**
          * Callback function that receives sunlight data from a REST resource
