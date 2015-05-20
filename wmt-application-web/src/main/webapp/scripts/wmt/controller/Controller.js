@@ -35,6 +35,7 @@ define([
     '../view/CoordinatesView',
     '../view/LayerManager',
     '../view/ReticuleView',
+    '../view/SolarView',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
@@ -42,6 +43,7 @@ define([
         CoordinatesView,
         LayerManager,
         ReticuleView,
+        SolarView,
         Wmt,
         WorldWind) {
         "use strict";
@@ -60,6 +62,8 @@ define([
             // Assemble the associations between model and views
             this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
+            this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlight, SolarView);
+
 
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
