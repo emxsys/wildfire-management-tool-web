@@ -42,7 +42,6 @@ define([
     '../util/Messenger',
     '../../nasa/WorldWind'],
     function (
-        LocationDialog,
         Log,
         Messenger,
         WorldWind) {
@@ -52,15 +51,15 @@ define([
          * @param {Navigator} navigator Object that will be updated by the Locator.
          * @returns {Locator}
          */
-        var Locator = function (navigator) {
-            if (!navigator) {
+        var Locator = function (controller) {
+            if (!controller) {
                 throw new WorldWind.ArgumentError(
-                    Log.error("Locator", "constructor", "missingNavigator"));
+                    Log.error("Locator", "constructor", "missingController"));
             }
             /**
-             * The locate...() methods update the globe via the navigator.
+             * The locate...() methods update the globe via the controller.
              */
-            this.navigator = navigator;
+            this.controller = controller;
         };
         /**
          * Center's the globe on the user's current position using the GeoLocation API.
@@ -85,7 +84,7 @@ define([
                      * onSuccess callback centers the crosshairs on the given position
                      * @param {GeoLocation.Position} position Coordinates and accuracy information.
                      */
-                    self.navigator.lookAtLatLon(
+                    self.controller.lookAtLatLon(
                         position.coords.latitude,
                         position.coords.longitude);
                 },
@@ -117,32 +116,6 @@ define([
 
                 });
         };
-        /**
-         * Initiates a modal dialog with the user to go to a set of coordinates.
-         * @description Displays a dialog that allows the user to navigate 
-         * to a set of coordinates.
-         * @public
-         */
-        Locator.prototype.locateCoordinates = function () {
-            var dlg = new LocationDialog(),
-                self = this;
-            dlg.show(
-                function (position) {
-                    /**
-                     * onSuccess callback centers the crosshairs on the given position.
-                     * @param {WorldWind.Position} position Coordinates.
-                     */
-                    self.navigator.lookAtLatLon(position.latitude, position.longitude);
-                },
-                function (error) {
-                    /**
-                     * onFailuer callback notifies the user of error.
-                     * @param {undefined} error
-                     */
-                    Messenger.growl("warn", "Error", "Something went wrong in locateCoordinates.", 4000);
-                });
-        };
-
 
         return Locator;
     }
