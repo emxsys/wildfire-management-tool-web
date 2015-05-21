@@ -99,6 +99,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <input type="text" name="timepicker" id="timepicker" >
             </div>
         </div>        
+        <!--Prime UI Fuel Model Dialog--> 
+        <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
+        </div>        
         <!--Main Menu-->
         <ul class="nav nav-pills hidden-xs">
             <li class="dropdown">
@@ -108,7 +111,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <li><a href="#">Submenu 1</a></li>
                     <li><a href="#">Submenu 2</a></li>
                     <li><a href="#">Submenu 3</a></li>
-                    <li><div class="dropdown" id="fuelModelDropdown"></div></li>
+                    <li><a id="fuelModel" href="#">Fuel Model</a></li>
                     <li><div class="dropdown" id="projectionDropdown"></div></li>
                     <li><div class="list-group" id="layerList"></div></li>
                 </ul>
