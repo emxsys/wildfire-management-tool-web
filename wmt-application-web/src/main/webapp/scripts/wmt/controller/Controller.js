@@ -33,16 +33,18 @@
 define([
     '../model/Model',
     '../view/CoordinatesView',
-    '../view/LayerManager',
+    './LayerManager',
+    './LocationManager',
     '../view/ReticuleView',
     '../view/SolarView',
-    '../view/TimeManager',
+    './TimeManager',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Model,
         CoordinatesView,
         LayerManager,
+        LocationManager,
         ReticuleView,
         SolarView,
         TimeManager,
@@ -51,18 +53,19 @@ define([
         "use strict";
         var Controller = function (worldWindow) {
             // The WorldWindow (globe) is the spatial input 
-            this.wwd = worldWindow; 
-            // Create the Date/Time input manager
+            this.wwd = worldWindow;
+            // Create the managers
+            this.layerManager = new LayerManager(this.wwd);
             this.timeManager = new TimeManager(this);
+            this.locationManager = new LocationManager(this);
 
             // Create the MVC Model
             this.model = new Model(worldWindow);
-            
+
             // Create MVC Views
             this.coordinatesView = new CoordinatesView(this.wwd);
             this.reticuleView = new ReticuleView(this.wwd);
-            this.layerManager = new LayerManager(this.wwd);
-            
+
             // MVC: Assemble the associations between the model and views
             this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
             this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
@@ -90,15 +93,20 @@ define([
             });
 
             // Initialize the model with current time
-            this.updateTemporalData(new Date());
+            this.changeTime(new Date());
 
         };
 
+
+        Controller.prototype.lookAtLatLon = function(latitude, longitude) {
+            this.wwd.navigator.lookAtLocation(latitude, longitude);
+        };
+        
         /**
          * Updates the model with the given time.
          * @param {Date} date
          */
-        Controller.prototype.updateTemporalData = function (date) {
+        Controller.prototype.changeDateTime = function (date) {
             this.model.updateAppTime(date);
         };
 

@@ -91,8 +91,8 @@ define([],
                             // Ok to close
                             $('#datetime-dlg').puidialog('hide');                           
                             
-                            // Invoke the callback with the user's position.
-                            self.ctrl.updateTemporalData(date);
+                            // Ask the controller to change the application time.
+                            self.ctrl.changeDateTime(date);
 
                         }
                     },

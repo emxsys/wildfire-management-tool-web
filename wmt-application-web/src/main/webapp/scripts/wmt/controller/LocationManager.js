@@ -37,29 +37,40 @@
  * @author Bruce Schubert
  * @author Theodore Walton
  */
-define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+define([
+    './Controller',
+    '../../nasa/WorldWind'],
+    function (
+        Controller,
+        WorldWind) {
         "use strict";
         /**
          * @constructor
-         * @returns {LocationDialog}
+         * @returns {LocationManager}
          */
-        var LocationDialog = function () {
+        var LocationManager = function (controller) {
+            var self = this;
+            
+            this.ctrl = controller;
             this.position = new WorldWind.Position();
+            this.initialize();
+            $("#location").on("click", function (event) {
+                self.showDialog(event);
+            });
         };
         /**
          * Shows the Location modal dialog.
          */
-        LocationDialog.prototype.showDialog = function () {
+        LocationManager.prototype.showDialog = function () {
             $('#location-dlg').puidialog('show');
         };
         /**
          * Generates, then shows the Location modal dialog.
-         * @param {function(Position)} success Callback function accepting a WorldWind Position.
          * @param {type} fail Callback function accepting an error.
          */
-        LocationDialog.prototype.show = function (success, fail) {
-
+        LocationManager.prototype.initialize = function () {
+            var self = this;
+            
             $('#location-dlg').puidialog({
                 showEffect: 'fade',
                 hideEffect: 'fade',
@@ -82,9 +93,8 @@ define(['../../nasa/WorldWind'],
                             // Ok to close
                             $('#location-dlg').puidialog('hide');
 
-                            // Invoke the callback with the user's position.
-                            success(new WorldWind.Position(Number(lat), Number(lon), 0));
-
+                            // Ask the controller to go to the new location.
+                            self.ctrl.lookAtLatLon(Number(lat), Number(lon));
                         }
                     },
                     {
@@ -92,13 +102,11 @@ define(['../../nasa/WorldWind'],
                         icon: 'ui-icon-close',
                         click: function () {
                             $('#location-dlg').puidialog('hide');
-                            //fail();
                         }
                     }]
             });
-//            setTimeout($('#location-dlg').puidialog('show'),50); I can stagger the execution this way, but the time based execution is unreliable.
             this.showDialog(); //This way, the operations above are guarenteed to be completed before the dialog is shown.
         };
-        return LocationDialog;
+        return LocationManager;
     }
 );
