@@ -34,22 +34,17 @@
  * The World Wind view controls are horizontal in nature, this implementation orients the controls vertically.
  * 
  * @exports EnhancedViewControlsLayer
- * @param {Object} Locator
- * @param {Object} Navigator
  * @param {Object} ViewControlsLayer
  * @param {Object} Wmt
  * @param {Object} WorldWind
+ * 
  * @author Bruce Schubert
  */
 define([
-    '../location/Locator',
-    '../location/Navigator',
     '../../nasa/layer/ViewControlsLayer',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
-        Locator,
-        Navigator,
         ViewControlsLayer,
         Wmt,
         WorldWind) {
@@ -69,20 +64,12 @@ define([
             // Creates a copy of parent members
             ViewControlsLayer.call(this, worldWindow);
 
-            // TODO: Depreciate Locator in favor of separate UI control for invoking Set Location.
-
-            /**  Updates the view */
-            this.locator = new Locator(new Navigator(worldWindow));
-
             // Set defaults from configuration
             this.showPanControl = Wmt.configuration.showPanControl;
             this.showExaggerationControl = Wmt.configuration.showExaggerationControl;
             this.orientation = Wmt.configuration.viewControlOrientation;
 
             // Top-right placement
-//            this.placement = new Offset(
-//                WorldWind.OFFSET_FRACTION, 0.973, // Align with Compass width
-//                WorldWind.OFFSET_FRACTION, 0.95); // Move down to make room for compass
             this.placement = new WorldWind.Offset(
                 WorldWind.OFFSET_INSET_PIXELS, 30, // Align with Compass width
                 WorldWind.OFFSET_INSET_PIXELS, 50); // Move down to make room for compass
@@ -92,18 +79,17 @@ define([
             // Use same offset values as parent ViewControlsLayer.
             var screenOffset = new WorldWind.Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
                 imagePath = Wmt.IMAGE_PATH;
-
             // These controls are all internal and intentionally not documented.
-            this.gotoControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
-            this.locateControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
-            this.gotoControl.imageOffset = screenOffset.clone();
-            this.locateControl.imageOffset = screenOffset.clone();
-            this.gotoControl.size = 32;
-            this.locateControl.size = 32;
-            this.gotoControl.opacity = this._inactiveOpacity;
-            this.locateControl.opacity = this._inactiveOpacity;
-            this.controls.push(this.gotoControl);
-            this.controls.push(this.locateControl);
+//            this.gotoControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
+//            this.locateControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
+//            this.gotoControl.imageOffset = screenOffset.clone();
+//            this.locateControl.imageOffset = screenOffset.clone();
+//            this.gotoControl.size = 32;
+//            this.locateControl.size = 32;
+//            this.gotoControl.opacity = this._inactiveOpacity;
+//            this.locateControl.opacity = this._inactiveOpacity;
+//            this.controls.push(this.gotoControl);
+//            this.controls.push(this.locateControl);
 
         };
 
@@ -252,10 +238,10 @@ define([
                 } else if (topObject === this.fovNarrowControl
                     || topObject === this.fovWideControl) {
                     operation = this.handleFov;
-                } else if (topObject === this.gotoControl) {
-                    operation = this.handleGoto;
-                } else if (topObject === this.locateControl) {
-                    operation = this.handleLocate;
+//                } else if (topObject === this.gotoControl) {
+//                    operation = this.handleGoto;
+//                } else if (topObject === this.locateControl) {
+//                    operation = this.handleLocate;
                 }
             }
 
@@ -264,33 +250,33 @@ define([
 
 
 
-        /**
-         * Locate handler.
-         * @private
-         * @param {type} e
-         * @param {type} ignore Control.
-         */
-        EnhancedViewControlsLayer.prototype.handleLocate = function (e, ignore) {
-            // Start an operation on left button down or touch start.
-            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
-                e.preventDefault();
-                setTimeout(this.locator.locateCurrentPosition(), 50);
-            }
-        };
-
-        /**
-         * Goto handler.
-         * @private
-         * @param {type} e
-         * @param {type} ignore Control.
-         */
-        EnhancedViewControlsLayer.prototype.handleGoto = function (e, ignore) {
-            // Start an operation on left button down or touch start.
-            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
-                e.preventDefault();
-                setTimeout(this.locator.locateCoordinates(), 50);
-            }
-        };
+//        /**
+//         * Locate handler.
+//         * @private
+//         * @param {type} e
+//         * @param {type} ignore Control.
+//         */
+//        EnhancedViewControlsLayer.prototype.handleLocate = function (e, ignore) {
+//            // Start an operation on left button down or touch start.
+//            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
+//                e.preventDefault();
+//                setTimeout(this.locator.locateCurrentPosition(), 50);
+//            }
+//        };
+//
+//        /**
+//         * Goto handler.
+//         * @private
+//         * @param {type} e
+//         * @param {type} ignore Control.
+//         */
+//        EnhancedViewControlsLayer.prototype.handleGoto = function (e, ignore) {
+//            // Start an operation on left button down or touch start.
+//            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
+//                e.preventDefault();
+//                setTimeout(this.locator.locateCoordinates(), 50);
+//            }
+//        };
 
 
         return EnhancedViewControlsLayer;
