@@ -101,6 +101,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </div>        
         <!--Prime UI Fuel Model Dialog--> 
         <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
+            <div id="fuelModel-tbl">
+            </div>
         </div>        
         <!--Main Menu-->
         <ul class="nav nav-pills hidden-xs">
@@ -212,9 +214,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>   
         -->
-
-
-        <div id="growl"class="pui-growl ui-widget"></div>  
 
     </body>
 </html>

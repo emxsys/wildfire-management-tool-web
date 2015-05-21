@@ -31,20 +31,22 @@
 /*global define*/
 
 define([
-    '../model/Model',
     '../view/CoordinatesView',
+    './FuelModelManager',
     './LayerManager',
     './LocationManager',
+    '../model/Model',
     '../view/ReticuleView',
     '../view/SolarView',
     './TimeManager',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
-        Model,
         CoordinatesView,
+        FuelModelManager,
         LayerManager,
         LocationManager,
+        Model,
         ReticuleView,
         SolarView,
         TimeManager,
@@ -52,12 +54,13 @@ define([
         WorldWind) {
         "use strict";
         var Controller = function (worldWindow) {
-            // The WorldWindow (globe) is the spatial input 
+            // The WorldWindow (globe) provides the spatial input 
             this.wwd = worldWindow;
-            // Create the managers
+            // Create the other input managers
             this.layerManager = new LayerManager(this.wwd);
             this.timeManager = new TimeManager(this);
             this.locationManager = new LocationManager(this);
+            this.fuelModelManager = new FuelModelManager(this);
 
             // Create the MVC Model
             this.model = new Model(worldWindow);
