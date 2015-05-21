@@ -26,6 +26,8 @@
         <jogl.version>2.1.5-01</jogl.version>
         <slf4j.version>1.7.7</slf4j.version>
                 
+        <terramenta.version>0.0.0</terramenta.version>        
+                                                
         <!-- PLUGIN VERSIONS -->
         <checkstyle.plugin.version>2.12</checkstyle.plugin.version>
         <compiler.plugin.version>3.1</compiler.plugin.version>
@@ -161,5 +163,7 @@
         <module>wmt-libraries</module>
         <module>wmt-gis</module>
         <module>wmt-application-rest</module>
+        <module>wmt-time</module>
+        <module>wmt-jfree</module>
     </modules>
 </project>
