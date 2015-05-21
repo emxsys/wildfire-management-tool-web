@@ -93,7 +93,7 @@ define([
             });
 
             // Initialize the model with current time
-            this.changeTime(new Date());
+            this.changeDateTime(new Date());
 
         };
 
