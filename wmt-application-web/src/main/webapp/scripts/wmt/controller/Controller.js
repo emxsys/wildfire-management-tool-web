@@ -98,10 +98,11 @@ define([
         };
 
 
-        Controller.prototype.lookAtLatLon = function(latitude, longitude) {
-            this.wwd.navigator.lookAtLocation(latitude, longitude);
+        Controller.prototype.lookAtLatLon = function (latitude, longitude) {
+            this.wwd.navigator.lookAtLocation.latitude = latitude;
+            this.wwd.navigator.lookAtLocation.longitude = longitude;
         };
-        
+
         /**
          * Updates the model with the given time.
          * @param {Date} date
@@ -110,6 +111,37 @@ define([
             this.model.updateAppTime(date);
         };
 
+
+        /**
+         * Resets the viewpoint to the startup configuration settings.
+         */
+        Controller.prototype.reset = function () {
+            this.wwd.navigator.lookAtLocation.latitude = Number(Wmt.configuration.startupLatitude);
+            this.wwd.navigator.lookAtLocation.longitude = Number(Wmt.configuration.startupLongitude);
+            this.wwd.navigator.range = Number(Wmt.configuration.startupAltitude);
+            this.wwd.navigator.heading = Number(Wmt.configuration.startupHeading);
+            this.wwd.navigator.tilt = Number(Wmt.configuration.startupTilt);
+            this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
+        };
+        
+
+        /**
+         * Resets the viewpoint to north up.
+         */
+        Controller.prototype.resetHeading = function () {
+            this.wwd.navigator.heading = Number(0);
+        };
+        
+        
+        /**
+         * Resets the viewpoint to north up and nadir.
+         */
+        Controller.prototype.resetHeadingAndTilt = function () {
+            this.wwd.navigator.heading = 0;
+            this.wwd.navigator.tilt = 0;
+        };
+        
+        
         /**
          * Updates the model with current globe viewpoint.
          */
