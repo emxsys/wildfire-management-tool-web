@@ -70,8 +70,10 @@ define([],
              * @constant
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
-            MILLISEC_PER_MINUTE: 1000 * 60,
-            MILLISEC_PER_HOUR:  1000 * 60 * 60,
+            /**
+             * The URL for the fuel models REST service.
+             */
+            FUELMODELS_REST_SERVICE: "/wmt-rest/rs/fuelmodels",
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
