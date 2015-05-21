@@ -208,12 +208,12 @@ define([
                 this.fovWideControl.render(dc);
             }
             // TODO: following block to be depreciated in favor of stand alone Goto/Set Location button.
-            this.gotoControl.screenOffset.x = x;
-            this.gotoControl.screenOffset.y = y;
-            this.locateControl.screenOffset.x = x + this.gotoControl.size;
-            this.locateControl.screenOffset.y = y;
-            this.gotoControl.render(dc);
-            this.locateControl.render(dc);
+//            this.gotoControl.screenOffset.x = x;
+//            this.gotoControl.screenOffset.y = y;
+//            this.locateControl.screenOffset.x = x + this.gotoControl.size;
+//            this.locateControl.screenOffset.y = y;
+//            this.gotoControl.render(dc);
+//            this.locateControl.render(dc);
         };
 
         // Copied from parent. Augmented to include goto and locate controls
