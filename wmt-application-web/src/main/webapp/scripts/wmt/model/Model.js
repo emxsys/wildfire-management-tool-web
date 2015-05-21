@@ -43,7 +43,7 @@
 define([
     '../util/Log',
     '../util/Publisher',
-    './SolarResource',
+    '../resource/SolarResource',
     '../globe/Terrain',
     '../globe/TerrainProvider',
     '../globe/Viewpoint',
