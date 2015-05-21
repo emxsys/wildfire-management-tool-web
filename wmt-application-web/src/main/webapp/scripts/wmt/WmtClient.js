@@ -72,7 +72,7 @@ define([
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
             // Make ready our general purpose notification
             Messenger.initialize();
-            
+
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
@@ -128,16 +128,16 @@ define([
                     rollStr = Cookie.read("roll");
 
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
-                    Log.log("Previous state invalid: Using default lat/lon.");
+                    Log.warning("WmtClient", "restoreSavedState", "Previous state invalid: Using default lat/lon.");
                     latStr = Wmt.configuration.startupLatitude;
                     lonStr = Wmt.configuration.startupLongitude;
                 }
                 if (!altStr || isNaN(altStr)) {
-                    Log.log("Previous state invalid: Using default altitude.");
+                    Log.warning("WmtClient", "restoreSavedState", "Previous state invalid: Using default altitude.");
                     altStr = Wmt.configuration.startupAltitude;
                 }
                 if (!headStr || !tiltStr || !rollStr || isNaN(headStr) || isNaN(tiltStr) || isNaN(rollStr)) {
-                    Log.log("Previous state invalid: Using default view angles.");
+                    Log.warning("WmtClient", "restoreSavedState", "Previous state invalid: Using default view angles.");
                     headStr = Wmt.configuration.startupHeading;
                     tiltStr = Wmt.configuration.startupTilt;
                     rollStr = Wmt.configuration.startupRoll;
@@ -170,7 +170,8 @@ define([
                 alt = this.wwd.navigator.range,
                 heading = this.wwd.navigator.heading,
                 tilt = this.wwd.navigator.tilt,
-                roll = this.wwd.navigator.roll, numDays = 100;
+                roll = this.wwd.navigator.roll,
+                numDays = 100;
 
             // Save the eye position
             Cookie.save("latitude", pos.latitude, numDays);
