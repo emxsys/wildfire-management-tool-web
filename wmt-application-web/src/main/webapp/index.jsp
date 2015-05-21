@@ -110,7 +110,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </ul>
             </li>
             <li><a id="datetime" href="#">Date/Time</a></li>
-            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
+            <li><a id="location" href="#">Location</a></li>
         </ul>
         <!--Coordinates Overlay-->
         <div class='row'>
