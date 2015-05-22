@@ -28,31 +28,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global requirejs*/
+/*global define, $ */
 
-/**
- * Top-level script file that does not define a module containing a configuration object.
- * @link http://requirejs.org/docs/api.html#config
- * @author Bruce Schubert
- */
-requirejs.config({
-    baseUrl: "scripts/wmt",
-    waitSeconds: 60,
-    "paths": {
-//        // Specify a path to jquery, the second declaration is local fallback
-//        jquery: [
-//            "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min",
-//            "../../thirdparty/jquery-2.1.4.min"],
-//        jqueryui: [
-//            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
-//            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
-//        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
-        //worldwind: "../nasa/WorldWind",
-        WmtClient: "WmtClient"
+define([
+    '../util/Log',
+    '../util/WmtUtil',
+    '../Wmt'],
+    function (
+        Log,
+        WmtUtil,
+        Wmt) {
+        "use strict";
+        var FuelMoistureResource = {
+            /**
+             * 
+             * @param {String} conditions  Either "hot_and_dry", "cool_and_wet", or
+             * "between_hot_and_cool". 
+             * @param {Function(FuelMoisture JSON)} callback Receives a FuelMoisture JSON object.
+             */
+            fuelMoisture: function (conditions, callback) {
+                // TODO: Assert conditions are valid
+                var url = WmtUtil.currentDomain() + Wmt.FUELMOISTURE_REST_SERVICE,
+                    query = "mime-type=application/json"
+                    + "&conditions=" + conditions;
+                console.log(url + '?' + query);
+                $.get(url, query, callback);
+            }
+        };
+        return FuelMoistureResource;
     }
-
-});
-
-requirejs(["WmtClient"], function (WmtClient) {
-    new WmtClient();
-});
+);

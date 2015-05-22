@@ -28,31 +28,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global requirejs*/
+/*global define, $ */
 
-/**
- * Top-level script file that does not define a module containing a configuration object.
- * @link http://requirejs.org/docs/api.html#config
- * @author Bruce Schubert
- */
-requirejs.config({
-    baseUrl: "scripts/wmt",
-    waitSeconds: 60,
-    "paths": {
-//        // Specify a path to jquery, the second declaration is local fallback
-//        jquery: [
-//            "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min",
-//            "../../thirdparty/jquery-2.1.4.min"],
-//        jqueryui: [
-//            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
-//            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
-//        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
-        //worldwind: "../nasa/WorldWind",
-        WmtClient: "WmtClient"
+define([
+    '../util/Log',
+    '../util/WmtUtil',
+    '../Wmt'],
+    function (
+        Log,
+        WmtUtil,
+        Wmt) {
+        "use strict";
+        var Terrain = {
+            /**
+             * Gets a terrain tuple that is compatible with the SurfaceFireResource.
+             *
+             * @param {String} aspect The direction the terrain slope is facing in degrees; 0 is north, 180 is south.
+             * @param {String} slope The steepness of the slope in degrees; 0 is flat, 90 is straight up.
+             * @param {String} elevation The elevation of the terrain in meters.
+             * @param {Function(TerrainTuple JSON)} callback Receives a simple terrain tuple using the .
+             */
+            terrainTuple: function (aspect, slope, elevation, callback) {
+                // TODO: assert the input values
+                var url = WmtUtil.currentDomain() + Wmt.TERRAIN_REST_SERVICE,
+                    query = "mime-type=application/json"
+                    + "&aspect=" + aspect
+                    + "&slope=" + slope
+                    + "&elevation=" + elevation;
+                console.log(url + '?' + query);
+                $.get(url, query, callback);
+            }
+        };
+        return Terrain;
     }
-
-});
-
-requirejs(["WmtClient"], function (WmtClient) {
-    new WmtClient();
-});
+);

@@ -28,31 +28,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global requirejs*/
+/*global define, $ */
 
-/**
- * Top-level script file that does not define a module containing a configuration object.
- * @link http://requirejs.org/docs/api.html#config
- * @author Bruce Schubert
- */
-requirejs.config({
-    baseUrl: "scripts/wmt",
-    waitSeconds: 60,
-    "paths": {
-//        // Specify a path to jquery, the second declaration is local fallback
-//        jquery: [
-//            "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min",
-//            "../../thirdparty/jquery-2.1.4.min"],
-//        jqueryui: [
-//            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
-//            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
-//        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
-        //worldwind: "../nasa/WorldWind",
-        WmtClient: "WmtClient"
+define([
+    '../util/Log',
+    '../util/WmtUtil',
+    '../Wmt'],
+    function (
+        Log,
+        WmtUtil,
+        Wmt) {
+        "use strict";
+        var SurfaceFuelResource = {
+
+            surfaceFuel: function (fuelModel, fuelMoisture, callback) {
+
+                var url = WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
+                    query = "mime-type=application/json";
+                console.log(url + '?' + query);
+                $.post(url, query, callback);
+            }
+        };
+        return SurfaceFuelResource;
     }
-
-});
-
-requirejs(["WmtClient"], function (WmtClient) {
-    new WmtClient();
-});
+);
