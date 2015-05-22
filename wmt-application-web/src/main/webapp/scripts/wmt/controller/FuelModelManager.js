@@ -47,6 +47,8 @@ define([
             var self = this;
             this.ctrl = controller;
             this.initialize();
+            this.selectedFuelModel = null;
+
             $("#fuelModel").on("click", function (event) {
                 self.showDialog(event);
             });
@@ -75,10 +77,14 @@ define([
                 buttons: [{
                         text: 'OK',
                         icon: 'ui-icon-check',
+                        disabled: 'true',
                         click: function () {
                             // Ok to close?
-                            $('#fuelModel-dlg').puidialog('hide');
-                            // TODO: Ask the controller to change the fuel model
+                            if (self.selectedFuelModel) {
+                                $('#fuelModel-dlg').puidialog('hide');
+                                // TODO: Ask the controller to change the fuel model
+                                self.ctrl.changeFuelModel(self.selectedFuelModel);
+                            }
                         }
                     },
                     {
@@ -93,34 +99,28 @@ define([
         };
 
         FuelModelManager.prototype.loadTable = function () {
+            var self = this;
             $('#fuelModel-tbl').puidatatable({
                 caption: 'Original Fuel Models',
 //                paginator: {
 //                    rows: 5
 //                },
-//                scrollable: true,
-//                scrollHeight: '300',
-//                scrollWidth: '400',
                 columns: [
                     {
-                        content: function(row) {
-                            return row.modelNo;
-                        }, 
-                        headerText: 'No.', 
-                        headerStyle: 'width:10%', 
+                        field: 'modelNo',
+                        headerText: 'No.',
+                        headerStyle: 'width:10%',
                         sortable: true
                     },
                     {
-                        content: function(row) {
-                            return row.modelName;
-                        }, 
-                        headerText: 'Name', 
+                        field: 'modelName',
+                        headerText: 'Name',
                         sortable: true
                     },
                     {
                         field: 'modelGroup',
-                        headerText: 'Category', 
-                        headerStyle: 'width:20%', 
+                        headerText: 'Category',
+                        headerStyle: 'width:20%',
                         sortable: true
                     }
                 ],
@@ -136,15 +136,21 @@ define([
                             callback.call(this, response.fuelModel);
                         }
                     });
-                },
+                }, 
                 selectionMode: 'single',
                 rowSelect: function (event, data) {
-                    Messenger.growl("info", "Row Selected", "...", 3000);
-                    // TODO: Update controller
+//                    // Enable OK button
+//                    var dlg = $('#fuelModel-dlg'),
+//                        btn = dlg.find('button.pui-button:contains("OK")');
+//
+//                    btn.attr('disabled', 'false');
+                    // Save the selected row
+                    self.selectedFuelModel = data;
                 },
                 rowUnselect: function (event, data) {
-                    Messenger.growl("info", "Row Unselected", "...",5000);
-                    // TODO: Update controller
+//                    // Disable OK button
+//                    var btn = $('#fuelModel-dlg').find('button.pui-button:contains("OK")');
+//                    btn.attr('disabled', 'true');
                 }
             });
 

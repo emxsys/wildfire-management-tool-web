@@ -114,6 +114,13 @@ define([
             this.model.updateAppTime(date);
         };
 
+        /**
+         * 
+         * @param {FuelModel} fuelModel A JSON FuelModel.
+         */
+        Controller.prototype.changeFuelModel = function (fuelModel) {
+            this.model.updateFuelModel(fuelModel);
+        };
 
         /**
          * Resets the viewpoint to the startup configuration settings.

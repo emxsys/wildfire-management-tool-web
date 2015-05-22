@@ -79,6 +79,7 @@ define([
             this.terrainAtMouse = new Terrain(0, 0, 0, 0, 0);
             this.applicationTime = new Date();
             this.sunlight = {};
+            this.fuelModel = null;
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
@@ -89,6 +90,38 @@ define([
             this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
         };
 
+        /**
+         * 
+         * @param {FuelModel} fuelModel
+         */
+        Model.prototype.updateFuelModel = function (fuelModel) {
+            if (!fuelModel) {
+                throw new Error(Log.error("Model", "updateFuelModel", "missingFuelModel"));
+            }
+            Log.info("Model", "updateFuelModel", fuelModel.modelName);
+            this.fuelModel = fuelModel;
+        };
+
+        /**
+         * 
+         * @param {Date} time
+         */
+        Model.prototype.updateAppTime = function (time) {
+            var self = this;
+
+            // Update the sunlight property when the elapsed time has gone past the threshold
+            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
+                SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
+                    function (sunlight) {
+                        self.handleSunlight(sunlight);  // callback
+                    });
+                this.lastSolarTime = time;
+            }
+            Log.info("Model", "updateAppTime", time.toLocaleString());
+            
+            this.applicationTime = time;
+            this.fire(Wmt.EVENT_TIME_CHANGED, time);
+        };
 
         /**
          * Updates model propeties associated with the globe's view.
@@ -133,6 +166,7 @@ define([
 
         /**
          * Updates the terrainAtMouse property and fires a "mousedMoved" event.
+         * 
          * @param {Vec2} mousePoint Mouse point or touchpoint coordiantes.
          */
         Model.prototype.updateMousePosition = function (mousePoint) {
@@ -149,29 +183,11 @@ define([
         };
 
 
-        /**
-         * 
-         * @param {type} time
-         * @returns {undefined}
-         */
-        Model.prototype.updateAppTime = function (time) {
-            var self = this;
-
-            // Update the sunlight property when the elapsed time has gone past the threshold
-            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
-                SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
-                    function (sunlight) {
-                        self.handleSunlight(sunlight);  // callback
-                    });
-                this.lastSolarTime = time;
-            }
-            this.applicationTime = time;
-            this.fire(Wmt.EVENT_TIME_CHANGED, time);
-        };
 
 
         /**
          * Gets terrain at the screen point.
+         * 
          * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
          */
         Model.prototype.terrainAtScreenPoint = function (screenPoint) {
@@ -196,7 +212,8 @@ define([
 
 
         /**
-         * Callback function that receives sunlight data from a REST resource
+         * Callback function that receives sunlight data from a REST resource.
+         * 
          * @param {JSON Object} sunlight
          */
         Model.prototype.handleSunlight = function (sunlight) {
