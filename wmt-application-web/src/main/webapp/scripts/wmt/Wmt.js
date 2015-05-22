@@ -75,6 +75,10 @@ define([],
              */
             FUELMODELS_REST_SERVICE: "/wmt-rest/rs/fuelmodels",
             /**
+             * The URL for the fuel models REST service.
+             */
+            FUELMOISTURE_REST_SERVICE: "/wmt-rest/rs/fuelmoisture",
+            /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
             IMAGE_PATH: "scripts/wmt/images/",
@@ -82,6 +86,22 @@ define([],
              * The URL for the sunlight REST service.
              */
             SUNLIGHT_REST_SERVICE: "/wmt-rest/rs/sunlight",
+            /**
+             * The URL for the surface fuel REST service.
+             */
+            SURFACEFUEL_REST_SERVICE: "/wmt-rest/rs/surfacefuel",
+            /**
+             * The URL for the surface fire REST service.
+             */
+            SURFACEFIRE_REST_SERVICE: "/wmt-rest/rs/surfacefire",
+            /**
+             * The URL for the terrain REST service.
+             */
+            TERRAIN_REST_SERVICE: "/wmt-rest/rs/terrain",
+            /**
+             * The URL for the weather REST service.
+             */
+            WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
