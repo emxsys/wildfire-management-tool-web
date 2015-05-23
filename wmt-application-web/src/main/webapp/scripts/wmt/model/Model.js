@@ -43,7 +43,9 @@
 define([
     '../util/Log',
     '../util/Publisher',
+    '../resource/FuelMoistureResource',
     '../resource/SolarResource',
+    '../resource/SurfaceFuelResource',
     '../globe/Terrain',
     '../globe/TerrainProvider',
     '../globe/Viewpoint',
@@ -53,7 +55,9 @@ define([
     function (
         Log,
         Publisher,
+        FuelMoistureResource,
         SolarResource,
+        SurfaceFuelResource,
         Terrain,
         TerrainProvider,
         Viewpoint,
@@ -80,6 +84,8 @@ define([
             this.applicationTime = new Date();
             this.sunlight = {};
             this.fuelModel = null;
+            this.fuelMoisture = null;
+            this.surfaceFuel = null;
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
@@ -100,6 +106,23 @@ define([
             }
             Log.info("Model", "updateFuelModel", fuelModel.modelName);
             this.fuelModel = fuelModel;
+
+            // Testing fuel moisture and surface fuel.
+            this.updateFuelMoisture("hot_and_dry");
+        };
+
+        /**
+         * 
+         * @param {String} conditions
+         */
+        Model.prototype.updateFuelMoisture = function (conditions) {
+            // TODO: Assert conditions
+            var self = this;
+
+            // Update the surface fuel property when the fuel model changes
+            FuelMoistureResource.fuelMoistureTuple(conditions, function (fuelMoisture) {
+                self.handleFuelMoisture(fuelMoisture);  // callback
+            });
         };
 
         /**
@@ -118,7 +141,7 @@ define([
                 this.lastSolarTime = time;
             }
             Log.info("Model", "updateAppTime", time.toLocaleString());
-            
+
             this.applicationTime = time;
             this.fire(Wmt.EVENT_TIME_CHANGED, time);
         };
@@ -183,8 +206,6 @@ define([
         };
 
 
-
-
         /**
          * Gets terrain at the screen point.
          * 
@@ -214,7 +235,7 @@ define([
         /**
          * Callback function that receives sunlight data from a REST resource.
          * 
-         * @param {JSON Object} sunlight
+         * @param {Sunlight} sunlight JSON Sunlight object.
          */
         Model.prototype.handleSunlight = function (sunlight) {
             this.sunlight = sunlight;
@@ -222,6 +243,43 @@ define([
             // Update sunlightChanged subscribers
             this.fire(Wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
         };
+
+        /**
+         * Callback function that receives fuel moisture data from a REST resource.
+         * 
+         * @param {FuelMoistureTuple} fuelMoisture JSON FuelMoistureTuple object.
+         */
+        Model.prototype.handleFuelMoisture = function (fuelMoisture) {
+            var self = this;
+
+            this.fuelMoisture = fuelMoisture;
+            Log.info("Model", "handleFuelMoisture", "FuelMoistureTuple: " + JSON.stringify(fuelMoisture));
+            // Update fuelMoistureChanged subscribers
+            this.fire(Wmt.EVENT_FUELMOISTURE_CHANGED, fuelMoisture);
+
+            if (this.fuelModel && this.fuelMoisture) {
+                // Update the surface fuel property when the fuel model changes
+                SurfaceFuelResource.surfaceFuel(this.fuelModel, this.fuelMoisture, function (surfaceFuel) {
+                    self.handleSurfaceFuel(surfaceFuel);  // callback
+                });
+
+            }
+        };
+
+
+        /**
+         * Callback function that receives surface fuel data from a REST resource.
+         * 
+         * @param {SurfaceFuel} surfaceFule JSON SurfaceFuel object.
+         */
+        Model.prototype.handleSurfaceFuel = function (surfaceFuel) {
+            this.surfaceFuel = surfaceFuel;
+            Log.info("Model", "handleSurfaceFuel", "SurfaceFuel: " + surfaceFuel.toString());
+            // Update surfaceFuelChanged subscribers
+            this.fire(Wmt.EVENT_SURFACEFUEL_CHANGED, surfaceFuel);
+        };
+
+
         return Model;
     }
 );

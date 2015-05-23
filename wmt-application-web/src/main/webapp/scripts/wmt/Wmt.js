@@ -70,6 +70,12 @@ define([],
              * @constant
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
+            
+            EVENT_FUELMOISTURE_CHANGED: "fuelMoistureChanged",
+            EVENT_SURFACEFUEL_CHANGED: "surfaceFuelChanged",
+            EVENT_SURFACEFIRE_CHANGED: "surfaceFireChanged",
+            EVENT_TERRAIN_CHANGED: "terrainChanged",
+            EVENT_WEATHER_CHANGED: "weatherChanged",
             /**
              * The URL for the fuel models REST service.
              */

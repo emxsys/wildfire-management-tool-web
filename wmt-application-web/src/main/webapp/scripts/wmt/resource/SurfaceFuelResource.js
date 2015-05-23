@@ -40,7 +40,6 @@ define([
         Wmt) {
         "use strict";
         var SurfaceFuelResource = {
-
             /**
              * Gets a conditioned surface fuel tuple that is compatible with SurfaceFireResource.
              * 
@@ -49,13 +48,27 @@ define([
              * @param {SurfaceFuel} callback Recieves a SurfaceFuel JSON object.
              */
             surfaceFuel: function (fuelModel, fuelMoisture, callback) {
+                var data = new FormData();
 
-                var url = WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
-                    query = "mime-type=application/json" +
-                    "&fuelModel=" + fuelModel +
-                    "&fuelMoisture=" + fuelMoisture;
-                console.log(url + '?' + query);
-                $.post(url, query, callback);
+                //data.append('fuelModel', JSON.stringify(fuelModel));
+                //data.append('fuelMoisture', JSON.stringify(fuelMoisture));
+                data.append('fuelModel', fuelModel);
+                data.append('fuelMoisture', fuelMoisture);
+                data.append('mime-type', 'application/json');
+
+                $.ajax({
+                    url: WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
+                    data: data,
+                    //contentType: "multipart/form-data",
+                    contentType: false,
+                    dataType: "json",
+                    cache: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
             }
         };
         return SurfaceFuelResource;

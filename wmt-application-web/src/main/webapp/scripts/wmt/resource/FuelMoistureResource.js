@@ -46,7 +46,7 @@ define([
              * "between_hot_and_cool". 
              * @param {Function(FuelMoisture JSON)} callback Receives a FuelMoisture JSON object.
              */
-            fuelMoisture: function (conditions, callback) {
+            fuelMoistureTuple: function (conditions, callback) {
                 // TODO: Assert conditions are valid
                 var url = WmtUtil.currentDomain() + Wmt.FUELMOISTURE_REST_SERVICE,
                     query = "mime-type=application/json"
