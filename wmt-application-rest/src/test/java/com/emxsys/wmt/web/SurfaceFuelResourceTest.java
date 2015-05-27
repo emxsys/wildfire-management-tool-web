@@ -37,24 +37,29 @@ import com.emxsys.wildfire.api.WeatherConditions;
 import com.emxsys.wildfire.behavior.SurfaceFuel;
 import com.emxsys.wildfire.behavior.SurfaceFuelProvider;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.multipart.BodyPart;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.test.framework.JerseyTest;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
  * @author Bruce Schubert
  */
+//@Ignore
 public class SurfaceFuelResourceTest extends JerseyTest {
 
     public SurfaceFuelResourceTest() throws Exception {
         super("com.emxsys.wmt.web");
+        
     }
 
     @Test
+    //@Ignore
     public void testCreateSurfaceFuel() {
         System.out.println("TESTING: createSurfaceFuel");
         SurfaceFuelResource instance = new SurfaceFuelResource();
@@ -97,6 +102,7 @@ public class SurfaceFuelResourceTest extends JerseyTest {
     }
 
     @Test
+    //@Ignore
     public void testGetXml() {
         System.out.println("TESTING: getXml");
 
@@ -122,16 +128,21 @@ public class SurfaceFuelResourceTest extends JerseyTest {
 
     @Test
     public void testGetJson() {
-        System.out.println("TESTING: getXml");
+        System.out.println("TESTING: getJSON");
 
         BasicFuelModel fuelModel = BasicFuelModel.from(6);
         BasicFuelMoisture fuelMoisture = BasicFuelMoisture.fromWeatherConditions(WeatherConditions.HOT_AND_DRY);
 
         // On the server-side, use @FormParam to process formData.field(s)
         // and use @FormDataParam to process formData.bodyPart.
+        BodyPart p1 = new BodyPart(fuelModel, APPLICATION_JSON_TYPE);
+        
+        
         FormDataMultiPart formData = new FormDataMultiPart();
+        formData.field("mime-type", "application/json", MediaType.TEXT_PLAIN_TYPE);
         formData.field("fuelModel", fuelModel, APPLICATION_JSON_TYPE);
         formData.field("fuelMoisture", fuelMoisture, APPLICATION_JSON_TYPE);
+        //formData.bodyPart(fuelModel, APPLICATION_JSON_TYPE);
         ClientResponse fuelResponse = super.webResource.path("surfacefuel")
                 .type(MULTIPART_FORM_DATA_TYPE)
                 .accept(APPLICATION_JSON)
@@ -143,5 +154,6 @@ public class SurfaceFuelResourceTest extends JerseyTest {
         assertTrue("Looks like JSON:\n" + entity, entity.trim().startsWith("{"));
         System.out.println(">>>> JSON Representation:\n" + JsonUtil.format(entity));
     }
+
 
 }

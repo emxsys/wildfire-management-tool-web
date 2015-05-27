@@ -51,12 +51,14 @@ import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import visad.Real;
 
 /**
  *
  * @author Bruce Schubert
  */
+@Ignore
 public class SurfaceFireResourceTest extends JerseyTest {
 
     public SurfaceFireResourceTest() throws Exception {
