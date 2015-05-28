@@ -36,10 +36,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
@@ -51,7 +53,7 @@ import org.openide.util.Exceptions;
  * @author Bruce Schubert
  */
 @Provider
-@Consumes("application/json")
+//@Consumes("application/json")
 public class FuelMoistureMessageBodyReader implements MessageBodyReader<BasicFuelMoisture> {
 
     @Override
@@ -69,26 +71,54 @@ public class FuelMoistureMessageBodyReader implements MessageBodyReader<BasicFue
             InputStream entityStream)
             throws IOException, WebApplicationException {
 
-        // Do not close the entity input stream in your  MessageBodyReader<T> 
+        // Note: Do not close the entity input stream in your MessageBodyReader<T> 
         // implementation. The stream will be automatically closed by Jersey runtime.
-        
-        try {
-            BasicFuelMoisture moisture;
-            if (mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
-                JAXBContext jaxbContext = JAXBContext.newInstance(BasicFuelMoisture.class);
-                moisture = (BasicFuelMoisture) jaxbContext.createUnmarshaller().unmarshal(entityStream);
-
-            } else if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
-                JSONJAXBContext jaxbContext = new JSONJAXBContext(BasicFuelMoisture.class);
-                moisture = (BasicFuelMoisture) jaxbContext.createJSONUnmarshaller().unmarshalFromJSON(entityStream, BasicFuelMoisture.class);
-            } else {
-                throw new UnsupportedOperationException("Unsupported media type: " + type.toString());
+        BasicFuelMoisture moisture;
+        if (mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
+            moisture = unmarshalXML(entityStream);
+        } else if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+            moisture = unmarshalJSON(entityStream);
+        } else if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
+            moisture = unmarshalJSON(entityStream);
+            if (moisture == null) {
+                moisture = unmarshalXML(entityStream);
             }
-            return moisture;
+            if (moisture == null) {
+                throw new WebApplicationException(Response.serverError().
+                        entity("Text is not valid JSON or XML").
+                        type("text/plain").build());
+            }
+        } else {
+            throw new WebApplicationException(Response.serverError().
+                    entity("Unsupported media type: " + mediaType.toString()).
+                    type("text/plain").build());
+        }
+        return moisture;
 
-        } catch (JAXBException jaxbException) {
-            throw new RuntimeException("Error deserializing a FuelMoisture.", jaxbException);
+    }
+
+    static BasicFuelMoisture unmarshalXML(InputStream entityStream) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(BasicFuelMoisture.class);
+            return (BasicFuelMoisture) jaxbContext.createUnmarshaller().unmarshal(entityStream);
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
         }
     }
 
+    static BasicFuelMoisture unmarshalJSON(InputStream entityStream) {
+        try {
+            JSONJAXBContext jaxbContext = new JSONJAXBContext(BasicFuelMoisture.class);
+            return (BasicFuelMoisture) jaxbContext.createJSONUnmarshaller().unmarshalFromJSON(entityStream, BasicFuelMoisture.class);
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
 }

@@ -30,21 +30,19 @@
 package com.emxsys.wmt.web;
 
 import com.emxsys.wildfire.api.BasicFuelModel;
-import com.emxsys.wildfire.api.FuelModel;
 import com.sun.jersey.api.json.JSONJAXBContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import org.openide.util.Exceptions;
 
 /**
@@ -52,8 +50,10 @@ import org.openide.util.Exceptions;
  * @author Bruce Schubert
  */
 @Provider
-@Consumes("application/json")
+//@Consumes("*/*")
 public class FuelModelMessageBodyReader implements MessageBodyReader<BasicFuelModel> {
+
+    Exception lastError = null;
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -70,24 +70,63 @@ public class FuelModelMessageBodyReader implements MessageBodyReader<BasicFuelMo
             InputStream entityStream)
             throws IOException, WebApplicationException {
 
-        // Do not close the entity input stream in your  MessageBodyReader<T> 
+        // Note: Do not close the entity input stream in your MessageBodyReader<T> 
         // implementation. The stream will be automatically closed by Jersey runtime.
-        try {
-            BasicFuelModel model;
-            if (mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
-                JAXBContext jaxbContext = JAXBContext.newInstance(BasicFuelModel.class);
-                model = (BasicFuelModel) jaxbContext.createUnmarshaller().unmarshal(entityStream);
-
-            } else if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
-                JSONJAXBContext jaxbContext = new JSONJAXBContext(BasicFuelModel.class);
-                model = (BasicFuelModel) jaxbContext.createJSONUnmarshaller().unmarshalFromJSON(entityStream, BasicFuelModel.class);
-            } else {
-                throw new UnsupportedOperationException("Unsupported media type: " + type.toString());
+        BasicFuelModel model;
+        if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+            // Explicit JSON object, from a FormData Blob 
+            model = unmarshalJSON(entityStream);
+            if (model == null) {
+                throw new WebApplicationException(Response.serverError().
+                        entity(lastError.getMessage()).
+                        type("text/plain").build());
             }
-            return model;
-        } catch (JAXBException jaxbException) {
-            throw new RuntimeException("Error deserializing a FuelModel.", jaxbException);
+        } else if (mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
+            // Explicit XML object
+            model = unmarshalXML(entityStream);
+            if (model == null) {
+                throw new WebApplicationException(Response.serverError().
+                        entity(lastError.getMessage()).
+                        type("text/plain").build());
+            }
+        } else if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
+            // Plain text, either JSON or XML, attempt to decode JSON first (most likely format)
+            model = unmarshalJSON(entityStream);
+            if (model == null) {
+                model = unmarshalXML(entityStream);
+            }
+            if (model == null) {
+                throw new WebApplicationException(Response.serverError().
+                        entity("Text is not valid JSON or XML").
+                        type("text/plain").build());
+            }
+        } else {
+            throw new WebApplicationException(Response.serverError().
+                    entity("Unsupported media type: " + mediaType.toString()).
+                    type("text/plain").build());
+        }
+        return model;
+    }
+
+    private BasicFuelModel unmarshalXML(InputStream entityStream) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(BasicFuelModel.class);
+            return (BasicFuelModel) jaxbContext.createUnmarshaller().unmarshal(entityStream);
+        } catch (JAXBException ex) {
+            lastError = ex;
+            Exceptions.printStackTrace(ex);
+            return null;
         }
     }
 
+    private BasicFuelModel unmarshalJSON(InputStream entityStream) {
+        try {
+            JSONJAXBContext jaxbContext = new JSONJAXBContext(BasicFuelModel.class);
+            return (BasicFuelModel) jaxbContext.createJSONUnmarshaller().unmarshalFromJSON(entityStream, BasicFuelModel.class);
+        } catch (JAXBException ex) {
+            lastError = ex;
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
 }

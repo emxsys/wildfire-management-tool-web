@@ -33,14 +33,12 @@ import com.emxsys.wildfire.api.BasicFuelModel;
 import com.emxsys.wildfire.api.BasicFuelMoisture;
 import com.emxsys.wildfire.behavior.SurfaceFuel;
 import com.emxsys.wildfire.behavior.SurfaceFuelProvider;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.FormDataParam;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -72,36 +70,27 @@ public class SurfaceFuelResource {
      * Retrieves representation of an instance of
      * com.emxsys.wildfire.behavior.SurfaceFuel
      *
-     * @param formData
-//     * @param mimeType Optional. A specified mime-type overrides the Accepts
-//     * header.
-//     * @param fuelModel An XML or JSON FuelModel representation.
-//     * @param fuelMoisture An XML or JSON FuelMoisture representation.
+     * @param mimeType Optional. A specified mime-type overrides the Accepts
+     * header.
+     * @param fuelModel An XML or JSON FuelModel representation.
+     * @param fuelMoisture An XML or JSON FuelMoisture representation.
      * @return A Response containing a SurfaceFuel entity.
      */
     @POST
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createSurfaceFuel(
-            @DefaultValue("") @FormParam("mime-type") String mimeType,
-            @FormParam("fuelModel") BasicFuelModel fuelModel,
-            @FormParam("fuelMoisture") BasicFuelMoisture fuelMoisture) {
-
-//    public Response createSurfaceFuel(
-//            @FormDataParam("mime-type") String mimeType,
-//            @FormDataParam("fuelModel") BasicFuelModel fuelModel,
-//            @FormDataParam("fuelMoisture") BasicFuelMoisture fuelMoisture)             {
-
-//    public Response createSurfaceFuel(FormDataMultiPart formData) {
-//        String mimeType = formData.getField("mime-type").getValue();
-//        BasicFuelModel fuelModel = formData.getField("fuelModel").getValueAs(BasicFuelModel.class);
-//        BasicFuelMoisture fuelMoisture = formData.getField("fuelMoisture").getValueAs(BasicFuelMoisture.class);
-            
-//        throw new WebApplicationException(Response.Status.PRECONDITION_FAILED);
+            @DefaultValue("") @FormDataParam("mime-type") String mimeType,
+            @FormDataParam("fuelModel") BasicFuelModel fuelModel,
+            @FormDataParam("fuelMoisture") BasicFuelMoisture fuelMoisture) {
 
         // Preconditions
         if (fuelModel == null || fuelMoisture == null) {
-            throw new WebApplicationException(Response.Status.PRECONDITION_FAILED);
+            throw new WebApplicationException(
+                    Response.status(Response.Status.PRECONDITION_FAILED)
+                    .entity(fuelModel == null ? "BasicFuelModel is null" : "BasicFuelMoisture is null")
+                    .type(MediaType.TEXT_PLAIN_TYPE)
+                    .build());
         }
         // Dermine representation
         MediaType mediaType = WebUtil.getPermittedMediaType(mimeType,
@@ -110,7 +99,11 @@ public class SurfaceFuelResource {
         // Create the resource
         SurfaceFuel fuel = fuelProvider.getSurfaceFuel(fuelModel, fuelMoisture);
         if (fuel == null) {
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("SurfaceFuelProvider failed to create a SurfaceFuel object")
+                    .type(MediaType.TEXT_PLAIN_TYPE)
+                    .build());
         }
 
         // Return the representation
