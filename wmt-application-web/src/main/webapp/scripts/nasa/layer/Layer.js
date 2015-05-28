@@ -4,7 +4,7 @@
  */
 /**
  * @exports Layer
- * @version $Id: Layer.js 2939 2015-03-30 16:50:49Z tgaskins $
+ * @version $Id: Layer.js 3106 2015-05-26 18:20:34Z tgaskins $
  */
 define([
         '../util/Logger'
@@ -67,6 +67,7 @@ define([
             /**
              * Indicates whether elements of this layer were drawn in the most recently generated frame.
              * @type {Boolean}
+             * @readonly
              */
             this.inCurrentFrame = false;
         };

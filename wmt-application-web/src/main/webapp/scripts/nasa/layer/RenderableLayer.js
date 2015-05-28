@@ -4,7 +4,7 @@
  */
 /**
  * @exports RenderableLayer
- * @version $Id: RenderableLayer.js 2957 2015-04-01 23:24:45Z tgaskins $
+ * @version $Id: RenderableLayer.js 3118 2015-05-27 19:39:20Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -90,7 +90,7 @@ define([
                     this.renderables[i].render(dc);
                 } catch (e) {
                     Logger.logMessage(Logger.LEVEL_SEVERE, "RenderableLayer", "doRender",
-                        "Error while rendering shape " + this.renderables[i].displayName + ".");
+                        "Error while rendering shape " + this.renderables[i].displayName + ".\n" + e.toString());
                     // Keep going. Render the rest of the shapes.
                 }
             }

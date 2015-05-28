@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WorldWind.js 3070 2015-05-06 20:05:26Z tgaskins $
+ * @version $Id: WorldWind.js 3120 2015-05-28 02:32:45Z tgaskins $
  */
 define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
         './error/AbstractError',
@@ -30,6 +30,9 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './globe/ElevationModel',
         './util/Font',
         './util/FrameStatistics',
+        './render/FramebufferTexture',
+        './render/FramebufferTile',
+        './render/FramebufferTileController',
         './geom/Frustum',
         './projections/GeographicProjection',
         './shapes/GeographicText',
@@ -54,10 +57,12 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './geom/Matrix',
         './cache/MemoryCache',
         './cache/MemoryCacheListener',
+        './layer/MercatorTiledImageLayer',
         './navigate/Navigator',
         './navigate/NavigatorState',
         './error/NotYetImplementedError',
         './util/Offset',
+        './layer/OpenStreetMapImageLayer',
         './gesture/PanRecognizer',
         './shapes/Path',
         './pick/PickedObject',
@@ -145,6 +150,9 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               ElevationModel,
               Font,
               FrameStatistics,
+              FramebufferTexture,
+              FramebufferTile,
+              FramebufferTileController,
               Frustum,
               GeographicProjection,
               GeographicText,
@@ -169,10 +177,12 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               Matrix,
               MemoryCache,
               MemoryCacheListener,
+              MercatorTiledImageLayer,
               Navigator,
               NavigatorState,
               NotYetImplementedError,
               Offset,
+              OpenStreetMapImageLayer,
               PanRecognizer,
               Path,
               PickedObject,
@@ -445,6 +455,9 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['ElevationModel'] = ElevationModel;
         WorldWind['Font'] = Font;
         WorldWind['FrameStatistics'] = FrameStatistics;
+        WorldWind['FramebufferTexture'] = FramebufferTexture;
+        WorldWind['FramebufferTile'] = FramebufferTile;
+        WorldWind['FramebufferTileController'] = FramebufferTileController;
         WorldWind['Frustum'] = Frustum;
         WorldWind['GeographicProjection'] = GeographicProjection;
         WorldWind['GeographicText'] = GeographicText;
@@ -469,10 +482,12 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['Matrix'] = Matrix;
         WorldWind['MemoryCache'] = MemoryCache;
         WorldWind['MemoryCacheListener'] = MemoryCacheListener;
+        WorldWind['MercatorTiledImageLayer'] = MercatorTiledImageLayer;
         WorldWind['Navigator'] = Navigator;
         WorldWind['NavigatorState'] = NavigatorState;
         WorldWind['NotYetImplementedError'] = NotYetImplementedError;
         WorldWind['Offset'] = Offset;
+        WorldWind['OpenStreetMapImageLayer'] = OpenStreetMapImageLayer;
         WorldWind['PanRecognizer'] = PanRecognizer;
         WorldWind['Path'] = Path;
         WorldWind['PickedObject'] = PickedObject;

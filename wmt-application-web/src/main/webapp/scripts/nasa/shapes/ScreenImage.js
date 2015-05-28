@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenImage
- * @version $Id: ScreenImage.js 3023 2015-04-15 20:24:17Z tgaskins $
+ * @version $Id: ScreenImage.js 3114 2015-05-27 01:08:58Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -227,7 +227,7 @@ define([
             var w, h, s, ws, hs,
                 iOffset, sOffset;
 
-            this.activeTexture = dc.gpuResourceCache.resourceForKey(this._imageSource);
+            this.activeTexture = this.getActiveTexture(dc);
             if (!this.activeTexture || this.imageSourceWasUpdated) {
                 this.activeTexture = dc.gpuResourceCache.retrieveTexture(dc.currentGlContext, this._imageSource);
                 if (!this.activeTexture) {
@@ -258,6 +258,10 @@ define([
             this.imageBounds = WWMath.boundingRectForUnitQuad(this.imageTransform);
 
             return this;
+        };
+
+        ScreenImage.prototype.getActiveTexture = function(dc) {
+            return dc.gpuResourceCache.resourceForKey(this._imageSource);
         };
 
         // Internal. Intentionally not documented.

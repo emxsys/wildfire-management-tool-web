@@ -4,7 +4,7 @@
  */
 /**
  * @exports GeographicText
- * @version $Id: GeographicText.js 2951 2015-03-31 23:31:08Z tgaskins $
+ * @version $Id: GeographicText.js 3109 2015-05-26 19:13:06Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -80,7 +80,7 @@ define([
         // Documented in superclass.
         GeographicText.prototype.computeScreenPointAndEyeDistance = function (dc) {
             // Compute the text's model point and corresponding distance to the eye point.
-            dc.terrain.surfacePointForMode(this.position.latitude, this.position.longitude, this.position.altitude,
+            dc.surfacePointForMode(this.position.latitude, this.position.longitude, this.position.altitude,
                 this.altitudeMode, GeographicText.placePoint);
 
             this.eyeDistance = this.alwaysOnTop ? 0 : dc.navigatorState.eyePoint.distanceTo(GeographicText.placePoint);

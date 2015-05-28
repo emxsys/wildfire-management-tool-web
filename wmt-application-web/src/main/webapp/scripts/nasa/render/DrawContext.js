@@ -4,12 +4,13 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3068 2015-05-06 19:23:44Z dcollins $
+ * @version $Id: DrawContext.js 3113 2015-05-26 23:36:12Z dcollins $
  */
 define([
         '../error/ArgumentError',
         '../util/Color',
         '../util/FrameStatistics',
+        '../render/FramebufferTileController',
         '../geom/Frustum',
         '../globe/Globe',
         '../shaders/GpuProgram',
@@ -35,6 +36,7 @@ define([
     function (ArgumentError,
               Color,
               FrameStatistics,
+              FramebufferTileController,
               Frustum,
               Globe,
               GpuProgram,
@@ -257,6 +259,13 @@ define([
              * @type {SurfaceShapeTileBuilder}
              */
             this.surfaceShapeTileBuilder = null;
+
+            /**
+             * Provides access to a multi-resolution WebGL framebuffer arranged as adjacent tiles in a pyramid. Surface
+             * shapes use these tiles internally to draw on the terrain surface.
+             * @type {FramebufferTileController}
+             */
+            this.surfaceShapeTileController = new FramebufferTileController();
 
             /**
              * The screen credit controller responsible for collecting and drawing screen credits.
@@ -948,7 +957,37 @@ define([
             return vboId;
         };
 
+        /**
+         * Computes a Cartesian point at a location on the surface of this terrain according to a specified
+         * altitude mode. If there is no current terrain, this function approximates the returned point by assuming
+         * the terrain is the globe's ellipsoid.
+         * @param {Number} latitude The location's latitude.
+         * @param {Number} longitude The location's longitude.
+         * @param {Number} offset Distance above the terrain, in meters relative to the specified altitude mode, at
+         * which to compute the point.
+         * @param {String} altitudeMode The altitude mode to use to compute the point. Recognized values are
+         * WorldWind.ABSOLUTE, WorldWind.CLAMP_TO_GROUND and
+         * WorldWind.RELATIVE_TO_GROUND. The mode WorldWind.ABSOLUTE is used if the
+         * specified mode is null, undefined or unrecognized, or if the specified location is outside this terrain.
+         * @param {Vec3} result A pre-allocated Vec3 in which to return the computed point.
+         * @returns {Vec3} The specified result parameter, set to the coordinates of the computed point.
+         * @throws {ArgumentError} If the specified result argument is null or undefined.
+         */
+        DrawContext.prototype.surfacePointForMode = function (latitude, longitude, offset, altitudeMode, result) {
+            if (!result) {
+                throw new ArgumentError(
+                    Logger.logMessage(Logger.LEVEL_SEVERE, "DrawContext", "surfacePointForMode", "missingResult"));
+            }
+
+            if (this.terrain) {
+                this.terrain.surfacePointForMode(latitude, longitude, offset, altitudeMode, result);
+            } else {
+                var h = offset + this.globe.elevationAtLocation(latitude, longitude) * this.verticalExaggeration;
+                this.globe.computePointFromPosition(latitude, longitude, h, result);
+            }
+
+            return result;
+        };
+
         return DrawContext;
-    }
-)
-;
+    });
