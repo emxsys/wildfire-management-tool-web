@@ -32,10 +32,12 @@
 
 define([
     '../util/Log',
+    '../util/Messenger',
     '../util/WmtUtil',
     '../Wmt'],
     function (
         Log,
+        Messenger,
         WmtUtil,
         Wmt) {
         "use strict";
@@ -44,26 +46,47 @@ define([
              * Gets a conditioned surface fuel tuple that is compatible with SurfaceFireResource.
              * 
              * @param {FuelModel} fuelModel A fuel model object.
-             * @param {FuelMoisture} fuelMoisture A fuel moisture tuple object.
+             * @param {FuelMoistureTuple} fuelMoisture A fuel moisture tuple object.
              * @param {SurfaceFuel} callback Recieves a SurfaceFuel JSON object.
              */
             surfaceFuel: function (fuelModel, fuelMoisture, callback) {
-                var data = new FormData();
+                if (!window.FormData) {
+                    // FormData is not supported; degrade gracefully/ alert the user as appropiate
+                    Messenger.notify(Log.error("SurfaceFuelResource", "surfaceFuel", "formDataNotSupported"));
+                    return;
+                }
 
-                //data.append('fuelModel', JSON.stringify(fuelModel));
-                //data.append('fuelMoisture', JSON.stringify(fuelMoisture));
-                data.append('fuelModel', fuelModel);
-                data.append('fuelMoisture', fuelMoisture);
-                data.append('mime-type', 'application/json');
+                var formData = new FormData(),
+                    model = JSON.stringify(fuelModel),
+                    moisture = JSON.stringify(fuelMoisture),
+                    modelBlob,
+                    moistureBlob;
+
+                // The following approachs serve up strings vesus binary data
+//                formData.append('mime-type', 'application/json');
+//                formData.append('fuelModel', encodeURIComponent(JSON.stringify(fuelModel)));
+//                formData.append('fuelMoisture', encodeURIComponent(JSON.stringify(fuelMoisture)));
+
+//                formData.append('mime-type', 'application/json');
+//                formData.append('fuelModel', $.param(fuelModel));
+//                formData.append('fuelMoisture', $.param(fuelMoisture));
+
+                modelBlob = new Blob([model], {type: 'application/json'});
+                moistureBlob = new Blob([moisture], {type: 'application/json'});
+                formData.append('mime-type', 'application/json');
+                formData.append('fuelModel', modelBlob);
+                formData.append('fuelMoisture', moistureBlob);
+                //formData.append('fuelMoisture', $.param(fuelMoisture));
+                //formData.append('fuelMoisture', encodeURIComponent(JSON.stringify(fuelMoisture)));
+
 
                 $.ajax({
                     url: WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
-                    data: data,
-                    //contentType: "multipart/form-data",
-                    contentType: false,
-                    dataType: "json",
-                    cache: false,
-                    processData: false,
+                    data: formData,
+                    contentType: false, // tell jQuery not encode as application/x-www-form-urlencoded
+                    cache: false, // tell the browser not to serve up cached data
+                    processData: false, // tell jQuery not to process the form data
+                    dataType: "json", // tell the server what kind of response we want
                     type: 'POST',
                     success: function (data) {
                         alert(data);
