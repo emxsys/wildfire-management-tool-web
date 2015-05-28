@@ -127,6 +127,7 @@ public class SurfaceFuelResourceTest extends JerseyTest {
     }
 
     @Test
+    //@Ignore
     public void testGetJson() {
         System.out.println("TESTING: getJSON");
 
@@ -135,14 +136,18 @@ public class SurfaceFuelResourceTest extends JerseyTest {
 
         // On the server-side, use @FormParam to process formData.field(s)
         // and use @FormDataParam to process formData.bodyPart.
-        BodyPart p1 = new BodyPart(fuelModel, APPLICATION_JSON_TYPE);
+        //BodyPart p1 = new BodyPart(fuelModel, APPLICATION_JSON_TYPE);
         
         
         FormDataMultiPart formData = new FormDataMultiPart();
+        // FormDataMultiPart.field works with the @FormParam annotation
         formData.field("mime-type", "application/json", MediaType.TEXT_PLAIN_TYPE);
         formData.field("fuelModel", fuelModel, APPLICATION_JSON_TYPE);
         formData.field("fuelMoisture", fuelMoisture, APPLICATION_JSON_TYPE);
+        
         //formData.bodyPart(fuelModel, APPLICATION_JSON_TYPE);
+        //formData.bodyPart(fuelMoisture, APPLICATION_JSON_TYPE);
+        
         ClientResponse fuelResponse = super.webResource.path("surfacefuel")
                 .type(MULTIPART_FORM_DATA_TYPE)
                 .accept(APPLICATION_JSON)
