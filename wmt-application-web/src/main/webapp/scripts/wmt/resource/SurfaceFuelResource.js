@@ -58,35 +58,28 @@ define([
 
                 var formData = new FormData(),
                     model = JSON.stringify(fuelModel),
-                    moisture = JSON.stringify(fuelMoisture),
-                    modelBlob,
-                    moistureBlob;
+                    moisture = JSON.stringify(fuelMoisture);
 
-                // The following approachs serve up strings vesus binary data
-//                formData.append('mime-type', 'application/json');
-//                formData.append('fuelModel', encodeURIComponent(JSON.stringify(fuelModel)));
-//                formData.append('fuelMoisture', encodeURIComponent(JSON.stringify(fuelMoisture)));
-
-//                formData.append('mime-type', 'application/json');
-//                formData.append('fuelModel', $.param(fuelModel));
-//                formData.append('fuelMoisture', $.param(fuelMoisture));
-
-                modelBlob = new Blob([model], {type: 'application/json'});
-                moistureBlob = new Blob([moisture], {type: 'application/json'});
+                // Passing FuelModel and FuelMoisture as text/plain
                 formData.append('mime-type', 'application/json');
-                formData.append('fuelModel', modelBlob);
-                formData.append('fuelMoisture', moistureBlob);
-                //formData.append('fuelMoisture', $.param(fuelMoisture));
-                //formData.append('fuelMoisture', encodeURIComponent(JSON.stringify(fuelMoisture)));
-
+                formData.append('fuelModel', model);
+                formData.append('fuelMoisture', moisture);
+                
+                // Example for passing FuelModel and FuelMoisture as application/json Blobs
+                // 
+                //var modelBlob = new Blob([model], {type: 'application/json'});
+                //var moistureBlob = new Blob([moisture], {type: 'application/json'});
+                //formData.append('mime-type', 'application/json');
+                //formData.append('fuelModel', modelBlob);
+                //formData.append('fuelMoisture', moistureBlob);
 
                 $.ajax({
                     url: WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
                     data: formData,
-                    contentType: false, // tell jQuery not encode as application/x-www-form-urlencoded
                     cache: false, // tell the browser not to serve up cached data
-                    processData: false, // tell jQuery not to process the form data
+                    contentType: false, // tell jQuery not auto encode as application/x-www-form-urlencoded
                     dataType: "json", // tell the server what kind of response we want
+                    processData: false, // tell jQuery not to transform data into query string
                     type: 'POST',
                     success: function (data) {
                         alert(data);
