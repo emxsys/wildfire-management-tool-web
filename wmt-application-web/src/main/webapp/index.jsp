@@ -59,14 +59,75 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--<script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
     </head>
     <body>
+        <!--Web World Wind Globe-->
         <div id="globe" class="container-full">
             <div id='canvas-wrap'>
                 <canvas id="canvasOne">
                     <h1>Your browser does not support HTML5 Canvas.</h1>
                 </canvas>
-                <!--DOM UI elements go here!-->
-                <div class='row'>
+                <!--DOM UI elements go here!-->                
+                <div class='container-full'>
+                    <!--Main Menu-->
+                    <ul class="nav nav-pills">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a id="fuelModel" href="#">Select Fuel Model</a></li>
+                                <li><a id="weather" href="#">Edit Weather</a></li>
+                                <li><a id="resetHeading" href="#">Reset Heading</a></li>
+                                <li><a id="resetView" href="#">Reset View</a></li>
+                                <li><a id="resetGlobe" href="#">Reset Globe </a></li>
+                                <!--<li><div class="dropdown" id="projectionDropdown"></div></li>-->
+                                <li><div class="list-group" id="layerList"></div></li>
+                            </ul>
+                        </li>
+                        <li><a id="datetime" href="#">Date/Time</a></li>
+                        <li><a id="location" href="#">Location</a></li>
+                    </ul>
+                    <!--Coordinates Overlay-->
+                    <div class='row'>
+                        <div id="coordinateOverlay" class="col-xs-4 non-interactive">
+                            <div class="row">
+                                <span>Eye Alt: </span><span id="eyeAltitude"></span>
+                            </div>
+                            <div class="row">
+                                <span>Lat: </span><span id="targetLatitude"></span>
+                            </div>
+                            <div class="row">
+                                <span>Lon: </span><span id="targetLongitude"></span>
+                            </div>
+                        </div>            
+                    </div>
+                    <!--REST information overlay-->
+                    <div id="RESTPanel" class="rest-panel-bottom non-interactive">
+                        <div class="row">            
+                            <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
+                                <div class="row">
+                                    <span>Time: </span><span id="apptime"></span>
+                                </div>
+                                <div class="row">
+                                    <span>Sunrise: </span><span id="sunrise"></span>
+                                </div>
+                                <div class="row">
+                                    <span>Sunset: </span><span id="sunset"></span>
+                                </div>
+                            </div>
+                            <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
 
+                            </div>
+                            <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
+                                <div class="row">
+                                    <span>Elevation: </span><span id="targetElevation"></span>
+                                </div>
+                                <div class="row">
+                                    <span>Aspect: </span><span id="targetAspect"></span>
+                                </div>
+                                <div class="row">
+                                    <span>Slope: </span><span id="targetSlope"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!--/DOM UI elements-->
             </div>
@@ -129,128 +190,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>            
             </div>
         </div>        
-        <!--Main Menu-->
-        <ul class="nav nav-pills">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a id="fuelModel" href="#">Select Fuel Model</a></li>
-                    <li><a id="weather" href="#">Edit Weather</a></li>
-                    <li><a id="resetHeading" href="#">Reset Heading</a></li>
-                    <li><a id="resetView" href="#">Reset View</a></li>
-                    <li><a id="resetGlobe" href="#">Reset Globe </a></li>
-                    <!--<li><div class="dropdown" id="projectionDropdown"></div></li>-->
-                    <li><div class="list-group" id="layerList"></div></li>
-                </ul>
-            </li>
-            <li><a id="datetime" href="#">Date/Time</a></li>
-            <li><a id="location" href="#">Location</a></li>
-        </ul>
-        <!--Coordinates Overlay-->
-        <div class='row'>
-            <div id="coordinateOverlay" class="col-xs-4 non-interactive">
-                <div class="row">
-                    <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                </div>
-                <div class="row">
-                    <span>Lat: </span><span id="targetLatitude"></span>
-                </div>
-                <div class="row">
-                    <span>Lon: </span><span id="targetLongitude"></span>
-                </div>
-            </div>            
-        </div>
-        <!--REST information overlay-->
-        <div id="RESTPanel" class="rest-panel-bottom">
-            <div class="row">            
-                <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
-                    <div class="row">
-                        <span>Time: </span><span id="apptime"></span>
-                    </div>
-                    <div class="row">
-                        <span>Sunrise: </span><span id="sunrise"></span>
-                    </div>
-                    <div class="row">
-                        <span>Sunset: </span><span id="sunset"></span>
-                    </div>
-                </div>
-                <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
-
-                </div>
-                <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
-                    <div class="row">
-                        <span>Elevation: </span><span id="targetElevation"></span>
-                    </div>
-                    <div class="row">
-                        <span>Aspect: </span><span id="targetAspect"></span>
-                    </div>
-                    <div class="row">
-                        <span>Slope: </span><span id="targetSlope"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--        
-                <div class='row'>
-                    <div class="col-sm-3 col-md-3 hidden-xs">
-                        <h4>Projection</h4>
-                        <div class="dropdown" id="projectionDropdown">
-                        </div>
-                        <br>
-                        <h4>Layers</h4>
-                        <div class="list-group" id="layerList">
-                        </div>
-                    </div>
-                </div>
-        -->
-
-        <!--Removed for purpose of testing fullscreen canvas and getting overlays to work-->
-        <!--            <div class="jumbotron">
-                        <h1 style="text-align:center">Wildfire Management Tool</h1>
-                    </div>-->  
-        <!--               <div class='row'>
-                            <div class="col-sm-3 col-md-3 hidden-xs">
-                                <h4>Projection</h4>
-                                <div class="dropdown" id="projectionDropdown">
-                                </div>
-                                <br>
-                                <h4>Layers</h4>
-                                <div class="list-group" id="layerList">
-                                </div>
-                            </div>
-                        </div>
-                        <ul class="nav nav-pills hidden-xs">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu
-                                    <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Submenu 2-1</a></li>
-                                    <li><a href="#">Submenu 2-2</a></li>
-                                    <li><a href="#">Submenu 2-3</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Date/Time: </a></li>
-                            <li><a id="crosshairsCoord2D" href="#">Location</a></li>
-                        </ul>-->
-        <!--Coordinates under mouse-->
-        <!--
-                <div class='row'>
-                    <div id="coordinateOverlay" class="col-xs-4">
-                        <div class="row">
-                            <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Lat: </span><span id="terrainLatitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Lon: </span><span id="terrainLongitude"></span>
-                        </div>
-                        <div class="row">
-                            <span>Height: </span><span id="terrainElevation"></span>
-                        </div>
-                    </div>
-                </div>   
-        -->
-
     </body>
 </html>
