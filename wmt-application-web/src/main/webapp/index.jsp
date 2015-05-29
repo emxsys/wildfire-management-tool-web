@@ -114,7 +114,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </div>        
         <!--Main Menu-->
-        <ul class="nav nav-pills hidden-xs">
+        <ul class="nav nav-pills">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu<span class="caret"></span></a>
                 <ul class="dropdown-menu">
