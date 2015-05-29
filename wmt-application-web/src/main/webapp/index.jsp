@@ -107,10 +107,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--Prime UI Weather Editor Dialog--> 
         <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
             <div class="weatherValues">
-                <label for="airTemp" class="required">Air Temperature:</label>
-                <input type="text" name="airTemp" id="airTemp">
-                <label for="relHumidity" class="required">Relative Humidity:</label>
-                <input type="text" name="relHumidity" id="relHumidity">
+                <div>                
+                    <label for="airTemperature" class="required">Air Temperature:</label>
+                    <input type="text" name="airTemperature" id="airTemperature">
+                </div>                
+                <div>                
+                    <label for="relaltiveHumidity" class="required">Relative Humidity:</label>
+                    <input type="text" name="relativeHumidity" id="relativeHumidity">
+                </div>                
+                <div>                
+                    <label for="windSpeed" class="required">Wind Speed:</label>
+                    <input type="text" name="windSpeed" id="windSpeed">
+                </div>                
+                <div>                
+                    <label for="windDirection" class="required">Wind Direction:</label>
+                    <input type="text" name="windDirection" id="windDirection">
+                </div>                
+                <div>                
+                    <label for="cloudCoer" class="required">Cloud Cover:</label>
+                    <input type="text" name="cloudCover" id="cloudCover">
+                </div>            
             </div>
         </div>        
         <!--Main Menu-->
@@ -159,7 +175,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>
                 <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
-                    
+
                 </div>
                 <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
                     <div class="row">
