@@ -55,13 +55,13 @@ define([
             this.position = new WorldWind.Position();
             this.initialize();
             $("#location").on("click", function (event) {
-                self.showDialog(event);
+                self.showLocationDialog(event);
             });
         };
         /**
          * Shows the Location modal dialog.
          */
-        LocationManager.prototype.showDialog = function () {
+        LocationManager.prototype.showLocationDialog = function () {
             $('#location-dlg').puidialog('show');
         };
         /**
@@ -105,7 +105,6 @@ define([
                         }
                     }]
             });
-            this.showDialog(); //This way, the operations above are guarenteed to be completed before the dialog is shown.
         };
         return LocationManager;
     }
