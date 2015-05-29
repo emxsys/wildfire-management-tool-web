@@ -86,6 +86,7 @@ define([
             this.fuelModel = null;
             this.fuelMoisture = null;
             this.surfaceFuel = null;
+            this.weather = null;
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
@@ -135,6 +136,14 @@ define([
             // Update the sunlight property when the elapsed time has gone past the threshold
             if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
                 SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
+                    function (sunlight) {
+                        self.handleSunlight(sunlight);  // callback
+                    });
+                this.lastSolarTime = time;
+            }
+            // Update the weather property when the elapsed time has gone past the threshold
+            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
+                WeatherResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
                     function (sunlight) {
                         self.handleSunlight(sunlight);  // callback
                     });
@@ -274,7 +283,7 @@ define([
          */
         Model.prototype.handleSurfaceFuel = function (surfaceFuel) {
             this.surfaceFuel = surfaceFuel;
-            Log.info("Model", "handleSurfaceFuel", "SurfaceFuel: " + surfaceFuel.toString());
+            Log.info("Model", "handleSurfaceFuel", "SurfaceFuel: " + JSON.stringify(surfaceFuel));
             // Update surfaceFuelChanged subscribers
             this.fire(Wmt.EVENT_SURFACEFUEL_CHANGED, surfaceFuel);
         };

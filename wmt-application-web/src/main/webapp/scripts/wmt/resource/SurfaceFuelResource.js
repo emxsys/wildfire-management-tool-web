@@ -82,7 +82,7 @@ define([
                     processData: false, // tell jQuery not to transform data into query string
                     type: 'POST',
                     success: function (data) {
-                        alert(data);
+                        callback(data);
                     }
                 });
             }

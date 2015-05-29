@@ -32,23 +32,55 @@
 
 define([
     '../util/Log',
+    '../util/Messenger',
     '../util/WmtUtil',
     '../Wmt'],
     function (
         Log,
+        Messenger,
         WmtUtil,
         Wmt) {
         "use strict";
         var SurfaceFuelResource = {
 
-            surfaceFuel: function (fuelModel, fuelMoisture, callback) {
+            /**
+             * Gets a conditioned surface fuel tuple that is compatible with SurfaceFireResource.
+             * 
+             * @param {SurfaceFuel} fuel
+             * @param {Weather} weather
+             * @param {Terrain} terrain
+             * @param {Function(SurfaceFire)} callback
+             * @returns {undefined}
+             */
+            surfaceFire: function (fuel, weather, terrain, callback) {
+                if (!window.FormData) {
+                    // FormData is not supported; degrade gracefully/ alert the user as appropiate
+                    Messenger.notify(Log.error("SurfaceFireResource", "surfaceFire", "formDataNotSupported"));
+                    return;
+                }
 
-                var url = WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
-                    query = "mime-type=application/json";
-                console.log(url + '?' + query);
-                $.post(url, query, callback);
+                var formData = new FormData();
+
+                // This technique will passing SurfaceFuel, Weather and Terrain as text/plain.
+                formData.append('mime-type', 'application/json');
+                formData.append('fuel', JSON.stringify(fuel));
+                formData.append('weather', JSON.stringify(weather));
+                formData.append('terrain', JSON.stringify(terrain));
+                
+                $.ajax({
+                    url: WmtUtil.currentDomain() + Wmt.SURFACEFUEL_REST_SERVICE,
+                    data: formData,
+                    cache: false, // tell the browser not to serve up cached data
+                    contentType: false, // tell jQuery not auto encode as application/x-www-form-urlencoded
+                    dataType: "json", // tell the server what kind of response we want
+                    processData: false, // tell jQuery not to transform data into query string
+                    type: 'POST',
+                    success: function (data) {
+                        callback(data);
+                    }
+                });
             }
         };
-        return SurfaceFuelResource;
+        return SurfaceFireResource;
     }
 );

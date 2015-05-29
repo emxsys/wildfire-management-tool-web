@@ -123,7 +123,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
         <!--Coordinates Overlay-->
         <div class='row'>
-            <div id="coordinateOverlay" class="col-xs-4">
+            <div id="coordinateOverlay" class="col-xs-4 non-interactive">
                 <div class="row">
                     <span>Eye Alt: </span><span id="eyeAltitude"></span>
                 </div>
@@ -152,7 +152,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span>Sunset: </span><span id="sunset"></span>
                 </div>
             </div>
-        </div>             
+        </div>
         <!--        
                 <div class='row'>
                     <div class="col-sm-3 col-md-3 hidden-xs">
