@@ -43,7 +43,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 import visad.Real;
+
 
 /**
  * Weather REST Web Service.
@@ -56,7 +58,7 @@ public class WeatherResource {
     @Context
     private HttpHeaders headers;
     private static final List<MediaType> permittedTypes = Arrays.asList(
-            APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
+        APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
 
     /**
      * Creates a new instance of WeatherResource
@@ -65,11 +67,9 @@ public class WeatherResource {
     }
 
     /**
-     * Retrieves representation of an instance
-     * com.emxsys.weather.api.BasicWeather.
+     * Retrieves representation of an instance com.emxsys.weather.api.BasicWeather.
      *
-     * @param mimeType Optional. Either application/json, application/xml or
-     * text/plain.
+     * @param mimeType Optional. Either application/json, application/xml or text/plain.
      * @param airTemperature [Fahrenheit]
      * @param relativeHumidity [Percent]
      * @param windSpeed [Knots]
@@ -80,29 +80,40 @@ public class WeatherResource {
     @GET
     @Produces({APPLICATION_XML, APPLICATION_JSON, TEXT_PLAIN})
     public Response getWeather(
-            @DefaultValue("") @QueryParam("mime-type") String mimeType,
-            @QueryParam("airTemperature") Double airTemperature,
-            @QueryParam("relativeHumidity") Double relativeHumidity,
-            @QueryParam("windSpeed") Double windSpeed,
-            @QueryParam("windDirection") Double windDirection,
-            @QueryParam("cloudCover") Double cloudCover) {
+        @DefaultValue("") @QueryParam("mime-type") String mimeType,
+        @QueryParam("airTemperature") Double airTemperature,
+        @QueryParam("relativeHumidity") Double relativeHumidity,
+        @QueryParam("windSpeed") Double windSpeed,
+        @QueryParam("windDirection") Double windDirection,
+        @QueryParam("cloudCover") Double cloudCover) {
 
         // Dermine representation
         MediaType mediaType = WebUtil.getPermittedMediaType(
-                mimeType, permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
+            mimeType, permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
 
         // Create the resource
         BasicWeather weather = BasicWeather.fromReals(
-                new Real(AIR_TEMP_F, airTemperature == null ? Double.NaN : airTemperature),
-                new Real(REL_HUMIDITY, relativeHumidity == null ? Double.NaN : relativeHumidity),
-                new Real(WIND_SPEED_KTS, windSpeed == null ? Double.NaN : windSpeed),
-                new Real(WIND_DIR, windDirection == null ? Double.NaN : windDirection),
-                new Real(CLOUD_COVER, cloudCover == null ? Double.NaN : cloudCover));
+            new Real(AIR_TEMP_F, airTemperature == null ? Double.NaN : airTemperature),
+            new Real(REL_HUMIDITY, relativeHumidity == null ? Double.NaN : relativeHumidity),
+            new Real(WIND_SPEED_KTS, windSpeed == null ? Double.NaN : windSpeed),
+            new Real(WIND_DIR, windDirection == null ? Double.NaN : windDirection),
+            new Real(CLOUD_COVER, cloudCover == null ? Double.NaN : cloudCover));
 
         // Return the representation
         return Response.ok(
-                mediaType.equals(TEXT_PLAIN_TYPE) ? weather.toString() : weather,
-                mediaType).build();
+            mediaType.equals(TEXT_PLAIN_TYPE) ? weather.toString() : weather,
+            mediaType).build();
 
     }
+
+
+    /**
+     * Custom message body reader that can handle JSON and XML types as well as JSON objects passed 
+     * as "text/plain" in a multipart/form-data post.
+     */
+    @Provider
+    public class WeatherMessageBodyReader extends BasicMessageBodyReader<BasicWeather> {
+
+    }
+
 }

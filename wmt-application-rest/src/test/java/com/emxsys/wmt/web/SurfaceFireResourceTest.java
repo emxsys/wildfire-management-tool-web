@@ -58,7 +58,7 @@ import visad.Real;
  *
  * @author Bruce Schubert
  */
-@Ignore
+//@Ignore
 public class SurfaceFireResourceTest extends JerseyTest {
 
     public SurfaceFireResourceTest() throws Exception {

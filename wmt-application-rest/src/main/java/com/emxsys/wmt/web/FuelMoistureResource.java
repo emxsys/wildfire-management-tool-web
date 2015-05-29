@@ -43,6 +43,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
+
 
 /**
  * Fuel Moisture REST Web Service.
@@ -60,13 +62,10 @@ public class FuelMoistureResource {
     }
 
     /**
-     * Retrieves representation of an instance
-     * com.emxsys.wildfire.api.BasicFuelMoisture.
+     * Retrieves representation of an instance com.emxsys.wildfire.api.BasicFuelMoisture.
      *
-     * @param mimeType Optional. Either application/json, application/xml or
-     * text/plain.
-     * @param conditions Optional. Either hot_and_dry, cool_and_wet, or
-     * between_hot_and_cool.
+     * @param mimeType Optional. Either application/json, application/xml or text/plain.
+     * @param conditions Optional. Either hot_and_dry, cool_and_wet, or between_hot_and_cool.
      * @param dead1Hr Optional, default value NaN.
      * @param dead10Hr Optional, default value NaN.
      * @param dead100Hr Optional, default value NaN.
@@ -77,13 +76,13 @@ public class FuelMoistureResource {
     @GET
     @Produces({APPLICATION_XML, APPLICATION_JSON, TEXT_PLAIN})
     public Response getFuelMoisture(
-            @DefaultValue("") @QueryParam("mime-type") String mimeType,
-            @DefaultValue("") @QueryParam("conditions") String conditions,
-            @QueryParam("dead1Hr") Double dead1Hr,
-            @QueryParam("dead10Hr") Double dead10Hr,
-            @QueryParam("dead100Hr") Double dead100Hr,
-            @QueryParam("herb") Double herb,
-            @QueryParam("woody") Double woody) {
+        @DefaultValue("") @QueryParam("mime-type") String mimeType,
+        @DefaultValue("") @QueryParam("conditions") String conditions,
+        @QueryParam("dead1Hr") Double dead1Hr,
+        @QueryParam("dead10Hr") Double dead10Hr,
+        @QueryParam("dead100Hr") Double dead100Hr,
+        @QueryParam("herb") Double herb,
+        @QueryParam("woody") Double woody) {
 
         // Dermine representation
         List<MediaType> permittedTypes = Arrays.asList(APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
@@ -102,16 +101,26 @@ public class FuelMoistureResource {
                 break;
             default:
                 fuelMoisture = BasicFuelMoisture.fromDoubles(
-                        dead1Hr == null ? Double.NaN : dead1Hr,
-                        dead10Hr == null ? Double.NaN : dead10Hr,
-                        dead100Hr == null ? Double.NaN : dead100Hr,
-                        herb == null ? Double.NaN : herb,
-                        woody == null ? Double.NaN : woody);
+                    dead1Hr == null ? Double.NaN : dead1Hr,
+                    dead10Hr == null ? Double.NaN : dead10Hr,
+                    dead100Hr == null ? Double.NaN : dead100Hr,
+                    herb == null ? Double.NaN : herb,
+                    woody == null ? Double.NaN : woody);
 
         }
         return Response.ok(
-                mediaType.equals(TEXT_PLAIN_TYPE) ? fuelMoisture.toString() : fuelMoisture,
-                mediaType).build();
+            mediaType.equals(TEXT_PLAIN_TYPE) ? fuelMoisture.toString() : fuelMoisture,
+            mediaType).build();
+
+    }
+
+
+    /**
+     * Custom message body reader that can handle JSON and XML types as well as JSON objects passed
+     * as "text/plain" in a multipart/form-data post.
+     */
+    @Provider
+    public class FuelMoistureMessageBodyReader extends BasicMessageBodyReader<BasicFuelMoisture> {
 
     }
 }

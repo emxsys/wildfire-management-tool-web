@@ -34,12 +34,12 @@ import com.emxsys.weather.api.BasicWeather;
 import com.emxsys.wildfire.behavior.SurfaceFire;
 import com.emxsys.wildfire.behavior.SurfaceFireProvider;
 import com.emxsys.wildfire.behavior.SurfaceFuel;
+import com.sun.jersey.multipart.FormDataParam;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -83,17 +83,18 @@ public class SurfaceFireResource {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createSurfaceFuel(
-            @DefaultValue("") @FormParam("mime-type") String mimeType,
-            @FormParam("fuel") SurfaceFuel fuel,
-            @FormParam("weather") BasicWeather weather,
-            @FormParam("terrain") BasicTerrain terrain) {
+            @DefaultValue("") @FormDataParam("mime-type") String mimeType,
+            @FormDataParam("fuel") SurfaceFuel fuel,
+            @FormDataParam("weather") BasicWeather weather,
+            @FormDataParam("terrain") BasicTerrain terrain) {
 
         // Validate preconditions
         if (fuel == null || weather == null || terrain == null) {
             throw new WebApplicationException(Response.Status.PRECONDITION_FAILED);
         }
         // Dermine the proper representation
-        MediaType mediaType = WebUtil.getPermittedMediaType(mimeType, permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
+        MediaType mediaType = WebUtil.getPermittedMediaType(mimeType, permittedTypes, headers, 
+            MediaType.TEXT_PLAIN_TYPE); // default type
 
         // Create the resource
         SurfaceFire fire = provider.getFireBehavior(fuel, weather, terrain);

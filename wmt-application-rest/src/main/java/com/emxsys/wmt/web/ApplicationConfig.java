@@ -55,15 +55,18 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(
                                         Set<Class<?>> resources) {
-        resources.add(com.emxsys.wmt.web.FuelModelMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.FuelModelsResource.class);
-        resources.add(com.emxsys.wmt.web.FuelMoistureMessageBodyReader.class);
+        resources.add(com.emxsys.wmt.web.FuelModelsResource.FuelModelMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.FuelMoistureResource.class);
+        resources.add(com.emxsys.wmt.web.FuelMoistureResource.FuelMoistureMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.SunlightResource.class);
         resources.add(com.emxsys.wmt.web.SurfaceFireResource.class);
         resources.add(com.emxsys.wmt.web.SurfaceFuelResource.class);
+        resources.add(com.emxsys.wmt.web.SurfaceFuelResource.SurfaceFuelMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.TerrainResource.class);
+        resources.add(com.emxsys.wmt.web.TerrainResource.TerrainMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.WeatherResource.class);
+        resources.add(com.emxsys.wmt.web.WeatherResource.WeatherMessageBodyReader.class);
     }
 
 }

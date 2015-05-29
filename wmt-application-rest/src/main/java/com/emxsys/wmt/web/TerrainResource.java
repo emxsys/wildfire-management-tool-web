@@ -42,6 +42,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
+
 
 /**
  * Terrain REST Web Service.
@@ -54,7 +56,7 @@ public class TerrainResource {
     @Context
     private HttpHeaders headers;
     private static final List<MediaType> permittedTypes = Arrays.asList(
-            APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
+        APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
 
     /**
      * Creates a new instance of TerrainResource
@@ -65,8 +67,7 @@ public class TerrainResource {
     /**
      * Retrieves representation of an instance com.emxsys.gis.api.BasicTerrain.
      *
-     * @param mimeType Optional. Either application/json, application/xml or
-     * text/plain.
+     * @param mimeType Optional. Either application/json, application/xml or text/plain.
      * @param aspect Aspect in degrees.
      * @param slope Slope in degrees.
      * @param elevation Elevation in meters.
@@ -75,22 +76,31 @@ public class TerrainResource {
     @GET
     @Produces({APPLICATION_XML, APPLICATION_JSON, TEXT_PLAIN})
     public Response getTerrain(
-            @DefaultValue("") @QueryParam("mime-type") String mimeType,
-            @QueryParam("aspect") Double aspect,
-            @QueryParam("slope") Double slope,
-            @QueryParam("elevation") Double elevation) {
+        @DefaultValue("") @QueryParam("mime-type") String mimeType,
+        @QueryParam("aspect") Double aspect,
+        @QueryParam("slope") Double slope,
+        @QueryParam("elevation") Double elevation) {
 
         // Dermine representation
         MediaType mediaType = WebUtil.getPermittedMediaType(mimeType, permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
         // Create the resource
         BasicTerrain terrain = new BasicTerrain(
-                aspect == null ? Double.NaN : aspect,
-                slope == null ? Double.NaN : slope,
-                elevation == null ? Double.NaN : elevation);
+            aspect == null ? Double.NaN : aspect,
+            slope == null ? Double.NaN : slope,
+            elevation == null ? Double.NaN : elevation);
         // Return the representation
         return Response.ok(
-                mediaType.equals(TEXT_PLAIN_TYPE) ? terrain.toString() : terrain,
-                mediaType).build();
+            mediaType.equals(TEXT_PLAIN_TYPE) ? terrain.toString() : terrain,
+            mediaType).build();
+
+    }
+
+    /**
+     * Custom message body reader that can handle JSON and XML types as well as JSON objects passed 
+     * as "text/plain" in a multipart/form-data post.
+     */
+    @Provider
+    public class TerrainMessageBodyReader extends BasicMessageBodyReader<BasicTerrain> {
 
     }
 }

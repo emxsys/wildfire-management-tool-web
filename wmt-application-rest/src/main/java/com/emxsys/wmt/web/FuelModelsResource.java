@@ -47,6 +47,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
 /**
  * REST Web Service
@@ -58,6 +59,7 @@ public class FuelModelsResource {
 
     @Context
     HttpHeaders headers;
+    
 
     /**
      * Creates a new instance of FuelModelsResource
@@ -145,6 +147,15 @@ public class FuelModelsResource {
         final List<MediaType> permittedTypes
                 = Arrays.asList(APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
         return WebUtil.getPermittedMediaType(mimeType, permittedTypes, headers, TEXT_PLAIN_TYPE);
+    }
+    
+    /**
+     * Custom message body reader that can handle JSON and XML types as well as JSON objects passed 
+     * as "text/plain" in a multipart/form-data post.
+     */
+    @Provider
+    public class FuelModelMessageBodyReader extends BasicMessageBodyReader<BasicFuelModel> {
+
     }
 
 }
