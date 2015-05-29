@@ -1,4 +1,6 @@
-/* @version $Id: Explorer.css 3067 2015-05-06 00:17:49Z dcollins $ */
+/*  WMT.css  
+    author: Theodore Walton
+*/
 
 /*#coordinateOverlay {
     position: absolute;   inset the coordinate overlay's top right relative to the container's top left 
@@ -23,12 +25,12 @@
 }
 
 #canvas-wrap canvas { 
-    position: absolute; 
+    position: absolute;
     top: 0; 
     left: 0; 
     z-index: 0 !important; 
     width: 100%; 
-    height: 75% 
+    height: 100% 
 }
 
 .container-full {
@@ -51,6 +53,43 @@
 .rest-panel-bottom {
     position: absolute;
     bottom: 0;
-    height: 25%;
+    height: 100px; /*25%;*/
     width: 100%
+}
+
+#restSolarData {
+    text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
+    text-align: center;
+    color: white;
+}
+#restSolarData tr td:first-child {
+    width: 50px; /* width of coordinate overlay display name column */
+}
+#restSolarData tr td:last-child {
+    width: 75px; /* width of coordinate overlay value column */
+}
+
+
+#restTerrainData {
+    text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
+    text-align: center;
+    color: white;
+}
+#restTerrainData tr td:first-child {
+    width: 50px; /* width of coordinate overlay display name column */
+}
+#restTerrainData tr td:last-child {
+    width: 75px; /* width of coordinate overlay value column */
+}
+
+#restWeatherData {
+    text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
+    text-align: center;
+    color: white;
+}
+#restWeatherData tr td:first-child {
+    width: 50px; /* width of coordinate overlay display name column */
+}
+#restWeatherData tr td:last-child {
+    width: 75px; /* width of coordinate overlay value column */
 }

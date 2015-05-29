@@ -133,32 +133,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="row">
                     <span>Lon: </span><span id="targetLongitude"></span>
                 </div>
-                <div class="row">
-                    <span>Height: </span><span id="targetElevation"></span>
-                </div>
-                <div class="row">
-                    <span>Aspect: </span><span id="targetAspect"></span>
-                </div>
-                <div class="row">
-                    <span>Slope: </span><span id="targetSlope"></span>
-                </div>
-                <div class="row">
-                    <span>Time: </span><span id="apptime"></span>
-                </div>
-                <div class="row">
-                    <span>Sunrise: </span><span id="sunrise"></span>
-                </div>
-                <div class="row">
-                    <span>Sunset: </span><span id="sunset"></span>
-                </div>
             </div>            
         </div>
         <!--REST information overlay-->
         <div id="RESTPanel" class="rest-panel-bottom">
             <div class="row">            
-                <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left"></div>
-                <div id="restWindData" class="col-xs-4 col-sm-4 col-md-4"></div>
-                <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right"></div>
+                <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
+                    <div class="row">
+                        <span>Time: </span><span id="apptime"></span>
+                    </div>
+                    <div class="row">
+                        <span>Sunrise: </span><span id="sunrise"></span>
+                    </div>
+                    <div class="row">
+                        <span>Sunset: </span><span id="sunset"></span>
+                    </div>
+                </div>
+                <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
+                    
+                </div>
+                <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
+                    <div class="row">
+                        <span>Elevation: </span><span id="targetElevation"></span>
+                    </div>
+                    <div class="row">
+                        <span>Aspect: </span><span id="targetAspect"></span>
+                    </div>
+                    <div class="row">
+                        <span>Slope: </span><span id="targetSlope"></span>
+                    </div>
+                </div>
             </div>
         </div>
         <!--        
