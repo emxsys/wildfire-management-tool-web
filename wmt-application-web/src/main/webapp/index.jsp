@@ -151,6 +151,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="row">
                     <span>Sunset: </span><span id="sunset"></span>
                 </div>
+            </div>            
+        </div>
+        <!--REST information overlay-->
+        <div id="RESTPanel" class="rest-panel-bottom">
+            <div class="row">            
+                <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left"></div>
+                <div id="restWindData" class="col-xs-4 col-sm-4 col-md-4"></div>
+                <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right"></div>
             </div>
         </div>
         <!--        
