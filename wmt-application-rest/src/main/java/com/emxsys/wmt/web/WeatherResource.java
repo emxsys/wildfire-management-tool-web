@@ -107,13 +107,5 @@ public class WeatherResource {
     }
 
 
-    /**
-     * Custom message body reader that can handle JSON and XML types as well as JSON objects passed 
-     * as "text/plain" in a multipart/form-data post.
-     */
-    @Provider
-    public class WeatherMessageBodyReader extends BasicMessageBodyReader<BasicWeather> {
-
-    }
 
 }
