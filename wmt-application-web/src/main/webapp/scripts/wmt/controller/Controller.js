@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, $ */
 
 define([
     '../view/CoordinatesView',
@@ -39,6 +39,7 @@ define([
     '../view/ReticuleView',
     '../view/SolarView',
     './TimeManager',
+    './WeatherManager',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
@@ -50,6 +51,7 @@ define([
         ReticuleView,
         SolarView,
         TimeManager,
+        WeatherManager,
         Wmt,
         WorldWind) {
         "use strict";
@@ -61,6 +63,7 @@ define([
             this.timeManager = new TimeManager(this);
             this.locationManager = new LocationManager(this);
             this.fuelModelManager = new FuelModelManager(this);
+            this.weatherManager = new WeatherManager(this);
 
             // Create the MVC Model
             this.model = new Model(worldWindow);
@@ -86,6 +89,9 @@ define([
                 self.handleRedraw();
             });
 
+            // Initialize the model with current time
+            this.changeDateTime(new Date());
+
             // Setup to track the cursor position relative to the World Window's canvas. Listen to touch events in order
             // to recognize and ignore simulated mouse events in mobile browsers.
             window.addEventListener("mousemove", function (event) {
@@ -95,12 +101,25 @@ define([
                 self.handleTouchEvent(event);
             });
 
-            // Initialize the model with current time
-            this.changeDateTime(new Date());
+            // Add menu event handlers
+            $("#resetGlobe").on("click", function (event) {
+                self.resetGlobe(event);
+            });
+            $("#resetHeading").on("click", function (event) {
+                self.resetHeading(event);
+            });
+            $("#resetView").on("click", function (event) {
+                self.resetHeadingAndTilt(event);
+            });
 
         };
 
 
+        /**
+         * Updates the globe view.
+         * @param {Number} latitude
+         * @param {Number} longitude
+         */
         Controller.prototype.lookAtLatLon = function (latitude, longitude) {
             this.wwd.navigator.lookAtLocation.latitude = latitude;
             this.wwd.navigator.lookAtLocation.longitude = longitude;
@@ -115,7 +134,7 @@ define([
         };
 
         /**
-         * 
+         * Changes the current fuel model.
          * @param {FuelModel} fuelModel A JSON FuelModel.
          */
         Controller.prototype.changeFuelModel = function (fuelModel) {
@@ -125,13 +144,14 @@ define([
         /**
          * Resets the viewpoint to the startup configuration settings.
          */
-        Controller.prototype.reset = function () {
+        Controller.prototype.resetGlobe = function () {
             this.wwd.navigator.lookAtLocation.latitude = Number(Wmt.configuration.startupLatitude);
             this.wwd.navigator.lookAtLocation.longitude = Number(Wmt.configuration.startupLongitude);
             this.wwd.navigator.range = Number(Wmt.configuration.startupAltitude);
             this.wwd.navigator.heading = Number(Wmt.configuration.startupHeading);
             this.wwd.navigator.tilt = Number(Wmt.configuration.startupTilt);
             this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
+            this.wwd.redraw();
         };
         
 
@@ -140,6 +160,7 @@ define([
          */
         Controller.prototype.resetHeading = function () {
             this.wwd.navigator.heading = Number(0);
+            this.wwd.redraw();
         };
         
         
@@ -149,6 +170,7 @@ define([
         Controller.prototype.resetHeadingAndTilt = function () {
             this.wwd.navigator.heading = 0;
             this.wwd.navigator.tilt = 0;
+            this.wwd.redraw();
         };
         
         
