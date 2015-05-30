@@ -35,6 +35,7 @@ define([
     './FuelModelManager',
     './LayerManager',
     './LocationManager',
+    '../util/Log',
     '../model/Model',
     '../view/ReticuleView',
     '../view/SolarView',
@@ -47,6 +48,7 @@ define([
         FuelModelManager,
         LayerManager,
         LocationManager,
+        Log,
         Model,
         ReticuleView,
         SolarView,
@@ -153,7 +155,7 @@ define([
             this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
             this.wwd.redraw();
         };
-        
+
 
         /**
          * Resets the viewpoint to north up.
@@ -162,8 +164,8 @@ define([
             this.wwd.navigator.heading = Number(0);
             this.wwd.redraw();
         };
-        
-        
+
+
         /**
          * Resets the viewpoint to north up and nadir.
          */
@@ -172,8 +174,8 @@ define([
             this.wwd.navigator.tilt = 0;
             this.wwd.redraw();
         };
-        
-        
+
+
         /**
          * Updates the model with current globe viewpoint.
          */

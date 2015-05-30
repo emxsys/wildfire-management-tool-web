@@ -46,6 +46,7 @@
 define([
     './util/Cookie',
     './controller/Controller',
+    './globe/KeyboardControls',
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
     './util/Log',
@@ -56,6 +57,7 @@ define([
     function (
         Cookie,
         Controller,
+        KeyboardControls,
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
         Log,
@@ -76,6 +78,7 @@ define([
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
+            this.keyboardControls = new KeyboardControls(this.wwd);
 
             var self = this,
                 layer,
