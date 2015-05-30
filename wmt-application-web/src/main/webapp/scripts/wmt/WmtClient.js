@@ -52,6 +52,7 @@ define([
     './util/Log',
     './util/Messenger',
     './globe/ReticuleLayer',
+    './globe/SkyBackgroundLayer',
     './Wmt',
     '../nasa/WorldWind'],
     function (
@@ -63,6 +64,7 @@ define([
         Log,
         Messenger,
         ReticuleLayer,
+        SkyBackgroundLayer,
         Wmt,
         WorldWind) {
         "use strict";
@@ -83,6 +85,7 @@ define([
             var self = this,
                 layer,
                 layers = [
+                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true}, 
                     {layer: new WorldWind.BMNGLayer(), enabled: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
@@ -94,6 +97,7 @@ define([
                 layers[layer].layer.enabled = layers[layer].enabled;
                 this.wwd.addLayer(layers[layer].layer);
             }
+
             // Restore the globe (eye position) from the last session
             this.restoreSavedState();
             this.wwd.redraw();
