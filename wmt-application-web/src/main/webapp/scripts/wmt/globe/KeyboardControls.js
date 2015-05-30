@@ -171,7 +171,7 @@ define([
                 setLookAtLocation = function () {
                     if (self.activeOperation) {
                         var heading = self.wwd.navigator.heading,
-                            distance = self.panIncrement * Math.min(self.wwd.navigator.range, 25000);
+                            distance = self.panIncrement * self.wwd.navigator.range;
 
                         switch (operation) {
                             case 'panUp' :
