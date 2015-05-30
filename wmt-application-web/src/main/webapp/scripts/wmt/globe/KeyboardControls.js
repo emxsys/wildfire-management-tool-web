@@ -77,8 +77,8 @@ define([
          * @param {KeyboardEvent} event
          */
         KeyboardControls.prototype.handleKeyDown = function (event) {
-            Log.info('KeyboardControls', 'handleKeyDown', event.keyCode + ' pressed.');
-            Log.info('KeyboardControls', 'handleKeyDown', "Target: " + event.target);
+            //Log.info('KeyboardControls', 'handleKeyDown', event.keyCode + ' pressed.');
+            //Log.info('KeyboardControls', 'handleKeyDown', "Target: " + event.target);
 
             if (event.keyCode === 187) {        // + key
                 this.handleZoom("zoomIn");
