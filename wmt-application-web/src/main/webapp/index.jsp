@@ -32,16 +32,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <title>Wildfire Management Tool (WMT)</title>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/x-icon" href="./favicon.png">
 
         <!--During development, using local copies of libraries-->
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
-        <link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />   
+        <!--<link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />-->   
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/production/primeui-1.1-min.css" />   
-        <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css">
         <link rel="stylesheet" href="./css/WMT.css">
 
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
@@ -77,22 +77,47 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </button>
                 <button id="showGlobeItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" aria-label="Show Globe">
-                    <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
                 </button>
                 <button id="showPanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" aria-label="Show Panel">
-                    <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                 </button>
                 <a class="navbar-brand" href="#">WMT</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <!--The navbar-left class is used for the sidebar buttons-->
                 <ul id="sidebarItems" class="nav navbar-nav navbar-left">
-                    <li id="controlPanelItem"><a href="#">Control Panel</a></li>
-                    <li id="layersItem"><a href="#">Layers</a></li>
-                    <li id="markersItem"><a href="#">Markers</a></li>
-                    <li id="weatherItem"><a href="#">Weather</a></li>
-                    <li id="firesItem"><a href="#">Fires</a></li>
+                    <li id="controlPanelItem">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-globe visible-xs-inline" aria-hidden="true" style="padding-right: 5px;"></span>
+                            Control Panel
+                        </a>
+                    </li>
+                    <li id="layersItem">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-list visible-xs-inline" aria-hidden="true" style="padding-right: 5px;"></span>
+                            Layers
+                        </a>
+                    </li>
+                    <li id="markersItem">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-flag visible-xs-inline" aria-hidden="true" style="padding-right: 5px;"></span>
+                            Markers
+                        </a>
+                    </li>
+                    <li id="weatherItem">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-cloud visible-xs-inline" aria-hidden="true" style="padding-right: 5px;"></span>
+                            Weather
+                        </a>
+                    </li>
+                    <li id="firesItem">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-fire visible-xs-inline" aria-hidden="true" style="padding-right: 5px;"></span>
+                            Fires
+                        </a>
+                    </li>
                 </ul>
                 <form class="navbar-form navbar-right">
                     <input type="text" class="form-control" placeholder="Search...">
@@ -110,7 +135,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div class="row-full">
             <!--Control Panel Sidebar-->
             <div id="controlPanel" class="col-sm-3 sidebar">
-                <h4>Control Panel</h4>
+                <h4>
+                    <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
+                    Control Panel
+                </h4>
                 <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
                     <!--Settings-->
                     <div class="panel panel-default">
@@ -164,9 +192,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div id="controlPanelGlobeBody" class="panel-collapse collapse" role="tabpanel" 
                              aria-labelledby="controlPanelGlobeHeading">
                             <div class="panel-body">
-                                <h4>Projection</h4>
-                                <div class="dropdown" id="projectionDropdown">
-                                </div>                            
+                                <h5>Projection</h5>
+                                <div class="dropdown" id="projectionDropdown"></div>
+                                <h5>View</h5>
+                                <div>
+                                    <button id="resetHeading" class="btn btn-default" type="submit"
+                                            data-toggle="tooltip" data-placement="top" 
+                                            title="Reset to north up">Reset Heading</button>
+                                    <button id="resetView" class="btn btn-default" type="submit"
+                                            data-toggle="tooltip" data-placement="top" 
+                                            title="Reset to north up and look down">Reset View</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,7 +212,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="layersPanel" 
                  class="col-sm-3 sidebar" 
                  style="display:none;">
-                <h4>Layers</h4>
+                <h4>
+                    <span class="glyphicon glyphicon-list" aria-hidden="true" style="padding-right: 5px;"></span>
+                    Layers
+                </h4>
                 <div class="panel-group" id="layersAccordion" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="labelSettingsHeading">
@@ -223,7 +262,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="markersPanel" 
                  class="col-sm-3 sidebar" 
                  style="display:none;">
-                <h4>Markers</h4>
+                <h4>
+                    <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
+                    Markers
+                </h4>
                 <div class="panel-group" id="markersAccordion" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="markersSettingsHeading">
@@ -251,7 +293,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="weatherPanel" 
                  class="col-sm-3 sidebar" 
                  style="display:none;">
-                <h4>Weather</h4>
+                <h4>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true" style="padding-right: 5px;"></span>
+                    Weather
+                </h4>
                 <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="weatherSettingsHeading">
@@ -279,7 +324,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="firesPanel" 
                  class="col-sm-3 sidebar" 
                  style="display:none;">
-                <h4>Fires</h4>
+                <h4>
+                    <span class="glyphicon glyphicon-fire" aria-hidden="true" style="padding-right: 5px;"></span>
+                    Fires
+                </h4>
                 <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="firesSettingsHeading">
