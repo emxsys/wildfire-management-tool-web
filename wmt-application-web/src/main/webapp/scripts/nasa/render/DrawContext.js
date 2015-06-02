@@ -4,7 +4,7 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3113 2015-05-26 23:36:12Z dcollins $
+ * @version $Id: DrawContext.js 3136 2015-06-02 17:14:24Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -67,8 +67,98 @@ define([
          * @constructor
          * @classdesc Provides current state during rendering. The current draw context is passed to most rendering
          * methods in order to make those methods aware of current state.
+         * @param {WebGLRenderingContext} gl The WebGL context this draw context is associated with.
+         * @throws {ArgumentError} If the specified WebGL context is null or undefined.
          */
-        var DrawContext = function () {
+        var DrawContext = function (gl) {
+            if (!gl) {
+                throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "Texture", "constructor",
+                    "missingGlContext"));
+            }
+
+            /**
+             * The current WebGL context.
+             * @type {WebGLRenderingContext}
+             */
+            this.currentGlContext = gl;
+
+            /**
+             * A 2D canvas for creating texture maps.
+             * @type {HTMLElement}
+             */
+            this.canvas2D = document.createElement("canvas");
+
+            /**
+             * A 2D context for this draw context's [canvas property]{@link DrawContext#canvas}.
+             */
+            this.ctx2D = this.canvas2D.getContext("2d");
+
+            /**
+             * The current clear color.
+             * @type {Color}
+             * @default Color.TRANSPARENT (red = 0, green = 0, blue = 0, alpha = 0)
+             */
+            this.clearColor = Color.TRANSPARENT;
+
+            /**
+             * The GPU resource cache, which tracks WebGL resources.
+             * @type {GpuResourceCache}
+             */
+            this.gpuResourceCache = new GpuResourceCache(WorldWind.configuration.gpuCacheSize,
+                0.8 * WorldWind.configuration.gpuCacheSize);
+
+            /**
+             * The surface-tile-renderer to use for drawing surface tiles.
+             * @type {SurfaceTileRenderer}
+             */
+            this.surfaceTileRenderer = new SurfaceTileRenderer();
+
+            /**
+             * The surface shape tile builder used to create and draw surface shapes.
+             * @type {SurfaceShapeTileBuilder}
+             */
+            this.surfaceShapeTileBuilder = new SurfaceShapeTileBuilder();
+
+            /**
+             * Provides access to a multi-resolution WebGL framebuffer arranged as adjacent tiles in a pyramid. Surface
+             * shapes use these tiles internally to draw on the terrain surface.
+             * @type {FramebufferTileController}
+             */
+            this.surfaceShapeTileController = new FramebufferTileController();
+
+            /**
+             * The screen credit controller responsible for collecting and drawing screen credits.
+             * @type {ScreenCreditController}
+             */
+            this.screenCreditController = new ScreenCreditController();
+
+            /**
+             * A shared TextSupport instance.
+             * @type {TextSupport}
+             */
+            this.textSupport = new TextSupport();
+
+            /**
+             * The current GPU program.
+             * @type {GpuProgram}
+             */
+            this.currentProgram = null;
+
+            /**
+             * Indicates whether this draw context is in ordered rendering mode.
+             * @type {Boolean}
+             */
+            this.orderedRenderingMode = false;
+
+            /**
+             * The list of ordered renderables.
+             * @type {Array}
+             */
+            this.orderedRenderables = [];
+
+            // Internal. Intentionally not documented. Provides ordinal IDs to ordered renderables.
+            this.orderedRenderablesCounter = 0; // Number
+
             /**
              * The starting time of the current frame, in milliseconds.
              * @type {Number}
@@ -83,6 +173,19 @@ define([
             this.globe = null;
 
             /**
+             * A copy of the current globe's state key. Provided here to avoid having to recompute it every time
+             * it's needed.
+             * @type {String}
+             */
+            this.globeStateKey = null;
+
+            /**
+             * The layers being rendered.
+             * @type {Layer[]}
+             */
+            this.layers = null;
+
+            /**
              * The layer being rendered.
              * @type {Layer}
              */
@@ -93,36 +196,6 @@ define([
              * @type {NavigatorState}
              */
             this.navigatorState = null;
-
-            /**
-             * The terrain for the current frame.
-             * @type {Terrain}
-             */
-            this.terrain = null;
-
-            /**
-             * The current GPU program.
-             * @type {GpuProgram}
-             */
-            this.currentProgram = null;
-
-            /**
-             * The current vertical exaggeration.
-             * @type {Number}
-             */
-            this.verticalExaggeration = 1;
-
-            /**
-             * The surface-tile-renderer to use for drawing surface tiles.
-             * @type {SurfaceTileRenderer}
-             */
-            this.surfaceTileRenderer = new SurfaceTileRenderer();
-
-            /**
-             * The GPU resource cache, which tracks WebGL resources.
-             * @type {GpuResourceCache}
-             */
-            this.gpuResourceCache = null;
 
             /**
              * The current eye position.
@@ -137,48 +210,28 @@ define([
             this.screenProjection = Matrix.fromIdentity();
 
             /**
-             * The current clear color.
-             * @type {Color}
-             * @default Color.MEDIUM_GRAY (red = 0.5, green = 0.5, blue = 0.5, alpha = 1)
+             * The terrain for the current frame.
+             * @type {Terrain}
              */
-            this.clearColor = Color.TRANSPARENT;
+            this.terrain = null;
+
+            /**
+             * The current vertical exaggeration.
+             * @type {Number}
+             */
+            this.verticalExaggeration = 1;
 
             /**
              * Frame statistics.
              * @type {FrameStatistics}
              */
-            this.frameStatistics = new FrameStatistics();
-
-            /**
-             * The current WebGL context.
-             * @type {WebGLRenderingContext}
-             */
-            this.currentGlContext = null;
+            this.frameStatistics = null;
 
             /**
              * Indicates whether the frame is being drawn for picking.
              * @type {boolean}
              */
             this.pickingMode = false;
-
-            /**
-             * The current pick point, in screen coordinates.
-             * @type {Vec2}
-             */
-            this.pickPoint = null;
-
-            /**
-             * The current pick rectangle, in WebGL (lower-left origin) screen coordinates.
-             * @type {Rectangle}
-             */
-            this.pickRectangle = null;
-
-            /**
-             * The current pick frustum, created anew each picking frame.
-             * @type {Frustum}
-             * @readonly
-             */
-            this.pickFrustum = null;
 
             /**
              * Indicates that picking will return only the terrain object, if the pick point is over the terrain.
@@ -205,6 +258,25 @@ define([
              */
             this.regionPicking = false;
 
+            /**
+             * The current pick point, in screen coordinates.
+             * @type {Vec2}
+             */
+            this.pickPoint = null;
+
+            /**
+             * The current pick rectangle, in WebGL (lower-left origin) screen coordinates.
+             * @type {Rectangle}
+             */
+            this.pickRectangle = null;
+
+            /**
+             * The current pick frustum, created anew each picking frame.
+             * @type {Frustum}
+             * @readonly
+             */
+            this.pickFrustum = null;
+
             // Internal. Keeps track of the current pick color.
             this.pickColor = new Color(0, 0, 0, 1);
 
@@ -214,64 +286,6 @@ define([
              * @readonly
              */
             this.objectsAtPickPoint = new PickedObjectList();
-
-            /**
-             * Indicates whether this draw context is in ordered rendering mode.
-             * @type {Boolean}
-             */
-            this.orderedRenderingMode = false;
-
-            /**
-             * A canvas for creating texture maps.
-             * @type {Canvas}
-             */
-            this.canvas2D = null;
-
-            /**
-             * A 2D context for this draw context's [canvas property]{@link DrawContext#canvas}.
-             */
-            this.ctx2D = null;
-
-            /**
-             * The list of ordered renderables.
-             * @type {Array}
-             */
-            this.orderedRenderables = [];
-
-            // Internal. Intentionally not documented. Provides ordinal IDs to ordered renderables.
-            this.orderedRenderablesCounter = 0; // Number
-
-            /**
-             * A shared TextSupport instance.
-             * @type {TextSupport}
-             */
-            this.textSupport = new TextSupport();
-
-            /**
-             * A copy of the current globe's state key. Provided here to avoid having to recompute it every time
-             * it's needed.
-             * @type {String}
-             */
-            this.globeStateKey = null;
-
-            /**
-             * The current surface shape tile builder used to create and draw surface shapes.
-             * @type {SurfaceShapeTileBuilder}
-             */
-            this.surfaceShapeTileBuilder = null;
-
-            /**
-             * Provides access to a multi-resolution WebGL framebuffer arranged as adjacent tiles in a pyramid. Surface
-             * shapes use these tiles internally to draw on the terrain surface.
-             * @type {FramebufferTileController}
-             */
-            this.surfaceShapeTileController = new FramebufferTileController();
-
-            /**
-             * The screen credit controller responsible for collecting and drawing screen credits.
-             * @type {ScreenCreditController}
-             */
-            this.screenCreditController = new ScreenCreditController();
         };
 
         // Internal use. Intentionally not documented.
@@ -284,14 +298,29 @@ define([
          * Prepare this draw context for the drawing of a new frame.
          */
         DrawContext.prototype.reset = function () {
+            // Reset the draw context's internal properties.
+            this.screenCreditController.clear();
+            this.orderedRenderingMode = false;
+            this.orderedRenderables = []; // clears the ordered renderables array
+            this.orderedRenderablesCounter = 0;
+
+            // Advance the per-frame timestamp.
             var oldTimeStamp = this.timestamp;
             this.timestamp = Date.now();
             if (this.timestamp === oldTimeStamp)
                 ++this.timestamp;
 
-            this.orderedRenderables = []; // clears the ordered renderables array
-            this.orderedRenderablesCounter = 0;
-            this.pickColor = new Color(0, 0, 0, 1);
+            // Reset properties set by the World Window every frame.
+            this.globe = null;
+            this.globeStateKey = null;
+            this.layers = null;
+            this.currentLayer = null;
+            this.navigatorState = null;
+            this.terrain = null;
+            this.verticalExaggeration = 1;
+            this.frameStatistics = null;
+
+            // Reset picking properties that may be set by the World Window.
             this.pickingMode = false;
             this.pickTerrainOnly = false;
             this.deepPicking = false;
@@ -299,8 +328,8 @@ define([
             this.pickPoint = null;
             this.pickRectangle = null;
             this.pickFrustum = null;
+            this.pickColor = new Color(0, 0, 0, 1);
             this.objectsAtPickPoint.clear();
-            this.screenCreditController.clear();
         };
 
         /**
@@ -316,13 +345,13 @@ define([
         };
 
         /**
-         * Binds a specified GPU program.
-         * This function also makes the program the current program.
-         * @param {WebGLRenderingContext} gl The current WebGL drawing context.
+         * Binds a specified GPU program. This function also makes the program the current program.
          * @param {GpuProgram} program The program to bind. May be null or undefined, in which case the currently
          * bound program is unbound.
          */
-        DrawContext.prototype.bindProgram = function (gl, program) {
+        DrawContext.prototype.bindProgram = function (program) {
+            var gl = this.currentGlContext;
+
             if (program) {
                 program.bind(gl);
             } else {
@@ -335,25 +364,25 @@ define([
         /**
          * Binds a potentially cached GPU program, creating and caching it if it isn't already cached.
          * This function also makes the program the current program.
-         * @param {WebGLRenderingContext} gl The current WebGL drawing context.
          * @param {function} programConstructor The constructor to use to create the program.
          * @returns {GpuProgram} The bound program.
          * @throws {ArgumentError} If the specified constructor is null or undefined.
          */
-        DrawContext.prototype.findAndBindProgram = function (gl, programConstructor) {
+        DrawContext.prototype.findAndBindProgram = function (programConstructor) {
             if (!programConstructor) {
                 throw new ArgumentError(
-                    Logger.logMessage(Logger.LEVEL_SEVERE, "DrawContext", "bindProgramForKey",
+                    Logger.logMessage(Logger.LEVEL_SEVERE, "DrawContext", "findAndBindProgram",
                         "The specified program constructor is null or undefined."));
             }
 
-            var program = this.gpuResourceCache.resourceForKey(programConstructor.key);
+            var gl = this.currentGlContext,
+                program = this.gpuResourceCache.resourceForKey(programConstructor.key);
             if (program) {
-                this.bindProgram(gl, program);
+                this.bindProgram(program);
             } else {
                 try {
                     program = new programConstructor(gl);
-                    this.bindProgram(gl, program);
+                    this.bindProgram(program);
                     this.gpuResourceCache.putResource(programConstructor.key, program, program.size);
                 } catch (e) {
                     Logger.log(Logger.LEVEL_SEVERE, "Error attempting to create GPU program.")

@@ -20,26 +20,22 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
      * @classdesc Provides a layer manager to interactively control layer visibility for a World Window.
      * @param {WorldWindow} worldWindow The World Window to associated this layer manager with.
      */
-    var LayerManager = function (worldWindow) {
-        var thisExplorer = this;
+    var ProjectionMenu = function (worldWindow) {
+        var self = this;
 
         this.wwd = worldWindow;
-
         this.roundGlobe = this.wwd.globe;
 
+        // Create the list of supported projections
         this.createProjectionList();
+        // Add event handlers to the list items
         $("#projectionDropdown").find(" li").on("click", function (e) {
-            thisExplorer.onProjectionClick(e);
+            self.onProjectionClick(e);
         });
 
-        this.synchronizeLayerList();
-
-        $("#layerList").find("button").on("click", function (e) {
-            thisExplorer.onLayerClick($(this));
-        });
     };
 
-    LayerManager.prototype.onProjectionClick = function (event) {
+    ProjectionMenu.prototype.onProjectionClick = function (event) {
         var projectionName = event.target.innerText || event.target.innerHTML;
         $("#projectionDropdown").find("button").html(projectionName + ' <span class="caret"></span>');
 
@@ -78,52 +74,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         this.wwd.redraw();
     };
 
-    LayerManager.prototype.onLayerClick = function (layerButton) {
-        var layerName = layerButton.text(),
-            i,
-            len,
-            layer;
-
-        // Update the layer state for the selected layer.
-        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
-            layer = this.wwd.layers[i];
-            if (layer.displayName === layerName) {
-                layer.enabled = !layer.enabled;
-                if (layer.enabled) {
-                    layerButton.addClass("active");
-                } else {
-                    layerButton.removeClass("active");
-                }
-                this.wwd.redraw();
-            }
-        }
-    };
-
-    LayerManager.prototype.synchronizeLayerList = function () {
-        var layerListItem = $("#layerList"),
-            layerItem,
-            layer,
-            i,
-            len;
-
-        layerListItem.remove('a');
-
-        // Synchronize the displayed layer list with the World Window's layer list.
-        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
-            layer = this.wwd.layers[i];
-            layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
-            layerListItem.append(layerItem);
-
-            if (layer.enabled) {
-                layerItem.addClass("active");
-            } else {
-                layerItem.removeClass("active");
-            }
-            this.wwd.redraw();
-        }
-    };
-
-    LayerManager.prototype.createProjectionList = function () {
+    ProjectionMenu.prototype.createProjectionList = function () {
         var projectionNames = [
             "3D",
             "Equirectangular",
@@ -149,5 +100,5 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         projectionDropdown.append(ulItem);
     };
 
-    return LayerManager;
+    return ProjectionMenu;
 });

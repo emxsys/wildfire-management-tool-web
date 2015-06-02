@@ -46,68 +46,89 @@
 define([
     './util/Cookie',
     './controller/Controller',
+    './globe/KeyboardControls',
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
     './util/Log',
-    './util/Messenger',
+    './menu/MainMenu',
     './globe/ReticuleLayer',
+    './globe/SkyBackgroundLayer',
     './Wmt',
     '../nasa/WorldWind'],
     function (
         Cookie,
         Controller,
+        KeyboardControls,
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
         Log,
-        Messenger,
+        MainMenu,
         ReticuleLayer,
+        SkyBackgroundLayer,
         Wmt,
         WorldWind) {
         "use strict";
         var WmtClient = function () {
             Log.info("WmtClient", "constructor", "started");
+            
             // Specify the where the World Wind resources are located.
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
             // Set the logging level for the World Wind library
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-            // Make ready our general purpose notification
-            Messenger.initialize();
-
-            // Create the World Window with a custom navigator object
-            this.wwd = new WorldWind.WorldWindow("canvasOne");
-            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
-
-            var self = this,
-                layer,
-                layers = [
-                    {layer: new WorldWind.BMNGLayer(), enabled: true},
-                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
-                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
-                    {layer: new ReticuleLayer(), enabled: true},
-                    {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
-                ];
-            // Add imagery layers to WorldWindow
-            for (layer = 0; layer < layers.length; layer++) {
-                layers[layer].layer.enabled = layers[layer].enabled;
-                this.wwd.addLayer(layers[layer].layer);
-            }
-            // Restore the globe (eye position) from the last session
-            this.restoreSavedState();
-            this.wwd.redraw();
-
+            // Initialize the WorldWindow
+            this.initializeGlobe();
+            
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.wwd);
-
+            
+            // Add keyboard controls to the globe
+            this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
+            
+            // Initialize the Navbar and Sidebars
+            MainMenu.initialize(this.wwd, this.controller);
+            
             // Add event handler to save the current view (eye position) when the window closes
-            window.onbeforeunload = function (evt) {
+            var self = this;
+            window.onbeforeunload = function () {
                 self.saveCurrentState();
                 // Return null to close quietly
                 return null;
             };
+
             Log.info("WmtClient", "constructor", "finished.");
         };
 
+        /**
+         * Initialized the WorldWindow with a custom navigator and maps and imagery layers.
+         */
+        WmtClient.prototype.initializeGlobe = function () {
+            // Create the World Window with a custom navigator object
+            this.wwd = new WorldWind.WorldWindow("canvasOne");
+            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
+
+            var layer,
+                layers = [
+                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true},
+                    {layer: new WorldWind.BMNGLayer(), enabled: true},
+                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
+                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
+                    {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
+                    {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},                    
+                    {layer: new ReticuleLayer(), enabled: true},
+                    {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
+                ];
+            // Add imagery layers to WorldWindow
+            for (layer = 0; layer < layers.length; layer += 1) {
+                layers[layer].layer.enabled = layers[layer].enabled;
+                this.wwd.addLayer(layers[layer].layer);
+            }
+
+            // Restore the globe (eye position) from the last session
+            this.restoreSavedState();
+            this.wwd.redraw();
+
+        };
 
 
         /**
@@ -126,7 +147,6 @@ define([
                     headStr = Cookie.read("heading"),
                     tiltStr = Cookie.read("tilt"),
                     rollStr = Cookie.read("roll");
-
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
                     Log.warning("WmtClient", "restoreSavedState", "Previous state invalid: Using default lat/lon.");
                     latStr = Wmt.configuration.startupLatitude;
@@ -148,14 +168,11 @@ define([
                 this.wwd.navigator.heading = Number(headStr);
                 this.wwd.navigator.tilt = Number(tiltStr);
                 this.wwd.navigator.roll = Number(rollStr);
-
             } catch (e) {
                 Log.error("WmtClient", "restoreSavedState",
                     "Exception occurred processing cookie: " + e.toString());
             }
         };
-
-
         /**
          * Saves the current view settings in a cookie
          */
@@ -183,7 +200,6 @@ define([
             Cookie.save("tilt", tilt, numDays);
             Cookie.save("roll", roll, numDays);
 
-            //TODO: save date/time
         };
 
         return WmtClient;

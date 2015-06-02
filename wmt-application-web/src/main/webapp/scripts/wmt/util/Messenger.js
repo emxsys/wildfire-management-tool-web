@@ -55,9 +55,11 @@ define([],
              * @param {Number} duration Time to show message in milliseconds.
              */
             growl: function (style, title, message, duration) {
-                //options
+                // Initialize
+                $('#growl').puigrowl();
+                // Apply options
                 $('#growl').puigrowl({life: duration});
-                //show messages
+                // Show messages
                 $('#growl').puigrowl('show',
                     [{
                             severity: style,
@@ -65,7 +67,13 @@ define([],
                             detail: message}]
                     );
             },
+            /**
+             * 
+             * @param {type} html
+             */
             notify: function (html) {
+                $('#notify').puinotify(); 
+                
                 $('#notify').puinotify({
                     easing: 'easeInOutCirc',
                     position: 'bottom'

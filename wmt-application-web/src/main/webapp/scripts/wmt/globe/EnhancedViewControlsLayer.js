@@ -71,25 +71,9 @@ define([
 
             // Top-right placement
             this.placement = new WorldWind.Offset(
-                WorldWind.OFFSET_INSET_PIXELS, 30, // Align with Compass width
-                WorldWind.OFFSET_INSET_PIXELS, 50); // Move down to make room for compass
+                WorldWind.OFFSET_INSET_PIXELS, 10, // Leave a margin to accomodate bezels on phones
+                WorldWind.OFFSET_INSET_PIXELS, 10); // ditto
             this.alignment = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 1, WorldWind.OFFSET_FRACTION, 1);
-
-            // Set the screen and image offsets of each control to the lower left corner.
-            // Use same offset values as parent ViewControlsLayer.
-            var screenOffset = new WorldWind.Offset(WorldWind.OFFSET_PIXELS, 0, WorldWind.OFFSET_PIXELS, 0),
-                imagePath = Wmt.IMAGE_PATH;
-            // These controls are all internal and intentionally not documented.
-//            this.gotoControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-goto32.png");
-//            this.locateControl = new WorldWind.ScreenImage(screenOffset.clone(), imagePath + "location-gps32.png");
-//            this.gotoControl.imageOffset = screenOffset.clone();
-//            this.locateControl.imageOffset = screenOffset.clone();
-//            this.gotoControl.size = 32;
-//            this.locateControl.size = 32;
-//            this.gotoControl.opacity = this._inactiveOpacity;
-//            this.locateControl.opacity = this._inactiveOpacity;
-//            this.controls.push(this.gotoControl);
-//            this.controls.push(this.locateControl);
 
         };
 
@@ -105,7 +89,6 @@ define([
                 return;
             }
             // Othewise, do vertical layout (copied from ViewControlsLayer and edited).
-
             var controlPanelWidth = 64,
                 controlPanelHeight = 0,
                 panelOffset,
@@ -141,10 +124,11 @@ define([
                 this.inCurrentFrame = true;
             }
 
-            // Determine the lower-left corner position of the control collection.
+            // Determine the upper-right corner position of the control collection.
             screenOffset = this.placement.offsetForSize(dc.navigatorState.viewport.width,
                 dc.navigatorState.viewport.height);
-            panelOffset = this.alignment.offsetForSize(controlPanelWidth, controlPanelHeight);
+            //panelOffset = this.alignment.offsetForSize(controlPanelWidth, controlPanelHeight); // for lower left
+            panelOffset = this.alignment.offsetForSize(controlPanelWidth, controlPanelHeight / 2); // for upper right
             x = screenOffset[0] - panelOffset[0];
             y = screenOffset[1] - panelOffset[1];
 
@@ -167,7 +151,7 @@ define([
                 this.zoomOutControl.render(dc);
                 this.zoomInControl.render(dc);
                 y -= this.zoomOutControl.size;
-            }
+            } 
 
             if (this.showHeadingControl) {
                 this.headingRightControl.screenOffset.x = x;
@@ -177,7 +161,7 @@ define([
                 this.headingRightControl.render(dc);
                 this.headingLeftControl.render(dc);
                 y -= this.headingLeftControl.size;
-            }
+            } 
 
             if (this.showTiltControl) {
                 this.tiltDownControl.screenOffset.x = x;
@@ -207,13 +191,25 @@ define([
                 this.fovNarrowControl.render(dc);
                 this.fovWideControl.render(dc);
             }
-            // TODO: following block to be depreciated in favor of stand alone Goto/Set Location button.
-//            this.gotoControl.screenOffset.x = x;
-//            this.gotoControl.screenOffset.y = y;
-//            this.locateControl.screenOffset.x = x + this.gotoControl.size;
-//            this.locateControl.screenOffset.y = y;
-//            this.gotoControl.render(dc);
-//            this.locateControl.render(dc);
+        };
+
+        // Copied from parent. Augmented to ignore inactive controls
+        ViewControlsLayer.prototype.pickControl = function (pickPoint) {
+            var x = pickPoint[0], y = this.wwd.canvas.height - pickPoint[1],
+                control;
+
+            for (var i = 0; i < this.controls.length; i++) {
+                control = this.controls[i];
+
+                if (control.enabled) {
+                    if (x >= control.screenOffset.x && x <= (control.screenOffset.x + control.size)
+                        && y >= control.screenOffset.y && y <= (control.screenOffset.y + control.size)) {
+                        return control;
+                    }
+                }
+            }
+
+            return null;
         };
 
         // Copied from parent. Augmented to include goto and locate controls
@@ -238,46 +234,11 @@ define([
                 } else if (topObject === this.fovNarrowControl
                     || topObject === this.fovWideControl) {
                     operation = this.handleFov;
-//                } else if (topObject === this.gotoControl) {
-//                    operation = this.handleGoto;
-//                } else if (topObject === this.locateControl) {
-//                    operation = this.handleLocate;
                 }
             }
 
             return operation;
         };
-
-
-
-//        /**
-//         * Locate handler.
-//         * @private
-//         * @param {type} e
-//         * @param {type} ignore Control.
-//         */
-//        EnhancedViewControlsLayer.prototype.handleLocate = function (e, ignore) {
-//            // Start an operation on left button down or touch start.
-//            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
-//                e.preventDefault();
-//                setTimeout(this.locator.locateCurrentPosition(), 50);
-//            }
-//        };
-//
-//        /**
-//         * Goto handler.
-//         * @private
-//         * @param {type} e
-//         * @param {type} ignore Control.
-//         */
-//        EnhancedViewControlsLayer.prototype.handleGoto = function (e, ignore) {
-//            // Start an operation on left button down or touch start.
-//            if ((e.type === "mousedown" && e.which === 1) || (e.type === "touchstart")) {
-//                e.preventDefault();
-//                setTimeout(this.locator.locateCoordinates(), 50);
-//            }
-//        };
-
 
         return EnhancedViewControlsLayer;
     }

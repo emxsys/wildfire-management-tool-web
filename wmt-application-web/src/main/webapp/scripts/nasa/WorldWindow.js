@@ -4,7 +4,7 @@
  */
 /**
  * @exports WorldWindow
- * @version $Id: WorldWindow.js 3098 2015-05-15 21:51:11Z dcollins $
+ * @version $Id: WorldWindow.js 3132 2015-06-01 22:42:45Z dcollins $
  */
 define([
         './error/ArgumentError',
@@ -62,7 +62,7 @@ define([
             var thisWindow = this;
             function handleContextLost(event) {
                 event.preventDefault();
-                thisWindow.gpuResourceCache.clear();
+                thisWindow.drawContext.gpuResourceCache.clear();
 
                 if (thisWindow.pickingFrameBuffer) {
                     thisWindow.pickingFrameBuffer = null;
@@ -72,7 +72,7 @@ define([
             function handleContextRestored(event) {
             }
 
-            var gl = this.getWebGLContext();
+            var gl = this.createWebGLContext(this.canvas);
 
             // Internal. Intentionally not documented. Must be initialized before the navigator is created.
             this.eventListeners = {};
@@ -142,30 +142,14 @@ define([
             this.redrawCallbacks = [];
 
             // Internal. Intentionally not documented.
-            this.gpuResourceCache = new GpuResourceCache(WorldWind.configuration.gpuCacheSize,
-                0.8 * WorldWind.configuration.gpuCacheSize);
-
-            // Internal. Intentionally not documented.
-            this.drawContext = new DrawContext();
-            this.drawContext.canvas = this.canvas;
-            this.drawContext.gpuResourceCache = this.gpuResourceCache;
+            this.drawContext = new DrawContext(gl);
 
             // Internal. Intentionally not documented.
             this.pickingFrameBuffer = null;
 
-            // Create a virtual canvas for capturing texture maps of SVG text and other SVG 2D renderings.
-            this.drawContext.canvas2D = document.createElement("canvas");
-            this.drawContext.ctx2D = this.drawContext.canvas2D.getContext("2d");
-
             // Internal. Intentionally not documented.
             this.frameRequested = false;
             this.frameRequestCallback = null;
-
-            /**
-             * Create a surface shape tile builder to accumulate and render surface shapes.
-             * @type {SurfaceShapeTileBuilder}
-             */
-            this.surfaceShapeTileBuilder = new SurfaceShapeTileBuilder();
 
             // Set up to handle redraw requests sent to the canvas and the global window. Imagery uses the canvas
             // because images are generally specific to the WebGL context associated with the canvas. Elevation models
@@ -175,6 +159,25 @@ define([
             };
             this.canvas.addEventListener(WorldWind.REDRAW_EVENT_TYPE, redrawEventListener, false);
             window.addEventListener(WorldWind.REDRAW_EVENT_TYPE, redrawEventListener, false);
+        };
+
+        // Internal function. Intentionally not documented.
+        WorldWindow.prototype.createWebGLContext = function (canvas) {
+            // Request a WebGL context with antialiasing is disabled. Antialiasing causes gaps to appear at the edges of
+            // terrain tiles.
+            var glAttrs = {antialias: false},
+                gl = canvas.getContext("webgl", glAttrs);
+            if (!gl) {
+                gl = canvas.getContext("experimental-webgl", glAttrs);
+            }
+
+            // uncomment to debug WebGL
+            //var gl = WebGLDebugUtils.makeDebugContext(this.canvas.getContext("webgl"),
+            //        this.throwOnGLError,
+            //        this.logAndValidate
+            //);
+
+            return gl;
         };
 
         /**
@@ -392,16 +395,16 @@ define([
 
         // Internal. Intentionally not documented.
         WorldWindow.prototype.resetDrawContext = function () {
-            var dc = this.drawContext;
-
             this.globe.offset = 0;
+
+            var dc = this.drawContext;
             dc.reset();
             dc.globe = this.globe;
             dc.layers = this.layers;
             dc.navigatorState = this.navigator.currentState();
             dc.verticalExaggeration = this.verticalExaggeration;
-            dc.frameStatistics = this.frameStatistics;
             dc.deepPicking = this.deepPicking;
+            dc.frameStatistics = this.frameStatistics;
             dc.update();
         };
 
@@ -435,8 +438,7 @@ define([
         WorldWindow.prototype.drawFrame = function () {
             this.drawContext.frameStatistics.beginFrame();
 
-            var gl = this.getWebGLContext();
-            this.drawContext.currentGlContext = gl;
+            var gl = this.drawContext.currentGlContext;
             this.viewport = new Rectangle(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
 
             if (!this.pickingFrameBuffer) {
@@ -461,24 +463,6 @@ define([
                 }
                 this.drawContext.frameStatistics.endFrame();
             }
-        };
-
-        WorldWindow.prototype.getWebGLContext = function () {
-            // Request a WebGL context with antialiasing is disabled. Antialiasing causes gaps to appear at the edges of
-            // terrain tiles.
-            var glAttrs = {antialias: false},
-                gl = this.canvas.getContext("webgl", glAttrs);
-            if (!gl) {
-                gl = this.canvas.getContext("experimental-webgl", glAttrs);
-            }
-
-            // uncomment to debug WebGL
-            //var gl = WebGLDebugUtils.makeDebugContext(this.canvas.getContext("webgl"),
-            //        this.throwOnGLError,
-            //        this.logAndValidate
-            //);
-
-            return gl;
         };
 
         WorldWindow.prototype.doNormalRepaint = function () {
@@ -551,12 +535,11 @@ define([
 
         // Internal function. Intentionally not documented.
         WorldWindow.prototype.doDraw = function () {
-            this.drawContext.surfaceShapeTileBuilder = this.surfaceShapeTileBuilder;
-            this.surfaceShapeTileBuilder.clear();
+            this.drawContext.surfaceShapeTileBuilder.clear();
 
             this.drawLayers();
 
-            this.surfaceShapeTileBuilder.doRender(this.drawContext);
+            this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
             if (!this.deferOrderedRendering) {
                 this.drawOrderedRenderables();
@@ -572,12 +555,11 @@ define([
             }
 
             if (!this.drawContext.pickTerrainOnly) {
-                this.drawContext.surfaceShapeTileBuilder = this.surfaceShapeTileBuilder;
-                this.surfaceShapeTileBuilder.clear();
+                this.drawContext.surfaceShapeTileBuilder.clear();
 
                 this.drawLayers();
 
-                this.surfaceShapeTileBuilder.doRender(this.drawContext);
+                this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
                 if (!this.deferOrderedRendering) {
                     this.drawOrderedRenderables();

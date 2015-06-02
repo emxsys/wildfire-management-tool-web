@@ -4,7 +4,7 @@
  */
 /**
  * @exports SurfaceTileRenderer
- * @version $Id: SurfaceTileRenderer.js 2941 2015-03-30 21:11:43Z tgaskins $
+ * @version $Id: SurfaceTileRenderer.js 3136 2015-06-02 17:14:24Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -119,7 +119,7 @@ define([
         // Intentionally not documented.
         SurfaceTileRenderer.prototype.beginRendering = function (dc, opacity) {
             var gl = dc.currentGlContext,
-                program = dc.findAndBindProgram(gl, SurfaceTileRendererProgram);
+                program = dc.findAndBindProgram(SurfaceTileRendererProgram);
             program.loadTexSampler(gl, WebGLRenderingContext.TEXTURE0);
 
             if (dc.pickingMode && !this.isSurfaceShapeTileRendering) {
@@ -134,7 +134,9 @@ define([
 
         // Intentionally not documented.
         SurfaceTileRenderer.prototype.endRendering = function (dc) {
-            dc.bindProgram(dc.currentGlContext, null);
+            var gl = dc.currentGlContext;
+            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
+            dc.bindProgram(null);
         };
 
         // Intentionally not documented.

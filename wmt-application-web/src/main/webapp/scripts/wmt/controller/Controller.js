@@ -33,7 +33,6 @@
 define([
     '../view/CoordinatesView',
     './FuelModelManager',
-    './LayerManager',
     './LocationManager',
     '../model/Model',
     '../view/ReticuleView',
@@ -45,7 +44,6 @@ define([
     function (
         CoordinatesView,
         FuelModelManager,
-        LayerManager,
         LocationManager,
         Model,
         ReticuleView,
@@ -59,7 +57,6 @@ define([
             // The WorldWindow (globe) provides the spatial input 
             this.wwd = worldWindow;
             // Create the other input managers
-            this.layerManager = new LayerManager(this.wwd);
             this.timeManager = new TimeManager(this);
             this.locationManager = new LocationManager(this);
             this.fuelModelManager = new FuelModelManager(this);
@@ -101,17 +98,6 @@ define([
                 self.handleTouchEvent(event);
             });
 
-            // Add menu event handlers
-            $("#resetGlobe").on("click", function (event) {
-                self.resetGlobe(event);
-            });
-            $("#resetHeading").on("click", function (event) {
-                self.resetHeading(event);
-            });
-            $("#resetView").on("click", function (event) {
-                self.resetHeadingAndTilt(event);
-            });
-
         };
 
 
@@ -123,6 +109,7 @@ define([
         Controller.prototype.lookAtLatLon = function (latitude, longitude) {
             this.wwd.navigator.lookAtLocation.latitude = latitude;
             this.wwd.navigator.lookAtLocation.longitude = longitude;
+            this.wwd.redraw();
         };
 
         /**
@@ -153,7 +140,7 @@ define([
             this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
             this.wwd.redraw();
         };
-        
+
 
         /**
          * Resets the viewpoint to north up.
@@ -162,18 +149,26 @@ define([
             this.wwd.navigator.heading = Number(0);
             this.wwd.redraw();
         };
-        
-        
+
+
         /**
          * Resets the viewpoint to north up and nadir.
          */
         Controller.prototype.resetHeadingAndTilt = function () {
+            // Tilting the view will change the location due to a bug in 
+            // the early release of WW.  So we set the location to the 
+            // current crosshairs position (viewpoint) to resolve this issue
+            var lat = this.model.viewpoint.target.latitude,
+                lon = this.model.viewpoint.target.longitude;
+
             this.wwd.navigator.heading = 0;
             this.wwd.navigator.tilt = 0;
-            this.wwd.redraw();
+            this.wwd.redraw();  // calls applyLimits which changes the location
+            
+            this.lookAtLatLon(lat, lon);
         };
-        
-        
+
+
         /**
          * Updates the model with current globe viewpoint.
          */
@@ -214,7 +209,7 @@ define([
         };
 
         //noinspection JSUnusedLocalSymbols
-        Controller.prototype.handleTouchEvent = function (event) {
+        Controller.prototype.handleTouchEvent = function () {
             this.isTouchDevice = true; // suppress simulated mouse events in mobile browsers
             this.mousePoint = null;
         };
