@@ -25,12 +25,19 @@
 }
 
 #canvas-wrap canvas { 
-    position: absolute;
-    top: 0; 
+    position: relative;
+    top: 0;
     left: 0; 
     z-index: 0 !important; 
     width: 100%; 
-    height: 100% 
+    height: 100%;
+    padding-left: 0;
+    padding-right: 0
+        
+}
+#globe { 
+    padding-left: 0;
+    padding-right: 0        
 }
 
 .container-full {
@@ -38,6 +45,10 @@
   width: 100%;
   height: 100%;
   min-height:100%;
+}
+
+.navbar-nomargin {
+    margin-bottom: 0;   /* override default of 20px
 }
 
 .non-interactive { 
@@ -63,6 +74,11 @@
     margin-left: 0;
 }
 
+.row-full {
+    margin-right: 0;
+    margin-left: 0;
+    height: 100%;
+}
 #restSolarData {
     text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
     text-align: center;
