@@ -51,6 +51,7 @@ define([
     './globe/EnhancedViewControlsLayer',
     './util/Log',
     './util/Messenger',
+    './util/MainMenu',
     './globe/ReticuleLayer',
     './globe/SkyBackgroundLayer',
     './Wmt',
@@ -63,6 +64,7 @@ define([
         EnhancedViewControlsLayer,
         Log,
         Messenger,
+        MainMenu,
         ReticuleLayer,
         SkyBackgroundLayer,
         Wmt,
@@ -74,9 +76,10 @@ define([
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
             // Set the logging level for the World Wind library
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-            // Make ready our general purpose notification
+            
             Messenger.initialize();
-
+            MainMenu.initialize();
+            
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
@@ -85,7 +88,7 @@ define([
             var self = this,
                 layer,
                 layers = [
-                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true}, 
+                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true},
                     {layer: new WorldWind.BMNGLayer(), enabled: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
@@ -133,7 +136,6 @@ define([
                     headStr = Cookie.read("heading"),
                     tiltStr = Cookie.read("tilt"),
                     rollStr = Cookie.read("roll");
-
                 if (!latStr || !lonStr || isNaN(latStr) || isNaN(lonStr)) {
                     Log.warning("WmtClient", "restoreSavedState", "Previous state invalid: Using default lat/lon.");
                     latStr = Wmt.configuration.startupLatitude;
@@ -155,14 +157,11 @@ define([
                 this.wwd.navigator.heading = Number(headStr);
                 this.wwd.navigator.tilt = Number(tiltStr);
                 this.wwd.navigator.roll = Number(rollStr);
-
             } catch (e) {
                 Log.error("WmtClient", "restoreSavedState",
                     "Exception occurred processing cookie: " + e.toString());
             }
         };
-
-
         /**
          * Saves the current view settings in a cookie
          */
