@@ -21,21 +21,24 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
      * @param {WorldWindow} worldWindow The World Window to associated this layer manager with.
      */
     var LayerManager = function (worldWindow) {
-        var thisExplorer = this;
+        var self = this;
 
         this.wwd = worldWindow;
 
         this.roundGlobe = this.wwd.globe;
 
         this.createProjectionList();
-        $("#projectionDropdown").find(" li").on("click", function (e) {
-            thisExplorer.onProjectionClick(e);
+        $("#projectionDropdown").find("button").on("click", function (e) {
+            self.onProjectionClick(e);
         });
 
+
+        // Populate the Layers menu with menu items
         this.synchronizeLayerList();
 
-        $("#layerList").find("button").on("click", function (e) {
-            thisExplorer.onLayerClick($(this));
+        // Attach a click handler to the new layer menu items
+        $('#layerList').find('button').on('click', function (event) {
+            self.onLayerClick($(this));
         });
     };
 
@@ -78,8 +81,8 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         this.wwd.redraw();
     };
 
-    LayerManager.prototype.onLayerClick = function (layerButton) {
-        var layerName = layerButton.text(),
+    LayerManager.prototype.onLayerClick = function (layerItem) {
+        var layerName = layerItem.text(),
             i,
             len,
             layer;
@@ -90,9 +93,9 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
             if (layer.displayName === layerName) {
                 layer.enabled = !layer.enabled;
                 if (layer.enabled) {
-                    layerButton.addClass("active");
+                    layerItem.addClass("active");
                 } else {
-                    layerButton.removeClass("active");
+                    layerItem.removeClass("active");
                 }
                 this.wwd.redraw();
             }
