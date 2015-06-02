@@ -4,7 +4,7 @@
  */
 /**
  * @exports SurfaceTileRenderer
- * @version $Id: SurfaceTileRenderer.js 2941 2015-03-30 21:11:43Z tgaskins $
+ * @version $Id: SurfaceTileRenderer.js 3129 2015-05-29 18:17:46Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -134,7 +134,9 @@ define([
 
         // Intentionally not documented.
         SurfaceTileRenderer.prototype.endRendering = function (dc) {
-            dc.bindProgram(dc.currentGlContext, null);
+            var gl = dc.currentGlContext;
+            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
+            dc.bindProgram(gl, null);
         };
 
         // Intentionally not documented.
