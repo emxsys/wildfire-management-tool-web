@@ -35,11 +35,15 @@
  * 
  * @module {MainMenu}
  */
-define([],
-    function () {
+define([
+    './LayerMenu',
+    './ProjectionMenu'],
+    function (
+        LayerMenu,
+        ProjectionMenu) {
         "use strict";
         var MainMenu = {
-            initialize: function () {
+            initialize: function (worldWindow) {
                 var self = this;
 
                 // Auto-collapse the navbar when one of its decendents are clicked
@@ -60,7 +64,7 @@ define([],
                     // so the globe keyboard controls are active 
                     $("#canvasOne").focus();
                 });
-                
+
 
                 // Attach a click handler to the main menu items
                 $('#controlPanelItem').on('click', function () {
@@ -83,6 +87,9 @@ define([],
                     self.highlightButton('#firesItem');
                     self.showSidebar('#firesPanel');
                 });
+
+                this.layerMenu = new LayerMenu(worldWindow);
+                this.projectionMenu = new ProjectionMenu(worldWindow);
             },
             /**
              * 

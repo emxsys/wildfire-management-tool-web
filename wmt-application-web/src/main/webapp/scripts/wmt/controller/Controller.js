@@ -33,7 +33,6 @@
 define([
     '../view/CoordinatesView',
     './FuelModelManager',
-    './LayerManager',
     './LocationManager',
     '../util/Log',
     '../model/Model',
@@ -46,7 +45,6 @@ define([
     function (
         CoordinatesView,
         FuelModelManager,
-        LayerManager,
         LocationManager,
         Log,
         Model,
@@ -61,7 +59,6 @@ define([
             // The WorldWindow (globe) provides the spatial input 
             this.wwd = worldWindow;
             // Create the other input managers
-            this.layerManager = new LayerManager(this.wwd);
             this.timeManager = new TimeManager(this);
             this.locationManager = new LocationManager(this);
             this.fuelModelManager = new FuelModelManager(this);

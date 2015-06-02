@@ -50,8 +50,7 @@ define([
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
     './util/Log',
-    './util/Messenger',
-    './util/MainMenu',
+    './menu/MainMenu',
     './globe/ReticuleLayer',
     './globe/SkyBackgroundLayer',
     './Wmt',
@@ -63,7 +62,6 @@ define([
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
         Log,
-        Messenger,
         MainMenu,
         ReticuleLayer,
         SkyBackgroundLayer,
@@ -72,25 +70,44 @@ define([
         "use strict";
         var WmtClient = function () {
             Log.info("WmtClient", "constructor", "started");
+            
             // Specify the where the World Wind resources are located.
             WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
             // Set the logging level for the World Wind library
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-            
-            Messenger.initialize();
-            MainMenu.initialize();
-            
+            // Initialize the WorldWindow
+            this.initializeGlobe();
+            // Now that the globe is setup, initialize the Model-View-Controller framework.
+            // The controller will create model and the views
+            this.controller = new Controller(this.wwd);
+            // Add keyboard controls to the globe
+            this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
+            // Initialize the Navbar and Sidebars
+            MainMenu.initialize(this.wwd);
+            // Add event handler to save the current view (eye position) when the window closes
+            var self = this;
+            window.onbeforeunload = function (evt) {
+                self.saveCurrentState();
+                // Return null to close quietly
+                return null;
+            };
+
+            Log.info("WmtClient", "constructor", "finished.");
+        };
+
+        WmtClient.prototype.initializeGlobe = function () {
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
 
-            var self = this,
-                layer,
+            var layer,
                 layers = [
                     {layer: new SkyBackgroundLayer(this.wwd), enabled: true},
                     {layer: new WorldWind.BMNGLayer(), enabled: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
+                    {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
+                    {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},                    
                     {layer: new ReticuleLayer(), enabled: true},
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
                 ];
@@ -104,20 +121,7 @@ define([
             this.restoreSavedState();
             this.wwd.redraw();
 
-            // Now that the globe is setup, initialize the Model-View-Controller framework.
-            // The controller will create model and the views
-            this.controller = new Controller(this.wwd);
-            this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
-
-            // Add event handler to save the current view (eye position) when the window closes
-            window.onbeforeunload = function (evt) {
-                self.saveCurrentState();
-                // Return null to close quietly
-                return null;
-            };
-            Log.info("WmtClient", "constructor", "finished.");
         };
-
 
 
         /**
