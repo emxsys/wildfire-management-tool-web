@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, $ */
 
 
 /**
@@ -51,12 +51,18 @@ define([
             this.wwd = worldWindow;
 
             var self = this;
-            window.addEventListener('keydown', function (event) {
+            $(worldWindow.canvas).keydown(function (event) {
                 self.handleKeyDown(event);
             });
-            window.addEventListener('keyup', function (event) {
+            $(worldWindow.canvas).keyup(function (event) {
                 self.handleKeyUp(event);
             });
+//            window.addEventListener('keydown', function (event) {
+//                self.handleKeyDown(event);
+//            });
+//            window.addEventListener('keyup', function (event) {
+//                self.handleKeyUp(event);
+//            });
 
             /**
              * The incremental amount to increase or decrease the eye distance (for zoom) each cycle.
