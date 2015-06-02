@@ -77,11 +77,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </button>
                 <button id="showGlobeItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" aria-label="Show Globe">
-                    <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                 </button>
                 <button id="showPanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" aria-label="Show Panel">
-                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
                 </button>
                 <a class="navbar-brand" href="#">WMT</a>
             </div>
