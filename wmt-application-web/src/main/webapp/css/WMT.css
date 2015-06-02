@@ -68,6 +68,9 @@
     height: 100px; /* was 25%;*/
     width: 100%;
 }
+.rest-panel-bottom table {
+    background-color: transparent;
+}
 
 .row {
     margin-right: 0;
