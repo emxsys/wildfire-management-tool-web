@@ -140,6 +140,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     Control Panel
                 </h4>
                 <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
+                    <!--Globe -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="controlPanelGlobeHeading">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#controlPanelAccordion" 
+                                   href="#controlPanelGlobeBody" aria-expanded="false" aria-controls="controlPanelGlobeBody">
+                                    Globe
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="controlPanelGlobeBody" class="panel-collapse collapse" role="tabpanel" 
+                             aria-labelledby="controlPanelGlobeHeading">
+                            <div class="panel-body">
+                                <h5>Projection</h5>
+                                <div class="dropdown" id="projectionDropdown"></div>
+                                <h5>View</h5>
+                                <div>
+                                    <button id="resetHeading" class="btn btn-default" type="submit"
+                                            data-toggle="tooltip" data-placement="top" 
+                                            title="Reset to north up">Reset Heading</button>
+                                    <button id="resetView" class="btn btn-default" type="submit"
+                                            data-toggle="tooltip" data-placement="top" 
+                                            title="Reset to north up and look down">Reset View</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--Settings-->
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="controlPanelSettingsHeading">
@@ -179,33 +206,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>
-                    <!--Globe -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="controlPanelGlobeHeading">
-                            <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#controlPanelAccordion" 
-                                   href="#controlPanelGlobeBody" aria-expanded="false" aria-controls="controlPanelGlobeBody">
-                                    Globe
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="controlPanelGlobeBody" class="panel-collapse collapse" role="tabpanel" 
-                             aria-labelledby="controlPanelGlobeHeading">
-                            <div class="panel-body">
-                                <h5>Projection</h5>
-                                <div class="dropdown" id="projectionDropdown"></div>
-                                <h5>View</h5>
-                                <div>
-                                    <button id="resetHeading" class="btn btn-default" type="submit"
-                                            data-toggle="tooltip" data-placement="top" 
-                                            title="Reset to north up">Reset Heading</button>
-                                    <button id="resetView" class="btn btn-default" type="submit"
-                                            data-toggle="tooltip" data-placement="top" 
-                                            title="Reset to north up and look down">Reset View</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>            
             </div>
             <!--Layers Sidebar-->
@@ -217,6 +217,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     Layers
                 </h4>
                 <div class="panel-group" id="layersAccordion" role="tablist" aria-multiselectable="false">
+                    <!--Layer List-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="layerListHeading">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#layersAccordion" 
+                                   href="#layerListBody" aria-expanded="false" aria-controls="layerListBody">
+                                    Layer List
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="layerListBody" class="panel-collapse collapse in" 
+                             role="tabpanel" aria-labelledby="layerListHeading">
+                            <div class="panel-body">
+                                <!--<div class="list-group" id="layerList">-->
+                                <ul class="list-group" id="layerList">
+                                </ul>                              
+                            </div>
+                        </div>
+                    </div>
+                    <!--Settings-->
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="labelSettingsHeading">
                             <h4 class="panel-title">
@@ -235,24 +255,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <li>C...</li>
 
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="layerListHeading">
-                            <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#layersAccordion" 
-                                   href="#layerListBody" aria-expanded="false" aria-controls="layerListBody">
-                                    Layer List
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="layerListBody" class="panel-collapse collapse in" 
-                             role="tabpanel" aria-labelledby="layerListHeading">
-                            <div class="panel-body">
-                                <!--<div class="list-group" id="layerList">-->
-                                <ul class="list-group" id="layerList">
-                                </ul>                              
                             </div>
                         </div>
                     </div>
