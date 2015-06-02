@@ -83,7 +83,6 @@ define([
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
-            this.keyboardControls = new KeyboardControls(this.wwd);
 
             var self = this,
                 layer,
@@ -108,6 +107,7 @@ define([
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.wwd);
+            this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function (evt) {

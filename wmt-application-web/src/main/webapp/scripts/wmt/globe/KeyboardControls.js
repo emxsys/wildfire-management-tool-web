@@ -41,14 +41,17 @@
  * @@author Bruce Schubert
  */
 define([
+    '../controller/Controller',
     '../util/Log',
     '../../nasa/WorldWind'],
     function (
+        Controller,
         Log,
         WorldWind) {
         "use strict";
-        var KeyboardControls = function (worldWindow) {
+        var KeyboardControls = function (worldWindow, controller) {
             this.wwd = worldWindow;
+            this.ctrl = controller;
 
             var self = this;
             $(worldWindow.canvas).keydown(function (event) {
@@ -57,13 +60,6 @@ define([
             $(worldWindow.canvas).keyup(function (event) {
                 self.handleKeyUp(event);
             });
-//            window.addEventListener('keydown', function (event) {
-//                self.handleKeyDown(event);
-//            });
-//            window.addEventListener('keyup', function (event) {
-//                self.handleKeyUp(event);
-//            });
-
             /**
              * The incremental amount to increase or decrease the eye distance (for zoom) each cycle.
              * @type {Number}
@@ -116,18 +112,15 @@ define([
          * Reset the view to North up.
          */
         KeyboardControls.prototype.resetHeading = function () {
-            this.wwd.navigator.heading = 0;
-            this.wwd.redraw();
+            this.ctrl.resetHeading();
         };
-        
+
         /**
          * Reset the view to North up and nadir.
          */
         KeyboardControls.prototype.resetHeadingAndTilt = function () {
-            this.wwd.navigator.heading = 0;
-            this.wwd.navigator.tilt = 0;
-            this.wwd.redraw();
-        };
+            this.ctrl.resetHeadingAndTilt();
+        }
 
         /**
          * 

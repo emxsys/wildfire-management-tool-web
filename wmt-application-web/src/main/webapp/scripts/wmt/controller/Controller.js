@@ -125,6 +125,7 @@ define([
         Controller.prototype.lookAtLatLon = function (latitude, longitude) {
             this.wwd.navigator.lookAtLocation.latitude = latitude;
             this.wwd.navigator.lookAtLocation.longitude = longitude;
+            this.wwd.redraw();
         };
 
         /**
@@ -170,9 +171,17 @@ define([
          * Resets the viewpoint to north up and nadir.
          */
         Controller.prototype.resetHeadingAndTilt = function () {
+            // Tilting the view will change the location due to a bug in 
+            // the early release of WW.  So we set the location to the 
+            // current crosshairs position (viewpoint) to resolve this issue
+            var lat = this.model.viewpoint.target.latitude,
+                lon = this.model.viewpoint.target.longitude;
+
             this.wwd.navigator.heading = 0;
             this.wwd.navigator.tilt = 0;
-            this.wwd.redraw();
+            this.wwd.redraw();  // calls applyLimits which changes the location
+            
+            this.lookAtLatLon(lat, lon);
         };
 
 
