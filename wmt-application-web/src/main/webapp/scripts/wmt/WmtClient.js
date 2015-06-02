@@ -77,16 +77,20 @@ define([
             WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
             // Initialize the WorldWindow
             this.initializeGlobe();
+            
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.wwd);
+            
             // Add keyboard controls to the globe
             this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
+            
             // Initialize the Navbar and Sidebars
-            MainMenu.initialize(this.wwd);
+            MainMenu.initialize(this.wwd, this.controller);
+            
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;
-            window.onbeforeunload = function (evt) {
+            window.onbeforeunload = function () {
                 self.saveCurrentState();
                 // Return null to close quietly
                 return null;
@@ -95,6 +99,9 @@ define([
             Log.info("WmtClient", "constructor", "finished.");
         };
 
+        /**
+         * Initialized the WorldWindow with a custom navigator and maps and imagery layers.
+         */
         WmtClient.prototype.initializeGlobe = function () {
             // Create the World Window with a custom navigator object
             this.wwd = new WorldWind.WorldWindow("canvasOne");
@@ -112,7 +119,7 @@ define([
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
                 ];
             // Add imagery layers to WorldWindow
-            for (layer = 0; layer < layers.length; layer++) {
+            for (layer = 0; layer < layers.length; layer += 1) {
                 layers[layer].layer.enabled = layers[layer].enabled;
                 this.wwd.addLayer(layers[layer].layer);
             }
@@ -193,7 +200,6 @@ define([
             Cookie.save("tilt", tilt, numDays);
             Cookie.save("roll", roll, numDays);
 
-            //TODO: save date/time
         };
 
         return WmtClient;
