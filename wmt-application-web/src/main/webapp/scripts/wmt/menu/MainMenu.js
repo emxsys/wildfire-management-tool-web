@@ -31,9 +31,11 @@
 /*global define, $ */
 
 /**
- * Provides the main menu
+ * Provides the menu system, comprised of a Navbar and Sidebars with Accordions.
  * 
- * @module {MainMenu}
+ * @param {LayerMenu} LayerMenu
+ * @param {Projectionmenu} ProjectionMenu
+ * @returns {MainMenu}
  */
 define([
     './LayerMenu',
@@ -43,9 +45,11 @@ define([
         ProjectionMenu) {
         "use strict";
         var MainMenu = {
-            initialize: function (worldWindow) {
+            initialize: function (worldWindow, controller) { 
                 var self = this;
-
+                
+                this.ctrl = controller;
+                
                 // Auto-collapse the navbar when one of its decendents are clicked
                 $('.nav a').on('click', function () {
                     //$("#expandMenuItem").click();  
@@ -87,6 +91,18 @@ define([
                     self.highlightButton('#firesItem');
                     self.showSidebar('#firesPanel');
                 });
+
+                // Add Control Panel > Globe event handlers
+                $("#resetGlobe").on("click", function (event) {
+                    self.ctrl.resetGlobe(event);
+                });
+                $("#resetHeading").on("click", function (event) {
+                    self.ctrl.resetHeading(event);
+                });
+                $("#resetView").on("click", function (event) {
+                    self.ctrl.resetHeadingAndTilt(event);
+                });
+
 
                 this.layerMenu = new LayerMenu(worldWindow);
                 this.projectionMenu = new ProjectionMenu(worldWindow);
