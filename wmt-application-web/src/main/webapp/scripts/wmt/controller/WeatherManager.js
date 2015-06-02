@@ -87,7 +87,7 @@ define([
             });
             $('#windDirection').puispinner({
                 min: 0,
-                max: 360
+                max: 359
             });
             $('#cloudCover').puispinner({
                 min: 0,
@@ -117,7 +117,7 @@ define([
                             $('#weatherEditor-dlg').puidialog('hide');
 
                             // Ask the controller to go to the update the weather.
-                            //self.ctrl.lookAtLatLon(Number(airTemp), Number(relHum));
+                            self.ctrl.changeWeather(Number(airTemp), Number(relHum));
                         }
                     },
                     {
