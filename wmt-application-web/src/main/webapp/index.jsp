@@ -58,11 +58,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
         <!--<script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
     </head>
-    
+
     <!-- Body: add padding to accommodate navbar-fixed-top style navbar -->
     <body style="padding-top: 50px;"> 
 
-    <!--Main Menu-->
+        <!--Main Menu-->
     <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -106,9 +106,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <!--WMTweb App-->
     <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
+        <!--Sidebars and Main Content-->
         <div class="row-full">
             <!--Control Panel Sidebar-->
-            <div id="controlPanel" class="col-sm-3 col-md-2 sidebar">
+            <div id="controlPanel" class="col-sm-3 col-lg-2 sidebar">
                 <h4>Control Panel</h4>
                 <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-default">
@@ -152,7 +153,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Layers Sidebar-->
             <div id="layersPanel" 
-                 class="col-sm-3 col-md-2 sidebar" 
+                 class="col-sm-3 col-lg-2 sidebar" 
                  style="display:none;">
                 <h4>Layers</h4>
                 <div class="panel-group" id="layersAccordion" role="tablist" aria-multiselectable="false">
@@ -198,7 +199,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Markers Sidebar-->
             <div id="markersPanel" 
-                 class="col-sm-3 col-md-2 sidebar" 
+                 class="col-sm-3 col-lg-2 sidebar" 
                  style="display:none;">
                 <h4>Markers</h4>
                 <div class="panel-group" id="markersAccordion" role="tablist" aria-multiselectable="false">
@@ -226,7 +227,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Weather Sidebar-->
             <div id="weatherPanel" 
-                 class="col-sm-3 col-md-2 sidebar" 
+                 class="col-sm-3 col-lg-2 sidebar" 
                  style="display:none;">
                 <h4>Weather</h4>
                 <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">
@@ -254,7 +255,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Fires Sidebar-->
             <div id="firesPanel" 
-                 class="col-sm-3 col-md-2 sidebar" 
+                 class="col-sm-3 col-lg-2 sidebar" 
                  style="display:none;">
                 <h4>Fires</h4>
                 <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">
@@ -280,140 +281,135 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>            
             </div>
-            
+
             <!--Globe Window-->
-            <div class="col-sm-9 main" id="globe" style="height: 100%">
+            <div class="col-sm-9 col-lg-10" id="globe" style="height: 100%">
                 <!--<div style="position:relative">-->
                 <div id='canvas-wrap' style="height: 100%">
                     <!--Set canvas' tabindex so keydown events can be captured-->
                     <canvas id="canvasOne" tabindex='1' >
                         <h1>Your browser does not support HTML5 Canvas.</h1>
                     </canvas>
-                    <!--                DOM UI elements go here!                
-                                    <div class='container-full'>
-                                        Main Menu
-                                        <ul class="nav nav-pills">
-                                            <li class="dropdown">
-                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main Menu<span class="caret"></span></a>
-                                                <ul class="dropdown-menu">
-                                                    <li><a id="fuelModel" href="#">Select Fuel Model</a></li>
-                                                    <li><a id="weather" href="#">Edit Weather</a></li>
-                                                    <li><a id="resetHeading" href="#">Reset Heading</a></li>
-                                                    <li><a id="resetView" href="#">Reset View</a></li>
-                                                    <li><a id="resetGlobe" href="#">Reset Globe </a></li>
-                                                    <li><div class="dropdown" id="projectionDropdown"></div></li>
-                                                    <li><div class="list-group" id="layerList"></div></li>
-                                                </ul>
-                                            </li>
-                                            <li><a id="datetime" href="#">Date/Time</a></li>
-                                            <li><a id="location" href="#">Location</a></li>
-                                        </ul>-->
+                    <!--DOM UI elements go here!-->                
+                    <!--<div class='container-full'>-->
                     <!--Coordinates Overlay-->
-                    <!--                <div class='row'>
-                                        <div id="coordinateOverlay" class="col-xs-4 non-interactive">
-                                            <div class="row">
-                                                <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                                            </div>
-                                            <div class="row">
-                                                <span>Lat: </span><span id="targetLatitude"></span>
-                                            </div>
-                                            <div class="row">
-                                                <span>Lon: </span><span id="targetLongitude"></span>
-                                            </div>
-                                        </div>            
-                                    </div>
-                                    REST information overlay
-                                    <div id="RESTPanel" class="rest-panel-bottom non-interactive">
-                                        <div class="row">            
-                                            <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
-                                                <div class="row">
-                                                    <span>Time: </span><span id="apptime"></span>
-                                                </div>
-                                                <div class="row">
-                                                    <span>Sunrise: </span><span id="sunrise"></span>
-                                                </div>
-                                                <div class="row">
-                                                    <span>Sunset: </span><span id="sunset"></span>
-                                                </div>
-                                            </div>
-                                            <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
-                    
-                                            </div>
-                                            <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
-                                                <div class="row">
-                                                    <span>Elevation: </span><span id="targetElevation"></span>
-                                                </div>
-                                                <div class="row">
-                                                    <span>Aspect: </span><span id="targetAspect"></span>
-                                                </div>
-                                                <div class="row">
-                                                    <span>Slope: </span><span id="targetSlope"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>-->
+                    <div>
+                        <div id="coordinateOverlay" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
+                            <div class="row">
+                                <span>Eye Alt: </span><span id="eyeAltitude"></span>
+                            </div>
+                        </div>            
+                    </div>
+                    <!--REST information overlay-->
+                    <div id="RESTPanel" class="rest-panel-bottom non-interactive">
+                        <div class="row">            
+                            <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
+                                <table>
+                                    <tr>
+                                        <td>Time:</td>
+                                        <td><span id="apptime"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sunrise:</td>
+                                        <td><span id="sunrise"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sunset:</td>
+                                        <td><span id="sunset"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
+
+                            </div>
+                            <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
+                                <table>
+                                    <tr>
+                                        <td>Lat:</td>
+                                        <td><span id="targetLatitude"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lon:</td>
+                                        <td><span id="targetLongitude"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Elevation:</td>
+                                        <td><span id="targetElevation"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aspect:</td>
+                                        <td><span id="targetAspect"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Slope:</td>
+                                        <td><span id="targetSlope"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--</div>-->
                 </div>
+                <!--/DOM UI elements-->
             </div>
-            <!--/DOM UI elements-->
         </div>
-    </div>
-    <!--Prime UI Growl Widget--> 
-    <div id="growl"></div>  
-    <!--Prime UI Notify Widget--> 
-    <div id="notify"></div>
-    <!--Prime UI Location Dialog--> 
-    <div id="location-dlg" title="Set Location" style="display: none;">
-        <div class="latitude">
-            <label for="latitude" class="required">Latitude:</label>
-            <input type="text" placeholder="[+/-] Latitude" 
-                   name="latitude" id="latitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
-        </div>
-        <div class="longitude">
-            <label for="longitude" class="required">Longitude:</label>
-            <input type="text" placeholder="[+/-] Longitude" 
-                   name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
-        </div>
-    </div> 
-    <!--Prime UI Date/Time Dialog--> 
-    <div id="datetime-dlg" title="Set Date and Time" style="display: none;">
-        <div class="appdate">
-            <label for="datepicker" class="required">Date:</label>
-            <input type="text" name="datepicker" id="datepicker">
-        </div>
-        <div class="apptime">
-            <label for="time" class="required">Time:</label>
-            <input type="text" name="timepicker" id="timepicker" >
-        </div>
-    </div>        
-    <!--Prime UI Fuel Model Dialog--> 
-    <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
-        <div id="fuelModel-tbl">
-        </div>
-    </div>        
-    <!--Prime UI Weather Editor Dialog--> 
-    <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
-        <div class="weatherValues">
-            <div>                
-                <label for="airTemperature" class="required">Air Temperature:</label>
-                <input type="text" name="airTemperature" id="airTemperature">
-            </div>                
-            <div>                
-                <label for="relaltiveHumidity" class="required">Relative Humidity:</label>
-                <input type="text" name="relativeHumidity" id="relativeHumidity">
-            </div>                
-            <div>                
-                <label for="windSpeed" class="required">Wind Speed:</label>
-                <input type="text" name="windSpeed" id="windSpeed">
-            </div>                
-            <div>                
-                <label for="windDirection" class="required">Wind Direction:</label>
-                <input type="text" name="windDirection" id="windDirection">
-            </div>                
-            <div>                
-                <label for="cloudCoer" class="required">Cloud Cover:</label>
-                <input type="text" name="cloudCover" id="cloudCover">
-            </div>            
-        </div>
-    </div>        
-</body>
+        <!--Prime UI Growl Widget--> 
+        <div id="growl"></div>  
+        <!--Prime UI Notify Widget--> 
+        <div id="notify"></div>
+        <!--Prime UI Location Dialog--> 
+        <div id="location-dlg" title="Set Location" style="display: none;">
+            <div class="latitude">
+                <label for="latitude" class="required">Latitude:</label>
+                <input type="text" placeholder="[+/-] Latitude" 
+                       name="latitude" id="latitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
+            </div>
+            <div class="longitude">
+                <label for="longitude" class="required">Longitude:</label>
+                <input type="text" placeholder="[+/-] Longitude" 
+                       name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
+            </div>
+        </div> 
+        <!--Prime UI Date/Time Dialog--> 
+        <div id="datetime-dlg" title="Set Date and Time" style="display: none;">
+            <div class="appdate">
+                <label for="datepicker" class="required">Date:</label>
+                <input type="text" name="datepicker" id="datepicker">
+            </div>
+            <div class="apptime">
+                <label for="time" class="required">Time:</label>
+                <input type="text" name="timepicker" id="timepicker" >
+            </div>
+        </div>        
+        <!--Prime UI Fuel Model Dialog--> 
+        <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
+            <div id="fuelModel-tbl">
+            </div>
+        </div>        
+        <!--Prime UI Weather Editor Dialog--> 
+        <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
+            <div class="weatherValues">
+                <div>                
+                    <label for="airTemperature" class="required">Air Temperature:</label>
+                    <input type="text" name="airTemperature" id="airTemperature">
+                </div>                
+                <div>                
+                    <label for="relaltiveHumidity" class="required">Relative Humidity:</label>
+                    <input type="text" name="relativeHumidity" id="relativeHumidity">
+                </div>                
+                <div>                
+                    <label for="windSpeed" class="required">Wind Speed:</label>
+                    <input type="text" name="windSpeed" id="windSpeed">
+                </div>                
+                <div>                
+                    <label for="windDirection" class="required">Wind Direction:</label>
+                    <input type="text" name="windDirection" id="windDirection">
+                </div>                
+                <div>                
+                    <label for="cloudCoer" class="required">Cloud Cover:</label>
+                    <input type="text" name="cloudCover" id="cloudCover">
+                </div>            
+            </div>
+        </div>        
+    </body>
 </html>
