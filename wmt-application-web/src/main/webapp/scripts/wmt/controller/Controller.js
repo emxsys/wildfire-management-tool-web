@@ -34,7 +34,6 @@ define([
     '../view/CoordinatesView',
     './FuelModelManager',
     './LocationManager',
-    '../util/Log',
     '../model/Model',
     '../view/ReticuleView',
     '../view/SolarView',
@@ -46,7 +45,6 @@ define([
         CoordinatesView,
         FuelModelManager,
         LocationManager,
-        Log,
         Model,
         ReticuleView,
         SolarView,
@@ -98,17 +96,6 @@ define([
             });
             window.addEventListener("touchstart", function (event) {
                 self.handleTouchEvent(event);
-            });
-
-            // Add menu event handlers
-            $("#resetGlobe").on("click", function (event) {
-                self.resetGlobe(event);
-            });
-            $("#resetHeading").on("click", function (event) {
-                self.resetHeading(event);
-            });
-            $("#resetView").on("click", function (event) {
-                self.resetHeadingAndTilt(event);
             });
 
         };
@@ -222,7 +209,7 @@ define([
         };
 
         //noinspection JSUnusedLocalSymbols
-        Controller.prototype.handleTouchEvent = function (event) {
+        Controller.prototype.handleTouchEvent = function () {
             this.isTouchDevice = true; // suppress simulated mouse events in mobile browsers
             this.mousePoint = null;
         };
