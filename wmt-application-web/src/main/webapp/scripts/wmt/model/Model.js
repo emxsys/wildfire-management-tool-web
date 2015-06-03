@@ -49,6 +49,7 @@ define([
     '../globe/Terrain',
     '../globe/TerrainProvider',
     '../globe/Viewpoint',
+    '../resource/WeatherResource',
     '../util/WmtUtil',
     '../Wmt',
     '../../nasa/WorldWind'],
@@ -61,6 +62,7 @@ define([
         Terrain,
         TerrainProvider,
         Viewpoint,
+        WeatherResource,
         WmtUtil,
         Wmt,
         WorldWind) {
@@ -287,7 +289,6 @@ define([
             // Update surfaceFuelChanged subscribers
             this.fire(Wmt.EVENT_SURFACEFUEL_CHANGED, surfaceFuel);
         };
-
 
         return Model;
     }

@@ -65,6 +65,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--Main Menu-->
     <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin">
         <div class="container-fluid">
+            <!--Navbar: Collapsed Menu-->
             <div class="navbar-header">
                 <button id="expandMenuItem" type="button" 
                         class="navbar-toggle collapsed" 
@@ -75,18 +76,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <button id="showGlobeItem" type="button" 
-                        class="navbar-btn navbar-toggle collapsed" aria-label="Show Globe">
-                    <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                <button id="collapsePanelsItem" type="button" 
+                        class="navbar-btn navbar-toggle collapsed" 
+                        aria-label="Show Globe">
+                    <span class="glyphicon glyphicon-chevron-up" 
+                          aria-hidden="true"></span>
                 </button>
-                <button id="showPanelsItem" type="button" 
-                        class="navbar-btn navbar-toggle collapsed" aria-label="Show Panel">
-                    <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                <button id="expandPanelsItem" type="button" 
+                        class="navbar-btn navbar-toggle collapsed" 
+                        aria-label="Show Panel">
+                    <span class="glyphicon glyphicon-chevron-down" 
+                          aria-hidden="true">
+                    </span>
                 </button>
-                <a class="navbar-brand" href="#">WMT</a>
+                <a class="navbar-brand" href="#" style="padding-left: 5px; padding-right: 5px">
+                    <img alt="WMT" src="./images/wmt-web-white-53x24.png">
+                </a>
             </div>
+            <!--Navbar: Expanded Menu-->
             <div id="navbar" class="navbar-collapse collapse">
-                <!--The navbar-left class is used for the sidebar buttons-->
+                <!--Navbar Left: Sidebars-->
                 <ul id="sidebarItems" class="nav navbar-nav navbar-left">
                     <li id="controlPanelItem">
                         <a href="#">
@@ -119,20 +128,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </a>
                     </li>
                 </ul>
-                <form class="navbar-form navbar-right">
-                    <input type="text" class="form-control" placeholder="Search...">
+                <!--Navbar Search-->
+                <form class="navbar-form navbar-right"
+                      style="padding-right: 0; padding-left: 0">
+                    <input type="text" 
+                           class="form-control"
+                           style="width: 150px"
+                           placeholder="Search...">
                 </form>
+                <!--Navbar Help-->
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Help</a></li>
+                    <li class="dropdown">
+                        <a href="#" 
+                           class="dropdown-toggle" 
+                           data-toggle="dropdown" 
+                           role="button" 
+                           aria-expanded="false">
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <span class="sr-only" aria-hidden="true">Help</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Contents</a></li>
+                        </ul>
+                    </li>                
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!--WMTweb App-->
+    <!--WMTweb: Globe and Sidebars--> 
     <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
-        <!--Sidebars and Main Content-->
+        <!--Content-->
         <div class="row-full">
+
             <!--Control Panel Sidebar-->
             <div id="controlPanel" class="col-sm-3 sidebar">
                 <h4>
@@ -142,43 +171,67 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
                     <!--Globe -->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="controlPanelGlobeHeading">
+                        <div class="panel-heading collapsed" 
+                             id="controlPanelGlobeHeading"
+                             role="tab" 
+                             data-toggle="collapse" 
+                             data-parent="#controlPanelAccordion" 
+                             href="#controlPanelGlobeBody" 
+                             aria-expanded="false" 
+                             aria-controls="controlPanelGlobeBody">                           
                             <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#controlPanelAccordion" 
-                                   href="#controlPanelGlobeBody" aria-expanded="false" aria-controls="controlPanelGlobeBody">
-                                    Globe
-                                </a>
+                                Globe
                             </h4>
                         </div>
-                        <div id="controlPanelGlobeBody" class="panel-collapse collapse" role="tabpanel" 
+                        <div id="controlPanelGlobeBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
                              aria-labelledby="controlPanelGlobeHeading">
                             <div class="panel-body">
                                 <h5>Projection</h5>
-                                <div class="dropdown" id="projectionDropdown"></div>
+                                <div class="dropdown" 
+                                     id="projectionDropdown">                                         
+                                </div>
                                 <h5>View</h5>
                                 <div>
-                                    <button id="resetHeading" class="btn btn-default" type="submit"
-                                            data-toggle="tooltip" data-placement="top" 
-                                            title="Reset to north up">Reset Heading</button>
-                                    <button id="resetView" class="btn btn-default" type="submit"
-                                            data-toggle="tooltip" data-placement="top" 
-                                            title="Reset to north up and look down">Reset View</button>
+                                    <button id="resetHeading" 
+                                            class="btn btn-default" 
+                                            type="submit"
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Reset to north up">
+                                        Reset Heading
+                                    </button>
+                                    <button id="resetView" 
+                                            class="btn btn-default" 
+                                            type="submit"
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Reset to north up and look down">
+                                        Reset View
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--Settings-->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="controlPanelSettingsHeading">
+                        <div id="controlPanelSettingsHeading"
+                             class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#controlPanelAccordion" 
+                             href="#controlPanelSettingsBody" 
+                             aria-expanded="false" 
+                             aria-controls="controlPanelSettingsBody" 
+                             role="tab">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#controlPanelAccordion" 
-                                   href="#controlPanelSettingsBody" aria-expanded="true" aria-controls="controlPanelSettingsBody">
-                                    Settings
-                                </a>
+                                Settings
                             </h4>
                         </div>
-                        <div id="controlPanelSettingsBody" class="panel-collapse collapse in" 
-                             role="tabpanel" aria-labelledby="conntrolPanelSettingsHeading">
+                        <div id="controlPanelSettingsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="conntrolPanelSettingsHeading">
                             <div class="panel-body">
                                 <ul>
                                     <li>A...</li>
@@ -190,15 +243,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                     <!--Options-->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="controlPanelOptionsHeading">
+                        <div id="controlPanelOptionsHeading"
+                             class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#controlPanelAccordion" 
+                             href="#controlPanelOptionsBody" 
+                             aria-expanded="false" 
+                             aria-controls="controlPanelOptionsBody"
+                             role="tab" >
                             <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#controlPanelAccordion" 
-                                   href="#controlPanelOptionsBody" aria-expanded="false" aria-controls="controlPanelOptionsBody">
-                                    Options
-                                </a>
+                                Options
                             </h4>
                         </div>
-                        <div id="controlPanelOptionsBody" class="panel-collapse collapse" role="tabpanel" 
+                        <div id="controlPanelOptionsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
                              aria-labelledby="controlPanelOptionsHeading">
                             <div class="panel-body">
                                 <li> 
@@ -208,6 +267,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>            
             </div>
+
             <!--Layers Sidebar-->
             <div id="layersPanel" 
                  class="col-sm-3 sidebar" 
@@ -219,34 +279,47 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="panel-group" id="layersAccordion" role="tablist" aria-multiselectable="false">
                     <!--Layer List-->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="layerListHeading">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#layersAccordion" 
+                             href="#layerListBody" 
+                             aria-expanded="false" 
+                             aria-controls="layerListBody"
+                             role="tab" 
+                             id="layerListHeading">
                             <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#layersAccordion" 
-                                   href="#layerListBody" aria-expanded="false" aria-controls="layerListBody">
-                                    Layer List
-                                </a>
+                                Layer List
                             </h4>
                         </div>
-                        <div id="layerListBody" class="panel-collapse collapse in" 
-                             role="tabpanel" aria-labelledby="layerListHeading">
+                        <div id="layerListBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="layerListHeading">
                             <div class="panel-body">
                                 <!--<div class="list-group" id="layerList">-->
-                                <ul class="list-group" id="layerList">
+                                <ul class="list-group" 
+                                    id="layerList">
                                 </ul>                              
                             </div>
                         </div>
                     </div>
                     <!--Settings-->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="labelSettingsHeading">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#layersAccordion" 
+                             href="#layerSettingsBody" 
+                             aria-expanded="false" 
+                             aria-controls="layerSettingsBody"
+                             role="tab" 
+                             id="labelSettingsHeading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#layersAccordion" 
-                                   href="#layerSettingsBody" aria-expanded="true" aria-controls="layerSettingsBody">
-                                    Settings
-                                </a>
+                                Settings
                             </h4>
                         </div>
-                        <div id="layerSettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                        <div id="layerSettingsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
                              aria-labelledby="layerSettingsHeading">
                             <div class="panel-body">
                                 <ul>
@@ -260,6 +333,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>            
             </div>
+
             <!--Markers Sidebar-->
             <div id="markersPanel" 
                  class="col-sm-3 sidebar" 
@@ -268,17 +342,82 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
                     Markers
                 </h4>
-                <div class="panel-group" id="markersAccordion" role="tablist" aria-multiselectable="false">
+                <!--Create Marker -->
+                <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="markersSettingsHeading">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#markersAccordion" 
+                             href="#markersCreateBody" 
+                             aria-expanded="false" 
+                             aria-controls="markersCreateBody" 
+                             role="tab" 
+                             id="markersCreateHeading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#markersAccordion" 
-                                   href="#markersSettingsBody" aria-expanded="true" aria-controls="markersSettingsBody">
-                                    Settings
-                                </a>
+                                Create
                             </h4>
                         </div>
-                        <div id="markersettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                        <div id="markersCreateBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="markersCreateHeading">
+                            <div class="panel-body">
+                                <button id="createMarker" 
+                                        class="btn btn-default" 
+                                        type="submit"
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="Add a marker to the globe at the crosshairs">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add Marker
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Marker List-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#markersAccordion" 
+                             href="#markersListBody" 
+                             aria-expanded="false" 
+                             aria-controls="markersListBody"" 
+                             role="tab" 
+                             id="markersListHeading">
+                            <h4 class="panel-title">
+                                Marker List
+                            </h4>
+                        </div>
+                        <div id="markersListBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="markersListHeading">
+                            <div class="panel-body">
+                                <ul>
+                                    <li>A...</li>
+                                    <li>B...</li>
+                                    <li>C...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Marker Settings-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#markersAccordion" 
+                             href="#markersSettingsBody" 
+                             aria-expanded="false" 
+                             aria-controls="markersSettingsBody" 
+                             role="tab" 
+                             id="markersSettingsHeading">
+                            <h4 class="panel-title">
+                                Settings
+                            </h4>
+                        </div>
+                        <div id="markersSettingsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
                              aria-labelledby="markersSettingsHeading">
                             <div class="panel-body">
                                 <ul>
@@ -303,8 +442,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="weatherSettingsHeading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#weatherAccordion" 
-                                   href="#weatherSettingsBody" aria-expanded="true" aria-controls="weatherSettingsBody">
+                                <a class="collapsed" 
+                                   data-toggle="collapse" 
+                                   data-parent="#weatherAccordion" 
+                                   href="#weatherSettingsBody" 
+                                   aria-expanded="false" 
+                                   aria-controls="weatherSettingsBody">
                                     Settings
                                 </a>
                             </h4>
@@ -334,8 +477,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="firesSettingsHeading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#firesAccordion" 
-                                   href="#firesSettingsBody" aria-expanded="true" aria-controls="firesSettingsBody">
+                                <a class="collapsed" 
+                                   data-toggle="collapse" 
+                                   data-parent="#firesAccordion" 
+                                   href="#firesSettingsBody" 
+                                   aria-expanded="false" 
+                                   aria-controls="firesSettingsBody">
                                     Settings
                                 </a>
                             </h4>
@@ -353,8 +500,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>            
             </div>
-
+            <!---------------->
             <!--Globe Window-->
+            <!---------------->
             <div class="col-sm-9" id="globe" style="height: 100%">
                 <!--<div style="position:relative">-->
                 <div id='canvas-wrap' style="height: 100%">
@@ -421,6 +569,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                     </div>
                 </div>
+                <div id="bottom"></div>
                 <!--/DOM UI elements-->
             </div>
         </div>

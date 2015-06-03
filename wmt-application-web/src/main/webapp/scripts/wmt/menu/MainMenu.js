@@ -34,77 +34,93 @@
  * Provides the menu system, comprised of a Navbar and Sidebars with Accordions.
  * 
  * @param {LayerMenu} LayerMenu
+ * @param {MarkerMenu} MarkerMenu
  * @param {Projectionmenu} ProjectionMenu
  * @returns {MainMenu}
  */
 define([
     './LayerMenu',
+    './MarkerMenu',
     './ProjectionMenu'],
     function (
         LayerMenu,
+        MarkerMenu,
         ProjectionMenu) {
         "use strict";
         var MainMenu = {
-            initialize: function (worldWindow, controller) { 
+            initialize: function (worldWindow, controller) {
                 var self = this;
-                
                 this.ctrl = controller;
-                
-                // Auto-collapse the navbar when one of its decendents are clicked
-                $('.nav a').on('click', function () {
-                    //$("#expandMenuItem").click();  
-                    $('#navbar').collapse('hide');
-                });
+
+                $(document).ready(function () {
+
+                    // Auto-collapse the navbar when one of its decendents are clicked
+                    $('.nav a').on('click', function () {
+                        $('#navbar').collapse('hide');
+                    });
+
+                    // Add handlers for minimized navbar (navbar-header), 
+                    // in which case the the sidebars appear above the globe.
+                    $('#expandPanelsItem').on('click', function () {
+                        $('html, body').animate({scrollTop: 0}, 'slow');
+                    });                    
+                    $('#collapsePanelsItem').on('click', function () {
+                        $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
+                        // Set the focus on the WorldWind canvas
+                        // so the globe keyboard controls are active 
+                        $("#canvasOne").focus();
+                    });
+
+                    // Attach a click handler to the main menu items
+                    $('#controlPanelItem').on('click', function () {
+                        self.highlightButton('#controlPanelItem');
+                        self.showSidebar('#controlPanel');
+                    });
+                    $('#layersItem').on('click', function () {
+                        self.highlightButton('#layersItem');
+                        self.showSidebar('#layersPanel');
+                    });
+                    $('#markersItem').on('click', function () {
+                        self.highlightButton('#markersItem');
+                        self.showSidebar('#markersPanel');
+                    });
+                    $('#weatherItem').on('click', function () {
+                        self.highlightButton('#weatherItem');
+                        self.showSidebar('#weatherPanel');
+                    });
+                    $('#firesItem').on('click', function () {
+                        self.highlightButton('#firesItem');
+                        self.showSidebar('#firesPanel');
+                    });
+                    
+                    
+                    // Add +/- icons on the accordion panels
+                    $('.panel-heading[aria-expanded="false"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-down aria-hidden="true"></span>');
+                    $('.panel-heading[aria-expanded="true"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-up aria-hidden="true"></span>');
+
+                    // Add event handlers to panels to toggle the +/- icons in the accordion panel-heading
+                    $('.panel:has([role="tab"])').on('shown.bs.collapse', function () {
+                        $(this).find(".glyphicon-collapse-down").removeClass("glyphicon-collapse-down").addClass("glyphicon-collapse-up");
+                    }).on('hidden.bs.collapse', function () {
+                        $(this).find(".glyphicon-collapse-up").removeClass("glyphicon-collapse-up").addClass("glyphicon-collapse-down");
+                    });
 
 
-                // Add handlers for minimized navbar, in which
-                // case the the sidebars appear above the globe.
-                $('#showPanelsItem').on('click', function () {
-                    $('html, body').animate({scrollTop: 0}, 'slow');
+                    // Add Control Panel > Globe event handlers
+                    $("#resetGlobe").on("click", function (event) {
+                        self.ctrl.resetGlobe(event);
+                    });
+                    $("#resetHeading").on("click", function (event) {
+                        self.ctrl.resetHeading(event);
+                    });
+                    $("#resetView").on("click", function (event) {
+                        self.ctrl.resetHeadingAndTilt(event);
+                    });
+                    
                 });
-                $('#showGlobeItem').on('click', function () {
-                    $('html, body').animate({scrollTop: $('#globe').position().top}, 'slow');
-                    // Set the focus on the WorldWind canvas
-                    // so the globe keyboard controls are active 
-                    $("#canvasOne").focus();
-                });
-
-
-                // Attach a click handler to the main menu items
-                $('#controlPanelItem').on('click', function () {
-                    self.highlightButton('#controlPanelItem');
-                    self.showSidebar('#controlPanel');
-                });
-                $('#layersItem').on('click', function () {
-                    self.highlightButton('#layersItem');
-                    self.showSidebar('#layersPanel');
-                });
-                $('#markersItem').on('click', function () {
-                    self.highlightButton('#markersItem');
-                    self.showSidebar('#markersPanel');
-                });
-                $('#weatherItem').on('click', function () {
-                    self.highlightButton('#weatherItem');
-                    self.showSidebar('#weatherPanel');
-                });
-                $('#firesItem').on('click', function () {
-                    self.highlightButton('#firesItem');
-                    self.showSidebar('#firesPanel');
-                });
-
-                // Add Control Panel > Globe event handlers
-                $("#resetGlobe").on("click", function (event) {
-                    self.ctrl.resetGlobe(event);
-                });
-                $("#resetHeading").on("click", function (event) {
-                    self.ctrl.resetHeading(event);
-                });
-                $("#resetView").on("click", function (event) {
-                    self.ctrl.resetHeadingAndTilt(event);
-                });
-
 
                 this.layerMenu = new LayerMenu(worldWindow);
+                this.markerMenu = new MarkerMenu(worldWindow, controller);
                 this.projectionMenu = new ProjectionMenu(worldWindow);
             },
             /**
@@ -125,9 +141,6 @@ define([
                 // Turn off the highlight for current button
                 // and highlight the given element id (#id)
                 $('#sidebarItems').find('li').removeClass("active");
-//                $('#sidebarItems').find('li').each(function () {
-//                    $(this).removeClass("active");
-//                });
                 $(elementId).addClass("active");
             }
 
