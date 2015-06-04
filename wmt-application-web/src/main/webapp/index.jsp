@@ -565,7 +565,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <!--REST information overlay-->
                     <div id="RESTPanel" class="rest-panel-bottom non-interactive">
                         <div class="row">            
-                            <div id="restSolarData" class="col-xs-4 col-sm-4 col-md-4 pull-left non-interactive">
+                            <div id="restSolarData" class="col-xs-6 col-sm-4 col-md-4 pull-left non-interactive">
                                 <table>
                                     <tr>
                                         <td>Time:</td>
@@ -584,7 +584,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div id="restWeatherData" class="visible-lg non-interactive">
 
                             </div>
-                            <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
+                            <div id="restTerrainData" class="col-xs-6 col-sm-4 col-md-4 pull-right non-interactive">
                                 <table>
                                     <tr>
                                         <td>Lat:</td>
