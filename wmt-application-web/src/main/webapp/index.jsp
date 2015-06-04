@@ -163,7 +163,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div class="row-full">
 
             <!--Control Panel Sidebar-->
-            <div id="controlPanel" class="col-sm-3 sidebar">
+            <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar">
                 <h4>
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
                     Control Panel
@@ -270,7 +270,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             <!--Layers Sidebar-->
             <div id="layersPanel" 
-                 class="col-sm-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar" 
                  style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-list" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -336,7 +336,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             <!--Markers Sidebar-->
             <div id="markersPanel" 
-                 class="col-sm-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar" 
                  style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -361,16 +361,58 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              class="panel-collapse collapse" 
                              role="tabpanel" 
                              aria-labelledby="markersCreateHeading">
-                            <div class="panel-body">
-                                <button id="createMarker" 
-                                        class="btn btn-default" 
-                                        type="submit"
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
-                                        title="Add a marker to the globe at the crosshairs">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                    Add Marker
-                                </button>
+                            <div class="panel-body" 
+                                 role="group">
+                                <h5>ICS Marker</h5>
+                                <div class="btn-group" 
+                                     role="group"
+                                     id="icsMarkerDropdown">
+                                    <button type="button" 
+                                            class="btn btn-default dropdown-toggle" 
+                                            data-toggle="dropdown" 
+                                            aria-expanded="false"
+                                            >
+                                        Select... 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" 
+                                        role="menu">
+                                    </ul>
+                                    <button id="createMarker" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a marker to the globe at the center.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add
+                                    </button>
+                                </div>
+                                <h5>Pushpin</h5>
+                                <div class="btn-group" 
+                                     role="group"
+                                     id="pushpinDropdown">
+                                    <button type="button" 
+                                            class="btn btn-default dropdown-toggle" 
+                                            data-toggle="dropdown" 
+                                            aria-expanded="false"
+                                            >
+                                        Select... 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" 
+                                        role="menu">
+                                    </ul>
+                                    <button id="createPushpin" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a pushpin to the globe at the center.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -381,7 +423,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              data-parent="#markersAccordion" 
                              href="#markersListBody" 
                              aria-expanded="false" 
-                             aria-controls="markersListBody"" 
+                             aria-controls="markersListBody"
                              role="tab" 
                              id="markersListHeading">
                             <h4 class="panel-title">
@@ -432,7 +474,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Weather Sidebar-->
             <div id="weatherPanel" 
-                 class="col-sm-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar" 
                  style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-cloud" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -467,7 +509,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Fires Sidebar-->
             <div id="firesPanel" 
-                 class="col-sm-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar" 
                  style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-fire" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -503,7 +545,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <!---------------->
             <!--Globe Window-->
             <!---------------->
-            <div class="col-sm-9" id="globe" style="height: 100%">
+            <div class="col-sm-8 col-lg-9" id="globe" style="height: 100%">
                 <!--<div style="position:relative">-->
                 <div id='canvas-wrap' style="height: 100%">
                     <!--Set canvas' tabindex so keydown events can be captured-->
@@ -539,7 +581,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     </tr>
                                 </table>
                             </div>
-                            <div id="restWeatherData" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
+                            <div id="restWeatherData" class="visible-lg non-interactive">
 
                             </div>
                             <div id="restTerrainData" class="col-xs-4 col-sm-4 col-md-4 pull-right non-interactive">
