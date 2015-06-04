@@ -35,17 +35,17 @@
  * 
  * @param {LayerMenu} LayerMenu
  * @param {MarkerMenu} MarkerMenu
- * @param {Projectionmenu} ProjectionMenu
+ * @param {ControlPanel} ControlPanel
  * @returns {MainMenu}
  */
 define([
+    './ControlPanel',
     './LayerMenu',
-    './MarkerMenu',
-    './ProjectionMenu'],
+    './MarkerMenu'],
     function (
+        ControlPanel,
         LayerMenu,
-        MarkerMenu,
-        ProjectionMenu) {
+        MarkerMenu) {
         "use strict";
         var MainMenu = {
             initialize: function (worldWindow, controller) {
@@ -63,7 +63,7 @@ define([
                     // in which case the the sidebars appear above the globe.
                     $('#expandPanelsItem').on('click', function () {
                         $('html, body').animate({scrollTop: 0}, 'slow');
-                    });                    
+                    });
                     $('#collapsePanelsItem').on('click', function () {
                         $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
                         // Set the focus on the WorldWind canvas
@@ -92,8 +92,8 @@ define([
                         self.highlightButton('#firesItem');
                         self.showSidebar('#firesPanel');
                     });
-                    
-                    
+
+
                     // Add +/- icons on the accordion panels
                     $('.panel-heading[aria-expanded="false"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-down aria-hidden="true"></span>');
                     $('.panel-heading[aria-expanded="true"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-up aria-hidden="true"></span>');
@@ -116,12 +116,12 @@ define([
                     $("#resetView").on("click", function (event) {
                         self.ctrl.resetHeadingAndTilt(event);
                     });
-                    
+
                 });
 
+                this.controlPanel = new ControlPanel(worldWindow);
                 this.layerMenu = new LayerMenu(worldWindow);
                 this.markerMenu = new MarkerMenu(worldWindow, controller);
-                this.projectionMenu = new ProjectionMenu(worldWindow);
             },
             /**
              * 

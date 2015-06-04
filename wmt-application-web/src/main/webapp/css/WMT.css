@@ -47,6 +47,13 @@
     min-height:100%;
 }
 
+/*Style used in dropdown menus*/
+img.icon {
+    width: 24px;
+    height: 24px;
+}
+
+/*Style used to pull the globe up flush with the navbar*/
 .navbar-nomargin {
     margin-bottom: 0;   /* override default of 20px */
 }

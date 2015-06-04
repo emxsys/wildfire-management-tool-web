@@ -31,10 +31,11 @@
 /*global define, $ */
 
 /**
- * The ProjectionMenu manifests a dropdown in the Control Panel:Globe sidebar to select the projection for the earth.
+ * The ControlPanel manifests a dropdown in the Control Panel:Globe 
+ * sidebar to select the projection for the earth.
  * 
  * @param {WorldWind} WorldWind
- * @returns {ProjectionMenu}
+ * @returns {ControlPanel}
  */
 define(['../../nasa/WorldWind'], function (WorldWind) {
     "use strict";
@@ -43,7 +44,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
      * @param {type} worldWindow
      * @returns {ProjectionMenu_L39.ProjectionMenu}
      */
-    var ProjectionMenu = function (worldWindow) {
+    var ControlPanel = function (worldWindow) {
         var self = this;
 
         this.wwd = worldWindow;
@@ -59,7 +60,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
 
     };
 
-    ProjectionMenu.prototype.onProjectionClick = function (event) {
+    ControlPanel.prototype.onProjectionClick = function (event) {
         var projectionName = event.target.innerText || event.target.innerHTML;
         $("#projectionDropdown").find("button").html(projectionName + ' <span class="caret"></span>');
 
@@ -98,7 +99,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         this.wwd.redraw();
     };
 
-    ProjectionMenu.prototype.createProjectionList = function () {
+    ControlPanel.prototype.createProjectionList = function () {
         var projectionNames = [
             "3D",
             "Equirectangular",
@@ -124,5 +125,5 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         projectionDropdown.append(ulItem);
     };
 
-    return ProjectionMenu;
+    return ControlPanel;
 });

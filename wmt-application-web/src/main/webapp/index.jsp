@@ -435,11 +435,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              role="tabpanel" 
                              aria-labelledby="markersListHeading">
                             <div class="panel-body">
-                                <ul>
-                                    <li>A...</li>
-                                    <li>B...</li>
-                                    <li>C...</li>
-                                </ul>
+                                <ul class="list-group" 
+                                    id="markerList">
+                                </ul>                              
                             </div>
                         </div>
                     </div>
