@@ -46,11 +46,12 @@
 define([
     './util/Cookie',
     './controller/Controller',
-    './globe/KeyboardControls',
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
+    './globe/KeyboardControls',
     './util/Log',
     './menu/MainMenu',
+    './globe/PickController',
     './globe/ReticuleLayer',
     './globe/SkyBackgroundLayer',
     './Wmt',
@@ -58,11 +59,12 @@ define([
     function (
         Cookie,
         Controller,
-        KeyboardControls,
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
+        KeyboardControls,
         Log,
         MainMenu,
+        PickController,
         ReticuleLayer,
         SkyBackgroundLayer,
         Wmt,
@@ -103,10 +105,13 @@ define([
          * Initialized the WorldWindow with a custom navigator and maps and imagery layers.
          */
         WmtClient.prototype.initializeGlobe = function () {
-            // Create the World Window with a custom navigator object
+            // Create the World Window with a custom navigator object 
             this.wwd = new WorldWind.WorldWindow("canvasOne");
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
-
+            
+            // Create the controller that handles picking objects in the globe
+            this.pickController = new PickController(this.wwd);
+            
             var layer,
                 layers = [
                     {layer: new SkyBackgroundLayer(this.wwd), enabled: true},
