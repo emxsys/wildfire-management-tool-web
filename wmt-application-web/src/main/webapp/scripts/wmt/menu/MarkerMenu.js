@@ -33,9 +33,11 @@
 /*global define, $ */
 
 define([
+    '../util/Log',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
+        Log,
         Wmt,
         WorldWind) {
         "use strict";
@@ -74,84 +76,50 @@ define([
 
                 this.synchronizeMarkerList();
 
-                // Attach a click handler to the new marker menu items
-                $('#markerList').find('li').on('click', function (event) {
-                    self.onMarkerClick($(this));
-                });
-
-                // Add Control Panel > Globe event handlers
+                // Add button event handlers
                 $("#createMarker").on("click", function (event) {
                     self.createIcsMarker();
                 });
                 $("#createPushpin").on("click", function (event) {
                     self.createPushpin();
                 });
+
+                // Attach a click handler to the markers in the marker list
+                $('#markerList').find('li').on('click', function (event) {
+                    self.onMarkerItemClick($(this));
+                });
+
             }
         };
 
+
         /**
-         * Finds the Markers Renerablelayer from the WorldWindow.layers.
-         * @returns {Renerablelayer}
+         * Handler for clicking a marker in the marker list.  
+         * Default behavior is to "go to" the selected marker.
+         * 
+         * @param {$(li)} markerItem List item element
          */
-        MarkerMenu.prototype.findMarkerLayer = function () {
-            var layer,
+        MarkerMenu.prototype.onMarkerItemClick = function (markerItem) {
+            var markers = this.markerLayer.renderables,
+                marker,
+                position,
                 i,
                 len;
 
-            // Find the Markers layer in the World Window's layer list.
-            for (i = 0, len = this.wwd.layers.length; i < len; i += 1) {
-                layer = this.wwd.layers[i];
-                if (layer.displayName === 'Markers') {
-                    return layer;
+            for (i = 0, len = markers.length; i < len; i += 1) {
+                marker = markers[i];
+                if (marker.displayName === markerItem.text()) {
+                    position = marker.position;
+                    if (position) {
+                        this.ctrl.lookAtLatLon(position.latitude, position.longitude);
+                        return;
+                    }
+                    Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
                 }
             }
+            Log.error("MarkerMenu", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
+            // TODO: Growl
         };
-
-
-        /**
-         * Populate the ICS markers dropdown.
-         */
-        MarkerMenu.prototype.populateIcsMarkerDropdown = function () {
-            this.populateDropdown('#icsMarkerDropdown', this.icsMarkers, Wmt.IMAGE_PATH + "ics/");
-        };
-
-
-        /**
-         * Populate the Pushpins dropdown.
-         */
-        MarkerMenu.prototype.populatePushpinDropdown = function () {
-            this.populateDropdown('#pushpinDropdown', this.pushpins, Wmt.WORLD_WIND_PATH + "images/pushpins/");
-        };
-
-
-        /**
-         * Populate a dropdown with contents and configure an event handler to update the 
-         * text upon selection.
-         * 
-         * @param {String} id Id of drop down panel, e.g, "#id".
-         * @param {Array} markerArray Array of {name:, symbol:} objects.
-         * @param {String} imagePath Path to folder containing the images.
-         */
-        MarkerMenu.prototype.populateDropdown = function (id, markerArray, imagePath) {
-            var $ul = $(id + ' ul'),
-                markerItem,
-                i;
-
-            // Populate the dropdown contents with the markers
-            for (i = 0; i < markerArray.length; i += 1) {
-                markerItem = $('<li><a >' +
-                    '<span><img class="icon" src="' + imagePath + markerArray[i].symbol + '" style="padding-right: 5px;"></span>' +
-                    markerArray[i].name +
-                    '</a></li>');
-                $ul.append(markerItem);
-            }
-            // Add a handler that displays the selected item in the dropdown button
-            $ul.find('li a').click(function () {
-                var selText = $(this).text();
-                $(id).find('.dropdown-toggle').html(selText + '<span class="caret"></span>');
-            });
-        };
-
 
         /**
          * Adds the selected ICS marker to the globe.
@@ -167,10 +135,6 @@ define([
                 if (markerName === this.icsMarkers[i].name) {
                     symbol = this.icsMarkers[i].symbol;
                 }
-            }
-            if (!symbol) {
-                // TODO: Log and Growl
-                return;
             }
             // Add the marker to the globe.
             this.createMarker(markerName, imgFolder + symbol);
@@ -192,11 +156,7 @@ define([
                     symbol = this.pushpins[i].symbol;
                 }
             }
-            if (!symbol) {
-                // TODO: Log and Growl
-                return;
-            }
-            // Add the pushpin to the globe\
+            // Add the pushpin to the globe
             this.createMarker(pushpinName, imgFolder + symbol);
         };
 
@@ -228,7 +188,11 @@ define([
 
             marker = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, elevation));
             marker.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-            marker.displayName = name;
+
+            // TODO: Create a unique marker name.
+
+
+            marker.displayName = this.generateUniqueName(name);
 //            marker.label = "Marker " + "\n"
 //                + "Lat " + latitude.toPrecision(4).toString() + "\n"
 //                + "Lon " + longitude.toPrecision(5).toString();
@@ -247,46 +211,146 @@ define([
             marker.highlightAttributes = hiliteAttr;
 
             this.markerLayer.addRenderable(marker);
-            
+
             this.synchronizeMarkerList();
         };
 
 
-//        MarkerMenu.prototype.onMarkerClick = function (markerItem) {
-//            var markerName = markerItem.text(),
-//                i,
-//                len,
-//                marker;
-//
-//            // Update the marker state for the selected marker.
-//            for (i = 0, len = this.wwd.markers.length; i < len; i++) {
-//                marker = this.wwd.markers[i];
-//                if (marker.displayName === markerName) {
-//                    marker.enabled = !marker.enabled;
-//                    this.highlightMarker(marker, markerItem);
-//                    this.wwd.redraw();
-//                }
-//            }
-//        };
-
-        MarkerMenu.prototype.synchronizeMarkerList = function () {
+        /**
+         * Generates a unique name by appending a suffix '(n)'.
+         * @param {String} name
+         * @returns {String}
+         */
+        MarkerMenu.prototype.generateUniqueName = function (name) {
             var markers = this.markerLayer.renderables,
-                markerList = $("#markerList"),
+                uniqueName = name.trim(),
+                isUnique,
+                suffixes,
+                seqNos,
+                n,
+                i,
+                len;
+
+            do {
+                // Assume uniqueness, set to false if we find a matching name
+                isUnique = true;
+
+                for (i = 0, len = markers.length; i < len; i += 1) {
+                    if (markers[i].displayName === uniqueName) {
+
+                        isUnique = false;
+
+                        // check for existing suffix '(n)' and increment
+                        suffixes = uniqueName.match(/[(]\d+[)]$/);
+                        if (suffixes) {
+                            seqNos = suffixes[0].match(/\d+/);
+                            n = parseInt(seqNos[0], 10) + 1;
+                            uniqueName = uniqueName.replace(/[(]\d+[)]$/, '(' + n + ')');
+                        } else {
+                            // else if no suffix, create one
+                            uniqueName += ' (2)';   // The first duplicate is #2
+                        }
+                        // Break out of for loop and recheck uniqueness
+                        break;
+                    }
+                }
+            } while (!isUnique);
+
+            return uniqueName;
+        };
+
+
+        /**
+         * Populate the ICS markers dropdown.
+         */
+        MarkerMenu.prototype.populateIcsMarkerDropdown = function () {
+            this.populateDropdown('#icsMarkerDropdown', this.icsMarkers, Wmt.IMAGE_PATH + "ics/");
+        };
+
+
+        /**
+         * Populate the Pushpins dropdown.
+         */
+        MarkerMenu.prototype.populatePushpinDropdown = function () {
+            this.populateDropdown('#pushpinDropdown', this.pushpins, Wmt.WORLD_WIND_PATH + "images/pushpins/");
+        };
+
+
+        /**
+         * Populate a dropdown with contents and configure an event handler to update the 
+         * dropdown item text upon selection.
+         * 
+         * @param {String} id Id of drop down panel, e.g, "#id".
+         * @param {Array} markerArray Array of {name:, symbol:} objects.
+         * @param {String} imagePath Path to folder containing the images.
+         */
+        MarkerMenu.prototype.populateDropdown = function (id, markerArray, imagePath) {
+            var $ul = $(id + ' ul'),
                 markerItem,
+                i;
+
+            // Populate the dropdown contents with the markers
+            for (i = 0; i < markerArray.length; i += 1) {
+                markerItem = $('<li><a >' +
+                    '<span><img class="icon" src="' + imagePath + markerArray[i].symbol + '" style="padding-right: 5px;"></span>' +
+                    markerArray[i].name +
+                    '</a></li>');
+                $ul.append(markerItem);
+            }
+            // Add a handler that displays the selected item in the dropdown button
+            $ul.find('li a').click(function () {
+                var selText = $(this).text();
+                $(id).find('.dropdown-toggle').html(selText + '<span class="caret"></span>');
+            });
+        };
+
+
+
+        /**
+         * Synchronize the marker list with the renderables in the Markers layer.
+         */
+        MarkerMenu.prototype.synchronizeMarkerList = function () {
+            var self = this,
+                markers = this.markerLayer.renderables,
+                markerList = $("#markerList"), markerItem,
                 marker,
                 i,
                 len;
 
-            // Synchronize the marker list with the renderables in the Markers layer.
             markerList.find('li').remove();
+
             for (i = 0, len = markers.length; i < len; i += 1) {
                 marker = markers[i];
                 markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
                 markerList.append(markerItem);
-                //this.highlightMarker(marker, markerItem);
-                this.wwd.redraw();
+            }
+            this.wwd.redraw();
+
+            // Add event handler to the buttons
+            markerList.find('li').on('click', function (event) {
+                self.onMarkerItemClick($(this));
+            });
+        };
+
+
+        /**
+         * Finds the Markers Renerablelayer from the WorldWindow.layers.
+         * @returns {Renerablelayer}
+         */
+        MarkerMenu.prototype.findMarkerLayer = function () {
+            var layer,
+                i,
+                len;
+
+            // Find the Markers layer in the World Window's layer list.
+            for (i = 0, len = this.wwd.layers.length; i < len; i += 1) {
+                layer = this.wwd.layers[i];
+                if (layer.displayName === 'Markers') {
+                    return layer;
+                }
             }
         };
+
 
         return MarkerMenu;
     }
