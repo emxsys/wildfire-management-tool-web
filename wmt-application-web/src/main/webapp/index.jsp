@@ -296,8 +296,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              role="tabpanel" 
                              aria-labelledby="layerListHeading">
                             <div class="panel-body">
-                                <!--<div class="list-group" id="layerList">-->
-                                <ul class="list-group" 
+                                <ul class="list-group pre-scrollable" 
                                     id="layerList">
                                 </ul>                              
                             </div>
@@ -435,7 +434,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              role="tabpanel" 
                              aria-labelledby="markersListHeading">
                             <div class="panel-body">
-                                <ul class="list-group" 
+                                <ul class="list-group pre-scrollable" 
                                     id="markerList">
                                 </ul>                              
                             </div>
