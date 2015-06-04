@@ -89,6 +89,11 @@ define([],
              */
             IMAGE_PATH: "scripts/wmt/images/",
             /**
+             * The maximum range that the globe can be zoomed out to.
+             * @default 20,000,000 meters.
+             */
+            NAVIGATOR_MAX_RANGE: 20000000,
+            /**
              * The URL for the sunlight REST service.
              */
             SUNLIGHT_REST_SERVICE: "/wmt-rest/rs/sunlight",

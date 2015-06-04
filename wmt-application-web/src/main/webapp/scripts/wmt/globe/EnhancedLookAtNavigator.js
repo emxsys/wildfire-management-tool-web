@@ -36,20 +36,18 @@ define([
     '../util/Log',
     '../../nasa/navigate/LookAtNavigator',
     '../../nasa/geom/Matrix',
-    '../../nasa/navigate/NavigatorState',
     '../../nasa/geom/Location',
     '../../nasa/geom/Position',
-    '../../nasa/geom/Vec3',
+    '../Wmt',
     '../../nasa/util/WWMath'],
     function (
         Angle,
         Log,
         LookAtNavigator,
         Matrix,
-        NavigatorState,
         Location,
         Position,
-        Vec3,
+        Wmt,
         WWMath) {
         "use strict";
         var EnhancedLookAtNavigator = function (worldWindow) {
@@ -89,7 +87,7 @@ define([
 
             // Clamp range to values greater than 1 in order to prevent degenerating to a first-person navigator when
             // range is zero.
-            this.range = WWMath.clamp(this.range, 1, Number.MAX_VALUE);
+            this.range = WWMath.clamp(this.range, 1, Wmt.NAVIGATOR_MAX_RANGE);
 
             // Normalize heading to between -180 and +180.
             this.heading = Angle.normalizedDegrees(this.heading);
