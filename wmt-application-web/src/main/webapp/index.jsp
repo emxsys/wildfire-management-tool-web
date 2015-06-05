@@ -67,6 +67,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div class="container-fluid">
             <!--Navbar: Collapsed Menu-->
             <div class="navbar-header">
+                <!--Menu Button-->
                 <button id="expandMenuItem" type="button" 
                         class="navbar-toggle collapsed" 
                         data-toggle="collapse" data-target="#navbar" 
@@ -76,12 +77,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <!--Collapse Sidebar-->
                 <button id="collapsePanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" 
                         aria-label="Show Globe">
                     <span class="glyphicon glyphicon-chevron-up" 
                           aria-hidden="true"></span>
                 </button>
+                <!--Expand Sidebar-->
                 <button id="expandPanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" 
                         aria-label="Show Panel">
@@ -89,6 +92,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                           aria-hidden="true">
                     </span>
                 </button>
+                <!--WMT Icon-->
                 <a class="navbar-brand" href="#" style="padding-left: 5px; padding-right: 5px">
                     <img alt="WMT" src="./images/wmt-web-white-53x24.png">
                 </a>
@@ -132,12 +136,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="navbar-form navbar-right"
                      style="padding-right: 0; padding-left: 0"
                      id="searchBox">
-                    <input type="text" 
-                           class="form-control"
-                           style="width: 150px"
-                           placeholder="Go To..."
-                           id="searchText">
-                    <button type="button" class="btn btn-default">Undo</button>
+                    <div class="form-group">
+                        <input type="text" 
+                               class="form-control"
+                               style="width: 150px"
+                               placeholder="Go To..."
+                               id="searchText">
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" 
+                                class="btn btn-default glyphicon glyphicon-circle-arrow-left"
+                                id="searchUndo">
+                        </button>
+                        <button type="button" 
+                                class="btn btn-default glyphicon glyphicon-circle-arrow-right"
+                                id="searchRedo">
+                            </span>  
+                        </button>
+                    </div>
                 </div>
                 <!--Navbar Help-->
                 <ul class="nav navbar-nav navbar-right">

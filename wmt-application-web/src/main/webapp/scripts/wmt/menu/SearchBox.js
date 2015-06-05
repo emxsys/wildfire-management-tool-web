@@ -36,21 +36,50 @@ define([
     function (
         WorldWind) {
         "use strict";
-        var SearchBox = function (worldWindow) {
-            this.wwd = worldWindow;
+        var SearchBox = function (controller) {
+            this.ctrl = controller;
+
             this.geocoder = new WorldWind.NominatimGeocoder();
-            this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
+            this.goToAnimator = new WorldWind.GoToAnimator(this.ctrl.wwd);
+
+            this.undoHistory = [];
+            this.redoHistory = [];
 
             var self = this;
             $("#searchText").on("keypress", function (e) {
                 self.onSearchTextKeyPress($(this), e);
             });
+            $("#searchUndo").on("click", function (e) {
+                self.onSearchUndo(e);
+            });
+            $("#searchRedo").on("click", function (e) {
+                self.onSearchRedo(e);
+            });
+
 
         };
 
 
-        SearchBox.prototype.onSearchButton = function (event) {
-            this.performSearch($("#searchText")[0].value);
+        SearchBox.prototype.onSearchUndo = function (event) {
+            if (this.undoHistory.length > 0) {
+                var prevLocation = this.undoHistory.pop(),
+                    curTgt = this.ctrl.model.viewpoint.target;
+
+                if (prevLocation) {
+                    this.redoHistory.push(new WorldWind.Location(curTgt.latitude, curTgt.longitude));
+                    this.ctrl.lookAtLatLon(prevLocation.latitude, prevLocation.longitude);
+                }
+            }
+        };
+
+        SearchBox.prototype.onSearchRedo = function (event) {
+            if (this.redoHistory.length > 0) {
+                var location = this.redoHistory.pop();
+                if (location) {
+                    this.undoHistory.push(location);
+                    this.ctrl.lookAtLatLon(location.latitude, location.longitude);
+                }
+            }
         };
 
 
@@ -66,7 +95,8 @@ define([
             var self = this,
                 tokens,
                 latitude,
-                longitude;
+                longitude,
+                target = this.ctrl.model.viewpoint.target;
 
             if (queryString) {
 
@@ -78,12 +108,23 @@ define([
                 } else {
                     this.geocoder.lookup(queryString, function (geocoder, result) {
                         if (result.length > 0) {
+//                            self.lastSearch = {
+//                                name: result[0].display_name,
+//                                latitude: parseFloat(result[0].lat),
+//                                longitude: parseFloat(result[0].lon)
+//                            };
                             latitude = parseFloat(result[0].lat);
                             longitude = parseFloat(result[0].lon);
 
                             WorldWind.Logger.log(
                                 WorldWind.Logger.LEVEL_INFO, queryString + ": " + latitude + ", " + longitude);
 
+                            // Remember our current target in the history
+                            if (target) {
+                                self.undoHistory.push(new WorldWind.Location(target.latitude, target.longitude));
+                            }
+                            self.redoHistory = [];
+                            self.redoCandidate = new WorldWind.Location(latitude, longitude);
                             self.goToAnimator.goTo(new WorldWind.Location(latitude, longitude));
                         }
                     });
