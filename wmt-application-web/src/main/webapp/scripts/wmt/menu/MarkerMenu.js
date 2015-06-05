@@ -92,6 +92,9 @@ define([
                 });
 
             }
+            
+            // Show the Create tab
+            $('#markersCreateBody').collapse('show');
         };
 
 
