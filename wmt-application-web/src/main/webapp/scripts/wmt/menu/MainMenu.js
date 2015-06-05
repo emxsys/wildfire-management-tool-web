@@ -109,22 +109,11 @@ define([
                     });
 
 
-                    // Add Control Panel > Globe event handlers
-                    $("#resetGlobe").on("click", function (event) {
-                        self.ctrl.resetGlobe(event);
-                    });
-                    $("#resetHeading").on("click", function (event) {
-                        self.ctrl.resetHeading(event);
-                    });
-                    $("#resetView").on("click", function (event) {
-                        self.ctrl.resetHeadingAndTilt(event);
-                    });
-
                 });
-                this.searchBox = new SearchBox(worldWindow);
-                this.controlPanel = new ControlPanel(worldWindow);
+                this.controlPanel = new ControlPanel(worldWindow, controller);
                 this.layerMenu = new LayerMenu(worldWindow);
                 this.markerMenu = new MarkerMenu(worldWindow, controller);
+                this.searchBox = new SearchBox(worldWindow);
             },
             /**
              * 

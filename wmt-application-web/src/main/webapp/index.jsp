@@ -130,13 +130,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </ul>
                 <!--Navbar Search-->
                 <div class="navbar-form navbar-right"
-                      style="padding-right: 0; padding-left: 0"
-                      id="searchBox">
+                     style="padding-right: 0; padding-left: 0"
+                     id="searchBox">
                     <input type="text" 
                            class="form-control"
                            style="width: 150px"
                            placeholder="Go To..."
                            id="searchText">
+                    <button type="button" class="btn btn-default">Undo</button>
                 </div>
                 <!--Navbar Help-->
                 <ul class="nav navbar-nav navbar-right">
@@ -185,32 +186,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 Globe
                             </h4>
                         </div>
-                        <div class="panel-collapse collapse in" 
+                        <div class="panel-collapse collapse" 
                              role="tabpanel" 
                              aria-labelledby="controlPanelGlobeHeading"
                              id="controlPanelGlobeBody" >
                             <div class="panel-body">
                                 <h5>Projection</h5>
                                 <div class="dropdown" 
-                                     id="projectionDropdown">                                         
+                                     id="projectionDropdown">
+                                    <h6>Initializing...</h6>
                                 </div>
-                                <h5>View</h5>
-                                <div>
+                                <h5>Reset</h5>
+                                <div class="btn-group btn-block" role="group">
                                     <button id="resetHeading" 
                                             class="btn btn-default" 
-                                            type="submit"
+                                            type="button"
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Reset to north up">
-                                        Reset Heading
+                                        Heading
                                     </button>
                                     <button id="resetView" 
                                             class="btn btn-default" 
-                                            type="submit"
+                                            type="button"
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Reset to north up and look down">
-                                        Reset View
+                                        View
+                                    </button>
+                                    <button id="resetGlobe" 
+                                            class="btn btn-default" 
+                                            type="button"
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Reset view to factory defaults">
+                                        Globe
                                     </button>
                                 </div>
                             </div>

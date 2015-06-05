@@ -41,22 +41,39 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
     "use strict";
     /**
      * 
-     * @param {type} worldWindow
-     * @returns {ProjectionMenu_L39.ProjectionMenu}
+     * @param {WorldWindow} worldWindow
+     * @param {Controller} controller
+     * @returns {ControlPanel}
      */
-    var ControlPanel = function (worldWindow) {
+    var ControlPanel = function (worldWindow, controller) {
         var self = this;
 
         this.wwd = worldWindow;
+        this.ctrl = controller;
+
         this.roundGlobe = this.wwd.globe;
 
         // Create the list of supported projections
         this.createProjectionList();
-        
+
         // Add event handlers to the list items
         $("#projectionDropdown").find(" li").on("click", function (e) {
             self.onProjectionClick(e);
         });
+
+        // Add Control Panel > Globe event handlers
+        $("#resetGlobe").on("click", function (event) {
+            self.ctrl.resetGlobe(event);
+        });
+        $("#resetHeading").on("click", function (event) {
+            self.ctrl.resetHeading(event);
+        });
+        $("#resetView").on("click", function (event) {
+            self.ctrl.resetHeadingAndTilt(event);
+        });
+
+        // Show the Globe tab
+        $('#controlPanelGlobeBody').collapse('show');
 
     };
 
@@ -113,6 +130,9 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
             dropdownButton = $('<button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">3D<span class="caret"></span></button>'),
             projectionItem,
             i;
+
+        // Remove "Initilizing..." text
+        projectionDropdown.children().remove();
 
         projectionDropdown.append(dropdownButton);
         projectionDropdown.append(ulItem);
