@@ -129,13 +129,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </li>
                 </ul>
                 <!--Navbar Search-->
-                <form class="navbar-form navbar-right"
-                      style="padding-right: 0; padding-left: 0">
+                <div class="navbar-form navbar-right"
+                      style="padding-right: 0; padding-left: 0"
+                      id="searchBox">
                     <input type="text" 
                            class="form-control"
                            style="width: 150px"
-                           placeholder="Search...">
-                </form>
+                           placeholder="Go To..."
+                           id="searchText">
+                </div>
                 <!--Navbar Help-->
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">

@@ -33,18 +33,21 @@
 /**
  * Provides the menu system, comprised of a Navbar and Sidebars with Accordions.
  * 
+ * @param {ControlPanel} ControlPanel
  * @param {LayerMenu} LayerMenu
  * @param {MarkerMenu} MarkerMenu
- * @param {ControlPanel} ControlPanel
+ * @param {SearchBox} SearchBox
  * @returns {MainMenu}
  */
 define([
     './ControlPanel',
     './LayerMenu',
+    './SearchBox',
     './MarkerMenu'],
     function (
         ControlPanel,
         LayerMenu,
+        SearchBox,
         MarkerMenu) {
         "use strict";
         var MainMenu = {
@@ -118,7 +121,7 @@ define([
                     });
 
                 });
-
+                this.searchBox = new SearchBox(worldWindow);
                 this.controlPanel = new ControlPanel(worldWindow);
                 this.layerMenu = new LayerMenu(worldWindow);
                 this.markerMenu = new MarkerMenu(worldWindow, controller);
