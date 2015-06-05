@@ -45,7 +45,7 @@ define([],
         var Messenger = {
             initialize: function () {
                 $('#growl').puigrowl();
-                $('#notify').puinotify();                
+                $('#notify').puinotify();
             },
             /**
              * Displays popup message for a few seconds.
@@ -68,12 +68,39 @@ define([],
                     );
             },
             /**
+             * Displays popup message for a few seconds.
+             * @param {String} message Message detail.
+             * @param {String} title Optional. Message summary. Default is "FYI"
+             * @param {Number} duration Optional. Time to show message in milliseconds.
+             */
+            infoGrowl: function (message, title, duration) {
+                this.growl("info", title || 'FYI', message, duration || 5000);
+            },
+            /**
+             * Displays popup message for a few seconds.
+             * @param {String} message Message detail.
+             * @param {String} title Optional. Message summary. Default is "Warning"
+             * @param {Number} duration Optional. Time to show message in milliseconds.
+             */
+            warningGrowl: function (message, title, duration) {
+                this.growl("warning", title || 'Warning', message, duration || 5000);
+            },
+            /**
+             * Displays popup message for a few seconds.
+             * @param {String} message Message detail.
+             * @param {String} title Optional. Message summary. Default is "Error"
+             * @param {Number} duration Optional. Time to show message in milliseconds.
+             */
+            errorGrowl: function (message, title, duration) {
+                this.growl("error", title || 'Error', message, duration || 5000);
+            },
+            /**
              * 
              * @param {type} html
              */
             notify: function (html) {
-                $('#notify').puinotify(); 
-                
+                $('#notify').puinotify();
+
                 $('#notify').puinotify({
                     easing: 'easeInOutCirc',
                     position: 'bottom'

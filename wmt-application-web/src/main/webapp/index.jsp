@@ -459,11 +459,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              role="tabpanel" 
                              aria-labelledby="markersSettingsHeading">
                             <div class="panel-body">
-                                <ul>
-                                    <li>A...</li>
-                                    <li>B...</li>
-                                    <li>C...</li>
-                                </ul>
+                                <div class="btn-group btn-block btn-group-sm"  role="group">
+                                    <button type="button" class="col-sm-8  btn btn-default">
+                                        Action
+                                    </button>
+                                    <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-pencil"></button>
+                                    <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-trash"></button>
+                                </div>
+                                <div class="btn-group btn-block "  role="group">
+                                    <button type="button" class="col-sm-8  btn btn-danger">
+                                        Action
+                                    </button>
+                                    <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-pencil"></button>
+                                    <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-trash"></button>
+                                </div>
+                                <div class="btn-group btn-block">
+                                    <button type="button" class="col-sm-10 col-md-11 btn btn-danger ">Action</button>
+                                    <button type="button" class="col-sm-2 col-md-1 btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Action</a></li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                    </ul>        
+                                </div>
                             </div>
                         </div>
                     </div>

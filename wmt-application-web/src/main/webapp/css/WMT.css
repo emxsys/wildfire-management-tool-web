@@ -72,6 +72,10 @@ img.icon {
   background-color: rgba(0,0,0,0) !important;
 }
 
+/*Override PrimeUI Growl position to be below Bootstrap Navbar*/
+.pui-growl {
+    top: 50px;
+}
 .rest-panel-bottom {
     margin: 0 auto;
     position: absolute;

@@ -34,10 +34,12 @@
 
 define([
     '../util/Log',
+    '../util/Messenger',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Log,
+        Messenger,
         Wmt,
         WorldWind) {
         "use strict";
@@ -99,7 +101,7 @@ define([
          * 
          * @param {$(li)} markerItem List item element
          */
-        MarkerMenu.prototype.onMarkerItemClick = function (markerItem) {
+        MarkerMenu.prototype.onMarkerItemClick = function (markerItem, action) {
             var markers = this.markerLayer.renderables,
                 marker,
                 position,
@@ -109,12 +111,23 @@ define([
             for (i = 0, len = markers.length; i < len; i += 1) {
                 marker = markers[i];
                 if (marker.displayName === markerItem.text()) {
-                    position = marker.position;
-                    if (position) {
-                        this.ctrl.lookAtLatLon(position.latitude, position.longitude);
+                    if (action === 'goto') {
+                        position = marker.position;
+                        if (position) {
+                            this.ctrl.lookAtLatLon(position.latitude, position.longitude);
+                            return;
+                        }
+                        Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
+                    } else if (action === 'edit') {
+                        Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
                         return;
+                    } else if (action === 'remove') {
+                        Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
+                        return;
+                    } else {
+                        Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
                     }
-                    Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
+                    return;
                 }
             }
             Log.error("MarkerMenu", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
@@ -136,6 +149,10 @@ define([
                     symbol = this.icsMarkers[i].symbol;
                 }
             }
+            if (!symbol) {
+                Messenger.warningGrowl("You must select an ICS marker first.", "Sorry!");
+                return;
+            }
             // Add the marker to the globe.
             this.createMarker(markerName, imgFolder + symbol);
         };
@@ -156,14 +173,19 @@ define([
                     symbol = this.pushpins[i].symbol;
                 }
             }
+            // 
+            if (!symbol) {
+                Messenger.warningGrowl("You must select a pushpin first.", "Oops!");
+                return;
+            }
             // Add the pushpin to the globe
             this.createMarker(pushpinName, imgFolder + symbol);
         };
 
         /**
          * Adds the given image to the globe.
-         * 
-         * @param {String} imageSource Image source.
+         * @param {String} name Name given to the marker.
+         * @param {String} imageSource The image source (filepath).
          */
         MarkerMenu.prototype.createMarker = function (name, imageSource) {
             var marker,
@@ -317,18 +339,30 @@ define([
                 i,
                 len;
 
-            markerList.find('li').remove();
+            markerList.children().remove();
 
             for (i = 0, len = markers.length; i < len; i += 1) {
                 marker = markers[i];
-                markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
+                //markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
+                markerItem =
+                    '<div class="btn-group btn-block btn-group-sm">' +
+                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto">' + marker.displayName + '</button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0"></button>' +
+                    '</div>';
                 markerList.append(markerItem);
             }
             this.wwd.redraw();
 
             // Add event handler to the buttons
-            markerList.find('li').on('click', function (event) {
-                self.onMarkerItemClick($(this));
+            markerList.find('button.mkr-goto').on('click', function (event) {
+                self.onMarkerItemClick($(this), "goto");
+            });
+            markerList.find('button.mkr-edit').on('click', function (event) {
+                self.onMarkerItemClick($(this), "edit");
+            });
+            markerList.find('button.mkr-remove').on('click', function (event) {
+                self.onMarkerItemClick($(this), "remove");
             });
         };
 
