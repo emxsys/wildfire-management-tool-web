@@ -183,10 +183,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 Globe
                             </h4>
                         </div>
-                        <div id="controlPanelGlobeBody" 
-                             class="panel-collapse collapse" 
+                        <div class="panel-collapse collapse in" 
                              role="tabpanel" 
-                             aria-labelledby="controlPanelGlobeHeading">
+                             aria-labelledby="controlPanelGlobeHeading"
+                             id="controlPanelGlobeBody" >
                             <div class="panel-body">
                                 <h5>Projection</h5>
                                 <div class="dropdown" 
@@ -276,9 +276,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="glyphicon glyphicon-list" aria-hidden="true" style="padding-right: 5px;"></span>
                     Layers
                 </h4>
-                <div class="panel-group" id="layersAccordion" role="tablist" aria-multiselectable="false">
+                <div class="panel-group" 
+                     role="tablist" 
+                     aria-multiselectable="false"
+                     id="layersAccordion">
                     <!--Layer List-->
                     <div class="panel panel-default">
+                        <!--Show this panel at startup via "collapsed.in"-->
                         <div class="panel-heading collapsed" 
                              data-toggle="collapse" 
                              data-parent="#layersAccordion" 
@@ -291,10 +295,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 Layer List
                             </h4>
                         </div>
-                        <div id="layerListBody" 
-                             class="panel-collapse collapse" 
+                        <div class="panel-collapse collapse in" 
                              role="tabpanel" 
-                             aria-labelledby="layerListHeading">
+                             aria-labelledby="layerListHeading"
+                             id="layerListBody" >
                             <div class="panel-body">
                                 <ul class="list-group pre-scrollable" 
                                     id="layerList">
@@ -341,8 +345,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
                     Markers
                 </h4>
-                <!--Create Marker -->
                 <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
+                    <!--Create Marker -->
                     <div class="panel panel-default">
                         <div class="panel-heading collapsed" 
                              data-toggle="collapse" 
