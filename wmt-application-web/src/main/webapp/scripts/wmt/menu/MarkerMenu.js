@@ -99,9 +99,9 @@ define([
          * Handler for clicking a marker in the marker list.  
          * Default behavior is to "go to" the selected marker.
          * 
-         * @param {$(li)} markerItem List item element
+         * @param {$(li)} markerName List item element
          */
-        MarkerMenu.prototype.onMarkerItemClick = function (markerItem, action) {
+        MarkerMenu.prototype.onMarkerItemClick = function (markerName, action) {
             var markers = this.markerLayer.renderables,
                 marker,
                 position,
@@ -110,7 +110,7 @@ define([
 
             for (i = 0, len = markers.length; i < len; i += 1) {
                 marker = markers[i];
-                if (marker.displayName === markerItem.text()) {
+                if (marker.displayName === markerName) {
                     if (action === 'goto') {
                         position = marker.position;
                         if (position) {
@@ -119,10 +119,12 @@ define([
                         }
                         Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
                     } else if (action === 'edit') {
+                        Messenger.infoGrowl('Rename is not implemented yet.');
                         Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
                         return;
                     } else if (action === 'remove') {
-                        Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
+                        markers.splice(i, 1);
+                        this.synchronizeMarkerList();
                         return;
                     } else {
                         Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
@@ -356,13 +358,16 @@ define([
 
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
-                self.onMarkerItemClick($(this), "goto");
+                self.onMarkerItemClick($(this).text(), "goto");
             });
             markerList.find('button.mkr-edit').on('click', function (event) {
-                self.onMarkerItemClick($(this), "edit");
+                // find the sibling with the text and send that to the event handler
+                var name = $(this).siblings().filter('.mkr-goto').text();
+                self.onMarkerItemClick(name, "edit");
             });
             markerList.find('button.mkr-remove').on('click', function (event) {
-                self.onMarkerItemClick($(this), "remove");
+                var name = $(this).siblings().filter('.mkr-goto').text();
+                self.onMarkerItemClick(name, "remove");
             });
         };
 
