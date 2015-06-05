@@ -107,6 +107,10 @@ define([
          * @param {Number} longitude
          */
         Controller.prototype.lookAtLatLon = function (latitude, longitude) {
+            // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
+            // This will establish the crosshairs on the target.
+            this.wwd.navigator.tilt = 0;
+            
             this.wwd.navigator.lookAtLocation.latitude = latitude;
             this.wwd.navigator.lookAtLocation.longitude = longitude;
             this.wwd.redraw();
@@ -164,7 +168,7 @@ define([
             this.wwd.navigator.heading = 0;
             this.wwd.navigator.tilt = 0;
             this.wwd.redraw();  // calls applyLimits which changes the location
-            
+
             this.lookAtLatLon(lat, lon);
         };
 
