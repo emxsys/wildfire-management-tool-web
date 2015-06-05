@@ -4,7 +4,7 @@
  */
 /**
  * @exports GestureRecognizer
- * @version $Id: GestureRecognizer.js 2772 2015-02-10 22:00:36Z dcollins $
+ * @version $Id: GestureRecognizer.js 3145 2015-06-03 22:00:11Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -86,7 +86,7 @@ define([
 
             if (!GestureRecognizer.terminalStates) {
                 GestureRecognizer.terminalStates = [WorldWind.ENDED, WorldWind.CANCELLED, WorldWind.FAILED,
-                    WorldWind.RECOGNIZED]
+                    WorldWind.RECOGNIZED];
             }
 
             GestureRecognizer.registerMouseEventListeners(this);

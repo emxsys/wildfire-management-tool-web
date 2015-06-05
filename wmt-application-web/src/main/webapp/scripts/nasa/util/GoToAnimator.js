@@ -4,7 +4,7 @@
  */
 /**
  * @exports GoToAnimator
- * @version $Id: GoToAnimator.js 3133 2015-06-02 16:48:25Z tgaskins $
+ * @version $Id: GoToAnimator.js 3152 2015-06-04 20:41:56Z tgaskins $
  */
 define([
         '../geom/Location',
@@ -47,25 +47,48 @@ define([
             this.animationFrequency = 20;
 
             /**
-             * The animation's duration, in milliseconds.
+             * The animation's duration, in milliseconds. When the distance is short, less than twice the viewport
+             * size, the travel time is reduced proportionally to the distance to travel. It therefore takes less
+             * time to move shorter distances.
              * @type {Number}
              * @default 3000
              */
             this.travelTime = 3000;
+
+            /**
+             * Indicates whether the current or most recent animation has been cancelled. Use the cancel() function
+             * to cancel an animation.
+             * @type {Boolean}
+             * @default false
+             * @readonly
+             */
+            this.cancelled = false;
+        };
+
+        // Stop the current animation.
+        GoToAnimator.prototype.cancel = function () {
+            this.cancelled = true;
         };
 
         /**
          * Moves the navigator to a specified location or position.
          * @param {Location | Position} position The location or position to move the navigator to. If this
          * argument contains an "altitude" property, as {@link Position} does, the end point of the navigation is
-         * at the specified altitude. Otherwise the end point as at the current altitude of the navigator.
+         * at the specified altitude. Otherwise the end point is at the current altitude of the navigator.
+         * @param {Function} completionCallback If not null or undefined, specifies a function to call when the
+         * animation completes. The completion callback is called with a single argument, this animator.
          * @throws {ArgumentError} If the specified location or position is null or undefined.
          */
-        GoToAnimator.prototype.goTo = function (position) {
+        GoToAnimator.prototype.goTo = function (position, completionCallback) {
             if (!position) {
                 throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "GoToAnimator", "goTo",
                     "missingPosition"));
             }
+
+            this.completionCallback = completionCallback;
+
+            // Reset the cancellation flag.
+            this.cancelled = false;
 
             // Capture the target position and determine its altitude.
             this.targetPosition = new Position(position.latitude, position.longitude,
@@ -91,15 +114,16 @@ define([
                     this.targetPosition.latitude, this.targetPosition.longitude, new Vec3(0, 0, 0));
             this.maxAltitude = pA.distanceTo(pB);
 
-            // Determine an approximate viewport size in meters in order to determine whether we actually change
+            // Determine an approximate viewport size in radians in order to determine whether we actually change
             // the range as we pan to the new location. We don't want to change the range if the distance between
             // the start and target positions is small relative to the current viewport.
             var viewportSize = this.wwd.navigator.currentState().pixelSizeAtDistance(this.startPosition.altitude)
                 * this.wwd.canvas.clientWidth / this.wwd.globe.equatorialRadius;
 
-            if (panDistance <= (2 * viewportSize)) {
-                // Start and target positions are close, so don't back out.
-                animationDuration /= 2; // reduce the travel time since we don't have far to go
+            if (panDistance <= 2 * viewportSize) {
+                // Start and target positions are close, so don't back out. Reduce the travel time based on the
+                // distance to travel relative to the viewport size.
+                animationDuration = Math.min((panDistance / viewportSize) * this.travelTime, this.travelTime);
                 this.maxAltitude = this.startPosition.altitude;
             }
 
@@ -125,8 +149,17 @@ define([
             // Set up the animation timer.
             var thisAnimator = this;
             var timerCallback = function () {
+                if (thisAnimator.cancelled) {
+                    if (thisAnimator.completionCallback) {
+                        thisAnimator.completionCallback(thisAnimator);
+                    }
+                    return;
+                }
+
                 if (thisAnimator.update()) {
                     setTimeout(timerCallback, thisAnimator.animationFrequency);
+                } else if (thisAnimator.completionCallback) {
+                    thisAnimator.completionCallback(thisAnimator);
                 }
             };
             setTimeout(timerCallback, this.animationFrequency); // invoke it the first time
@@ -135,6 +168,7 @@ define([
         // Intentionally not documented.
         GoToAnimator.prototype.update = function () {
             // This is the timer callback function. It invokes the range animator and the pan animator.
+
             var currentPosition = new Position(
                 this.wwd.navigator.lookAtLocation.latitude,
                 this.wwd.navigator.lookAtLocation.longitude,

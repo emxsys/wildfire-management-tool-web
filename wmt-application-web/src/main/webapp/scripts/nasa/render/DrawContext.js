@@ -4,12 +4,13 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: DrawContext.js 3143 2015-06-03 17:07:20Z dcollins $
  */
 define([
         '../error/ArgumentError',
         '../util/Color',
         '../util/FrameStatistics',
+        '../render/FramebufferTexture',
         '../render/FramebufferTileController',
         '../geom/Frustum',
         '../globe/Globe',
@@ -36,6 +37,7 @@ define([
     function (ArgumentError,
               Color,
               FrameStatistics,
+              FramebufferTexture,
               FramebufferTileController,
               Frustum,
               Globe,
@@ -67,8 +69,8 @@ define([
          * @constructor
          * @classdesc Provides current state during rendering. The current draw context is passed to most rendering
          * methods in order to make those methods aware of current state.
-         * @param {WebGLRenderingContext} gl The WebGL context this draw context is associated with.
-         * @throws {ArgumentError} If the specified WebGL context is null or undefined.
+         * @param {WebGLRenderingContext} gl The WebGL rendering context this draw context is associated with.
+         * @throws {ArgumentError} If the specified WebGL rendering context is null or undefined.
          */
         var DrawContext = function (gl) {
             if (!gl) {
@@ -77,7 +79,7 @@ define([
             }
 
             /**
-             * The current WebGL context.
+             * The current WebGL rendering context.
              * @type {WebGLRenderingContext}
              */
             this.currentGlContext = gl;
@@ -139,7 +141,13 @@ define([
             this.textSupport = new TextSupport();
 
             /**
-             * The current GPU program.
+             * The current WebGL framebuffer. Null indicates that the default WebGL framebuffer is active.
+             * @type {FramebufferTexture}
+             */
+            this.currentFramebuffer = null;
+
+            /**
+             * The current WebGL program. Null indicates that no WebGL program is active.
              * @type {GpuProgram}
              */
             this.currentProgram = null;
@@ -165,6 +173,13 @@ define([
              * @readonly
              */
             this.timestamp = Date.now();
+
+            /**
+             * Indicates whether a redraw has been requested during the current frame. When true, this causes the World
+             * Window associated with this draw context to redraw after the current frame.
+             * @type {Boolean}
+             */
+            this.redrawRequested = false;
 
             /**
              * The globe being rendered.
@@ -229,7 +244,7 @@ define([
 
             /**
              * Indicates whether the frame is being drawn for picking.
-             * @type {boolean}
+             * @type {Boolean}
              */
             this.pickingMode = false;
 
@@ -269,6 +284,13 @@ define([
              * @type {Rectangle}
              */
             this.pickRectangle = null;
+
+            /**
+             * The off-screen WebGL framebuffer used during picking.
+             * @type {FramebufferTexture}
+             * @readonly
+             */
+            this.pickFramebuffer = null;
 
             /**
              * The current pick frustum, created anew each picking frame.
@@ -311,6 +333,7 @@ define([
                 ++this.timestamp;
 
             // Reset properties set by the World Window every frame.
+            this.redrawRequested = false;
             this.globe = null;
             this.globeStateKey = null;
             this.layers = null;
@@ -345,7 +368,49 @@ define([
         };
 
         /**
-         * Binds a specified GPU program. This function also makes the program the current program.
+         * Notifies this draw context that the current WebGL rendering context has been lost. This function removes all
+         * cached WebGL resources and resets all properties tracking the current WebGL state.
+         */
+        DrawContext.prototype.contextLost = function () {
+            // Remove all cached WebGL resources, which are now invalid.
+            this.gpuResourceCache.clear();
+            this.pickFramebuffer = null;
+            // Reset properties tracking the current WebGL state, which are now invalid.
+            this.currentFramebuffer = null;
+            this.currentProgram = null;
+        };
+
+        /**
+         * Notifies this draw context that the current WebGL rendering context has been restored. This function prepares
+         * this draw context to resume rendering.
+         */
+        DrawContext.prototype.contextRestored = function () {
+            // Remove all cached WebGL resources. This cache is already cleared when the context is lost, but
+            // asynchronous load operations that complete between context lost and context restored populate the cache
+            // with invalid entries.
+            this.gpuResourceCache.clear();
+        };
+
+        /**
+         * Binds a specified WebGL framebuffer. This function also makes the framebuffer the active framebuffer.
+         * @param {FramebufferTexture} framebuffer The framebuffer to bind. May be null or undefined, in which case the
+         * default WebGL framebuffer is made active.
+         */
+        DrawContext.prototype.bindFramebuffer = function (framebuffer) {
+            var gl = this.currentGlContext;
+
+            if (framebuffer) {
+                framebuffer.bindFramebuffer(this);
+            } else {
+                gl.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER, null);
+            }
+
+            this.currentFramebuffer = framebuffer;
+        };
+
+
+        /**
+         * Binds a specified WebGL program. This function also makes the program the current program.
          * @param {GpuProgram} program The program to bind. May be null or undefined, in which case the currently
          * bound program is unbound.
          */
@@ -362,7 +427,7 @@ define([
         };
 
         /**
-         * Binds a potentially cached GPU program, creating and caching it if it isn't already cached.
+         * Binds a potentially cached WebGL program, creating and caching it if it isn't already cached.
          * This function also makes the program the current program.
          * @param {function} programConstructor The constructor to use to create the program.
          * @returns {GpuProgram} The bound program.
@@ -598,6 +663,25 @@ define([
             var color = this.pickColor.nextColor().clone();
 
             return color.equals(this.clearColor) ? color.nextColor() : color;
+        };
+
+        /**
+         * Creates an off-screen WebGL framebuffer for use during picking and stores it in this draw context. The
+         * framebuffer width and height match the WebGL rendering context's drawingBufferWidth and drawingBufferHeight.
+         */
+        DrawContext.prototype.makePickFramebuffer = function () {
+            var gl = this.currentGlContext,
+                width = gl.drawingBufferWidth,
+                height = gl.drawingBufferHeight;
+
+            if (!this.pickFramebuffer ||
+                this.pickFramebuffer.width != width ||
+                this.pickFramebuffer.height != height) {
+
+                this.pickFramebuffer = new FramebufferTexture(gl, width, height, true); // enable depth buffering
+            }
+
+            return this.pickFramebuffer;
         };
 
         /**
