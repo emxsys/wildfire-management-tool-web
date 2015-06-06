@@ -4,18 +4,18 @@
  */
 /**
  * @exports GoToAnimator
- * @version $Id: GoToAnimator.js 3152 2015-06-04 20:41:56Z tgaskins $
+ * @version $Id: GoToAnimator.js 3154 2015-06-06 14:19:39Z tgaskins $
  */
 define([
-    '../geom/Location',
-    '../util/Logger',
-    '../geom/Position',
-    '../geom/Vec3'
-],
+        '../geom/Location',
+        '../util/Logger',
+        '../geom/Position',
+        '../geom/Vec3'
+    ],
     function (Location,
-        Logger,
-        Position,
-        Vec3) {
+              Logger,
+              Position,
+              Vec3) {
         "use strict";
 
         /**
@@ -106,14 +106,10 @@ define([
                 panDistance = Location.greatCircleDistance(this.startPosition, this.targetPosition),
                 rangeDistance;
 
-            if (panDistance === 0) {
-                return;
-            }
-                
             // Determine how high we need to go to give the user context. The max altitude computed is approximately
             // that needed to fit the start and end positions in the same viewport assuming a 45 degree field of view.
             var pA = this.wwd.globe.computePointFromLocation(
-                this.startPosition.latitude, this.startPosition.longitude, new Vec3(0, 0, 0)),
+                    this.startPosition.latitude, this.startPosition.longitude, new Vec3(0, 0, 0)),
                 pB = this.wwd.globe.computePointFromLocation(
                     this.targetPosition.latitude, this.targetPosition.longitude, new Vec3(0, 0, 0));
             this.maxAltitude = pA.distanceTo(pB);
@@ -125,19 +121,10 @@ define([
                 * this.wwd.canvas.clientWidth / this.wwd.globe.equatorialRadius;
 
             if (panDistance <= 2 * viewportSize) {
-                // Start and target positions are close, so don't back out. Reduce the travel time based on the
-                // distance to travel relative to the viewport size.
-                animationDuration = Math.min((panDistance / viewportSize) * this.travelTime, this.travelTime);
+                // Start and target positions are close, so don't back out.
                 this.maxAltitude = this.startPosition.altitude;
             }
 
-            // Determine the pan velocity, in radians per millisecond.
-            this.panVelocity = panDistance / animationDuration;
-            
-            // SANITY CHECK
-            if (isNaN(this.panVelocity)) {
-                this.panVelocity = 1;
-            }
             // We need to capture the time the max altitude is reached in order to begin decreasing the range
             // midway through the animation. If we're already above the max altitude, then that time is now since
             // we don't back out if the current altitude is above the computed max altitude.
@@ -152,13 +139,27 @@ define([
             } else {
                 rangeDistance = Math.abs(this.targetPosition.altitude - this.startPosition.altitude);
             }
-            
-            // SANITY CHECK
-            this.rangeVelocity = rangeDistance / animationDuration; // meters per millisecond
-            if (isNaN(this.rangeVelocity)) {
-                this.rangeVelocity = 1;
+
+            // Determine which distance governs the animation duration.
+            var animationDistance = Math.max(panDistance, rangeDistance / this.wwd.globe.equatorialRadius);
+            if (animationDistance === 0) {
+                return; // current and target positions are the same
             }
 
+            if (animationDistance < 2 * viewportSize) {
+                // Start and target positions are close, so reduce the travel time based on the
+                // distance to travel relative to the viewport size.
+                animationDuration = Math.min((animationDistance / viewportSize) * this.travelTime, this.travelTime);
+            }
+
+            // Don't let the animation duration go to 0.
+            animationDuration = Math.max(1, animationDuration);
+
+            // Determine the pan velocity, in radians per millisecond.
+            this.panVelocity = panDistance / animationDuration;
+
+            // Determine the range velocity, in meters per millisecond.
+            this.rangeVelocity = rangeDistance / animationDuration; // meters per millisecond
 
             // Set up the animation timer.
             var thisAnimator = this;
@@ -182,16 +183,12 @@ define([
         // Intentionally not documented.
         GoToAnimator.prototype.update = function () {
             // This is the timer callback function. It invokes the range animator and the pan animator.
+            console.log("UPDATING " + Date.now());
 
             var currentPosition = new Position(
                 this.wwd.navigator.lookAtLocation.latitude,
                 this.wwd.navigator.lookAtLocation.longitude,
                 this.wwd.navigator.range);
-
-            // Safety Check
-            if (isNaN(this.wwd.navigator.range)) {
-                currentPosition.copy(this.targetPosition);
-            }
 
             var continueAnimation = this.updateRange(currentPosition);
             continueAnimation = this.updateLocation(currentPosition) || continueAnimation;
@@ -216,12 +213,6 @@ define([
                 if (Math.abs(this.wwd.navigator.range - nextRange) < 1) {
                     this.maxAltitudeReachedTime = Date.now();
                 }
-
-                // SANITY CHECK
-                if (isNaN(nextRange)) {
-                    nextRange = this.maxAltitude;
-                }
-
                 this.wwd.navigator.range = nextRange;
                 continueAnimation = true;
             } else {
@@ -233,12 +224,6 @@ define([
                     nextRange = this.maxAltitude + (this.rangeVelocity * elapsedTime);
                     nextRange = Math.min(nextRange, this.targetPosition.altitude);
                 }
-
-                // SANITY CHECK
-                if (isNaN(nextRange)) {
-                    nextRange = this.maxAltitude;
-                }
-
                 this.wwd.navigator.range = nextRange;
                 // We're done if we get withing 1 meter of the desired range.
                 continueAnimation = Math.abs(this.wwd.navigator.range - this.targetPosition.altitude) > 1;
