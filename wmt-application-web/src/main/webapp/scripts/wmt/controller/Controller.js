@@ -34,6 +34,7 @@ define([
     '../view/CoordinatesView',
     './FuelModelManager',
     './LocationManager',
+    '../util/Log',
     '../model/Model',
     '../view/ReticuleView',
     '../view/SolarView',
@@ -45,6 +46,7 @@ define([
         CoordinatesView,
         FuelModelManager,
         LocationManager,
+        Log,
         Model,
         ReticuleView,
         SolarView,
@@ -61,6 +63,9 @@ define([
             this.locationManager = new LocationManager(this);
             this.fuelModelManager = new FuelModelManager(this);
             this.weatherManager = new WeatherManager(this);
+
+            this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
+            this.isAnimating = false;
 
             // Create the MVC Model
             this.model = new Model(worldWindow);
@@ -107,13 +112,28 @@ define([
          * @param {Number} longitude
          */
         Controller.prototype.lookAtLatLon = function (latitude, longitude) {
+            if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+                Log.error("Controller", "lookAtLatLon", "Invalid Latitude and/or Longitude.");
+                return;
+            }
             // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
             // This will establish the crosshairs on the target.
             this.wwd.navigator.tilt = 0;
-            
-            this.wwd.navigator.lookAtLocation.latitude = latitude;
-            this.wwd.navigator.lookAtLocation.longitude = longitude;
             this.wwd.redraw();
+
+//            this.wwd.navigator.lookAtLocation.latitude = latitude;
+//            this.wwd.navigator.lookAtLocation.longitude = longitude;
+
+            if (this.isAnimating) {
+                this.goToAnimator.cancel();
+            }
+            
+            this.isAnimating = true;
+            var self = this;
+            this.goToAnimator.goTo(new WorldWind.Location(latitude, longitude), function () {
+                self.isAnimating = false;
+                self.updateSpatialData();
+            });
         };
 
         /**
@@ -189,7 +209,9 @@ define([
                 this.model.updateMousePosition(mousePoint);
             }
             // Update the viewpoint
-            this.model.updateEyePosition();
+            if (!this.isAnimating) {
+                this.model.updateEyePosition();
+            }
         };
 
         Controller.prototype.handleRedraw = function () {

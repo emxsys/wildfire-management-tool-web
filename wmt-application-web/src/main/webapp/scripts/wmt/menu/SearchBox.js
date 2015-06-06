@@ -40,7 +40,6 @@ define([
             this.ctrl = controller;
 
             this.geocoder = new WorldWind.NominatimGeocoder();
-            this.goToAnimator = new WorldWind.GoToAnimator(this.ctrl.wwd);
 
             this.undoHistory = [];
             this.redoHistory = [];
@@ -125,7 +124,7 @@ define([
                             }
                             self.redoHistory = [];
                             self.redoCandidate = new WorldWind.Location(latitude, longitude);
-                            self.goToAnimator.goTo(new WorldWind.Location(latitude, longitude));
+                            self.ctrl.lookAtLatLon(latitude, longitude);
                         }
                     });
                 }
