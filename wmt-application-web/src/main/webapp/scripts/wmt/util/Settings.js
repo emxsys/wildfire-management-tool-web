@@ -43,6 +43,13 @@ define([
         Wmt) {
         "use strict";
         var Settings = {
+            
+            STARTUP_LATITUDE_KEY:  "startupLatitude",
+            STARTUP_LONGITUDE_KEY:  "startupLongitude",
+            STARTUP_ALTITUDE_KEY:  "startupAltitude",
+            STARTUP_ROLL_KEY:  "startupRoll",
+            STARTUP_TILT_KEY:  "startupTilt",
+            STARTUP_HEADING_KEY:  "startupHeading",
             /**
              * 
              * @param {Controller} controller
@@ -60,14 +67,14 @@ define([
                     roll = controller.wwd.navigator.roll;
 
                 // Save the eye position
-                localStorage.setItem("latitude", pos.latitude);
-                localStorage.setItem("longitude", pos.longitude);
-                localStorage.setItem("altitude", alt);
+                localStorage.setItem(this.STARTUP_LATITUDE_KEY, pos.latitude);
+                localStorage.setItem(this.STARTUP_LONGITUDE_KEY, pos.longitude);
+                localStorage.setItem(this.STARTUP_ALTITUDE_KEY, alt);
 
                 // Save the globe orientation.
-                localStorage.setItem("heading", heading);
-                localStorage.setItem("tilt", tilt);
-                localStorage.setItem("roll", roll);
+                localStorage.setItem(this.STARTUP_HEADING_KEY, heading);
+                localStorage.setItem(this.STARTUP_TILT_KEY, tilt);
+                localStorage.setItem(this.STARTUP_ROLL_KEY, roll);
 
             },
             /**
@@ -80,12 +87,12 @@ define([
                         Log.warning("Settings", "restoreSessionSettings", "Local Storage is not enabled!");
                         return;
                     }
-                    var lat = localStorage.getItem("latitude"),
-                        lon = localStorage.getItem("longitude"),
-                        alt = localStorage.getItem("altitude"),
-                        head = localStorage.getItem("heading"),
-                        tilt = localStorage.getItem("tilt"),
-                        roll = localStorage.getItem("roll");
+                    var lat = localStorage.getItem(this.STARTUP_LATITUDE_KEY),
+                        lon = localStorage.getItem(this.STARTUP_LONGITUDE_KEY),
+                        alt = localStorage.getItem(this.STARTUP_ALTITUDE_KEY),
+                        head = localStorage.getItem(this.STARTUP_HEADING_KEY),
+                        tilt = localStorage.getItem(this.STARTUP_TILT_KEY),
+                        roll = localStorage.getItem(this.STARTUP_ROLL_KEY);
 
                     if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
                         Log.warning("Settings", "restoreSessionSettings", "Previous state invalid: Using default lat/lon.");
