@@ -51,7 +51,7 @@ define([
         MarkerMenu) {
         "use strict";
         var MainMenu = {
-            initialize: function (worldWindow, controller) {
+            initialize: function (controller) {
                 var self = this;
                 this.ctrl = controller;
 
@@ -110,8 +110,8 @@ define([
 
 
                 });
-                this.controlPanel = new ControlPanel(worldWindow, controller);
-                this.layerMenu = new LayerMenu(worldWindow);
+                this.controlPanel = new ControlPanel(controller);
+                this.layerMenu = new LayerMenu(controller);
                 this.markerMenu = new MarkerMenu(controller);
                 this.searchBox = new SearchBox(controller);
             },

@@ -38,10 +38,11 @@
  */
 define(['../../nasa/WorldWind'], function (WorldWind) {
     "use strict";
-    var LayerMenu = function (worldWindow) {
+    var LayerMenu = function (controller) {
         var self = this;
 
-        this.wwd = worldWindow;
+        this.ctrl = controller;
+        this.wwd = controller.wwd;
 
         // Populate the Layers menu with menu items
         this.synchronizeLayerList();
@@ -64,7 +65,8 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
             if (layer.displayName === layerName) {
                 layer.enabled = !layer.enabled;
                 this.highlightLayer(layer, layerItem);
-                this.wwd.redraw();
+
+                this.ctrl.redrawGlobe();
             }
         }
     };
@@ -86,7 +88,8 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
 //            layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
             layerListItem.append(layerItem);
             this.highlightLayer(layer, layerItem);
-            this.wwd.redraw();
+
+            this.ctrl.redrawGlobe();
         }
     };
 

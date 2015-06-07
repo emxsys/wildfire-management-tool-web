@@ -40,16 +40,15 @@
 define(['../../nasa/WorldWind'], function (WorldWind) {
     "use strict";
     /**
-     * 
-     * @param {WorldWindow} worldWindow
+     * @constructor
      * @param {Controller} controller
      * @returns {ControlPanel}
      */
-    var ControlPanel = function (worldWindow, controller) {
+    var ControlPanel = function (controller) {
         var self = this;
 
-        this.wwd = worldWindow;
         this.ctrl = controller;
+        this.wwd = controller.wwd;
 
         this.roundGlobe = this.wwd.globe;
 
@@ -112,8 +111,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
                 this.wwd.globe = this.flatGlobe;
             }
         }
-
-        this.wwd.redraw();
+        this.ctrl.redrawGlobe();
     };
 
     ControlPanel.prototype.createProjectionList = function () {

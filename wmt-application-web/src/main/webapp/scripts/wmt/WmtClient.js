@@ -95,7 +95,7 @@ define([
             this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
 
             // Initialize the Navbar and Sidebars
-            MainMenu.initialize(this.wwd, this.controller);
+            MainMenu.initialize(this.controller);
 
             // Restore the globe (eye position) from the last session
             Settings.restoreSessionSettings(this.controller);

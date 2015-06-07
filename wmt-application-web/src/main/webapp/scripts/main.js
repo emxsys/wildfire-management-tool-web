@@ -48,11 +48,14 @@ requirejs.config({
 //            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
 //        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
         //worldwind: "../nasa/WorldWind",
+        Log: "./util/Log",
         WmtClient: "WmtClient"
     }
-
 });
 
-requirejs(["WmtClient"], function (WmtClient) {
-    new WmtClient();
-});
+requirejs(['Log', 'WmtClient'],
+    function (Log, WmtClient) {
+        "use strict";
+        var app = new WmtClient();
+        Log.info("main", "", "started");
+    });
