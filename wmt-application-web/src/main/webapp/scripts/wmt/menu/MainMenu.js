@@ -112,7 +112,7 @@ define([
                 });
                 this.controlPanel = new ControlPanel(worldWindow, controller);
                 this.layerMenu = new LayerMenu(worldWindow);
-                this.markerMenu = new MarkerMenu(worldWindow, controller);
+                this.markerMenu = new MarkerMenu(controller);
                 this.searchBox = new SearchBox(controller);
             },
             /**
