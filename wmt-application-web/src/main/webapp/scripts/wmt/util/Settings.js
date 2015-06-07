@@ -87,23 +87,23 @@ define([
                         Log.warning("Settings", "restoreSessionSettings", "Local Storage is not enabled!");
                         return;
                     }
-                    var lat = localStorage.getItem(this.STARTUP_LATITUDE_KEY),
-                        lon = localStorage.getItem(this.STARTUP_LONGITUDE_KEY),
-                        alt = localStorage.getItem(this.STARTUP_ALTITUDE_KEY),
-                        head = localStorage.getItem(this.STARTUP_HEADING_KEY),
-                        tilt = localStorage.getItem(this.STARTUP_TILT_KEY),
-                        roll = localStorage.getItem(this.STARTUP_ROLL_KEY);
+                    var lat = Number(localStorage.getItem(this.STARTUP_LATITUDE_KEY)),
+                        lon = Number(localStorage.getItem(this.STARTUP_LONGITUDE_KEY)),
+                        alt = Number(localStorage.getItem(this.STARTUP_ALTITUDE_KEY)),
+                        head = Number(localStorage.getItem(this.STARTUP_HEADING_KEY)),
+                        tilt = Number(localStorage.getItem(this.STARTUP_TILT_KEY)),
+                        roll = Number(localStorage.getItem(this.STARTUP_ROLL_KEY));
 
-                    if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+                    if (isNaN(lat) || isNaN(lon)) {
                         Log.warning("Settings", "restoreSessionSettings", "Previous state invalid: Using default lat/lon.");
                         lat = Wmt.configuration.startupLatitude;
                         lon = Wmt.configuration.startupLongitude;
                     }
-                    if (!alt || isNaN(alt)) {
+                    if (isNaN(alt)) {
                         Log.warning("Settings", "restoreSessionSettings", "Previous state invalid: Using default altitude.");
                         alt = Wmt.configuration.startupAltitude;
                     }
-                    if (!head || !tilt || !roll || isNaN(head) || isNaN(tilt) || isNaN(roll)) {
+                    if (isNaN(head) || isNaN(tilt) || isNaN(roll)) {
                         Log.warning("Settings", "restoreSessionSettings", "Previous state invalid: Using default view angles.");
                         head = Wmt.configuration.startupHeading;
                         tilt = Wmt.configuration.startupTilt;
