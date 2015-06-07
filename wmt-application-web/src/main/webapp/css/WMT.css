@@ -33,8 +33,13 @@
     height: 100%;
     padding-left: 0;
     padding-right: 0
-
 }
+
+/*Custom cursor for when the user drags in the globe*/
+#canvasOne:active { 
+    cursor: pointer;
+}
+
 #globe { 
     padding-left: 0;
     padding-right: 0        
@@ -67,6 +72,15 @@ img.icon {
     -o-user-select: none;
     pointer-events: none;
 } 
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 .panel-heading:hover {
   background-color: rgba(0,0,0,0) !important;
