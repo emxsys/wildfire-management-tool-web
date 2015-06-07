@@ -369,7 +369,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="markersPanel" 
                  class="col-sm-4 col-lg-3 sidebar" 
                  style="display:none;">
-                <h4>
+                <h4 class="noselect">
                     <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
                     Markers
                 </h4>
@@ -597,7 +597,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <!---------------->
             <!--Globe Window-->
             <!---------------->
-            <div class="col-sm-8 col-lg-9" id="globe" style="height: 100%">
+            <div class="col-sm-8 col-lg-9 noselect" id="globe" style="height: 100%">
                 <!--<div style="position:relative">-->
                 <div id='canvas-wrap' style="height: 100%">
                     <!--Set canvas' tabindex so keydown events can be captured-->
