@@ -41,10 +41,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
         <!--<link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />-->   
         <link rel="stylesheet" href="./thirdparty/primeui-1.1/production/primeui-1.1-min.css" />   
-        <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css">
-        <link rel="stylesheet" href="./css/WMT.css">
+        <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
+        <link rel="stylesheet" href="./thirdparty/pace/pace-theme-big-counter.css"/>
+        <link rel="stylesheet" href="./css/WMT.css"/>
+
+        <script>
+            // Pace.js Progress Bar options
+            paceOptions = {
+                // Only show the progress on initial load, not on every request.
+                restartOnRequestAfter: false,
+                restartOnPushState: false
+            }
+        </script>
 
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
+        <script src="./thirdparty/pace/pace.min.js"></script>
         <script src="./thirdparty/jquery-2.1.4.min.js" type="text/javascript"></script>
         <script src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <script src="./thirdparty/primeui-1.1/production/primeui-1.1-min.js" type="text/javascript"></script>
@@ -725,5 +736,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>            
             </div>
         </div>        
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-63788794-1', 'auto');
+            ga('send', 'pageview');
+        </script>
     </body>
 </html>
