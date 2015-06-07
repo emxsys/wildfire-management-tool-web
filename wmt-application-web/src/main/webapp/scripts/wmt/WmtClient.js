@@ -130,7 +130,7 @@ define([
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
-                    {layer: new WorldWind.RenderableLayer("Markers"), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(Wmt.MARKERS_LAYER_NAME), enabled: true},
                     {layer: new ReticuleLayer(), enabled: true},
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
                 ];
