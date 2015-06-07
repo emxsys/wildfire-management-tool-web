@@ -127,7 +127,7 @@ define([
             if (this.isAnimating) {
                 this.goToAnimator.cancel();
             }
-            
+
             this.isAnimating = true;
             var self = this;
             this.goToAnimator.goTo(new WorldWind.Location(latitude, longitude), function () {
@@ -151,6 +151,41 @@ define([
         Controller.prototype.changeFuelModel = function (fuelModel) {
             this.model.updateFuelModel(fuelModel);
         };
+
+        /**
+         * Finds the World Wind Layer in the layer list with the given display name.
+         * @param {String} name Display name of the layer
+         * @returns {Layer}
+         */
+        Controller.prototype.findLayer = function (name) {
+            var layer,
+                i,
+                len;
+
+            // Find the Markers layer in the World Window's layer list.
+            for (i = 0, len = this.wwd.layers.length; i < len; i += 1) {
+                layer = this.wwd.layers[i];
+                if (layer.displayName === name) {
+                    return layer;
+                }
+            }
+        };
+
+        /**
+         * Returns the terrain at the reticule.
+         * @returns {Terrain} Controller.model.viewpoint.target}
+         */
+        Controller.prototype.getTargetTerrain = function () {
+            return this.model.viewpoint.target;
+        };
+
+        /** 
+         * Redraws the World Window.
+         */
+        Controller.prototype.redrawGlobe = function () {
+            this.wwd.redraw();
+        };
+
 
         /**
          * Resets the viewpoint to the startup configuration settings.
