@@ -89,6 +89,10 @@ define([],
              */
             IMAGE_PATH: "scripts/wmt/images/",
             /**
+             * The display name for the layer that displays markers.
+             */
+            MARKERS_LAYER_NAME: "Markers",
+            /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
              */

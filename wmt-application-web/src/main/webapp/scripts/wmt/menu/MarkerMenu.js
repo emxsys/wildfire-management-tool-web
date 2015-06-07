@@ -35,41 +35,47 @@
 define([
     '../util/Log',
     '../util/Messenger',
+    '../../nasa/layer/RenderableLayer',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Log,
         Messenger,
+        RenderableLayer,
         Wmt,
         WorldWind) {
         "use strict";
-        var MarkerMenu = function (worldWindow, controller) {
+        var MarkerMenu = function (controller) {
             var self = this;
 
-            this.wwd = worldWindow;
             this.ctrl = controller;
 
-            this.icsMarkers = [
-                {name: "Fire Origin ", symbol: "Fire_Origin24.png", icon: "Fire_Origin.png"},
-                {name: "Fire Location ", symbol: "Fire_Location24.png", icon: "Fire_Location.png"},
-                {name: "Drop Point ", symbol: "Drop_Point24.png", icon: "Drop_Point.png"},
-                {name: "Incident Command Post ", symbol: "Incident_Command_Post24.png", icon: "Incident_Command_Post.png"}
+            this.icsMarkerTypes = [
+                {key: "fireOrigin", name: "Fire Origin ", symbol: "Fire_Origin24.png", icon: "Fire_Origin.png"},
+                {key: "fireLocation", name: "Fire Location ", symbol: "Fire_Location24.png", icon: "Fire_Location.png"},
+                {key: "dropPoint", name: "Drop Point ", symbol: "Drop_Point24.png", icon: "Drop_Point.png"},
+                {key: "icp", name: "Incident Command Post ", symbol: "Incident_Command_Post24.png", icon: "Incident_Command_Post.png"}
             ];
 
-            this.pushpins = [
-                {name: "Black ", symbol: "castshadow-black.png"},
-                {name: "Red ", symbol: "castshadow-red.png"},
-                {name: "Green ", symbol: "castshadow-green.png"},
-                {name: "Blue ", symbol: "castshadow-blue.png"},
-                {name: "Teal ", symbol: "castshadow-teal.png"},
-                {name: "Orange ", symbol: "castshadow-orange.png"},
-                {name: "Purple ", symbol: "castshadow-purple.png"},
-                {name: "Brown ", symbol: "castshadow-brown.png"},
-                {name: "White ", symbol: "castshadow-white.png"}
+            this.pushpinTypes = [
+                {key: "black", name: "Black ", symbol: "castshadow-black.png"},
+                {key: "red", name: "Red ", symbol: "castshadow-red.png"},
+                {key: "green", name: "Green ", symbol: "castshadow-green.png"},
+                {key: "blue", name: "Blue ", symbol: "castshadow-blue.png"},
+                {key: "teal", name: "Teal ", symbol: "castshadow-teal.png"},
+                {key: "orange", name: "Orange ", symbol: "castshadow-orange.png"},
+                {key: "purple", name: "Purple ", symbol: "castshadow-purple.png"},
+                {key: "brown", name: "Brown ", symbol: "castshadow-brown.png"},
+                {key: "white", name: "White ", symbol: "castshadow-white.png"}
             ];
 
-            // Get the Markers layer from the globe.
-            this.markerLayer = this.findMarkerLayer();
+            // Get the RenderableLayer that we'll add the markers to.
+            this.markerLayer = this.ctrl.findLayer(Wmt.MARKERS_LAYER_NAME);
+            if (!this.markerLayer) {
+                throw new Error(
+                    Log.error("MarkerMenu", "constructor",
+                        "Could not find a Layer named " + Wmt.MARKERS_LAYER_NAME));
+            }
 
             // Populate the Markers menu with existing marker items
             if (this.markerLayer) {
@@ -92,7 +98,7 @@ define([
                 });
 
             }
-            
+
             // Show the Create tab
             $('#markersCreateBody').collapse('show');
         };
@@ -149,9 +155,9 @@ define([
                 i;
 
             // Find the selected symbol
-            for (i = 0; i < this.icsMarkers.length; i += 1) {
-                if (markerName === this.icsMarkers[i].name) {
-                    symbol = this.icsMarkers[i].symbol;
+            for (i = 0; i < this.icsMarkerTypes.length; i += 1) {
+                if (markerName === this.icsMarkerTypes[i].name) {
+                    symbol = this.icsMarkerTypes[i].symbol;
                 }
             }
             if (!symbol) {
@@ -173,9 +179,9 @@ define([
                 i;
 
             // Find the selected symbol
-            for (i = 0; i < this.pushpins.length; i += 1) {
-                if (pushpinName === this.pushpins[i].name) {
-                    symbol = this.pushpins[i].symbol;
+            for (i = 0; i < this.pushpinTypes.length; i += 1) {
+                if (pushpinName === this.pushpinTypes[i].name) {
+                    symbol = this.pushpinTypes[i].symbol;
                 }
             }
             // 
@@ -196,8 +202,7 @@ define([
             var marker,
                 attr = new WorldWind.PlacemarkAttributes(null),
                 hiliteAttr,
-                latitude = this.ctrl.model.viewpoint.target.latitude,
-                longitude = this.ctrl.model.viewpoint.target.longitude,
+                target = this.ctrl.getTargetTerrain(),
                 elevation = 0; // elevation is AGL;
 
             // Set up the common placemark attributes.
@@ -213,13 +218,12 @@ define([
             attr.drawLeaderLine = true;
             attr.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
-            marker = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, elevation));
+            marker = new WorldWind.Placemark(new WorldWind.Position(target.latitude, target.longitude, elevation));
             marker.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
-            // TODO: Create a unique marker name.
-
-
+            // Create a unique marker name.
             marker.displayName = this.generateUniqueName(name);
+            //            
 //            marker.label = "Marker " + "\n"
 //                + "Lat " + latitude.toPrecision(4).toString() + "\n"
 //                + "Lon " + longitude.toPrecision(5).toString();
@@ -291,7 +295,7 @@ define([
          * Populate the ICS markers dropdown.
          */
         MarkerMenu.prototype.populateIcsMarkerDropdown = function () {
-            this.populateDropdown('#icsMarkerDropdown', this.icsMarkers, Wmt.IMAGE_PATH + "ics/");
+            this.populateDropdown('#icsMarkerDropdown', this.icsMarkerTypes, Wmt.IMAGE_PATH + "ics/");
         };
 
 
@@ -299,7 +303,7 @@ define([
          * Populate the Pushpins dropdown.
          */
         MarkerMenu.prototype.populatePushpinDropdown = function () {
-            this.populateDropdown('#pushpinDropdown', this.pushpins, Wmt.WORLD_WIND_PATH + "images/pushpins/");
+            this.populateDropdown('#pushpinDropdown', this.pushpinTypes, Wmt.WORLD_WIND_PATH + "images/pushpins/");
         };
 
 
@@ -352,47 +356,24 @@ define([
                 markerItem =
                     '<div class="btn-group btn-block btn-group-sm">' +
                     ' <button type="button" class="col-sm-8 btn btn-default mkr-goto">' + marker.displayName + '</button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0"></button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerName="' + marker.displayName + '"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerName="' + marker.displayName + '"></button>' +
                     '</div>';
                 markerList.append(markerItem);
             }
-            this.wwd.redraw();
+            this.ctrl.redrawGlobe();
 
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
                 self.onMarkerItemClick($(this).text(), "goto");
             });
             markerList.find('button.mkr-edit').on('click', function (event) {
-                // find the sibling with the text and send that to the event handler
-                var name = $(this).siblings().filter('.mkr-goto').text();
-                self.onMarkerItemClick(name, "edit");
+                self.onMarkerItemClick($(this).attr('markerName'), "edit");
             });
             markerList.find('button.mkr-remove').on('click', function (event) {
-                var name = $(this).siblings().filter('.mkr-goto').text();
-                self.onMarkerItemClick(name, "remove");
+                self.onMarkerItemClick($(this).attr('markerName'), "remove");
             });
         };
-
-
-        /**
-         * Finds the Markers Renerablelayer from the WorldWindow.layers.
-         * @returns {Renerablelayer}
-         */
-        MarkerMenu.prototype.findMarkerLayer = function () {
-            var layer,
-                i,
-                len;
-
-            // Find the Markers layer in the World Window's layer list.
-            for (i = 0, len = this.wwd.layers.length; i < len; i += 1) {
-                layer = this.wwd.layers[i];
-                if (layer.displayName === 'Markers') {
-                    return layer;
-                }
-            }
-        };
-
 
         return MarkerMenu;
     }
