@@ -71,7 +71,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
             self.ctrl.resetHeadingAndTilt(event);
         });
 
-        // Show the Globe tab
+        // Initially, show the Globe tab
         $('#controlPanelGlobeBody').collapse('show');
 
     };

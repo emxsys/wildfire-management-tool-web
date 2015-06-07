@@ -108,6 +108,14 @@ define([
                         $(this).find(".glyphicon-collapse-up").removeClass("glyphicon-collapse-up").addClass("glyphicon-collapse-down");
                     });
 
+                    // Initially, at startup, activate the Control Panel
+                    $('#controlPanelItem').trigger('click');
+
+                    // But on phones, we want the activated panel to be hidden
+                    // so we click the Collapse button.
+                    if ($(document).width <= 768)                    {
+                        $('#collapsePanelsItem').trigger('click');
+                    }
 
                 });
                 this.controlPanel = new ControlPanel(controller);

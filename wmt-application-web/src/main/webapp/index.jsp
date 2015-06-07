@@ -193,7 +193,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div class="row-full">
 
             <!--Control Panel Sidebar-->
-            <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar">
+            <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar"
+                 style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
                     Control Panel
