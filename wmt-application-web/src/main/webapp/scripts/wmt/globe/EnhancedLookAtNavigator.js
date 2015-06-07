@@ -38,8 +38,12 @@ define([
     '../../nasa/geom/Matrix',
     '../../nasa/geom/Location',
     '../../nasa/geom/Position',
+    '../../nasa/gesture/TiltRecognizer',
+    '../../nasa/geom/Vec2',
+    '../../nasa/geom/Vec3',
     '../Wmt',
-    '../../nasa/util/WWMath'],
+    '../../nasa/util/WWMath',
+    '../../nasa/WorldWind'],
     function (
         Angle,
         Log,
@@ -47,14 +51,19 @@ define([
         Matrix,
         Location,
         Position,
+        TiltRecognizer,
+        Vec2,
+        Vec3,
         Wmt,
-        WWMath) {
+        WWMath,
+        WorldWind) {
         "use strict";
         var EnhancedLookAtNavigator = function (worldWindow) {
             // Using Classic Inheriticance Pattern #3 - Rent and Set Prototype. See JavaScript Patterns
             LookAtNavigator.call(this, worldWindow);
 
             this.wwd = worldWindow;
+
             this.lastEyePosition = new Position();
             // Use the parent object's 'safe' settings for our initial 'last' settings
             this.lastLookAtLocation = new Location(this.lookAtLocation.latitude, this.lookAtLocation.longitude);
@@ -63,14 +72,121 @@ define([
             this.lastTilt = this.tilt;
             this.lastRoll = this.roll;
 
+// Prototyping method to keep crosshairs navigator centered on target during rotate and tilt...  
+//            // Unregister the parent's tilt event handler and register our customized handler
+//            var self = this;
+//            this.tiltRecognizer.addGestureListener(function (recognizer) {
+//                self.handleTilt(recognizer);
+//            });
+//
+
         };
         EnhancedLookAtNavigator.prototype = Object.create(LookAtNavigator.prototype);
 
+        /**
+         * Returns the intercept position of a ray from the eye to the lookAtLocation.
+         * @returns {Position) The current terrain intercept position
+         */
+        EnhancedLookAtNavigator.prototype.terrainInterceptPosition = function () {
+            var wwd = this.wwd,
+                centerPoint = new Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
+                terrainObject = wwd.pickTerrain(centerPoint).terrainObject();
 
+            if (terrainObject) {
+                return terrainObject.position;
+            }
+        };
+
+
+// Prototyping method to keep crosshairs navigator centered on target during rotate and tilt...  
+//        /**
+//         * Handles tilt requests
+//         * @param {type} recognizer
+//         */
+//        EnhancedLookAtNavigator.prototype.handleTilt = function (recognizer) {
+//            var state = recognizer.state,
+//                translation = recognizer.translation,
+//                viewport = this.worldWindow.viewport,
+//                pixels,
+//                degrees,
+//                terrainIntercept,
+//                intermediateNavState = this.intermediateState(),
+//                navigatorState,
+//                wwd = this.wwd,
+//                centerPoint = new Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
+//                ray,
+//                point = new Vec3(0, 0, 0),
+//                targetPoint = new Vec3(0, 0, 0),
+//                cartesionPoint = new Vec3(0, 0, 0),
+//                screenPoint = new Vec3(0, 0, 0),
+//                windowPoint = new Vec2(0, 0),
+//                position = new Position();
+//
+//
+//            if (state === WorldWind.BEGAN) {
+//                this.beginTilt = this.tilt;
+//            } else if (state === WorldWind.CHANGED) {
+//                // Compute the current translation in screen coordinates
+//                pixels = -translation[1];
+//
+//                // Convert the translation from screen coordinates to degrees. Use the viewport dimensions as a metric
+//                // for converting the gesture translation to a fraction of an angle
+//                degrees = 90 * pixels / viewport.height;
+//
+//                // Apply the change in heading and tilt to this navigator's corresponding properties.
+//                this.tilt = this.beginTilt + degrees;
+//
+//                // Capture the current position that we're looking at. 
+//                terrainIntercept = this.terrainInterceptPosition();
+//
+//                // Apply the new tilt value and get the new state
+//                navigatorState = this.currentState();
+//
+//                // Recompute the lookAtLocation using the new navigator state 
+//                // using the ray passing thru the last terrain intercept
+//                if (terrainIntercept) {
+//                    wwd.globe.computePointFromPosition(
+//                        terrainIntercept.latitude,
+//                        terrainIntercept.longitude,
+//                        terrainIntercept.altitude,
+//                        cartesionPoint);
+//
+//                    navigatorState.project(cartesionPoint, screenPoint);
+//                    navigatorState.convertPointToWindow(screenPoint, windowPoint);
+//
+//                    ray = navigatorState.rayFromScreenPoint(windowPoint);
+//                    if (wwd.globe.intersectsLine(ray, point)) {
+//                        if (wwd.globe.computePositionFromPoint(point[0], point[1], point[2], position)) {
+//                            this.lookAtLocation.latitude = position.latitude;
+//                            this.lookAtLocation.longitude = position.longitude;
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//
         /**
          * Limit the navigator's position and orientation appropriately for the current scene.
          */
         EnhancedLookAtNavigator.prototype.applyLimits = function () {
+
+            if (isNaN(this.lookAtLocation.latitude) || isNaN(this.lookAtLocation.longitude)) {
+                Log.error("EnhancedLookAtNavigator", "applyLimits", "Invalid lat/lon: NaN");
+                this.lookAtLocation.latitude = this.lastLookAtLocation.latitude;
+                this.lookAtLocation.longitude = this.lastLookAtLocation.longitude;
+            }
+            if (isNaN(this.range)) {
+                Log.error("EnhancedLookAtNavigator", "applyLimits", "Invalid range: NaN");
+                this.range = this.lastRange;
+            }
+            if (isNaN(this.heading)) {
+                Log.error("EnhancedLookAtNavigator", "applyLimits", "Invalid heading: NaN");
+                this.heading = this.lastHeading;
+            }
+            if (isNaN(this.tilt)) {
+                Log.error("EnhancedLookAtNavigator", "applyLimits", "Invalid tilt: NaN");
+                this.tilt = this.lastTilt;
+            }
 
             if (!this.validateEyePosition()) {
                 // Eye position is invalid, so restore the last navigator settings
@@ -142,18 +258,22 @@ define([
             this.lastEyePosition.copy(eyePos);
             return true;
         };
-        
-        
+
+
         /**
-         * 
-         * @returns {EnhancedLookAtNavigator_L44.EnhancedLookAtNavigator.prototype@call;currentStateForModelview}
+         * Returns a new NavigatorState without calling applyLimits(). 
+         * See also LookAtNavigator.currentState().
+         * @returns {NavigatorState}
          */
         EnhancedLookAtNavigator.prototype.intermediateState = function () {
-            //this.applyLimits();
+            // this.applyLimits(); -- Don't do this!!
             var globe = this.worldWindow.globe,
-                lookAtPosition = new Position(this.lookAtLocation.latitude, this.lookAtLocation.longitude, 0),
+                lookAtPosition = new Position(
+                    this.lookAtLocation.latitude,
+                    this.lookAtLocation.longitude,
+                    0),
                 modelview = Matrix.fromIdentity();
-            
+
             modelview.multiplyByLookAtModelview(lookAtPosition, this.range, this.heading, this.tilt, this.roll, globe);
 
             return this.currentStateForModelview(modelview);
