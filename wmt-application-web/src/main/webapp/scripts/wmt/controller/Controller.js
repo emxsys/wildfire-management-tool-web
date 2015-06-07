@@ -116,24 +116,32 @@ define([
                 Log.error("Controller", "lookAtLatLon", "Invalid Latitude and/or Longitude.");
                 return;
             }
+            // TODO: Make AGL and MSL elevations a function of the model
+            // TODO: Eye Position a property of the model
+            // 
+            var self = this,
+                eyeAltMsl = this.model.viewpoint.eye.altitude,
+                eyePosGrdElev = this.model.terrainProvider.elevationAtLatLon(this.model.viewpoint.eye.latitude, this.model.viewpoint.eye.longitude),
+                eyeAltAgl = Math.max(eyeAltMsl - eyePosGrdElev, 100),
+                tgtPosElev = this.model.terrainProvider.elevationAtLatLon(latitude, longitude),
+                tgtEyeAltMsl = Math.max(tgtPosElev + eyeAltAgl, 100);
+                            
             // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
             // This will establish the crosshairs on the target.
+            this.wwd.navigator.range = eyeAltMsl;
             this.wwd.navigator.tilt = 0;
             this.wwd.redraw();
-
-//            this.wwd.navigator.lookAtLocation.latitude = latitude;
-//            this.wwd.navigator.lookAtLocation.longitude = longitude;
 
             if (this.isAnimating) {
                 this.goToAnimator.cancel();
             }
-
             this.isAnimating = true;
-            var self = this;
-            this.goToAnimator.goTo(new WorldWind.Location(latitude, longitude), function () {
+            this.goToAnimator.goTo(new WorldWind.Position(latitude, longitude, tgtEyeAltMsl), function () {
                 self.isAnimating = false;
                 self.updateSpatialData();
             });
+//            this.wwd.navigator.lookAtLocation.latitude = latitude;
+//            this.wwd.navigator.lookAtLocation.longitude = longitude;
         };
 
         /**
