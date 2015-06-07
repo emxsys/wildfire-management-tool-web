@@ -55,6 +55,13 @@ define([
                 self.onSearchRedo(e);
             });
 
+            // Autoselect the text upon focus.
+            $('#searchText').focus(function (e) {
+                setTimeout(function () {
+                    $('#searchText').select();
+                }, 0);
+            });
+
 
         };
 
