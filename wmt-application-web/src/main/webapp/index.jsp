@@ -166,8 +166,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </button>
                     </div>
                 </div>
-                <!--Navbar Help-->
-                <ul class="nav navbar-nav navbar-right">
+                <!--Help button - hidden until we make room by adjusting button margins-->
+                <!-- <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" 
                            class="dropdown-toggle" 
@@ -182,7 +182,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <li><a href="#">Contents</a></li>
                         </ul>
                     </li>                
-                </ul>
+                </ul>-->
             </div>
         </div>
     </nav>
@@ -200,6 +200,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     Control Panel
                 </h4>
                 <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
+                    <!--Location Panel-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading collapsed" 
+                             id="controlPanelLocationHeading"
+                             role="tab" 
+                             data-toggle="collapse" 
+                             data-parent="#controlPanelAccordion" 
+                             href="#controlPanelLocationBody" 
+                             aria-expanded="false" 
+                             aria-controls="controlPanelLocationBody">                           
+                            <h4 class="panel-title">
+                                Location
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="controlPanelLocationHeading"
+                             id="controlPanelLocationBody" >
+                            <div class="panel-body">
+                                <div class="btn-group btn-block" role="group">
+                                    <button id="findMe" 
+                                            class="btn btn-default" 
+                                            type="button"
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Centers the globe on your location.">
+                                        Find Me
+                                    </button>
+                                    <button id="followMe" 
+                                            class="btn btn-default" 
+                                            type="button"
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Keeps the globe centered on your location.">
+                                        Follow Me
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--Globe -->
                     <div class="panel panel-default">
                         <div class="panel-heading collapsed" 

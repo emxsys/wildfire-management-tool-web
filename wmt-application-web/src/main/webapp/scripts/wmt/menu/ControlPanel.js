@@ -37,7 +37,11 @@
  * @param {WorldWind} WorldWind
  * @returns {ControlPanel}
  */
-define(['../../nasa/WorldWind'], function (WorldWind) {
+define([
+    '../util/Locator', 
+    '../util/Messenger', 
+    '../../nasa/WorldWind'], 
+function (Locator, Messenger, WorldWind) {
     "use strict";
     /**
      * @constructor
@@ -49,6 +53,7 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
 
         this.ctrl = controller;
         this.wwd = controller.wwd;
+        this.self = this;
 
         this.roundGlobe = this.wwd.globe;
 
@@ -61,6 +66,15 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         });
 
         // Add Control Panel > Globe event handlers
+        $("#findMe").on("click", function (event) {
+            var locator = new Locator(self.ctrl);
+            locator.locateCurrentPosition();
+        });
+        // Add Control Panel > Globe event handlers
+        $("#followMe").on("click", function (event) {
+            Messenger.infoGrowl("Follow Me not implemented yet.","<h2>Sorry</h2>");
+        });
+        // Add Control Panel > Globe event handlers
         $("#resetGlobe").on("click", function (event) {
             self.ctrl.resetGlobe(event);
         });
@@ -71,8 +85,8 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
             self.ctrl.resetHeadingAndTilt(event);
         });
 
-        // Initially, show the Globe tab
-        $('#controlPanelGlobeBody').collapse('show');
+        // Initially, show the Location tab
+        $('#controlPanelLocationBody').collapse('show');
 
     };
 

@@ -33,11 +33,13 @@
 /**
  * The Locator module is responsble for locating the host device's geographic location
  * and centering the globe's crosshairs on this location.
+ * @param {type} Log
+ * @param {type} Messenger
+ * @param {type} WorldWind
  * @module Locator
  * @author Bruce Schubert
  */
 define([
-    './LocationDialog',
     '../util/Log',
     '../util/Messenger',
     '../../nasa/WorldWind'],
@@ -48,7 +50,7 @@ define([
         "use strict";
         /**
          * @constructor
-         * @param {Navigator} navigator Object that will be updated by the Locator.
+         * @param {Controller} controller Object that will be updated by the Locator.
          * @returns {Locator}
          */
         var Locator = function (controller) {
