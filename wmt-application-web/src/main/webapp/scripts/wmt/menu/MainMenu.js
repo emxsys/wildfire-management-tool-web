@@ -111,9 +111,9 @@ define([
                     // Initially, at startup, activate the Control Panel
                     $('#controlPanelItem').trigger('click');
 
-                    // But on phones, we want the activated panel to be hidden
+                    // But on phones or small portrait mode tablets, we want the activated panel to be hidden
                     // so we click the Collapse button.
-                    if ($(document).width <= 768)                    {
+                    if ($(document).width < 768)                    {
                         $('#collapsePanelsItem').trigger('click');
                     }
 
