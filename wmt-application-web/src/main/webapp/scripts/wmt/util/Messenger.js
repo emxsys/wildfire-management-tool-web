@@ -45,7 +45,7 @@ define([],
         var Messenger = {
             initialize: function () {
                 $('#growl').puigrowl();
-                $('#notify').puinotify();
+//                $('#notify').puinotify();
             },
             /**
              * Displays popup message for a few seconds.
@@ -99,7 +99,7 @@ define([],
              * @param {type} html
              */
             notify: function (html) {
-                $('#notify').puinotify();
+//                $('#notify').puinotify();
 
                 $('#notify').puinotify({
                     easing: 'easeInOutCirc',

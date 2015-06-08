@@ -92,12 +92,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="icon-bar"></span>
                 </button>
                 <!--Collapse Sidebar-->
-                <button id="collapsePanelsItem" type="button" 
+<!--                <button id="collapsePanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" 
                         aria-label="Show Globe">
                     <span class="glyphicon glyphicon-chevron-up" 
                           aria-hidden="true"></span>
-                </button>
+                </button>-->
                 <!--Expand Sidebar-->
                 <button id="expandPanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" 
@@ -721,11 +721,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div id="bottom"></div>
                 <!--/DOM UI elements-->
             </div>
+            <!--Prime UI Notify Widget--> 
+            <div id="notify"></div>
         </div>
         <!--Prime UI Growl Widget--> 
         <div id="growl"></div>  
-        <!--Prime UI Notify Widget--> 
-        <div id="notify"></div>
         <!--Prime UI Location Dialog--> 
         <div id="location-dlg" title="Set Location" style="display: none;">
             <div class="latitude">
