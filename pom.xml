@@ -165,5 +165,6 @@
         <module>wmt-application-rest</module>
         <module>wmt-time</module>
         <module>wmt-jfree</module>
+        <module>wmt-weather-nws</module>
     </modules>
 </project>
