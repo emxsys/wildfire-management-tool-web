@@ -461,7 +461,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         Select... 
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu" 
+                                    <ul class="dropdown-menu pre-scrollable" 
                                         role="menu">
                                     </ul>
                                     <button id="createMarker" 

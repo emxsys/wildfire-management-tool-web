@@ -80,6 +80,8 @@ define([
             this.wwd = worldWindow;
             this.terrainProvider = new TerrainProvider(worldWindow);
 
+            this.markers = [];
+
             // Properties available for non-subscribers
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
             this.terrainAtMouse = new Terrain(0, 0, 0, 0, 0);
@@ -98,6 +100,63 @@ define([
             this.SUNLIGHT_DISTANCE_THRESHOLD = 10000; // meters
             this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
         };
+
+
+        Model.prototype.addMarker = function (uniqueName, category, type, lat, lon) {
+            // Add marker to managed list
+            var marker = {
+                name: uniqueName,
+                category: category,
+                type: type,
+                latitude: lat,
+                longitude: lon
+            };
+
+            this.markers.push(marker);
+
+            // TODO: Add marker to globe via notify
+            //this.fire(Wmt.EVENT_MARKER_ADDED, marker);
+
+        };
+
+        Model.prototype.removeMarker = function (uniqueName) {
+            var i,
+                max;
+
+            for (i = 0, max = this.markers.length; i < max; i++) {
+                if (this.markers[i].name === uniqueName) {
+                    this.markers.splice(i, 1);
+                    break;
+                }
+            }
+            // TODO: Remove renderable from globe via notify
+            //this.fire(Wmt.EVENT_MARKER_REMOVED, marker);
+
+        };
+
+
+        /**
+         * Saves the markers list to local storage.
+         */
+        Model.prototype.saveMarkers = function () {
+            var validMarkers = this.markers.filter(function (marker) {
+                return !marker.invalid;
+            }),
+                string = JSON.stringify(validMarkers);
+            localStorage.setItem('markers', string);
+        };
+
+        /**
+         * Restores the markers list from local storage.
+         */
+        Model.prototype.restoreMarkers = function () {
+            var string = localStorage.getItem('markers');
+            if (!string || string === 'null') {
+                return;
+            }
+            this.markers = JSON.parse(string);
+        };
+
 
         /**
          * 

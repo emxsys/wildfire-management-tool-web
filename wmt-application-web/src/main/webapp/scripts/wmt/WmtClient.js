@@ -90,6 +90,7 @@ define([
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.wwd);
+            this.controller.restoreSession();
 
             // Add keyboard controls to the globe: requires the Controller
             this.keyboardControls = new KeyboardControls(this.wwd, this.controller);
@@ -97,15 +98,12 @@ define([
             // Initialize the Navbar and Sidebars
             MainMenu.initialize(this.controller);
 
-            // Restore the globe (eye position) from the last session
-            Settings.restoreSessionSettings(this.controller);
-
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;
             window.onbeforeunload = function () {
-                Settings.saveSessionSettings(self.controller);
-                // Return null to close quietly
-                return null;
+                self.controller.saveSession();
+                // Return null to close quietly on Chrome FireFox.
+                return "Close WMT?";
             };
             Log.info("WmtClient", "constructor", "finished.");
         };

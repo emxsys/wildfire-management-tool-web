@@ -49,24 +49,54 @@ define([
             var self = this;
 
             this.ctrl = controller;
+            this.icsMarkers = {
+                markers: []
+            };
+            this.pushpins = {
+                pushpins: []
+            };
 
-            this.icsMarkerTypes = [
-                {key: "fireOrigin", name: "Fire Origin ", symbol: "Fire_Origin24.png", icon: "Fire_Origin.png"},
-                {key: "fireLocation", name: "Fire Location ", symbol: "Fire_Location24.png", icon: "Fire_Location.png"},
-                {key: "dropPoint", name: "Drop Point ", symbol: "Drop_Point24.png", icon: "Drop_Point.png"},
-                {key: "icp", name: "Incident Command Post ", symbol: "Incident_Command_Post24.png", icon: "Incident_Command_Post.png"}
+            // CAUTION: change the type value may cause existing markers in local storage to be lost
+            // ICS Category
+            this.icsTypes = [
+                {type: "aerial-hazard", name: "Aerial Hazard ", symbol: "Aerial_Hazard24.png"},
+                {type: "aerial-ignition", name: "Aerial Ignition24 ", symbol: "Aerial_Ignition24.png"},
+                {type: "airport", name: "Airport ", symbol: "Airport_124.png"},
+                {type: "archaeological-site", name: "Archaeological Site ", symbol: "Archaeological_Site_124.png"},
+                {type: "branch-break", name: "Branch Break ", symbol: "Branch_Break24.png"},
+                {type: "camp", name: "Camp ", symbol: "Camp24.png"},
+                {type: "division-break", name: "Division Break ", symbol: "Division_Break24.png"},
+                {type: "drop-point", name: "Drop Point ", symbol: "Drop_Point24.png"},
+                {type: "fire-location", name: "Fire Location ", symbol: "Fire_Location24.png"},
+                {type: "fire-origin", name: "Fire Origin ", symbol: "Fire_Origin24.png"},
+                {type: "fire-station", name: "Fire Station ", symbol: "Fire_Station24.png"},
+                {type: "first-aid", name: "First Aid ", symbol: "First_Aid_124.png"},
+                {type: "heat-sorce", name: "Heat Source ", symbol: "Heat_Source24.png"},
+                {type: "helibase", name: "Helibase ", symbol: "Helibase24.png"},
+                {type: "helispot", name: "Helispot ", symbol: "Helispot24.png"},
+                {type: "historical-site", name: "Historical Site ", symbol: "Historical_Site24.png"},
+                {type: "incident-base", name: "Incident Base ", symbol: "Incident_Base24.png"},
+                {type: "incident-command-post", name: "Incident Command Post ", symbol: "Incident_Command_Post24.png"},
+                {type: "medi-vac", name: "MediVac Site ", symbol: "MediVac_Site24.png"},
+                {type: "mobile-weather-unit", name: "Mobile Weather Unit ", symbol: "Mobile_Weather_Unit24.png"},
+                {type: "repeater", name: "Repeater ", symbol: "Repeater24.png"},
+                {type: "retardant-pickup", name: "Retardant Pickup ", symbol: "Retardant_Pickup24.png"},
+                {type: "safety-zone", name: "Safety Zone ", symbol: "Safety_Zone_024.png"},
+                {type: "staging-area", name: "Staging Area ", symbol: "Staging_Area24.png"},
+                {type: "water-source", name: "Water Source ", symbol: "Water_Source24.png"}
             ];
 
+            // Pusphin Category
             this.pushpinTypes = [
-                {key: "black", name: "Black ", symbol: "castshadow-black.png"},
-                {key: "red", name: "Red ", symbol: "castshadow-red.png"},
-                {key: "green", name: "Green ", symbol: "castshadow-green.png"},
-                {key: "blue", name: "Blue ", symbol: "castshadow-blue.png"},
-                {key: "teal", name: "Teal ", symbol: "castshadow-teal.png"},
-                {key: "orange", name: "Orange ", symbol: "castshadow-orange.png"},
-                {key: "purple", name: "Purple ", symbol: "castshadow-purple.png"},
-                {key: "brown", name: "Brown ", symbol: "castshadow-brown.png"},
-                {key: "white", name: "White ", symbol: "castshadow-white.png"}
+                {type: "black", name: "Black ", symbol: "castshadow-black.png"},
+                {type: "red", name: "Red ", symbol: "castshadow-red.png"},
+                {type: "green", name: "Green ", symbol: "castshadow-green.png"},
+                {type: "blue", name: "Blue ", symbol: "castshadow-blue.png"},
+                {type: "teal", name: "Teal ", symbol: "castshadow-teal.png"},
+                {type: "orange", name: "Orange ", symbol: "castshadow-orange.png"},
+                {type: "purple", name: "Purple ", symbol: "castshadow-purple.png"},
+                {type: "brown", name: "Brown ", symbol: "castshadow-brown.png"},
+                {type: "white", name: "White ", symbol: "castshadow-white.png"}
             ];
 
             // Get the RenderableLayer that we'll add the markers to.
@@ -77,12 +107,9 @@ define([
                         "Could not find a Layer named " + Wmt.MARKERS_LAYER_NAME));
             }
 
-            // Populate the Markers menu with existing marker items
             if (this.markerLayer) {
                 this.populateIcsMarkerDropdown();
                 this.populatePushpinDropdown();
-
-                this.synchronizeMarkerList();
 
                 // Add button event handlers
                 $("#createMarker").on("click", function (event) {
@@ -97,10 +124,62 @@ define([
                     self.onMarkerItemClick($(this));
                 });
 
+                this.loadMarkers();
+                this.synchronizeMarkerList();
             }
-
-            // Show the Create tab
+            // Initially show the Create tab
             $('#markersCreateBody').collapse('show');
+        };
+
+        MarkerMenu.prototype.loadMarkers = function () {
+            var markers = this.ctrl.model.markers,
+                marker,
+                types,
+                mkrIdx,
+                typIdx,
+                symbol;
+
+            if (!markers) {
+                return;
+            }
+            for (mkrIdx = 0; mkrIdx < markers.length; mkrIdx++) {
+                marker = markers[mkrIdx];
+                // Find the selected symbol
+                if (marker.category === "ics") {
+                    types = this.icsTypes;
+                }
+                else if (marker.category === "pushpin") {
+                    types = this.pushpinTypes;
+                }
+                else {
+                    Log.error("MarkerMenu", "loadMarkers", "unhandled marker category: " + marker.category);
+                    continue;
+                }
+                try {
+                    // Find a symbol for this marker type
+                    for (typIdx = 0; typIdx < types.length; typIdx++) {
+                        if (marker.type === types[typIdx].type) {
+                            symbol = types[typIdx].symbol;
+                            break;
+                        }
+                    }
+                    if (!symbol) {
+                        Log.error("MarkerMenu", "loadMarkers", "type not found: " + marker.type);
+                        marker.invalid = true;  // Flag this marker... so we don't save it
+                        continue;
+                    }
+                    this.createRenderable(
+                        marker.name,
+                        marker.category,
+                        marker.type,
+                        symbol,
+                        marker.latitude,
+                        marker.longitude);
+                }
+                catch (e) {
+                    Log.error("MarkerMenu", "loadMarkers", e.toString());
+                }
+            }
         };
 
 
@@ -120,52 +199,58 @@ define([
             for (i = 0, len = markers.length; i < len; i += 1) {
                 marker = markers[i];
                 if (marker.displayName === markerName) {
-                    if (action === 'goto') {
-                        position = marker.position;
-                        if (position) {
-                            this.ctrl.lookAtLatLon(position.latitude, position.longitude);
-                            return;
-                        }
-                        Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
-                    } else if (action === 'edit') {
-                        Messenger.infoGrowl('Rename is not implemented yet.');
-                        Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
-                        return;
-                    } else if (action === 'remove') {
-                        markers.splice(i, 1);
-                        this.synchronizeMarkerList();
-                        return;
-                    } else {
-                        Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
+                    switch (action) {
+                        case 'goto':
+                            position = marker.position;
+                            if (position) {
+                                this.ctrl.lookAtLatLon(position.latitude, position.longitude);
+                            } else {
+                                Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
+                            }
+                            break;
+                        case 'edit':
+                            Messenger.infoGrowl('Rename is not implemented yet.');
+                            Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
+                            break;
+                        case 'remove':
+                            this.ctrl.model.removeMarker(marker.displayName);
+                            markers.splice(i, 1);
+                            this.synchronizeMarkerList();
+                            break;
+                        default:
+                            Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
                     }
                     return;
                 }
             }
             Log.error("MarkerMenu", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
-            // TODO: Growl
         };
 
         /**
          * Adds the selected ICS marker to the globe.
          */
         MarkerMenu.prototype.createIcsMarker = function () {
-            var imgFolder = Wmt.IMAGE_PATH + "ics/",
-                markerName = $("#icsMarkerDropdown").find('.dropdown-toggle').text(),
-                symbol,
+            var markerName = $("#icsMarkerDropdown").find('.dropdown-toggle').text(),
+                lat = this.ctrl.model.viewpoint.target.latitude,
+                lon = this.ctrl.model.viewpoint.target.longitude,
+                type,
                 i;
 
-            // Find the selected symbol
-            for (i = 0; i < this.icsMarkerTypes.length; i += 1) {
-                if (markerName === this.icsMarkerTypes[i].name) {
-                    symbol = this.icsMarkerTypes[i].symbol;
+            // Find the selected type and symbol
+            for (i = 0; i < this.icsTypes.length; i += 1) {
+                if (markerName === this.icsTypes[i].name) {
+                    type = this.icsTypes[i].type;
+                    break;
                 }
             }
-            if (!symbol) {
+            if (!type) {
                 Messenger.warningGrowl("You must select an ICS marker first.", "Sorry!");
                 return;
             }
             // Add the marker to the globe.
-            this.createMarker(markerName, imgFolder + symbol);
+            this.createMarker(markerName, "ics", type, lat, lon);
+            // Update our marker list presentation 
+            this.synchronizeMarkerList();
         };
 
 
@@ -173,43 +258,79 @@ define([
          * Adds a pushpin to the globe.
          */
         MarkerMenu.prototype.createPushpin = function () {
-            var imgFolder = Wmt.WORLD_WIND_PATH + "images/pushpins/",
-                pushpinName = $("#pushpinDropdown").find('.dropdown-toggle').text(),
-                symbol,
+            var name = $("#pushpinDropdown").find('.dropdown-toggle').text(),
+                lat = this.ctrl.model.viewpoint.target.latitude,
+                lon = this.ctrl.model.viewpoint.target.longitude,
+                type,
                 i;
 
             // Find the selected symbol
             for (i = 0; i < this.pushpinTypes.length; i += 1) {
-                if (pushpinName === this.pushpinTypes[i].name) {
-                    symbol = this.pushpinTypes[i].symbol;
+                if (name === this.pushpinTypes[i].name) {
+                    type = this.pushpinTypes[i].type;
+                    break;
                 }
             }
             // 
-            if (!symbol) {
+            if (!type) {
                 Messenger.warningGrowl("You must select a pushpin first.", "Oops!");
                 return;
             }
             // Add the pushpin to the globe
-            this.createMarker(pushpinName, imgFolder + symbol);
+            this.createMarker(name, "pushpin", type, lat, lon);
+            // Update our marker list presentation 
+            this.synchronizeMarkerList();
         };
 
-        /**
-         * Adds the given image to the globe.
-         * @param {String} name Name given to the marker.
-         * @param {String} imageSource The image source (filepath).
-         */
-        MarkerMenu.prototype.createMarker = function (name, imageSource) {
-            var marker,
+
+        MarkerMenu.prototype.createMarker = function (name, category, type, latitude, longitude) {
+            var uniqueName = this.generateUniqueName(name),
+                symbol,
+                types,
+                i;
+
+            // Find the selected symbol
+            if (category === "ics") {
+                types = this.icsTypes;
+            }
+            else if (category === "pushpin") {
+                types = this.pushpinTypes;
+            }
+            for (i = 0; i < types.length; i += 1) {
+                if (name === types[i].name) {
+                    symbol = types[i].symbol;
+                    break;
+                }
+            }
+
+            this.ctrl.model.addMarker(uniqueName, category, type, latitude, longitude);
+            this.createRenderable(uniqueName, category, type, symbol, latitude, longitude);
+
+        };
+
+        MarkerMenu.prototype.createRenderable = function (name, category, type, symbol, latitude, longitude) {
+            var placemark,
                 attr = new WorldWind.PlacemarkAttributes(null),
                 hiliteAttr,
-                target = this.ctrl.getTargetTerrain(),
-                elevation = 0; // elevation is AGL;
+                imageSource;
 
             // Set up the common placemark attributes.
-            attr.imageScale = 1;
-            attr.imageOffset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 0.3,
-                WorldWind.OFFSET_FRACTION, 0.0);
+            switch (category) {
+                case 'ics':
+                    imageSource = Wmt.IMAGE_PATH + "ics/" + symbol;
+                    attr.imageScale = 1.5;
+                    attr.imageOffset = new WorldWind.Offset(
+                        WorldWind.OFFSET_FRACTION, 0.5,
+                        WorldWind.OFFSET_FRACTION, 0.0);
+                    break;
+                case 'pushpin':
+                    imageSource = Wmt.WORLD_WIND_PATH + "images/pushpins/" + symbol;
+                    attr.imageScale = 0.8;
+                    attr.imageOffset = new WorldWind.Offset(
+                        WorldWind.OFFSET_FRACTION, 0.3,
+                        WorldWind.OFFSET_FRACTION, 0.0);
+                    break;
+            }
             attr.imageColor = WorldWind.Color.WHITE;
             attr.labelAttributes.offset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
@@ -218,12 +339,11 @@ define([
             attr.drawLeaderLine = true;
             attr.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
-            marker = new WorldWind.Placemark(new WorldWind.Position(target.latitude, target.longitude, elevation));
-            marker.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+            placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 0));
+            placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+            placemark.displayName = name;
 
-            // Create a unique marker name.
-            marker.displayName = this.generateUniqueName(name);
-            //            
+
 //            marker.label = "Marker " + "\n"
 //                + "Lat " + latitude.toPrecision(4).toString() + "\n"
 //                + "Lon " + longitude.toPrecision(5).toString();
@@ -232,18 +352,21 @@ define([
             // Note that the attributes differ only by their image URL.
             attr = new WorldWind.PlacemarkAttributes(attr);
             attr.imageSource = imageSource;
-            marker.attributes = attr;
+            placemark.attributes = attr;
 
             // Create the highlight attributes for this placemark. Note that the normal attributes are specified as
             // the default highlight attributes so that all properties are identical except the image scale. You could
             // instead vary the color, image, or other property to control the highlight representation.
             hiliteAttr = new WorldWind.PlacemarkAttributes(attr);
-            hiliteAttr.imageScale = 1.2;
-            marker.highlightAttributes = hiliteAttr;
+            hiliteAttr.imageScale = attr.imageScale * 1.2;
+            placemark.highlightAttributes = hiliteAttr;
 
-            this.markerLayer.addRenderable(marker);
+            // Inject OUR own marker properties 
+            placemark.markerCategory = category;
+            placemark.markerType = type;
 
-            this.synchronizeMarkerList();
+            // Render the marker on the globe
+            this.markerLayer.addRenderable(placemark);
         };
 
 
@@ -253,7 +376,7 @@ define([
          * @returns {String}
          */
         MarkerMenu.prototype.generateUniqueName = function (name) {
-            var markers = this.markerLayer.renderables,
+            var markers = this.ctrl.model.markers,
                 uniqueName = name.trim(),
                 isUnique,
                 suffixes,
@@ -267,7 +390,7 @@ define([
                 isUnique = true;
 
                 for (i = 0, len = markers.length; i < len; i += 1) {
-                    if (markers[i].displayName === uniqueName) {
+                    if (markers[i].name === uniqueName) {
 
                         isUnique = false;
 
@@ -295,7 +418,7 @@ define([
          * Populate the ICS markers dropdown.
          */
         MarkerMenu.prototype.populateIcsMarkerDropdown = function () {
-            this.populateDropdown('#icsMarkerDropdown', this.icsMarkerTypes, Wmt.IMAGE_PATH + "ics/");
+            this.populateDropdown('#icsMarkerDropdown', this.icsTypes, Wmt.IMAGE_PATH + "ics/");
         };
 
 
@@ -322,7 +445,7 @@ define([
 
             // Populate the dropdown contents with the markers
             for (i = 0; i < markerArray.length; i += 1) {
-                markerItem = $('<li><a >' +
+                markerItem = $('<li><a markertype="' + markerArray[i].type + '">' +
                     '<span><img class="icon" src="' + imagePath + markerArray[i].symbol + '" style="padding-right: 5px;"></span>' +
                     markerArray[i].name +
                     '</a></li>');

@@ -37,6 +37,7 @@ define([
     '../util/Log',
     '../model/Model',
     '../view/ReticuleView',
+    '../util/Settings',
     '../view/SolarView',
     './TimeManager',
     './WeatherManager',
@@ -49,6 +50,7 @@ define([
         Log,
         Model,
         ReticuleView,
+        Settings,
         SolarView,
         TimeManager,
         WeatherManager,
@@ -125,7 +127,7 @@ define([
                 eyeAltAgl = Math.max(eyeAltMsl - eyePosGrdElev, 100),
                 tgtPosElev = this.model.terrainProvider.elevationAtLatLon(latitude, longitude),
                 tgtEyeAltMsl = Math.max(tgtPosElev + eyeAltAgl, 100);
-                            
+
             // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
             // This will establish the crosshairs on the target.
             this.wwd.navigator.range = eyeAltMsl;
@@ -234,6 +236,25 @@ define([
 
             this.lookAtLatLon(lat, lon);
         };
+
+        Controller.prototype.restoreSession = function () {
+            this.model.restoreMarkers();
+            this.restoreSessionView();
+        };
+
+        Controller.prototype.restoreSessionView = function () {
+            Settings.restoreSessionSettings(this);
+        };
+
+        Controller.prototype.saveSession = function () {
+            this.saveSessionView();
+            this.model.saveMarkers();
+        };
+
+        Controller.prototype.saveSessionView = function () {
+            Settings.saveSessionSettings(this);
+        };
+
 
 
         /**
