@@ -56,9 +56,8 @@ define([
     './globe/KeyboardControls',
     './util/Log',
     './menu/MainMenu',
-    './globe/PickController',
     './globe/ReticuleLayer',
-    './util/Settings',
+    './globe/SelectController',
     './globe/SkyBackgroundLayer',
     './Wmt',
     '../nasa/WorldWind'],
@@ -69,9 +68,8 @@ define([
         KeyboardControls,
         Log,
         MainMenu,
-        PickController,
         ReticuleLayer,
-        Settings,
+        SelectController,
         SkyBackgroundLayer,
         Wmt,
         WorldWind) {
@@ -114,10 +112,15 @@ define([
         WmtClient.prototype.initializeGlobe = function () {
             // Create the World Window with a custom navigator object 
             this.wwd = new WorldWind.WorldWindow("canvasOne");
-            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
 
-            // Create the controller that handles picking objects in the globe
-            this.pickController = new PickController(this.wwd);
+            // Create the controller that mouseover highlighting objects in the globe;
+            // add this controller as a new WorldWindow property .
+            this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
+            this.wwd.selectController = new SelectController(this.wwd);
+
+            // Add the navigator after the select controller so the select controller
+            // can consume the mousemove event and preempt the pan/drag operation.
+            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
 
             var self = this,
                 layer,

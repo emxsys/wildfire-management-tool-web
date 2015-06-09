@@ -38,24 +38,33 @@ define([
         /**
          * @constructor
          * @param {WorldWindow} worldWindow
-         * @returns {PickController}
+         * @returns {SelectController}
          */
-        var PickController = function (worldWindow) {
+        var SelectController = function (worldWindow) {
             this.wwd = worldWindow;
 
-            // The list of items under the mouse cursor
-            this.highlightedItems = [];
-
+            this.isDragging = false;
+            // The list of selected items under the mouse cursor
+            this.selectedItems = [];
             // The top item in the pick list
             this.pickedItem = null;
 
             var self = this,
                 tapRecognizer;
 
-            // Listen for mouse moves and tap gestutes
+            // Listen for mouse moves and tap gestutes to move an item
             this.wwd.addEventListener("mousemove", function (event) {
                 self.handlePick(event);
             });
+            // Listen for mouse clicks to select an item
+            this.wwd.addEventListener("mousedown", function (event) {
+                self.handlePick(event);
+            });
+            // Listen for mouse clicks to select an item
+            this.wwd.addEventListener("mouseup", function (event) {
+                self.handlePick(event);
+            });
+
             // Listen for tap gestures on mobile devices
             tapRecognizer = new WorldWind.TapRecognizer(this.wwd);
             tapRecognizer.addGestureListener(function (event) {
@@ -64,69 +73,62 @@ define([
 
         };
 
-        /**
-         * The HandlePick function selects and highlights items on the globe under the mouse 
-         * or touch point, aka the pick point.  The code was copied from Web World Wind examples:
-         * 
-         *     PlacemarksAndPicking.js 3121 2015-05-28 02:42:13Z tgaskins
-         *     
-         *     Copyright (C) 2014 United States Government as represented by the Administrator of the
-         *     National Aeronautics and Space Administration. All Rights Reserved.
-         *
-         * @param {Event or a TapRecognizer} o The input argument is either an Event or a TapRecognizer.
-         */
-        PickController.prototype.handlePick = function (o) {
+        SelectController.prototype.handlePick = function (o) {
             // The input argument is either an Event or a TapRecognizer. Both have the same properties for determining
             // the mouse or tap location.
-            var x = o.clientX,
+            var type = o.type,
+                x = o.clientX,
                 y = o.clientY,
                 redrawRequired,
                 pickList,
-                h,
-                p;
+                terrainObject;
 
-            redrawRequired = this.highlightedItems.length > 0;
-
-            // De-highlight any previously highlighted placemarks.
-            for (h = 0; h < this.highlightedItems.length; h += 1) {
-                this.highlightedItems[h].highlighted = false;
-            }
-            this.highlightedItems = [];
+            redrawRequired = false;
 
             // Perform the pick. Must first convert from window coordinates to canvas coordinates, which are
             // relative to the upper left corner of the canvas rather than the upper left corner of the page.
             pickList = this.wwd.pick(this.wwd.canvasCoordinates(x, y));
-            if (pickList.objects.length > 0) {
-                this.pickedItem = pickList.objects[0];
-                redrawRequired = true;
-            } else {
-                this.pickedItem = null;
-            }
 
-            // Highlight the items picked by simply setting their highlight flag to true.
-            if (pickList.objects.length > 0) {
-                for (p = 0; p < pickList.objects.length; p += 1) {
-                    pickList.objects[p].userObject.highlighted = true;
-
-                    // Keep track of highlighted items in order to de-highlight them later.
-                    this.highlightedItems.push(pickList.objects[p].userObject);
-
-                    // Detect whether the placemark's label was picked. If so, the "labelPicked" property is true.
-                    // If instead the user picked the placemark's image, the "labelPicked" property is false.
-                    // Applications might use this information to determine whether the user wants to edit the label
-                    // or is merely picking the placemark as a whole.
-                    if (pickList.objects[p].labelPicked) {
-                        console.log("Label picked");
+            switch (type) {
+                case 'mousedown':
+                    pickList = this.wwd.pick(this.wwd.canvasCoordinates(x, y));
+                    if (pickList.hasNonTerrainObjects()) {
+                        this.pickedItem = pickList.topPickedObject();
+                        this.isDragging = true;
                     }
-                }
+                    break;
+                case 'mousemove':
+                    if (this.pickedItem) {
+                        // Move the object if the picked object has a position
+                        if (this.pickedItem.userObject.position) {
+                            terrainObject = pickList.terrainObject();
+                            if (terrainObject) {
+                                this.pickedItem.userObject.position =
+                                    new WorldWind.Position(
+                                        terrainObject.position.latitude,
+                                        terrainObject.position.longitude,
+                                        this.pickedItem.userObject.position.elevation);
+                                redrawRequired = true;
+                            }
+                        }
+                    }
+                    break;
+                case 'mouseup':
+                    this.pickedItem = null;
+                    this.selectedItems = [];
+                    this.isDragging = false;
+                    break;
             }
-
+            // Prevent pan/drag operations on the globe when we're dragging an object.
+            if (this.isDragging) {
+                o.stopImmediatePropagation();
+            }
             // Update the window if we changed anything.
             if (redrawRequired) {
                 this.wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
             }
         };
 
-        return PickController;
+        return SelectController;
     }
 );
