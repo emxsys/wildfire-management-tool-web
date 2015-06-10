@@ -61,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <script src="./thirdparty/pace/pace.min.js"></script>
         <script src="./thirdparty/jquery-2.1.4.min.js" type="text/javascript"></script>
         <script src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="./thirdparty/jquery.ui.touch-punch.js"></script>
         <script src="./thirdparty/primeui-1.1/production/primeui-1.1-min.js" type="text/javascript"></script>
         <script src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js" type="text/javascript"></script>
 
@@ -660,7 +661,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <h1>Your browser does not support HTML5 Canvas.</h1>
                     </canvas>
                     <!--DOM UI elements go here!-->                
-                    <!--<div class='container-full'>-->
+                    <!--<div class='container-full'>-->  
+                    <!--DateTime slider-->
+                    <div id="timeControlSlider" class="col-xs-7 col-sm-7"></div>
                     <!--Coordinates Overlay-->
                     <div>
                         <div id="coordinateOverlay" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
