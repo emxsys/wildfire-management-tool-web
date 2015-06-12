@@ -38,7 +38,12 @@ import com.emxsys.visad.TemporalDomain;
 import com.emxsys.visad.Times;
 import java.rmi.RemoteException;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.openide.util.Exceptions;
 import visad.Data;
 import visad.DateTime;
@@ -52,6 +57,7 @@ import visad.RealTupleType;
 import visad.RealType;
 import visad.SampledSet;
 import visad.VisADException;
+import visad.georef.LatLonPoint;
 import visad.georef.LatLonTuple;
 import visad.util.DataUtility;
 
@@ -67,6 +73,7 @@ import visad.util.DataUtility;
  *
  * @author Bruce Schubert
  */
+@XmlRootElement(name = "weatherModel")
 public class WeatherModel extends SpatioTemporalModel {
 
     private static final Logger logger = Logger.getLogger(WeatherModel.class.getName());
@@ -127,6 +134,15 @@ public class WeatherModel extends SpatioTemporalModel {
     }
 
     /**
+     * Default constructor; DO NOT CALL! Exists only to satisfy JAXB requirements.
+     * @throws UnsupportedOperationException
+     */
+    public WeatherModel() {
+        super();
+        throw new UnsupportedOperationException("WeatherModel default constructor is not implemented.");
+    }
+
+    /**
      * Gets the Weather at the specific time and place
      * @param time Time at which to sample the weather.
      * @param coord Place at which to sample the weather.
@@ -135,6 +151,68 @@ public class WeatherModel extends SpatioTemporalModel {
     public BasicWeather getWeather(ZonedDateTime time, Coord2D coord) {
         RealTuple tuple = super.getTuple(time, coord);
         return tuple == null ? BasicWeather.INVALID_WEATHER : BasicWeather.fromRealTuple(tuple);
+    }
+//    @XmlElement(name = "range")
+//    @XmlJavaTypeAdapter(RealTupleTypeXmlAdapter.class)
+
+    RealTupleType getWeatherRangeTupleType() throws VisADException, RemoteException {
+        // We know the FieldImpl's range is a FlatField
+        FunctionType temporalFunc = (FunctionType) DataUtility.getRangeType(getField());
+        return temporalFunc.getFlatRange();
+    }
+
+    @XmlElement(name = "spatioTemporalWeather")
+    @XmlJavaTypeAdapter(SpatioTemporalWeatherMapXmlAdapter.class)
+    public SpatioTemporalWeatherMap getSpatioTemporalWeather() {
+        return new SpatioTemporalWeatherMap(getField());
+    }
+
+    public List<LatLonPoint> getCoordinates() {
+        try {
+            SampledSet set = getSpatialDomainSet();
+            int length = set.getLength();
+            double[][] values = set.getDoubles();
+            List<LatLonPoint> spatialDomain = new ArrayList<>(length);
+            for (int i = 0; i < length; i++) {
+                spatialDomain.add(new LatLonTuple(values[0][i], values[1][i]));
+            }
+            return spatialDomain;
+        } catch (VisADException | RemoteException ex) {
+            Exceptions.printStackTrace(ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public SampledSet getSpatialDomainSet() {
+        try {
+            MathType domainType = DataUtility.getDomainType(getField());
+            boolean isSpatialThenTemporal = domainType.equals(RealTupleType.LatitudeLongitudeTuple);
+            if (isSpatialThenTemporal) {
+                return (SampledSet) getField().getDomainSet();
+            } else {
+                FlatField spatialField = (FlatField) getField().getSample(0);
+                return (SampledSet) spatialField.getDomainSet();
+            }
+        } catch (VisADException | RemoteException ex) {
+            Exceptions.printStackTrace(ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public List<DateTime> getTimes() {
+        try {
+            Gridded1DDoubleSet set = getTemporalDomainSet();
+            double[][] values = set.getDoubles();
+            int length = set.getLength();
+            List<DateTime> timeDomain = new ArrayList<>(length);
+            for (int i = 0; i < length; i++) {
+                timeDomain.add(Times.fromDouble(values[0][i]));
+            }
+            return timeDomain;
+        } catch (VisADException ex) {
+            Exceptions.printStackTrace(ex);
+            throw new RuntimeException(ex);
+        }
     }
 
     public Gridded1DDoubleSet getTemporalDomainSet() {
@@ -155,7 +233,7 @@ public class WeatherModel extends SpatioTemporalModel {
 
     /**
      *
-     * @return An ZonedDateTime array containing [first, last].
+     * @return An DateTime array containing [first, last].
      */
     public DateTime[] getTemporalBounds() {
         Gridded1DDoubleSet set = getTemporalDomainSet();
@@ -236,15 +314,13 @@ public class WeatherModel extends SpatioTemporalModel {
             MathType domainType = DataUtility.getDomainType(field);
             boolean isSpatialThenTemporal = domainType.equals(RealTupleType.LatitudeLongitudeTuple);
             if (isSpatialThenTemporal) {
-                
+
                 // Handle model function type: (Lat,Lon) -> (Time -> (Weather)) ...
-                
                 // ... Simply get the (Time -> (Weather)) FlatField
                 return (FlatField) field.evaluate(latLon, Data.WEIGHTED_AVERAGE, Data.DEPENDENT);
             } else {
-                
-                // Handle model function type: Time -> ((Lat,Lon) -> (Weather))...
 
+                // Handle model function type: Time -> ((Lat,Lon) -> (Weather))...
                 // First, merge the spatial field for each time into a new range sample-array (wxSamples)
                 int numTimes = field.getLength();
                 RealTupleType wxTupleType = getWeatherRangeTupleType();
@@ -269,12 +345,6 @@ public class WeatherModel extends SpatioTemporalModel {
         } catch (VisADException | RemoteException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    RealTupleType getWeatherRangeTupleType() throws VisADException, RemoteException {
-        // We know the FieldImpl's range is a FlatField
-        FunctionType temporalFunc = (FunctionType) DataUtility.getRangeType(getField());
-        return temporalFunc.getFlatRange();
     }
 
     /**
@@ -341,7 +411,7 @@ public class WeatherModel extends SpatioTemporalModel {
                 for (int i = 0; i < numLatLons; i++) {
                     sb.append(DataUtility.getSample(latLonSet, i));
                     sb.append("\n");
-                    
+
                     FlatField temporalField = (FlatField) field.getSample(i);
                     double[][] samples = temporalField.getDomainSet().getDoubles(false);
                     for (int j = 0; j < samples[0].length; j++) {
