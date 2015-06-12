@@ -32,32 +32,23 @@ package com.emxsys.weather.api;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * The SpatioTemporalWeatherMapXmlAdapter marshals a WeatherModel object to XML via the JAXB
- * XmlAdapter and the XmlElements defined in WeatherModelXmlType. The WeatherModelXmlType class maps
- * the .... to XmlElements.
+ * The SpatioTemporalWeatherXmlAdapter marshals a SpatioTemporalWeatherM object to XML via the JAXB
+ * XmlAdapter and the XmlElements defined in SpatioTemporalWeatherXmlType.
  *
- * To use, JavaBean properties that return a WeatherModel should be annotated with
- * <code>@XmlJavaTypeAdapter(WeatherModelXmlAdapter.class)</code> Example:
- * <pre> @code{
- * @XmlElement
- * @XmlJavaTypeAdapter(WeatherModelAdaptor.class) public WeatherModel getDead1HrFuelLoad() { return
- * this.dead1HrFuelLoad; }
- * </pre>
- *
- * @see WeatherModelXmlType
+ * @see SpatioTemporalWeatherXmlType
  *
  * @author Bruce Schubert
  */
-public class TemporalWeatherMapXmlAdapter extends XmlAdapter<TemporalWeatherMapXmlType, TemporalWeatherMap> {
+public class SpatioTemporalWeatherXmlAdapter extends XmlAdapter<SpatioTemporalWeatherXmlType, SpatioTemporalWeather> {
 
     @Override
-    public TemporalWeatherMap unmarshal(TemporalWeatherMapXmlType ignored) throws Exception {
-        throw new UnsupportedOperationException("unmarshal(WeatherModelElement) not implemented.");
+    public SpatioTemporalWeather unmarshal(SpatioTemporalWeatherXmlType ignored) throws Exception {
+        throw new UnsupportedOperationException("unmarshal(SpatioTemporalWeatherXmlType) not implemented.");
     }
 
     @Override
-    public TemporalWeatherMapXmlType marshal(TemporalWeatherMap map) throws Exception {
-        return new TemporalWeatherMapXmlType(map);
+    public SpatioTemporalWeatherXmlType marshal(SpatioTemporalWeather map) throws Exception {
+        return new SpatioTemporalWeatherXmlType(map);
     }
 
 }

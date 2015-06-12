@@ -152,19 +152,16 @@ public class WeatherModel extends SpatioTemporalModel {
         RealTuple tuple = super.getTuple(time, coord);
         return tuple == null ? BasicWeather.INVALID_WEATHER : BasicWeather.fromRealTuple(tuple);
     }
-//    @XmlElement(name = "range")
-//    @XmlJavaTypeAdapter(RealTupleTypeXmlAdapter.class)
 
-    RealTupleType getWeatherRangeTupleType() throws VisADException, RemoteException {
-        // We know the FieldImpl's range is a FlatField
-        FunctionType temporalFunc = (FunctionType) DataUtility.getRangeType(getField());
-        return temporalFunc.getFlatRange();
-    }
-
+    /**
+     * Gets a Java Map representation of this WeatherModel that is compatible with JAXB marshaling
+     * to XML and JSON.
+     * @return SpatioTemporalWeather
+     */
     @XmlElement(name = "spatioTemporalWeather")
-    @XmlJavaTypeAdapter(SpatioTemporalWeatherMapXmlAdapter.class)
-    public SpatioTemporalWeatherMap getSpatioTemporalWeather() {
-        return new SpatioTemporalWeatherMap(getField());
+    @XmlJavaTypeAdapter(SpatioTemporalWeatherXmlAdapter.class)
+    public SpatioTemporalWeather getSpatioTemporalWeather() {
+        return new SpatioTemporalWeather(this);
     }
 
     public List<LatLonPoint> getCoordinates() {
@@ -388,6 +385,18 @@ public class WeatherModel extends SpatioTemporalModel {
         } catch (VisADException | RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Gets the RealTupleType representing the range of this WeatherModel. Internal use.
+     * @return The inner range of the spatiotemporal model.
+     * @throws VisADException
+     * @throws RemoteException
+     */
+    RealTupleType getWeatherRangeTupleType() throws VisADException, RemoteException {
+        // We know the FieldImpl's range is a FlatField
+        FunctionType temporalFunc = (FunctionType) DataUtility.getRangeType(getField());
+        return temporalFunc.getFlatRange();
     }
 
     @Override

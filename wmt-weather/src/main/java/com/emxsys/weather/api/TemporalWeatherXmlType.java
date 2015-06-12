@@ -29,71 +29,67 @@
  */
 package com.emxsys.weather.api;
 
-import com.emxsys.gis.api.GeoCoord2D;
-import com.emxsys.visad.RealTupleTypeXmlAdapter;
+import com.emxsys.visad.Times;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import visad.RealTupleType;
-import visad.georef.LatLonPoint;
+import visad.DateTime;
+import visad.RealTuple;
 
 /**
- * The WeatherModelXmlType class maps a WeatherModel to JAXB XmlElements for use by the
- * WeatherModelXmlAdaptor, which marshals/unmarshals a WeatherModel object to/from XML.
- *
- * @see RealXmlAdaptor
+ * The TemporalWeatherXmlType class maps a TemporalWeather object to JAXB XmlElements for use by the
+ * TemporalWeatherXmlAdaptor, which marshals/unmarshals a TemporalWeather object to/from XML.
+ * 
  * @author Bruce Schubert
  */
-public class SpatioTemporalWeatherMapXmlType {
-
-    @XmlElement
-    @XmlJavaTypeAdapter(RealTupleTypeXmlAdapter.class)
-    RealTupleType range;
-
-    @XmlElement(name = "spatialDomain")
-    SpatioTemporalWeather[] tuples;
+public class TemporalWeatherXmlType {
 
     /**
-     * Mandatory default constructor.
+     * Collection of XML compatible temporal weather entries 
      */
-    public SpatioTemporalWeatherMapXmlType() {
+    @XmlElement(name = "temporalWeather")
+    TemporalEntry[] entries;
+
+    /**
+     * Mandatory default constructor. Do not use.
+     */
+    public TemporalWeatherXmlType() {
         throw new UnsupportedOperationException("Default ctor not supported.");
     }
 
-    public SpatioTemporalWeatherMapXmlType(SpatioTemporalWeatherMap map) {
-        this.range = map.getRange();
-        Set<Map.Entry<GeoCoord2D, TemporalWeatherMap>> set = map.entrySet();
-        tuples = new SpatioTemporalWeather[set.size()];
+    /**
+     * Initializes this XML adaptor from the incoming TemporalWeather object.
+     * @param temporalMap 
+     */
+    public TemporalWeatherXmlType(TemporalWeather temporalMap) {
+
+        Set<Map.Entry<DateTime, RealTuple>> set = temporalMap.entrySet();
+        entries = new TemporalEntry[set.size()];
         int i = 0;
-        for (Map.Entry<GeoCoord2D, TemporalWeatherMap> entry : set) {
-            LatLonPoint latLon = entry.getKey();
-            tuples[i] = new SpatioTemporalWeather(
-                    latLon.getLatitude().getValue(),
-                    latLon.getLongitude().getValue(),
-                    entry.getValue());
-            i++;
+        for (Map.Entry<DateTime, RealTuple> entry : set) {
+            entries[i++] = new TemporalEntry(entry.getKey(), entry.getValue());
         }
     }
 
-    public static class SpatioTemporalWeather {
+    /**
+     * XML Representation of the TemporalWeather object.
+     */
+    private static class TemporalEntry {
 
         @XmlAttribute
-        public double latitude;
-        @XmlAttribute
-        public double longitude;
-        @XmlElement(name = "temporalDomain")
-        @XmlJavaTypeAdapter(TemporalWeatherMapXmlAdapter.class)
-        public TemporalWeatherMap temporalWeather;
+        public String time;
+        @XmlElement
+        public double[] values;
 
-        public SpatioTemporalWeather() {
+        TemporalEntry() {
+            throw new UnsupportedOperationException("TemporalWeather default ctor not supported.");
         }
 
-        public SpatioTemporalWeather(double latitude, double longitude, TemporalWeatherMap temporalWeather) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.temporalWeather = temporalWeather;
+        TemporalEntry(DateTime time, RealTuple tuple) {
+            this.time = Times.toZonedDateTime(time).format(DateTimeFormatter.ISO_DATE_TIME);
+            this.values = tuple.getValues();
         }
     }
 

@@ -44,20 +44,32 @@ import visad.VisADException;
 import visad.util.DataUtility;
 
 /**
+ * The SpatioTemporalWeather class is a Java Map representation of a WeatherModel. This
+ * representation is used primarily for JAXB marshaling to XML and JSON.
  *
+ * @see SpatioTemporalWeatherXmlAdapter
+ * @see SpatioTemporalWeatherXmlType
+ * 
  * @author Bruce Schubert
- * @version $Id$
  */
-public class SpatioTemporalWeatherMap extends LinkedHashMap<GeoCoord2D, TemporalWeatherMap> {
+public class SpatioTemporalWeather extends LinkedHashMap<GeoCoord2D, TemporalWeather> {
 
     private RealTupleType range;
 
-    public SpatioTemporalWeatherMap() {
+    /**
+     * Mandatory default constructor needed by JAXB.  Do not use.
+     */
+    public SpatioTemporalWeather() {
+        throw new UnsupportedOperationException("Default ctor not supported.");
     }
 
-    public SpatioTemporalWeatherMap(FieldImpl field) {
+    /**
+     * Constructs a SpatioTemporalWeather object from a WeatherModel's field property.
+     * @param model WeatherModel suppling the FieldImpl object.
+     */
+    public SpatioTemporalWeather(WeatherModel model) {
         try {
-
+            FieldImpl field = model.getField();
             MathType domainType = DataUtility.getDomainType(field);
             boolean isSpatialThenTemporal = domainType.equals(RealTupleType.LatitudeLongitudeTuple);
             if (isSpatialThenTemporal) {
@@ -74,7 +86,7 @@ public class SpatioTemporalWeatherMap extends LinkedHashMap<GeoCoord2D, Temporal
                     double[] coords = latLon.getValues();
                     GeoCoord2D coord = new GeoCoord2D(coords[0], coords[1]);
                     FlatField temporalField = (FlatField) field.getSample(i);
-                    TemporalWeatherMap weather = new TemporalWeatherMap(temporalField);
+                    TemporalWeather weather = new TemporalWeather(temporalField);
                     this.put(coord, weather);
                 }
             } else {
@@ -89,6 +101,5 @@ public class SpatioTemporalWeatherMap extends LinkedHashMap<GeoCoord2D, Temporal
     public RealTupleType getRange() {
         return range;
     }
-    
 
 }

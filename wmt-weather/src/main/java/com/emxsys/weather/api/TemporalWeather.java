@@ -30,56 +30,41 @@
 package com.emxsys.weather.api;
 
 import com.emxsys.visad.Times;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.Set;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import java.rmi.RemoteException;
+import java.util.LinkedHashMap;
+import org.openide.util.Exceptions;
 import visad.DateTime;
+import visad.FlatField;
 import visad.RealTuple;
+import visad.VisADException;
 
 /**
+ * /**
+ * The TemporalWeather class is a Java Map representation of a temporal weather FlatField. This
+ * representation is used primarily for JAXB marshaling to XML and JSON.
+ *
+ * @see SpatioTemporalWeather
+ * @see TemporalWeatherXmlAdapter
+ * @see TemporalWeatherXmlType
  *
  * @author Bruce Schubert
  */
-public class TemporalWeatherMapXmlType {
+public class TemporalWeather extends LinkedHashMap<DateTime, RealTuple> {
 
-    @XmlElement(name = "temporalWeather")
-    TemporalWeather[] tuples;
-
-    /**
-     * Mandatory default constructor.
-     */
-    public TemporalWeatherMapXmlType() {
-        this(null);
+    public TemporalWeather() {
     }
 
-    public TemporalWeatherMapXmlType(TemporalWeatherMap map) {
-
-        Set<Map.Entry<DateTime, RealTuple>> set = map.entrySet();
-        tuples = new TemporalWeather[set.size()];
-        int i = 0;
-        for (Map.Entry<DateTime, RealTuple> entry : set) {
-            DateTime time = entry.getKey();
-            tuples[i++] = new TemporalWeather(entry.getKey(), entry.getValue());
+    public TemporalWeather(FlatField temporalField) {
+        try {
+            double[][] timeValues = temporalField.getDomainSet().getDoubles(false);
+            for (int j = 0; j < timeValues[0].length; j++) {
+                DateTime datetime = Times.fromDouble(timeValues[0][j]);
+                RealTuple wxTuple = (RealTuple) temporalField.getSample(j);
+                this.put(datetime, wxTuple);
+            }
+        } catch (VisADException | RemoteException ex) {
+            Exceptions.printStackTrace(ex);
+            throw new RuntimeException(ex);
         }
     }
-
-    public static class TemporalWeather {
-
-        @XmlAttribute
-        public String time;
-        @XmlElement
-        public double[] values;
-
-        public TemporalWeather() {
-            throw new UnsupportedOperationException("TemporalWeather default ctor not supported.");
-        }
-
-        public TemporalWeather(DateTime time, RealTuple tuple) {
-            this.time = Times.toZonedDateTime(time).format(DateTimeFormatter.ISO_DATE_TIME);
-            this.values = tuple.getValues();
-        }
-    }
-
 }

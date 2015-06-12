@@ -29,36 +29,26 @@
  */
 package com.emxsys.weather.api;
 
-import com.emxsys.visad.Times;
-import java.rmi.RemoteException;
-import java.util.LinkedHashMap;
-import org.openide.util.Exceptions;
-import visad.DateTime;
-import visad.FlatField;
-import visad.RealTuple;
-import visad.VisADException;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
+ * The TemporalWeatherXmlAdapter marshals a TemporalWeather object to XML via the JAXB XmlAdapter
+ * and the XmlElements defined in TemporalWeatherXmlType.
+ *
+ * @see TemporalWeatherXmlType
  *
  * @author Bruce Schubert
- * @version $Id$
  */
-public class TemporalWeatherMap extends LinkedHashMap<DateTime, RealTuple> {
+public class TemporalWeatherXmlAdapter extends XmlAdapter<TemporalWeatherXmlType, TemporalWeather> {
 
-    public TemporalWeatherMap() {
+    @Override
+    public TemporalWeather unmarshal(TemporalWeatherXmlType ignored) throws Exception {
+        throw new UnsupportedOperationException("unmarshal(TemporalWeatherXmlType) not implemented.");
     }
 
-    public TemporalWeatherMap(FlatField temporalField) {
-        try {
-            double[][] timeValues = temporalField.getDomainSet().getDoubles(false);            
-            for (int j = 0; j < timeValues[0].length; j++) {
-                DateTime datetime = Times.fromDouble(timeValues[0][j]);
-                RealTuple wxTuple = (RealTuple) temporalField.getSample(j);
-                this.put(datetime, wxTuple);
-            }
-        } catch (VisADException | RemoteException ex) {
-            Exceptions.printStackTrace(ex);
-            throw new RuntimeException(ex);
-        }
+    @Override
+    public TemporalWeatherXmlType marshal(TemporalWeather map) throws Exception {
+        return new TemporalWeatherXmlType(map);
     }
+
 }
