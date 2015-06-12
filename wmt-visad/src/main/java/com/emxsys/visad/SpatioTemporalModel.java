@@ -106,6 +106,16 @@ public class SpatioTemporalModel {
 
     private final FieldImpl field;
 
+    /**
+     * Default constructor; DO NOT CALL! Exists only to satisfy JAXB requirements.
+     * @throws UnsupportedOperationException
+     */
+    public SpatioTemporalModel() {
+        this.field = null;
+        throw new UnsupportedOperationException("SpatioTemporal default constructor not implemented.");
+    }
+
+    
     public SpatioTemporalModel(FieldImpl field) {
         validateField(field);
         this.field = field;

@@ -29,37 +29,63 @@
  */
 package com.emxsys.visad;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import visad.Real;
 import visad.RealType;
 
 /**
- * The RealXmlAdapter marshals a VisAD Real to XML via the JAXB XmlAdapter and the XmlElements
- * defined in RealXmlType. The RealXmlType class maps the Real type, value and unit properties to
- * XmlElements.
+ * The RealXmlType class maps a Real to JAXB XmlElements for use by the RealXmlAdaptor, which
+ marshals/unmarshals a VisAD Real object to/from XML.
  *
- * To use, JavaBean properties that return a Real should be annotated with
- * <code>@XmlJavaTypeAdapter(RealXmlAdapter.class)</code> Example:
- * <pre> @code{
- * @XmlElement
- * @XmlJavaTypeAdapter(RealXmlAdaptor.class) public Real getDead1HrFuelLoad() { return
- * this.dead1HrFuelLoad; }
- * </pre>
- *
- * @see RealXmlType
- *
+ * @see RealXmlAdaptor
  * @author Bruce Schubert
+ * @version $Id$
  */
-public class RealXmlAdapter extends XmlAdapter<RealXmlType, Real> {
+@XmlType(propOrder = {"type", "value", "unit"})
+public class RealXmlType {
 
-    @Override
-    public Real unmarshal(RealXmlType xmlType) throws Exception {
-        return new Real(RealType.getRealType(xmlType.getType()), xmlType.getValue());
+    private String type;
+    private double value;
+    private String unit;
+
+    public RealXmlType() {
+        this(new Real(RealType.Generic));
     }
 
-    @Override
-    public RealXmlType marshal(Real real) throws Exception {
-        return new RealXmlType(real);
+    public RealXmlType(Real real) {
+        if (real == null) {
+            real = new Real(RealType.Generic);
+        }
+        type = real.getType().toString();
+        value = real.getValue();
+        unit = real.getUnit().getIdentifier();
     }
 
+    @XmlElement
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @XmlElement
+    public double getValue() {
+        return this.value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    @XmlElement
+    public String getUnit() {
+        return this.unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 }

@@ -30,36 +30,43 @@
 package com.emxsys.visad;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import visad.Real;
-import visad.RealType;
+import visad.georef.LatLonPoint;
+import visad.georef.LatLonTuple;
 
 /**
- * The RealXmlAdapter marshals a VisAD Real to XML via the JAXB XmlAdapter and the XmlElements
- * defined in RealXmlType. The RealXmlType class maps the Real type, value and unit properties to
- * XmlElements.
+ * The LatLonPointXmlAdapter marshals a VisAD LatLonPoint to XML via the JAXB XmlAdapter.
  *
- * To use, JavaBean properties that return a Real should be annotated with
- * <code>@XmlJavaTypeAdapter(RealXmlAdapter.class)</code> Example:
+ * To use, JavaBean properties that return a LatLonPoint should be annotated with
+ * <code>@XmlJavaTypeAdapter(LatLonPointXmlAdapter.class)</code> Example:
  * <pre> @code{
  * @XmlElement
- * @XmlJavaTypeAdapter(RealXmlAdaptor.class) public Real getDead1HrFuelLoad() { return
- * this.dead1HrFuelLoad; }
+ * @XmlJavaTypeAdapter(LatLonPointAdaptor.class) public LatLonPoint getLatLonPoint() { return ...; }
  * </pre>
  *
- * @see RealXmlType
+ * @see LatLonTuple
  *
  * @author Bruce Schubert
  */
-public class RealXmlAdapter extends XmlAdapter<RealXmlType, Real> {
+public class LatLonPointXmlAdapter extends XmlAdapter<LatLonPointXmlType, LatLonPoint> {
 
+//    @Override
+//    public LatLonPoint unmarshal(double[] coords) throws Exception {
+//        return new LatLonTuple(coords[0], coords[1]);
+//    }
+//
+//    @Override
+//    public double[] marshal(LatLonPoint latLon) throws Exception {
+//        return new double[]{latLon.getLatitude().getValue(), latLon.getLongitude().getValue()};
+//    }
+    
     @Override
-    public Real unmarshal(RealXmlType xmlType) throws Exception {
-        return new Real(RealType.getRealType(xmlType.getType()), xmlType.getValue());
+    public LatLonPoint unmarshal(LatLonPointXmlType point) throws Exception {
+        return new LatLonTuple(point.lat, point.lon);
     }
 
     @Override
-    public RealXmlType marshal(Real real) throws Exception {
-        return new RealXmlType(real);
+    public LatLonPointXmlType marshal(LatLonPoint latLon) throws Exception {
+        return new LatLonPointXmlType(latLon);
     }
 
 }

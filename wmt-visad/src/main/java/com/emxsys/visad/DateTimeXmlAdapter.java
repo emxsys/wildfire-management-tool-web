@@ -29,37 +29,36 @@
  */
 package com.emxsys.visad;
 
+import java.time.ZonedDateTime;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import visad.Real;
-import visad.RealType;
+import visad.DateTime;
 
 /**
- * The RealXmlAdapter marshals a VisAD Real to XML via the JAXB XmlAdapter and the XmlElements
- * defined in RealXmlType. The RealXmlType class maps the Real type, value and unit properties to
- * XmlElements.
+ * The DateTimeXmlAdapter marshals a VisAD DateTime to XML via the JAXB XmlAdapter. The DateTime is
+ * mapped to an ISO date time string.
  *
- * To use, JavaBean properties that return a Real should be annotated with
- * <code>@XmlJavaTypeAdapter(RealXmlAdapter.class)</code> Example:
+ * To use, JavaBean properties that return a DateTime should be annotated with
+ * <code>@XmlJavaTypeAdapter(DateTimeXmlAdapter.class)</code> Example:
  * <pre> @code{
  * @XmlElement
- * @XmlJavaTypeAdapter(RealXmlAdaptor.class) public Real getDead1HrFuelLoad() { return
- * this.dead1HrFuelLoad; }
+ * @XmlJavaTypeAdapter(DateTimeAdaptor.class) public DateTime getDateTime() { return ...; }
  * </pre>
  *
- * @see RealXmlType
+ * @see ZonedDateTime
  *
  * @author Bruce Schubert
  */
-public class RealXmlAdapter extends XmlAdapter<RealXmlType, Real> {
+public class DateTimeXmlAdapter extends XmlAdapter<DateTimeXmlType, DateTime> {
 
     @Override
-    public Real unmarshal(RealXmlType xmlType) throws Exception {
-        return new Real(RealType.getRealType(xmlType.getType()), xmlType.getValue());
+    public DateTime unmarshal(DateTimeXmlType xmlType) throws Exception {
+        ZonedDateTime zdt = ZonedDateTime.parse(xmlType.toString());
+        return Times.fromZonedDateTime(zdt);
     }
 
     @Override
-    public RealXmlType marshal(Real real) throws Exception {
-        return new RealXmlType(real);
+    public DateTimeXmlType marshal(DateTime dateTime) throws Exception {
+        return new DateTimeXmlType(dateTime);
     }
 
 }

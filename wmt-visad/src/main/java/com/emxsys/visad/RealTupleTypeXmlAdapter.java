@@ -29,63 +29,44 @@
  */
 package com.emxsys.visad;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import visad.Real;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import visad.RealTupleType;
 import visad.RealType;
 
 /**
- * The RealElement class maps a Real to JAXB XmlElements for use by the RealXmlAdaptor, which
- marshals/unmarshals a VisAD Real object to/from XML.
+ * The RealTupleTypeXmlAdapter marshals a VisAD RealTypeTuple to XML via the JAXB XmlAdapter.
  *
- * @see RealXmlAdaptor
+ * To use, JavaBean properties that return a RealTupleType should be annotated with
+ * <code>@XmlJavaTypeAdapter(RealTupleTypeXmlAdapter.class)</code> Example:
+ * <pre> @code{
+ * @XmlElement
+ * @XmlJavaTypeAdapter(RealTupleTypeXmlAdapter.class) public Real getRealTupleType() { ...; }
+ * </pre>
+ *
  * @author Bruce Schubert
- * @version $Id$
  */
-@XmlType(propOrder = {"type", "value", "unit"})
-public class RealElement {
+public class RealTupleTypeXmlAdapter extends XmlAdapter<String[], RealTupleType> {
 
-    private String type;
-    private double value;
-    private String unit;
-
-    public RealElement() {
-        this(new Real(RealType.Generic));
-    }
-
-    public RealElement(Real real) {
-        if (real == null) {
-            real = new Real(RealType.Generic);
+    @Override
+    public RealTupleType unmarshal(String[] realTypeNames) throws Exception {
+        List<RealType> realTypes = new ArrayList<>();
+        for (String typeName : realTypeNames) {
+            realTypes.add(RealType.getRealType(typeName));
         }
-        type = real.getType().toString();
-        value = real.getValue();
-        unit = real.getUnit().getIdentifier();
+        RealType[] array = new RealType[realTypes.size()];
+        return new RealTupleType(realTypes.toArray(array));
     }
 
-    @XmlElement
-    public String getType() {
-        return this.type;
+    @Override
+    public String[] marshal(RealTupleType tupleType) throws Exception {
+        RealType[] types = tupleType.getRealComponents();
+        String[] typeNames = new String[types.length];
+        for (int i = 0; i < types.length; i++) {
+            typeNames[i] = types[i].getName();
+        }
+        return typeNames;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @XmlElement
-    public double getValue() {
-        return this.value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    @XmlElement
-    public String getUnit() {
-        return this.unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
 }

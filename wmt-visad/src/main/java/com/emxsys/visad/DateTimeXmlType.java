@@ -29,37 +29,46 @@
  */
 package com.emxsys.visad;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import visad.Real;
-import visad.RealType;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import visad.DateTime;
 
 /**
- * The RealXmlAdapter marshals a VisAD Real to XML via the JAXB XmlAdapter and the XmlElements
- * defined in RealXmlType. The RealXmlType class maps the Real type, value and unit properties to
- * XmlElements.
+ * The DateTimeXmlType class maps a VisAD DateTime to JAXB XmlElements for use by the
+ DateTimeXmlAdaptor, which marshals/unmarshals a VisAD DateTime object to/from XML.
  *
- * To use, JavaBean properties that return a Real should be annotated with
- * <code>@XmlJavaTypeAdapter(RealXmlAdapter.class)</code> Example:
- * <pre> @code{
- * @XmlElement
- * @XmlJavaTypeAdapter(RealXmlAdaptor.class) public Real getDead1HrFuelLoad() { return
- * this.dead1HrFuelLoad; }
- * </pre>
+ * This class provides a mandatory default constructor to JAXB, which is not provided by the VisAD
+ * DateTime.
  *
- * @see RealXmlType
- *
+ * @see DateTimeXmlAdaptor
  * @author Bruce Schubert
  */
-public class RealXmlAdapter extends XmlAdapter<RealXmlType, Real> {
+@XmlType()
+public class DateTimeXmlType {
 
-    @Override
-    public Real unmarshal(RealXmlType xmlType) throws Exception {
-        return new Real(RealType.getRealType(xmlType.getType()), xmlType.getValue());
+    @XmlValue
+    public String isoDateTime;
+
+    /**
+     * Mandatory default constructor.
+     */
+    public DateTimeXmlType() {
+        this(null);
+    }
+
+    public DateTimeXmlType(DateTime dateTime) {
+        if (dateTime == null) {
+            dateTime = Times.fromCurrentTime();
+        }
+        ZonedDateTime zdt = Times.toZonedDateTime(dateTime);
+        this.isoDateTime = zdt.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     @Override
-    public RealXmlType marshal(Real real) throws Exception {
-        return new RealXmlType(real);
+    public String toString() {
+        return isoDateTime;
     }
 
 }
