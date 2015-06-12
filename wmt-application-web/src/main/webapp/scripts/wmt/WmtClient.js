@@ -56,6 +56,7 @@ define([
     './globe/KeyboardControls',
     './util/Log',
     './menu/MainMenu',
+    './menu/DateTimeControls',
     './globe/ReticuleLayer',
     './globe/SelectController',
     './globe/SkyBackgroundLayer',
@@ -68,6 +69,7 @@ define([
         KeyboardControls,
         Log,
         MainMenu,
+        DateTimeControls,
         ReticuleLayer,
         SelectController,
         SkyBackgroundLayer,
@@ -95,6 +97,9 @@ define([
 
             // Initialize the Navbar and Sidebars
             MainMenu.initialize(this.controller);
+            
+            // Initialize the Time Slider Control
+            DateTimeControls.initialize(this.controller);                     
 
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;

@@ -24,6 +24,30 @@
     width: 75px; /* width of coordinate overlay value column */
 }
 
+#timeControlSlider {
+    position: absolute;  /* "Lifts" the element to actually overlay the globe canvas */
+    float:left; /* Push to the left side of the globe */
+    height:25px;
+    top:5px;
+    left:5px;
+}
+
+#timeControlSlider .ui-slider-handle {
+    background:#3e444c;
+    top:3px;
+}
+
+.ui-slider-horizontal {
+    background:#272b30;
+    border:#272b30;
+}
+
+.ui-slider-range {
+    background:#272b30;
+    border:#272b30;
+}
+
+
 #canvas-wrap canvas { 
     position: relative;
     top: 0;
@@ -75,7 +99,7 @@ img.icon {
 
 .noselect {
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
+    /* -webkit-user-select: none; */
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

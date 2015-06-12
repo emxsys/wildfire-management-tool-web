@@ -28,15 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
-
 /**
  * The LayerMenu manifests buttons in the Layers sidebar to show/hide the World Wind layers.
  * 
- * @param {WorldWind} WorldWind
  * @returns {LayerMenu}
  */
-define(['../../nasa/WorldWind'], function (WorldWind) {
+define([], function () {
     "use strict";
     var LayerMenu = function (controller) {
         var self = this;
@@ -83,13 +80,12 @@ define(['../../nasa/WorldWind'], function (WorldWind) {
         // Synchronize the displayed layer list with the World Window's layer list.
         for (i = 0, len = this.wwd.layers.length; i < len; i++) {
             layer = this.wwd.layers[i];
+            if (layer.hideInMenu) {
+                continue;
+            }
             layerItem = $('<li class="list-group-item">' + layer.displayName + '</li>');
-//            layerItem = $('<label><input type="checkbox"/>' + layer.displayName + '</label>');
-//            layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
             layerListItem.append(layerItem);
             this.highlightLayer(layer, layerItem);
-
-            this.ctrl.redrawGlobe();
         }
     };
 
