@@ -36,15 +36,28 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
 /**
  *
  * @author Bruce Schubert
  */
 public class WebUtil {
 
+    /**
+     * Gets the MediaType based on the contents of the optional mime-type parameter and the Accept
+     * header.
+     *
+     * @param mimeType Optional mime type. It overrides the Accept header, but it must be within the
+     * permitted types.
+     * @param permittedTypes Array of permitted MediaTypes.
+     * @param headers HTTP headers containing the Accept header.
+     * @param defaultType The default MediaType
+     * @return The preferred MediaType.
+     * @throws WebApplicationException if an unsupported mime type is given.
+     */
     public static MediaType getPermittedMediaType(
-            String mimeType, List<MediaType> permittedTypes,
-            HttpHeaders headers, MediaType defaultType) {
+        String mimeType, List<MediaType> permittedTypes,
+        HttpHeaders headers, MediaType defaultType) {
 
         // Set the MediaType based on mime-type or Accept header...
         if (mimeType != null && !mimeType.isEmpty()) {

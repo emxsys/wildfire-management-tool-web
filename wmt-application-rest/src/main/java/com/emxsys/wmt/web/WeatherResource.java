@@ -29,8 +29,16 @@
  */
 package com.emxsys.wmt.web;
 
+import com.emxsys.gis.api.GeoCoord2D;
+import com.emxsys.visad.SpatialDomain;
+import com.emxsys.visad.TemporalDomain;
 import com.emxsys.weather.api.BasicWeather;
+import com.emxsys.weather.api.WeatherModel;
+import com.emxsys.weather.api.WeatherProvider;
 import static com.emxsys.weather.api.WeatherType.*;
+import com.emxsys.weather.api.services.WeatherForecaster;
+import com.emxsys.weather.spi.WeatherProviderFactory;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -39,6 +47,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
@@ -106,6 +115,96 @@ public class WeatherResource {
 
     }
 
+    @GET
+    @Path("/pointforecast")
+    @Produces({APPLICATION_XML, APPLICATION_JSON, TEXT_PLAIN})
+    public Response getPointForecast(
+        @DefaultValue("") @QueryParam("mime-type") String mimeType,
+        @QueryParam("latitude") double latitude,
+        @QueryParam("longitude") double longitude,
+        @QueryParam("duration") int duration) {
 
+        // Dermine representation from optional mime-type param
+        MediaType mediaType = WebUtil.getPermittedMediaType(
+            mimeType,
+            permittedTypes,
+            headers,
+            APPLICATION_JSON_TYPE);
+
+        List<WeatherProvider> providers = WeatherProviderFactory.getWeatherForecasters();
+        if (providers.isEmpty()) {
+            throw new WebApplicationException(
+                new RuntimeException("WeatherProviderFactory.getWeatherForecasters() provided empty list."),
+                Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        WeatherModel wxModel = null;
+        for (WeatherProvider provider : providers) {
+            WeatherForecaster forecaster = provider.getService(WeatherForecaster.class);
+            SpatialDomain pointDomain = SpatialDomain.from(GeoCoord2D.fromDegrees(latitude, longitude));
+            TemporalDomain timeDomain = TemporalDomain.from(ZonedDateTime.now(), duration);
+            wxModel = forecaster.getForecast(pointDomain, timeDomain);
+            if (wxModel != null) {
+                break;
+            }
+        }
+
+        if (wxModel == null) {
+            throw new WebApplicationException(
+                new RuntimeException("null weather model"),
+                Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        // Create the resource
+
+        Object entity = mediaType.equals(TEXT_PLAIN_TYPE) ? wxModel.toString() : wxModel;
+        return Response.ok(entity, mediaType).build();
+    }
+
+    @GET
+    @Path("/areaforecast")
+    @Produces({APPLICATION_XML, APPLICATION_JSON, TEXT_PLAIN})
+    public Response getAreaForecast(
+        @DefaultValue("") @QueryParam("mime-type") String mimeType,
+        @QueryParam("maxLatitude") double maxLatitude,
+        @QueryParam("maxLongitude") double maxLongitude,
+        @QueryParam("minLatitude") double minLatitude,
+        @QueryParam("minLongitude") double minLongitude,
+        @QueryParam("duration") int duration) {
+
+        // Dermine representation from optional mime-type param
+        MediaType mediaType = WebUtil.getPermittedMediaType(
+            mimeType,
+            permittedTypes,
+            headers,
+            APPLICATION_JSON_TYPE);
+
+        List<WeatherProvider> providers = WeatherProviderFactory.getWeatherForecasters();
+        if (providers.isEmpty()) {
+            throw new WebApplicationException(
+                new RuntimeException("WeatherProviderFactory.getWeatherForecasters() provided empty list."),
+                Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        WeatherModel wxModel = null;
+        for (WeatherProvider provider : providers) {
+            WeatherForecaster forecaster = provider.getService(WeatherForecaster.class);
+            SpatialDomain area = SpatialDomain.from(
+                GeoCoord2D.fromDegrees(minLatitude, minLongitude),
+                GeoCoord2D.fromDegrees(maxLatitude, maxLongitude));
+            TemporalDomain time = TemporalDomain.from(ZonedDateTime.now(), duration);
+            wxModel = forecaster.getForecast(area, time);
+            if (wxModel != null) {
+                break;
+            }
+        }
+
+        if (wxModel == null) {
+            throw new WebApplicationException(
+                new RuntimeException("null weather model"),
+                Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        // Create the resource
+
+        Object entity = mediaType.equals(TEXT_PLAIN_TYPE) ? wxModel.toString() : wxModel;
+        return Response.ok(entity, mediaType).build();
+    }
 
 }
