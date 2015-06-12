@@ -77,6 +77,14 @@ define([],
             EVENT_TERRAIN_CHANGED: "terrainChanged",
             EVENT_WEATHER_CHANGED: "weatherChanged",
             /**
+             * The display name for the layer that displays fire behavior lookouts.
+             */
+            FIRE_BEHAVIOR_LAYER_NAME: "Fire Lookouts",
+            /**
+             * The display name for the layer that displays fire perimeters and related data.
+             */
+            FIRE_PERIMETERS_LAYER_NAME: "Fire Perimeters",
+            /**
              * The URL for the fuel models REST service.
              */
             FUELMODELS_REST_SERVICE: "/wmt-rest/rs/fuelmodels",
@@ -113,6 +121,10 @@ define([],
              * The URL for the terrain REST service.
              */
             TERRAIN_REST_SERVICE: "/wmt-rest/rs/terrain",
+            /**
+             * The display name for the layer that displays weather stations and lookouts.
+             */
+            WEATHER_LAYER_NAME: "Weather",
             /**
              * The URL for the weather REST service.
              */
