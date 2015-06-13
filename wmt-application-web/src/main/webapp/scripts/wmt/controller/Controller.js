@@ -81,6 +81,7 @@ define([
             this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
             this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlightChanged, SolarView);
             this.model.on(Wmt.EVENT_TIME_CHANGED, SolarView.handleTimeChanged, SolarView);
+            this.model.on(Wmt.EVENT_TIME_CHANGED, SolarView.handleTimeChanged, SolarView);
 
 
             // Internal. Intentionally not documented.
@@ -238,7 +239,7 @@ define([
         };
 
         Controller.prototype.restoreSession = function () {
-            this.model.restoreMarkers();
+            this.model.markerManager.restoreMarkers();
             this.restoreSessionView();
         };
 
@@ -248,7 +249,7 @@ define([
 
         Controller.prototype.saveSession = function () {
             this.saveSessionView();
-            this.model.saveMarkers();
+            this.model.markerManager.saveMarkers();
         };
 
         Controller.prototype.saveSessionView = function () {

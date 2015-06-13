@@ -34,12 +34,14 @@
 
 define([
     '../util/Log',
+    '../model/MarkerNode',
     '../util/Messenger',
     '../../nasa/layer/RenderableLayer',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
         Log,
+        MarkerNode,
         Messenger,
         RenderableLayer,
         Wmt,
@@ -49,18 +51,16 @@ define([
             var self = this;
 
             this.ctrl = controller;
-            this.icsMarkers = {
-                markers: []
-            };
-            this.pushpins = {
-                pushpins: []
-            };
+            this.manager = this.ctrl.model.markerManager;
+            this.manager.on(Wmt.EVENT_MARKER_ADDED, this.handleMarkerAddedEvent, this);
+            this.manager.on(Wmt.EVENT_MARKER_REMOVED, this.handleMarkerRemovedEvent, this);
+
 
             // CAUTION: change the type value may cause existing markers in local storage to be lost
             // ICS Category
             this.icsTypes = [
                 {type: "aerial-hazard", name: "Aerial Hazard ", symbol: "Aerial_Hazard24.png"},
-                {type: "aerial-ignition", name: "Aerial Ignition24 ", symbol: "Aerial_Ignition24.png"},
+                {type: "aerial-ignition", name: "Aerial Ignition ", symbol: "Aerial_Ignition24.png"},
                 {type: "airport", name: "Airport ", symbol: "Airport_124.png"},
                 {type: "archaeological-site", name: "Archaeological Site ", symbol: "Archaeological_Site_124.png"},
                 {type: "branch-break", name: "Branch Break ", symbol: "Branch_Break24.png"},
@@ -107,87 +107,147 @@ define([
                         "Could not find a Layer named " + Wmt.MARKERS_LAYER_NAME));
             }
 
-            if (this.markerLayer) {
-                this.populateIcsMarkerDropdown();
-                this.populatePushpinDropdown();
+            // Add button event handlers
+            $("#createMarker").on("click", function (event) {
+                self.onCreateIcsMarker();
+            });
+            $("#createPushpin").on("click", function (event) {
+                self.onCreatePushpin();
+            });
+            // Attach a click handler to the markers in the marker list
+            $('#markerList').find('li').on('click', function (event) {
+                self.onMarkerItemClick($(this));
+            });
 
-                // Add button event handlers
-                $("#createMarker").on("click", function (event) {
-                    self.createIcsMarker();
-                });
-                $("#createPushpin").on("click", function (event) {
-                    self.createPushpin();
-                });
+            this.populateIcsMarkerDropdown();
+            this.populatePushpinDropdown();
+            this.loadExistingMarkers();
 
-                // Attach a click handler to the markers in the marker list
-                $('#markerList').find('li').on('click', function (event) {
-                    self.onMarkerItemClick($(this));
-                });
-
-                this.loadMarkers();
-                this.synchronizeMarkerList();
-            }
             // Initially show the Create tab
             $('#markersCreateBody').collapse('show');
         };
 
-        MarkerMenu.prototype.loadMarkers = function () {
-            var markers = this.ctrl.model.markers,
-                marker,
-                types,
-                mkrIdx,
-                typIdx,
-                symbol;
 
-            if (!markers) {
+        /**
+         * Handles the dropdown button click: adds the selected ICS marker type to the globe.
+         */
+        MarkerMenu.prototype.onCreateIcsMarker = function () {
+            var $item = $("#icsMarkerDropdown").find('.dropdown-toggle'),
+                name = $item.text(),
+                type = $item.attr('markertype');
+
+            // Type will be empty if an item has not been selected from the dropdown
+            if (!type) {
+                Messenger.warningGrowl("You must select an ICS marker first.", "Sorry!");
                 return;
             }
-            for (mkrIdx = 0; mkrIdx < markers.length; mkrIdx++) {
-                marker = markers[mkrIdx];
-                // Find the selected symbol
-                if (marker.category === "ics") {
-                    types = this.icsTypes;
-                }
-                else if (marker.category === "pushpin") {
-                    types = this.pushpinTypes;
-                }
-                else {
-                    Log.error("MarkerMenu", "loadMarkers", "unhandled marker category: " + marker.category);
-                    continue;
-                }
-                try {
-                    // Find a symbol for this marker type
-                    for (typIdx = 0; typIdx < types.length; typIdx++) {
-                        if (marker.type === types[typIdx].type) {
-                            symbol = types[typIdx].symbol;
-                            break;
-                        }
-                    }
-                    if (!symbol) {
-                        Log.error("MarkerMenu", "loadMarkers", "type not found: " + marker.type);
-                        marker.invalid = true;  // Flag this marker... so we don't save it
-                        continue;
-                    }
-                    this.createRenderable(
-                        marker.name,
-                        marker.category,
-                        marker.type,
-                        symbol,
-                        marker.latitude,
-                        marker.longitude);
-                }
-                catch (e) {
-                    Log.error("MarkerMenu", "loadMarkers", e.toString());
-                }
+            // Add the marker to the globe
+            this.createMarker(name, "ics", type);
+        };
+
+        /**
+         * Handles pushpin dropdown button click: adds a pushpin to the globe.
+         */
+        MarkerMenu.prototype.onCreatePushpin = function () {
+            var $item = $("#pushpinDropdown").find('.dropdown-toggle'),
+                name = $item.text(),
+                type = $item.attr('markertype');
+
+            // Type will be empty if an item has not been selected from the dropdown
+            if (!type) {
+                Messenger.warningGrowl("You must select a pushpin first.", "Sorry!");
+                return;
+            }
+            // Add the pushpin to the globe
+            this.createMarker(name, "pushpin", type);
+        };
+
+
+        MarkerMenu.prototype.loadExistingMarkers = function () {
+            var markers = this.ctrl.model.markerManager.markers,
+                i,
+                max;
+            
+            for (i = 0, max = markers.length; i < max; i++) {
+                this.handleMarkerAddedEvent(markers[i]);
             }
         };
 
 
+        MarkerMenu.prototype.createMarker = function (name, category, type) {
+            var lat = this.ctrl.model.viewpoint.target.latitude,
+                lon = this.ctrl.model.viewpoint.target.longitude;
+
+            // This action will fire the marker added event.
+            this.ctrl.model.markerManager.addMarker(name, category, type, lat, lon);
+        };
+
+
+        MarkerMenu.prototype.handleMarkerAddedEvent = function (markerNode) {
+            var symbol = this.findSymbol(markerNode.category, markerNode.type);
+
+            // Handle if the model is initialized before this panel is initialized
+            if (!this.markerLayer) {
+                return;
+            }
+            if (!symbol) {
+                Log.error("MarkerMenu", "handleMarkerAddedEvent", "Symbol not found for marker type: " + markerNode.type);
+                // Flag this marker... so we don't save it
+                markerNode.invalid = true;
+                return;
+            }
+            try {
+                // Create the symbol on the globe
+                this.createRenderable(
+                    markerNode.name,
+                    markerNode.category,
+                    markerNode.type,
+                    symbol,
+                    markerNode.latitude,
+                    markerNode.longitude);
+                // Update our list of markers
+                this.synchronizeMarkerList();
+            }
+            catch (e) {
+                Log.error("MarkerMenu", "handleMarkerAddedEvent", e.toString());
+            }
+        };
+
         /**
-         * Handler for clicking a marker in the marker list.  
-         * Default behavior is to "go to" the selected marker.
+         * Removes the given marker from the globe and the marker list.
+         * @param {Object} markerNode
+         */
+        MarkerMenu.prototype.handleMarkerRemovedEvent = function (markerNode) {
+            var i,
+                max,
+                placename;
+
+            // Handle if the model is initialized before this panel is initialized
+            if (!this.markerLayer) {
+                return;
+            }
+            try {
+                for (i = 0, max = this.markerLayer.renderables.length; i < max; i++) {
+                    placename = this.markerLayer.renderables[i];
+
+                    if (placename.displayName === markerNode.name) {
+                        this.markerLayer.renderables.splice(i, 1);
+                        break;
+                    }
+                }
+
+                this.synchronizeMarkerList();
+            }
+            catch (e) {
+                Log.error("MarkerMenu", "handleMarkerRemovedEvent", e.toString());
+            }
+        };
+
+        /**
+         * Handler for clicking any one of the marker buttons in the marker list.  
          * 
          * @param {$(li)} markerName List item element
+         * @param {string} action "goto", "edit", or remove
          */
         MarkerMenu.prototype.onMarkerItemClick = function (markerName, action) {
             var markers = this.markerLayer.renderables,
@@ -213,9 +273,7 @@ define([
                             Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
                             break;
                         case 'remove':
-                            this.ctrl.model.removeMarker(marker.displayName);
-                            markers.splice(i, 1);
-                            this.synchronizeMarkerList();
+                            this.ctrl.model.markerManager.removeMarker(marker.displayName);
                             break;
                         default:
                             Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
@@ -226,87 +284,34 @@ define([
             Log.error("MarkerMenu", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
         };
 
-        /**
-         * Adds the selected ICS marker to the globe.
-         */
-        MarkerMenu.prototype.createIcsMarker = function () {
-            var markerName = $("#icsMarkerDropdown").find('.dropdown-toggle').text(),
-                lat = this.ctrl.model.viewpoint.target.latitude,
-                lon = this.ctrl.model.viewpoint.target.longitude,
-                type,
-                i;
 
-            // Find the selected type and symbol
-            for (i = 0; i < this.icsTypes.length; i += 1) {
-                if (markerName === this.icsTypes[i].name) {
-                    type = this.icsTypes[i].type;
-                    break;
-                }
-            }
-            if (!type) {
-                Messenger.warningGrowl("You must select an ICS marker first.", "Sorry!");
-                return;
-            }
-            // Add the marker to the globe.
-            this.createMarker(markerName, "ics", type, lat, lon);
-            // Update our marker list presentation 
-            this.synchronizeMarkerList();
-        };
-
-
-        /**
-         * Adds a pushpin to the globe.
-         */
-        MarkerMenu.prototype.createPushpin = function () {
-            var name = $("#pushpinDropdown").find('.dropdown-toggle').text(),
-                lat = this.ctrl.model.viewpoint.target.latitude,
-                lon = this.ctrl.model.viewpoint.target.longitude,
-                type,
-                i;
-
-            // Find the selected symbol
-            for (i = 0; i < this.pushpinTypes.length; i += 1) {
-                if (name === this.pushpinTypes[i].name) {
-                    type = this.pushpinTypes[i].type;
-                    break;
-                }
-            }
-            // 
-            if (!type) {
-                Messenger.warningGrowl("You must select a pushpin first.", "Oops!");
-                return;
-            }
-            // Add the pushpin to the globe
-            this.createMarker(name, "pushpin", type, lat, lon);
-            // Update our marker list presentation 
-            this.synchronizeMarkerList();
-        };
-
-
-        MarkerMenu.prototype.createMarker = function (name, category, type, latitude, longitude) {
-            var uniqueName = this.generateUniqueName(name),
-                symbol,
+        MarkerMenu.prototype.findSymbol = function (category, type) {
+            var symbol,
                 types,
-                i;
+                i,
+                len;
 
             // Find the selected symbol
-            if (category === "ics") {
-                types = this.icsTypes;
+            switch (category) {
+                case 'ics':
+                    types = this.icsTypes;
+                    break;
+                case 'pushpin':
+                    types = this.pushpinTypes;
+                    break;
+                default:
+                    Log.error("MarkerMenu", "findSymbol", "unhandled marker category: " + category);
+                    return;
             }
-            else if (category === "pushpin") {
-                types = this.pushpinTypes;
-            }
-            for (i = 0; i < types.length; i += 1) {
-                if (name === types[i].name) {
+            for (i = 0, len = types.length; i < len; i += 1) {
+                if (type === types[i].type) {
                     symbol = types[i].symbol;
                     break;
                 }
             }
-
-            this.ctrl.model.addMarker(uniqueName, category, type, latitude, longitude);
-            this.createRenderable(uniqueName, category, type, symbol, latitude, longitude);
-
+            return symbol;
         };
+
 
         MarkerMenu.prototype.createRenderable = function (name, category, type, symbol, latitude, longitude) {
             var placemark,
@@ -371,50 +376,6 @@ define([
 
 
         /**
-         * Generates a unique name by appending a suffix '(n)'.
-         * @param {String} name
-         * @returns {String}
-         */
-        MarkerMenu.prototype.generateUniqueName = function (name) {
-            var markers = this.ctrl.model.markers,
-                uniqueName = name.trim(),
-                isUnique,
-                suffixes,
-                seqNos,
-                n,
-                i,
-                len;
-
-            do {
-                // Assume uniqueness, set to false if we find a matching name
-                isUnique = true;
-
-                for (i = 0, len = markers.length; i < len; i += 1) {
-                    if (markers[i].name === uniqueName) {
-
-                        isUnique = false;
-
-                        // check for existing suffix '(n)' and increment
-                        suffixes = uniqueName.match(/[(]\d+[)]$/);
-                        if (suffixes) {
-                            seqNos = suffixes[0].match(/\d+/);
-                            n = parseInt(seqNos[0], 10) + 1;
-                            uniqueName = uniqueName.replace(/[(]\d+[)]$/, '(' + n + ')');
-                        } else {
-                            // else if no suffix, create one
-                            uniqueName += ' (2)';   // The first duplicate is #2
-                        }
-                        // Break out of for loop and recheck uniqueness
-                        break;
-                    }
-                }
-            } while (!isUnique);
-
-            return uniqueName;
-        };
-
-
-        /**
          * Populate the ICS markers dropdown.
          */
         MarkerMenu.prototype.populateIcsMarkerDropdown = function () {
@@ -443,7 +404,7 @@ define([
                 markerItem,
                 i;
 
-            // Populate the dropdown contents with the markers
+            // Populate the dropdown contents with the marker names, symbols, and types
             for (i = 0; i < markerArray.length; i += 1) {
                 markerItem = $('<li><a markertype="' + markerArray[i].type + '">' +
                     '<span><img class="icon" src="' + imagePath + markerArray[i].symbol + '" style="padding-right: 5px;"></span>' +
@@ -451,10 +412,14 @@ define([
                     '</a></li>');
                 $ul.append(markerItem);
             }
-            // Add a handler that displays the selected item in the dropdown button
+            // Add a handler that displays the selected item's icon and text in the dropdown button
             $ul.find('li a').click(function () {
-                var selText = $(this).text();
-                $(id).find('.dropdown-toggle').html(selText + '<span class="caret"></span>');
+                var selectdItemHtml = $(this).html(),
+                    type = $(this).attr('markertype'),
+                    $btn = $(id).find('.dropdown-toggle');
+
+                $btn.html(selectdItemHtml + '<span class="caret"></span>');
+                $btn.attr('markertype', type);
             });
         };
 
@@ -471,6 +436,7 @@ define([
                 i,
                 len;
 
+            // This preliminary implemenation does a brute force "clear and repopulate" of the list
             markerList.children().remove();
 
             for (i = 0, len = markers.length; i < len; i += 1) {

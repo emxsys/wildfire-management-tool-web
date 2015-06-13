@@ -71,6 +71,9 @@ define([],
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
             
+            EVENT_MARKER_ADDED: "markerAdded",
+            EVENT_MARKER_CHANGED: "markerChanged",
+            EVENT_MARKER_REMOVED: "markerRemoved",
             EVENT_FUELMOISTURE_CHANGED: "fuelMoistureChanged",
             EVENT_SURFACEFUEL_CHANGED: "surfaceFuelChanged",
             EVENT_SURFACEFIRE_CHANGED: "surfaceFireChanged",
@@ -101,6 +104,10 @@ define([],
              */
             MARKERS_LAYER_NAME: "Markers",
             /**
+             * The local storage key for markers.
+             */
+            MARKERS_STORAGE_KEY: "markers",
+            /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
              */
@@ -125,6 +132,10 @@ define([],
              * The display name for the layer that displays weather stations and lookouts.
              */
             WEATHER_LAYER_NAME: "Weather",
+            /**
+             * The local storage key for weather lookouts.
+             */
+            WEATHER_LOOKOUTS_STORAGE_KEY: "wxlookouts",
             /**
              * The URL for the weather REST service.
              */
