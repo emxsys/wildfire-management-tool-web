@@ -108,6 +108,17 @@ define([
 
         };
 
+        /**
+         * 
+         * @param {type} latitude
+         * @param {type} longitude
+         */
+        Controller.prototype.createWeatherLookout = function (latitude, longitude) {
+            // Open a model dialog to obtain the Weather Lookout properties
+            
+            // On OK, create the lookout
+            //this.model.weatherLookoutManager.addWeatherLookout(name, latitude, longitude, rules);
+        };
 
         /**
          * Updates the globe view.

@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        
+
         <title>Wildfire Management Tool (WMT)</title>
         <link rel="icon" type="image/x-icon" href="./favicon.png">
 
@@ -93,12 +93,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <span class="icon-bar"></span>
                 </button>
                 <!--Collapse Sidebar-->
-<!--                <button id="collapsePanelsItem" type="button" 
-                        class="navbar-btn navbar-toggle collapsed" 
-                        aria-label="Show Globe">
-                    <span class="glyphicon glyphicon-chevron-up" 
-                          aria-hidden="true"></span>
-                </button>-->
+                <!--                <button id="collapsePanelsItem" type="button" 
+                                        class="navbar-btn navbar-toggle collapsed" 
+                                        aria-label="Show Globe">
+                                    <span class="glyphicon glyphicon-chevron-up" 
+                                          aria-hidden="true"></span>
+                                </button>-->
                 <!--Expand Sidebar-->
                 <button id="expandPanelsItem" type="button" 
                         class="navbar-btn navbar-toggle collapsed" 
@@ -423,7 +423,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             <!--Markers Sidebar-->
             <div id="markersPanel" 
-                 class="col-sm-4 col-lg-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar noselect" 
                  style="display:none;">
                 <h4 class="noselect">
                     <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -582,34 +582,91 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Weather Sidebar-->
             <div id="weatherPanel" 
-                 class="col-sm-4 col-lg-3 sidebar" 
+                 class="col-sm-4 col-lg-3 sidebar noselect" 
                  style="display:none;">
                 <h4>
                     <span class="glyphicon glyphicon-cloud" aria-hidden="true" style="padding-right: 5px;"></span>
                     Weather
                 </h4>
                 <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">
+                    <!--Weather Lookouts-->
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="weatherSettingsHeading">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#weatherAccordion" 
+                             href="#weatherLookoutsBody" 
+                             aria-expanded="false" 
+                             aria-controls="weatherLookoutsBody"
+                             role="tab" 
+                             id="weatherLookoutsHeading">
                             <h4 class="panel-title">
-                                <a class="collapsed" 
-                                   data-toggle="collapse" 
-                                   data-parent="#weatherAccordion" 
-                                   href="#weatherSettingsBody" 
-                                   aria-expanded="false" 
-                                   aria-controls="weatherSettingsBody">
-                                    Settings
-                                </a>
+                                Lookouts
                             </h4>
                         </div>
-                        <div id="weatherSettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                        <div id="weatherLookoutsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="weatherLookoutsHeading">
+                            <div class="panel-body">
+                                <button id="createWeatherLookout" 
+                                        type="button"
+                                        class="btn btn-default" 
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="Add a lookout to the globe.">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add
+                                </button>
+                                <ul class="list-group pre-scrollable" 
+                                    id="weatherLookoutList">
+                                </ul>                              
+                            </div>
+                        </div>
+                    </div>                   
+                    <!--Weather Stations-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#weatherAccordion" 
+                             href="#weatherStationsBody" 
+                             aria-expanded="false" 
+                             aria-controls="weatherStationsBody"
+                             role="tab" 
+                             id="weatherStationsHeading">
+                            <h4 class="panel-title">
+                                Stations
+                            </h4>
+                        </div>
+                        <div id="weatherStationsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="weatherStationsHeading">
+                            <div class="panel-body">
+                                <ul class="list-group pre-scrollable" 
+                                    id="weatherStationList">
+                                </ul>                              
+                            </div>
+                        </div>
+                    </div>
+                    <!--Weather Settings-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading collapsed" 
+                             data-toggle="collapse" 
+                             data-parent="#weathersAccordion" 
+                             href="#weathersSettingsBody" 
+                             aria-expanded="false" 
+                             aria-controls="weathersSettingsBody" 
+                             role="tab" 
+                             id="weatherSettingsHeading">
+                            <h4 class="panel-title">
+                                Settings
+                            </h4>
+                        </div>
+                        <div id="weatherSettingsBody" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
                              aria-labelledby="weatherSettingsHeading">
                             <div class="panel-body">
-                                <ul>
-                                    <li>A...</li>
-                                    <li>B...</li>
-                                    <li>C...</li>
-                                </ul>
                             </div>
                         </div>
                     </div>

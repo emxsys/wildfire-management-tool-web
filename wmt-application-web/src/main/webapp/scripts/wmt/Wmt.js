@@ -171,7 +171,7 @@ define([],
             startupTilt: 0,
             startupRoll: 0,
             viewControlOrientation: "vertical",
-            showPanControl: false,
+            showPanControl: true,
             showExaggerationControl: false
         };
 
