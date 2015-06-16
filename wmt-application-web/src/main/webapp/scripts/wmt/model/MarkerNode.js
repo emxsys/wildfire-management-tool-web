@@ -34,15 +34,14 @@ define([],
     function () {
         "use strict";
 
-        var MarkerNode = function (uniqueName, category, type, lat, lon) {
+        var MarkerNode = function (uniqueName, type, lat, lon) {
             this.name = uniqueName;
-            this.category = category;
             this.type = type;
             this.latitude = lat;
             this.longitude = lon;
         };
 
-        
+
         return MarkerNode;
 
     }

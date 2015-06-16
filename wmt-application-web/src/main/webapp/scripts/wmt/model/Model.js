@@ -105,8 +105,7 @@ define([
             this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
         };
 
-
-
+        
        /**
          * 
          * @param {FuelModel} fuelModel

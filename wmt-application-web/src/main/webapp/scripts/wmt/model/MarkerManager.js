@@ -55,16 +55,9 @@ define([
             this.restoreMarkers();
         };
 
-        MarkerManager.prototype.addMarker = function (name, category, type, lat, lon) {
+        MarkerManager.prototype.addMarker = function (name, type, lat, lon) {
             // Add marker to managed list
-            var marker = new MarkerNode(this.generateUniqueName(name), category, type, lat, lon);
-//            var marker = {
-//                name: this.generateUniqueName(name),
-//                category: category,
-//                type: type,
-//                latitude: lat,
-//                longitude: lon
-//            };
+            var marker = new MarkerNode(this.generateUniqueName(name), type, lat, lon);
 
             this.markers.push(marker);
             this.fire(Wmt.EVENT_MARKER_ADDED, marker);
