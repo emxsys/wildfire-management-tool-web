@@ -4,7 +4,7 @@
  */
 /**
  * @exports GeographicText
- * @version $Id: GeographicText.js 3109 2015-05-26 19:13:06Z tgaskins $
+ * @version $Id: GeographicText.js 3177 2015-06-11 02:04:25Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -46,6 +46,16 @@ define([
              * @type {Position}
              */
             this.position = position;
+
+            /**
+             * Indicates the group ID of the declutter group to include this Text shape. This shape
+             * is decluttered relative to all other shapes within its group by the default
+             * [declutter filter]{@link WorldWindow#declutter}. To prevent decluttering of this shape, set its
+             * declutter group to 0.
+             * @type {Number}
+             * @default 1
+             */
+            this.declutterGroup = 1;
         };
 
         // Internal use only. Intentionally not documented.

@@ -4,7 +4,7 @@
  */
 /**
  * @exports DragRecognizer
- * @version $Id: DragRecognizer.js 2808 2015-02-17 01:05:18Z dcollins $
+ * @version $Id: DragRecognizer.js 3162 2015-06-08 21:07:36Z dcollins $
  */
 define([
         '../gesture/GestureRecognizer',
@@ -27,7 +27,7 @@ define([
              *
              * @type {number}
              */
-            this.buttons = 1;
+            this.button = 0;
 
             /**
              * The gesture's translation in the window's coordinate system. This indicates the cursor's absolute
@@ -124,8 +124,8 @@ define([
          * @protected
          */
         DragRecognizer.prototype.shouldRecognize = function () {
-            var buttonMask = this.buttonMask;
-            return buttonMask != 0 && buttonMask == this.buttons;
+            var buttonBit = (1 << this.button);
+            return buttonBit == this.buttonMask; // true when the specified button is the only button down
         };
 
         /**

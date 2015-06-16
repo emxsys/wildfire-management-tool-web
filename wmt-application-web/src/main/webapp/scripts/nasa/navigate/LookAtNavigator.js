@@ -4,7 +4,7 @@
  */
 /**
  * @exports LookAtNavigator
- * @version $Id: LookAtNavigator.js 3089 2015-05-14 18:30:02Z dcollins $
+ * @version $Id: LookAtNavigator.js 3162 2015-06-08 21:07:36Z dcollins $
  */
 define([
         '../geom/Angle',
@@ -99,7 +99,7 @@ define([
 
             // Internal use only. Intentionally not documented.
             this.secondaryDragRecognizer = new DragRecognizer(worldWindow);
-            this.secondaryDragRecognizer.buttons = 4; // secondary mouse button
+            this.secondaryDragRecognizer.button = 2; // secondary mouse button
             this.secondaryDragRecognizer.addGestureListener(function (recognizer) {
                 self.handleSecondaryDrag(recognizer);
             });

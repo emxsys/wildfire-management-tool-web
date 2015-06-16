@@ -4,7 +4,7 @@
  */
 /**
  * @exports GoToAnimator
- * @version $Id: GoToAnimator.js 3154 2015-06-06 14:19:39Z tgaskins $
+ * @version $Id: GoToAnimator.js 3164 2015-06-09 15:35:14Z tgaskins $
  */
 define([
         '../geom/Location',
@@ -183,7 +183,6 @@ define([
         // Intentionally not documented.
         GoToAnimator.prototype.update = function () {
             // This is the timer callback function. It invokes the range animator and the pan animator.
-            console.log("UPDATING " + Date.now());
 
             var currentPosition = new Position(
                 this.wwd.navigator.lookAtLocation.latitude,
