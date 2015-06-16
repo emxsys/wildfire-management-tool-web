@@ -99,9 +99,9 @@ define([
 
             // Initialize the Navbar and Sidebars
             MainMenu.initialize(this.controller);
-            
+
             // Initialize the Time Slider Control
-            DateTimeControls.initialize(this.controller);                     
+            DateTimeControls.initialize(this.controller);
 
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;
@@ -133,19 +133,23 @@ define([
             var self = this,
                 layer,
                 layers = [
-                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true},
-                    {layer: new WorldWind.BMNGLayer(), enabled: true},
+                    {layer: new SkyBackgroundLayer(this.wwd), enabled: true, hide: true},
+                    {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new WorldWind.RenderableLayer(Wmt.MARKERS_LAYER_NAME), enabled: true},
-                    {layer: new ReticuleLayer(), enabled: true},
-                    {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true}
+                    {layer: new ReticuleLayer(), enabled: true, hide: true},
+                    {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true, hide: true}
                 ];
             // Add imagery layers to WorldWindow
             for (layer = 0; layer < layers.length; layer += 1) {
                 layers[layer].layer.enabled = layers[layer].enabled;
+                // Hide background and control layers in the menu 
+                if (layers[layer].hide) {
+                    layers[layer].layer.hide = layers[layer].hide;
+                }
                 this.wwd.addLayer(layers[layer].layer);
             }
 
@@ -159,4 +163,4 @@ define([
         return WmtClient;
     }
 );
-        
+

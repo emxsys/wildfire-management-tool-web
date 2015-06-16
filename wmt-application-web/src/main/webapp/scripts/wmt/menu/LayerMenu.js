@@ -80,7 +80,7 @@ define([], function () {
         // Synchronize the displayed layer list with the World Window's layer list.
         for (i = 0, len = this.wwd.layers.length; i < len; i++) {
             layer = this.wwd.layers[i];
-            if (layer.hideInMenu) {
+            if (layer.hide) {
                 continue;
             }
             layerItem = $('<li class="list-group-item">' + layer.displayName + '</li>');
