@@ -36,6 +36,7 @@ define([],
     function () {
         "use strict";
         var DateTimeControls = {
+            intervalID: -1,
             initialize: function (controller) {
                 this.ctrl = controller;
                 $('#timeControlSlider').slider({
@@ -43,24 +44,45 @@ define([],
                     min: -100,
                     max: 100,
                     orientation: 'horizontal',
-                    stop: function() {$("#timeControlSlider").slider("value", "0");}
+                    stop: function () {
+                        $("#timeControlSlider").slider("value", "0");
+                    }
                 });
-                
+                $("#timeControlSlider").on('mousedown', this.onMousedown);
+                $("#timeControlSlider").on('mouseup', this.onMouseup);
+
+            },
+            whileMousedown: function () {
+                var value = $("#timeControlSlider").slider("value");
+                this.ctrl.incrementDateTime(Math.pow(value, 2) * (value < 0 ? -1 : 1));
+            },
+            onMousedown: function (event) {
+                console.log("onMousedown: setting interval timer");
+                this.intervalID = setInterval(function () {
+                    DateTimeControls.whileMousedown();
+                }, 100);
+            },
+            onMouseup: function (event) {
+                console.log("onMouseup: clearing interval timer");
+                if (this.intervalID !== -1) {  //Only stop if exists
+                    clearInterval(this.intervalID);
+                    this.intervalID = -1;
+                }
             }
         };
-        
-        
-        $("#timeControlSlider").on( "slide", function( event, ui ) {
-           //TODO: Figure out how to asynchronously Call out to REST service to update application time, so that the slider can still move and reset while the calls are being made.
-           //var currentValue = ui.value;
-           // while ($("#timeControlSlider").slider("value") != 0 && currentValue == ui.value) {                
-                //setTimeout(function() {
-                    console.log(ui.value+":"+$("#timeControlSlider").slider("value")); 
-                //},250);
-            //}            
-        });
-        
+
+
+//        $("#timeControlSlider").on("slide", function (event, ui) {
+//            //: Figure out how to asynchronously Call out to REST service to update application time, so that the slider can still move and reset while the calls are being made.
+//           var currentValue = ui.value;
+//            while ($("#timeControlSlider").slider("value") != 0 && currentValue == ui.value) {                
+//                setTimeout(function() {
+//            console.log(ui.value + ":" + $("#timeControlSlider").slider("value"));
+//                },250);
+//            }        
+//        });
+
         return DateTimeControls;
     }
-    
+
 );

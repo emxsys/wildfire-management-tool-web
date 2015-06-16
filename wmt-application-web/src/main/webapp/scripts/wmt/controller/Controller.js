@@ -215,6 +215,16 @@ define([
         };
 
         /**
+         * Updates the model with the an adjusted time (+/- minutues).
+         * @param {Number} minutes The number of minutes (+/-) added or subtracted from the current application time. 
+         */
+        Controller.prototype.incrementDateTime = function (minutes) {
+            var msCurrent = this.model.applicationTime.valueOf(),
+                msNew = msCurrent + (minutes * 60000);
+            this.changeDateTime(new Date(msNew));
+        };
+
+        /**
          * Changes the current fuel model.
          * @param {FuelModel} fuelModel A JSON FuelModel.
          */
