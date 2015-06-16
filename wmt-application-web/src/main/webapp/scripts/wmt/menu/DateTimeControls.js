@@ -48,26 +48,36 @@ define([],
                         $("#timeControlSlider").slider("value", "0");
                     }
                 });
-                $("#timeControlSlider").on('mousedown', this.onMousedown);
-                $("#timeControlSlider").on('mouseup', this.onMouseup);
+                $("#timeControlSlider").on('mousedown', $.proxy(this.onMousedown, this));
+                $("#timeControlSlider").on('mouseup', $.proxy(this.onMouseup, this));
+                // The slide event provides events from the keyboard
+                $("#timeControlSlider").on('slide', $.proxy(this.onSlide, this)); 
 
+            },
+            onMousedown: function (event) {
+                //console.log("onMousedown: setting interval timer");
+                if (this.intervalID === -1) {   // Prevent dupicates
+                    var self = this;
+                    this.intervalID = setInterval(function () {
+                        self.whileMousedown();
+                    }, 100);
+                }
             },
             whileMousedown: function () {
                 var value = $("#timeControlSlider").slider("value");
+                //console.log("whileMousedown: " + value);
                 this.ctrl.incrementDateTime(Math.pow(value, 2) * (value < 0 ? -1 : 1));
             },
-            onMousedown: function (event) {
-                console.log("onMousedown: setting interval timer");
-                this.intervalID = setInterval(function () {
-                    DateTimeControls.whileMousedown();
-                }, 100);
-            },
             onMouseup: function (event) {
-                console.log("onMouseup: clearing interval timer");
+                //console.log("onMouseup: clearing interval timer");
                 if (this.intervalID !== -1) {  //Only stop if exists
                     clearInterval(this.intervalID);
                     this.intervalID = -1;
                 }
+            },
+            onSlide: function (event, ui) {
+                //console.log("onSlide: " + ui.value);
+                this.ctrl.incrementDateTime(Math.pow(ui.value, 2) * (ui.value < 0 ? -1 : 1));
             }
         };
 

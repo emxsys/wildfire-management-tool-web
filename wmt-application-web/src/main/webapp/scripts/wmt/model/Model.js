@@ -105,8 +105,8 @@ define([
             this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
         };
 
-        
-       /**
+
+        /**
          * 
          * @param {FuelModel} fuelModel
          */
@@ -140,23 +140,40 @@ define([
          * @param {Date} time
          */
         Model.prototype.updateAppTime = function (time) {
+            if (this.applicationTime.valueOf() === time.valueOf()) {
+                return;
+            }
             var self = this;
 
-            // Update the sunlight property when the elapsed time has gone past the threshold
+            // SUNLIGHT: 
+            // Update the sunlight angles when the elapsed time has gone past the threshold (15 min)
             if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
-                SolarResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
-                    function (sunlight) {
-                        self.handleSunlight(sunlight);  // callback
-                    });
-                this.lastSolarTime = time;
+                if (this.processingSunlight) {
+                    // Cache the latest request. handleSunlight() will process the pending request.
+                    this.pendingSolarTime = time;
+                }
+                else {
+                    // Set the processing flag so that we queue only the latest request.
+                    this.processingSunlight = true;
+                    SolarResource.sunlightAtLatLonTime(
+                        this.lastSolarTarget.latitude,
+                        this.lastSolarTarget.longitude,
+                        time,
+                        function (sunlight) {
+                            self.handleSunlight(sunlight);  // callback
+                        });
+                    this.lastSolarTime = time;
+                }
             }
+
+            // WEATHER:
             // Update the weather property when the elapsed time has gone past the threshold
             if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
-                WeatherResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
-                    function (sunlight) {
-                        self.handleSunlight(sunlight);  // callback
-                    });
-                this.lastSolarTime = time;
+//                WeatherResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
+//                    function (sunlight) {
+//                        self.handleSunlight(sunlight);  // callback
+//                    });
+//                this.lastSolarTime = time;
             }
             Log.info("Model", "updateAppTime", time.toLocaleString());
 
@@ -257,9 +274,18 @@ define([
          */
         Model.prototype.handleSunlight = function (sunlight) {
             this.sunlight = sunlight;
+            // Reset our "processing flag"
+            this.processingSunlight = false;
             Log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
             // Update sunlightChanged subscribers
             this.fire(Wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
+
+            // If there's a pending request, initiate another update
+            if (this.pendingSolarTime) {
+                var time = this.pendingSolarTime;
+                delete this.pendingSolarTime;
+                this.updateAppTime(time);
+            }
         };
 
         /**
