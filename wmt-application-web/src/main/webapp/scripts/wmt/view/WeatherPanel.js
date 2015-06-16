@@ -52,8 +52,8 @@ define([
 
             this.ctrl = controller;
             this.manager = this.ctrl.model.weatherManager;
-            this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, this.handleWeatherAddedEvent, this);
-            this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_REMOVED, this.handleWeatherRemovedEvent, this);
+            //this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, this.handleWeatherAddedEvent, this);
+            //this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_REMOVED, this.handleWeatherRemovedEvent, this);
 
 
 
