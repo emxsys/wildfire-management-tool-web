@@ -51,6 +51,7 @@
  */
 define([
     './controller/Controller',
+    './globe/DnDController',
     './globe/EnhancedLookAtNavigator',
     './globe/EnhancedViewControlsLayer',
     './globe/KeyboardControls',
@@ -64,6 +65,7 @@ define([
     '../nasa/WorldWind'],
     function (
         Controller,
+        DnDController,
         EnhancedLookAtNavigator,
         EnhancedViewControlsLayer,
         KeyboardControls,
@@ -122,6 +124,7 @@ define([
             // add this controller as a new WorldWindow property .
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
             this.wwd.selectController = new SelectController(this.wwd);
+            this.wwd.dndController = new DnDController(this.wwd);
 
             // Add the navigator after the select controller so the select controller
             // can consume the mousemove event and preempt the pan/drag operation.
