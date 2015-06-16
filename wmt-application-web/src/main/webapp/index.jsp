@@ -42,8 +42,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!--During development, using local copies of libraries-->
         <link rel="stylesheet" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
-        <!--<link rel="stylesheet" href="./thirdparty/primeui-1.1/themes/afterwork/theme.css" />-->   
-        <link rel="stylesheet" href="./thirdparty/primeui-1.1/production/primeui-1.1-min.css" />   
+        <link rel="stylesheet" href="./thirdparty/primeui-2.0/themes/afterwork/theme.css" />   
+        <link rel="stylesheet" href="./thirdparty/primeui-2.0/production/primeui-2.0-min.css" />   
+        <link rel="stylesheet" href="./thirdparty/primeui-2.0/production/css/datagrid/datagrid.css" />   
         <link rel="stylesheet" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
         <link rel="stylesheet" href="./thirdparty/pace/pace-theme-big-counter.css"/>
         <link rel="stylesheet" href="./css/WMT.css"/>
@@ -62,7 +63,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <script src="./thirdparty/jquery-2.1.4.min.js" type="text/javascript"></script>
         <script src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <script src="./thirdparty/jquery.ui.touch-punch.js"></script>
-        <script src="./thirdparty/primeui-1.1/production/primeui-1.1-min.js" type="text/javascript"></script>
+        <script src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js" type="text/javascript"></script>
+        <script src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js" type="text/javascript"></script>
         <script src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js" type="text/javascript"></script>
 
         <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
@@ -430,79 +432,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     Markers
                 </h4>
                 <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
-                    <!--Create Marker -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading collapsed" 
-                             data-toggle="collapse" 
-                             data-parent="#markersAccordion" 
-                             href="#markersCreateBody" 
-                             aria-expanded="false" 
-                             aria-controls="markersCreateBody" 
-                             role="tab" 
-                             id="markersCreateHeading">
-                            <h4 class="panel-title">
-                                Create
-                            </h4>
-                        </div>
-                        <div id="markersCreateBody" 
-                             class="panel-collapse collapse" 
-                             role="tabpanel" 
-                             aria-labelledby="markersCreateHeading">
-                            <div class="panel-body" 
-                                 role="group">
-                                <h5>ICS Marker</h5>
-                                <div class="btn-group" 
-                                     role="group"
-                                     id="icsMarkerDropdown">
-                                    <button type="button" 
-                                            class="btn btn-default dropdown-toggle" 
-                                            data-toggle="dropdown" 
-                                            aria-expanded="false"
-                                            >
-                                        Select... 
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu pre-scrollable" 
-                                        role="menu">
-                                    </ul>
-                                    <button id="createMarker" 
-                                            type="button"
-                                            class="btn btn-default" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="Add a marker to the globe at the center.">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        Add
-                                    </button>
-                                </div>
-                                <h5>Pushpin</h5>
-                                <div class="btn-group" 
-                                     role="group"
-                                     id="pushpinDropdown">
-                                    <button type="button" 
-                                            class="btn btn-default dropdown-toggle" 
-                                            data-toggle="dropdown" 
-                                            aria-expanded="false"
-                                            >
-                                        Select... 
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" 
-                                        role="menu">
-                                    </ul>
-                                    <button id="createPushpin" 
-                                            type="button"
-                                            class="btn btn-default" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="Add a pushpin to the globe at the center.">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Marker List-->
                     <div class="panel panel-default">
                         <div class="panel-heading collapsed" 
@@ -522,6 +451,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              role="tabpanel" 
                              aria-labelledby="markersListHeading">
                             <div class="panel-body">
+                                <div class="btn-group btn-block" 
+                                     role="group"
+                                     id="createMarkerButtons">
+                                    <button id="createMarker" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a marker to the globe at the center.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        ICS
+                                    </button>
+                                    <button id="createPushpin" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a pushpin to the globe at the center.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Pushpin
+                                    </button>
+                                </div>
                                 <ul class="list-group pre-scrollable" 
                                     id="markerList">
                                 </ul>                              
@@ -783,9 +734,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
             <!--Prime UI Notify Widget--> 
             <div id="notify"></div>
+            <!--Prime UI Growl Widget--> 
+            <div id="growl"></div>  
         </div>
-        <!--Prime UI Growl Widget--> 
-        <div id="growl"></div>  
+
+
         <!--Prime UI Location Dialog--> 
         <div id="location-dlg" title="Set Location" style="display: none;">
             <div class="latitude">
@@ -799,6 +752,44 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                        name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
             </div>
         </div> 
+
+        <!--Prime UI ICS Marker Dialog--> 
+        <div id="icsMarkerDialog" title="ICS Marker" style="display: none;">
+            <div>
+                <label for="markerName" class="required">Name:</label>
+                <input type="text" placeholder="Unique name" 
+                       name="markerName" id="markerName" required>
+            </div>
+            <div id="icsMarkerGrid">
+                
+            </div>
+<!--            <div class="btn-group" 
+                 role="group"
+                 id="icsMarkerTypeDropdown">
+                <button type="button" 
+                        class="btn btn-default dropdown-toggle" 
+                        data-toggle="dropdown" 
+                        aria-expanded="false"
+                        >
+                    Select... 
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" 
+                    role="menu">
+                </ul>
+            </div> -->
+        </div>
+        
+        <!--Prime-UI ICS Marker Palette --> 
+        <div id="icsMarkerPalette" style="z-index: 2000;" title="Select an ICS Marker" style="display: none;">
+            <div id="markerGrid"></div>
+        </div>
+        
+        <!--Prime-UI Pushpin Palette --> 
+        <div id="pushpinPalette" title="Select a Pushpin Style" style="display: none;">
+            <div id="markerGrid"></div>
+        </div>
+
         <!--Prime UI Date/Time Dialog--> 
         <div id="datetime-dlg" title="Set Date and Time" style="display: none;">
             <div class="appdate">
@@ -810,11 +801,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <input type="text" name="timepicker" id="timepicker" >
             </div>
         </div>        
+
         <!--Prime UI Fuel Model Dialog--> 
         <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
             <div id="fuelModel-tbl">
             </div>
         </div>        
+
         <!--Prime UI Weather Editor Dialog--> 
         <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
             <div class="weatherValues">
@@ -839,7 +832,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <input type="text" name="cloudCover" id="cloudCover">
                 </div>            
             </div>
-        </div>        
+        </div>    
+        
+        <!--Google Analytics-->
         <script>
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
