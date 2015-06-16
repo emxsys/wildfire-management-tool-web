@@ -35,6 +35,7 @@ define([
     './FuelModelManager',
     './LocationManager',
     '../util/Log',
+    '../util/Messenger',
     '../model/Model',
     '../view/ReticuleView',
     '../util/Settings',
@@ -48,6 +49,7 @@ define([
         FuelModelManager,
         LocationManager,
         Log,
+        Messenger,
         Model,
         ReticuleView,
         Settings,
@@ -87,6 +89,9 @@ define([
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
             this.updateInterval = 50;
+            
+            // Counter used to display conditional messages
+            this.markerDnDCount = 0;
 
             // Setup to update each time the World Window is repainted.
             var self = this;
@@ -109,16 +114,59 @@ define([
         };
 
         /**
+         * Starts a drag-n-drop operation that creates the given marker on the globe at the drop point.
+         * 
+         * @param {Object} markerTemplate A marker template containing name:String and type:String properties.
+         */
+        Controller.prototype.addMarkerToGlobe = function (markerTemplate) {
+            var self = this,
+                onDropCallback;
+            
+            if (this.markerDnDCount < 2) {
+                this.markerDnDCount++;
+                Messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
+            }
+            // This callback function is invoked when the DnD drop is completed.
+            // The DnD controller will add/update the marker lat/lon properties
+            // at the drop point prior to invoking this function.
+            onDropCallback = function (markerTemplate) {
+                self.model.markerManager.addMarker(
+                    markerTemplate.name,
+                    markerTemplate.type,
+                    markerTemplate.latitude,
+                    markerTemplate.longitude);
+            };
+
+            // Start the DnD for the marker
+            this.wwd.dndController.armDrop(markerTemplate, onDropCallback);
+        };
+
+
+        /**
+         * Creates a weather lookout on the globe at the given location.
          * 
          * @param {type} latitude
          * @param {type} longitude
          */
-        Controller.prototype.createWeatherLookout = function (latitude, longitude) {
-            // Open a model dialog to obtain the Weather Lookout properties
-            
-            // On OK, create the lookout
-            //this.model.weatherLookoutManager.addWeatherLookout(name, latitude, longitude, rules);
+        Controller.prototype.addWeatherLookoutToGlobe = function (lookoutTemplate) {
+           var self = this,
+                onDropCallback;
+
+            // This callback function is invoked when the DnD drop is completed.
+            // The DnD controller will add/update the marker lat/lon properties
+            // at the drop point prior to invoking this function.
+//            onDropCallback = function (lookoutTemplate) {
+//                self.model.weatherLookoutManager.addLookout(
+//                    markerTemplate.name,
+//                    markerTemplate.type,
+//                    markerTemplate.latitude,
+//                    markerTemplate.longitude);
+//            };
+//
+//            // Start the DnD for the marker
+//            this.wwd.dndController.armDrop(markerTemplate, onDropCallback);tude, longitude, rules);
         };
+
 
         /**
          * Updates the globe view.
