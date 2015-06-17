@@ -198,13 +198,7 @@ define([
             }
             try {
                 // Create the symbol on the globe
-                this.createRenderable(
-                    markerNode.name,
-                    markerNode.type,
-                    template.category,
-                    template.symbol,
-                    markerNode.latitude,
-                    markerNode.longitude);
+                this.createRenderable(markerNode, template);
                 // Update our list of markers
                 this.synchronizeMarkerList();
             }
@@ -310,20 +304,16 @@ define([
          * Creates a WebWorldWind Placemark renderable for the given marker properties, and adds
          * the renderable to the globe.
          * 
-         * @param {type} name
-         * @param {type} type
-         * @param {type} category
-         * @param {type} symbol
-         * @param {type} latitude
-         * @param {type} longitude
+         * @param {MarkerNode} node Marker model object
+         * @param {Object} template Palette item
          */
-        MarkerPanel.prototype.createRenderable = function (name, type, category, symbol, latitude, longitude) {
+        MarkerPanel.prototype.createRenderable = function (node, template) {
             var placemark,
                 attr = new WorldWind.PlacemarkAttributes(null),
                 hiliteAttr;
 
             // Set up the common placemark attributes.
-            switch (category) {
+            switch (template.category) {
                 case 'ics':
                     attr.imageScale = 1.5;
                     attr.imageOffset = new WorldWind.Offset(
@@ -345,9 +335,9 @@ define([
             attr.drawLeaderLine = true;
             attr.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
-            placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 0));
+            placemark = new WorldWind.Placemark(new WorldWind.Position(node.latitude, node.longitude, 0));
             placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-            placemark.displayName = name;
+            placemark.displayName = node.name;
 
 
 //            marker.label = "Marker " + "\n"
@@ -357,7 +347,7 @@ define([
             // Create the placemark attributes for this placemark. 
             // Note that the attributes differ only by their image URL.
             attr = new WorldWind.PlacemarkAttributes(attr);
-            attr.imageSource = symbol;
+            attr.imageSource = template.symbol;
             placemark.attributes = attr;
 
             // Create the highlight attributes for this placemark. Note that the normal attributes are specified as
@@ -368,8 +358,17 @@ define([
             placemark.highlightAttributes = hiliteAttr;
 
             // Inject OUR own marker properties 
-            placemark.markerCategory = category;
-            placemark.markerType = type;
+            placemark.markerCategory = template.category;
+            placemark.markerType = template.type;
+
+            // Add a reference to our model object and a movable capability to the renderable
+            placemark.model = node;
+            placemark.moveToLatLon = function(latitude, longitude) {
+                this.position.latitude  = latitude;
+                this.position.longitude = longitude;
+                this.model.latitude = latitude;
+                this.model.longitude = longitude;
+            };
 
             // Render the marker on the globe
             this.markerLayer.addRenderable(placemark);
