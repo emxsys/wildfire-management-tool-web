@@ -43,6 +43,7 @@ define([
         var SelectController = function (worldWindow) {
             this.wwd = worldWindow;
 
+            // When dragging, the mouse event is consumed, i.e., not propagated.
             this.isDragging = false;
             // The list of selected items under the mouse cursor
             this.selectedItems = [];
@@ -99,10 +100,18 @@ define([
                     break;
                 case 'mousemove':
                     if (this.pickedItem) {
-                        // Move the object if the picked object has a position
-                        if (this.pickedItem.userObject.position) {
-                            terrainObject = pickList.terrainObject();
-                            if (terrainObject) {
+                        terrainObject = pickList.terrainObject();
+                        if (terrainObject) {
+                            // Move the object if it has a movable capability, i.e. a moveToLatLon function
+                            if (this.pickedItem.userObject.moveToLatLon) {
+                                this.pickedItem.userObject.moveToLatLon(
+                                    terrainObject.position.latitude,
+                                    terrainObject.position.longitude);
+                                redrawRequired = true;
+                            }
+                            // Move the object (a Renderable) if the picked object has a position object
+                            else if (this.pickedItem.userObject.position) {
+                                terrainObject = pickList.terrainObject();
                                 this.pickedItem.userObject.position =
                                     new WorldWind.Position(
                                         terrainObject.position.latitude,
@@ -113,6 +122,7 @@ define([
                         }
                     }
                     break;
+                case 'mouseout':
                 case 'mouseup':
                     this.pickedItem = null;
                     this.selectedItems = [];
