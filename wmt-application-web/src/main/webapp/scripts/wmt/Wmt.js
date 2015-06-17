@@ -74,11 +74,16 @@ define([],
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
             EVENT_MARKER_REMOVED: "markerRemoved",
+            
             EVENT_FUELMOISTURE_CHANGED: "fuelMoistureChanged",
             EVENT_SURFACEFUEL_CHANGED: "surfaceFuelChanged",
             EVENT_SURFACEFIRE_CHANGED: "surfaceFireChanged",
             EVENT_TERRAIN_CHANGED: "terrainChanged",
             EVENT_WEATHER_CHANGED: "weatherChanged",
+            
+            EVENT_WEAHER_LOOKOUT_ADDED: "weatherLookoutAdded",
+            EVENT_WEAHER_LOOKOUT_CHANGED: "weatherLookoutChanged",
+            EVENT_WEAHER_LOOKOUT_REMOVED: "weatherLookoutRemoved",
             /**
              * The display name for the layer that displays fire behavior lookouts.
              */
