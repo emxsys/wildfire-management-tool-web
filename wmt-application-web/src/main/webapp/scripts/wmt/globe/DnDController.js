@@ -55,10 +55,6 @@ define([
                 self.handleDrop(event);
             });
 
-//            this.wwd.addEventListener("touchend", function (event) {
-//                self.handleDrop(event);
-//            });
-
             // Listen for tap gestures on mobile devices
             clickRecognizer = new WorldWind.ClickRecognizer(this.wwd);
             clickRecognizer.addGestureListener(function (event) {
@@ -79,7 +75,7 @@ define([
             this.dropCallback = dropCallback;
 
             this.isArmed = true;
-            $('#canvasOne').css('cursor', 'crosshair'); // This should be a function of a Globe object
+            $(this.wwd.canvas).css('cursor', 'crosshair'); // This should be a function of a Globe object
         };
 
         /**
@@ -117,17 +113,19 @@ define([
             // relative to the upper left corner of the canvas rather than the upper left corner of the page.
             pickList = this.wwd.pickTerrain(this.wwd.canvasCoordinates(x, y));
             terrainObject = pickList.terrainObject();
-
-            this.dropObject.latitude = terrainObject.position.latitude;
-            this.dropObject.longitude = terrainObject.position.longitude;
-
-            // Restore the cursor
-            $('#canvasOne').css('cursor', 'pointer');   // TODO: this should be a property of our Globe object
-            this.isArmed = false;
-            event.stopImmediatePropagation();
-
-            this.dropCallback(this.dropObject);
-
+            if (terrainObject) {
+                // Update the drop object with new position
+                this.dropObject.latitude = terrainObject.position.latitude;
+                this.dropObject.longitude = terrainObject.position.longitude;
+                
+                // Cleanup and consume this event
+                $(this.wwd.canvas).css('cursor', 'pointer');
+                this.isArmed = false;
+                event.stopImmediatePropagation();
+                
+                // Transfer control to the callback function with the udpated drop object
+                this.dropCallback(this.dropObject);
+            }
         };
 
         return DnDController;
