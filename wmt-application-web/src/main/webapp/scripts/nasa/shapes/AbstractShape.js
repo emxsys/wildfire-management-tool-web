@@ -4,7 +4,7 @@
  */
 /**
  * @exports AbstractShape
- * @version $Id: AbstractShape.js 3095 2015-05-15 17:15:12Z dcollins $
+ * @version $Id: AbstractShape.js 3206 2015-06-17 18:06:31Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -191,6 +191,10 @@ define([
 
         AbstractShape.prototype.render = function (dc) {
             if (!this.enabled) {
+                return;
+            }
+
+            if (!dc.accumulateOrderedRenderables) {
                 return;
             }
 

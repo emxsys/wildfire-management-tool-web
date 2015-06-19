@@ -4,7 +4,7 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3174 2015-06-10 19:36:49Z tgaskins $
+ * @version $Id: DrawContext.js 3206 2015-06-17 18:06:31Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -357,6 +357,7 @@ define([
             this.terrain = null;
             this.verticalExaggeration = 1;
             this.frameStatistics = null;
+            this.accumulateOrderedRenderables = true;
 
             // Reset picking properties that may be set by the World Window.
             this.pickingMode = false;

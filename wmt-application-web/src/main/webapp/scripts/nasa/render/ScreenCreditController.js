@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenCreditController
- * @version $Id: ScreenCreditController.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: ScreenCreditController.js 3206 2015-06-17 18:06:31Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -178,7 +178,8 @@ define([
             program.loadModulateColor(gl, false);
 
             // Turn off depth testing.
-            gl.disable(WebGLRenderingContext.DEPTH_TEST);
+            // tag, 6/17/15: It's not clear why this call was here. It was carried over from WWJ.
+            //gl.disable(WebGLRenderingContext.DEPTH_TEST);
         };
 
         // Internal use only. Intentionally not documented.

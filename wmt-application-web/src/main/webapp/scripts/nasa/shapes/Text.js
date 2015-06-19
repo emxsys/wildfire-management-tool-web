@@ -4,7 +4,7 @@
  */
 /**
  * @exports Text
- * @version $Id: Text.js 3182 2015-06-11 21:44:04Z tgaskins $
+ * @version $Id: Text.js 3206 2015-06-17 18:06:31Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -238,6 +238,10 @@ define([
          */
         Text.prototype.render = function (dc) {
             if (!this.enabled || (!this.text) || this.text.length === 0) {
+                return;
+            }
+
+            if (!dc.accumulateOrderedRenderables) {
                 return;
             }
 
