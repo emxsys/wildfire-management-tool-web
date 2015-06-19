@@ -30,20 +30,24 @@
 
 /*global define*/
 
-define([],
-    function () {
+define(['../util/Movable'],
+    function (Movable) {
         "use strict";
 
-        var WeatherLookout = function (latitude, longitude, name, duration) {
-            this.latitude = latitude;
-            this.longitude = longitude;
+        var WeatherLookout = function (name, duration, rules, latitude, longitude) {
+            
+            // Mix-in the Movable capability: i.e., the moveToLatLon function 
+            // and EVENT_OBJECT_MOVED event publisher
+            Movable.makeMovable(this);
+            
             this.name = name || 'Wx Lookout';
             this.duration = duration || 24;
+            this.latitude = latitude;
+            this.longitude = longitude;
             
             this.rules = [];
             
         };
-
         return WeatherLookout;
 
     }
