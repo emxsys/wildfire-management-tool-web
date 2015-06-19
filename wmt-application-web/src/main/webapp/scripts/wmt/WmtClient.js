@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
 /**
  * WMT Client Application.
@@ -45,7 +45,6 @@
  * @param {Object} ReticuleLayer
  * @param {Object} Settings
  * @param {Object} Wmt
- * @param {Object} WorldWind
  * 
  * @author Bruce Schubert
  */
@@ -61,8 +60,7 @@ define([
     './globe/ReticuleLayer',
     './globe/SelectController',
     './globe/SkyBackgroundLayer',
-    './Wmt',
-    '../nasa/WorldWind'],
+    './Wmt'],
     function (
         Controller,
         DnDController,
@@ -75,8 +73,7 @@ define([
         ReticuleLayer,
         SelectController,
         SkyBackgroundLayer,
-        Wmt,
-        WorldWind) {
+        Wmt) {
         "use strict";
         var WmtClient = function () {
             Log.info("WmtClient", "constructor", "started");
@@ -101,7 +98,7 @@ define([
             MainMenu.initialize(this.controller);
 
             // Initialize the Time Slider Control
-            DateTimeControls.initialize(this.controller);
+            //DateTimeControls.initialize(this.controller);
 
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;
@@ -140,6 +137,7 @@ define([
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new WorldWind.RenderableLayer(Wmt.MARKERS_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(Wmt.WEATHER_LAYER_NAME), enabled: true},
                     {layer: new ReticuleLayer(), enabled: true, hide: true},
                     {layer: new EnhancedViewControlsLayer(this.wwd), enabled: true, hide: true}
                 ];
