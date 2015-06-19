@@ -89,7 +89,7 @@ define([
             // Internal. Intentionally not documented.
             this.updateTimeout = null;
             this.updateInterval = 50;
-            
+
             // Counter used to display conditional messages
             this.markerDnDCount = 0;
 
@@ -121,7 +121,7 @@ define([
         Controller.prototype.addMarkerToGlobe = function (markerTemplate) {
             var self = this,
                 onDropCallback;
-            
+
             if (this.markerDnDCount < 2) {
                 this.markerDnDCount++;
                 Messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
@@ -136,35 +136,26 @@ define([
                     markerTemplate.latitude,
                     markerTemplate.longitude);
             };
-
             // Start the DnD for the marker
             this.wwd.dndController.armDrop(markerTemplate, onDropCallback);
         };
 
 
         /**
-         * Creates a weather lookout on the globe at the given location.
+         * Creates a weather lookout on the globe at the user's drop point.
          * 
-         * @param {type} latitude
-         * @param {type} longitude
+         * @param {WeatherLookout} wxLookout A weather lookout containing name and rules[] properties.
          */
-        Controller.prototype.addWeatherLookoutToGlobe = function (lookoutTemplate) {
-           var self = this,
-                onDropCallback;
-
-            // This callback function is invoked when the DnD drop is completed.
-            // The DnD controller will add/update the marker lat/lon properties
-            // at the drop point prior to invoking this function.
-//            onDropCallback = function (lookoutTemplate) {
-//                self.model.weatherLookoutManager.addLookout(
-//                    markerTemplate.name,
-//                    markerTemplate.type,
-//                    markerTemplate.latitude,
-//                    markerTemplate.longitude);
-//            };
-//
-//            // Start the DnD for the marker
-//            this.wwd.dndController.armDrop(markerTemplate, onDropCallback);tude, longitude, rules);
+        Controller.prototype.addWeatherLookoutToGlobe = function (wxLookout) {
+            var self = this,
+                onDropCallback = function (wxLookout) {
+                    // This callback function is invoked when the DnD drop is completed.
+                    // The DnD controller will add/update the lookout object lat/lon properties
+                    // at the drop point prior to invoking this function.
+                    self.model.weatherLookoutManager.addLookout(wxLookout);
+                };
+            // Start the DnD for the lookout
+            this.wwd.dndController.armDrop(wxLookout, onDropCallback);
         };
 
 
@@ -309,6 +300,7 @@ define([
 
         Controller.prototype.restoreSession = function () {
             this.model.markerManager.restoreMarkers();
+            this.model.weatherLookoutManager.restoreLookouts();
             this.restoreSessionView();
         };
 
@@ -319,6 +311,7 @@ define([
         Controller.prototype.saveSession = function () {
             this.saveSessionView();
             this.model.markerManager.saveMarkers();
+            this.model.weatherLookoutManager.saveLookouts();
         };
 
         Controller.prototype.saveSessionView = function () {
