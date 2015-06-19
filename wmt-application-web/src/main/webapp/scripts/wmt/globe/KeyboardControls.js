@@ -47,7 +47,7 @@ define([
     function (
         Controller,
         Log,
-        WorldWind) {
+        ww) {
         "use strict";
         var KeyboardControls = function (worldWindow, controller) {
             this.wwd = worldWindow;

@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
 /**
  * The Formatter utiltity provides convienient methods for obtaining pretty strings. 
@@ -36,7 +36,7 @@
  * @author Bruce Schubert
  */
 define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+    function (ww) {
         "use strict";
         /**
          * Provides useful utilities specicially for WMT.

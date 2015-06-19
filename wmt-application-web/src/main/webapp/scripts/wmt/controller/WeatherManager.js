@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 /**
  * The WeatherManager manages a set of weather values from the user.
@@ -37,12 +37,8 @@
  
  *  * @author Bruce Schubert
  */
-define([
-    './Controller',
-    '../../nasa/WorldWind'],
-    function (
-        Controller,
-        WorldWind) {
+define(['./Controller'],
+    function (Controller) {
         "use strict";
         /**
          * @constructor

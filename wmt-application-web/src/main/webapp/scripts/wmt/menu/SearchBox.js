@@ -29,12 +29,12 @@
  */
 
 
-/*global define, $ */
+/*global define, $, WorldWind */
 
 define([
     '../../nasa/WorldWind'],
     function (
-        WorldWind) {
+        ww) {
         "use strict";
         var SearchBox = function (controller) {
             this.ctrl = controller;

@@ -47,7 +47,7 @@ define([
     function (
         ViewControlsLayer,
         Wmt,
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * Constructs a view controls layer.

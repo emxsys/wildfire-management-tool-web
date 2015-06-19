@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 define([
     '../view/CoordinatesView',
@@ -42,8 +42,7 @@ define([
     '../view/SolarView',
     './TimeManager',
     './WeatherManager',
-    '../Wmt',
-    '../../nasa/WorldWind'],
+    '../Wmt'],
     function (
         CoordinatesView,
         FuelModelManager,
@@ -56,8 +55,7 @@ define([
         SolarView,
         TimeManager,
         WeatherManager,
-        Wmt,
-        WorldWind) {
+        Wmt) {
         "use strict";
         var Controller = function (worldWindow) {
             // The WorldWindow (globe) provides the spatial input 

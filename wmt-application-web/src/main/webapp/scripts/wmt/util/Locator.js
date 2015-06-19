@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define */
+/*global define, WorldWind */
 
 /**
  * The Locator module is responsble for locating the host device's geographic location
@@ -46,7 +46,7 @@ define([
     function (
         Log,
         Messenger,
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * @constructor

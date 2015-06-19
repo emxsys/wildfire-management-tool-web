@@ -50,7 +50,7 @@ define([
         Compass,
         Crosshairs,
         Wmt,
-        WorldWind) {
+        ww) {
         "use strict";
 
         /**

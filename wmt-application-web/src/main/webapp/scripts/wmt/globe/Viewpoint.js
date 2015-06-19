@@ -38,7 +38,7 @@ define([
     function (
         Log,
         Terrain,
-        WorldWind) {
+        ww) {
         "use strict";
 
         /**

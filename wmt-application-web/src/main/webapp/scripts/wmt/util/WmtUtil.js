@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
 /**
  * Common utiltities module for WMT.
@@ -36,7 +36,7 @@
  * @module {util/WmtUtil}
  */
 define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+    function (ww) {
         "use strict";
         var WmtUtil = {
             METERS_TO_FEET: 3.28084,

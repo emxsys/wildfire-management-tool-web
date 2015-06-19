@@ -38,7 +38,7 @@
  * @author Bruce Schubert
  */
 define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+    function (ww) {
         "use strict";
         /**
          * Constructs crosshairs.

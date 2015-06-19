@@ -60,7 +60,8 @@ define([
     './globe/ReticuleLayer',
     './globe/SelectController',
     './globe/SkyBackgroundLayer',
-    './Wmt'],
+    './Wmt',
+    '../nasa/WorldWind'],
     function (
         Controller,
         DnDController,
@@ -73,7 +74,8 @@ define([
         ReticuleLayer,
         SelectController,
         SkyBackgroundLayer,
-        Wmt) {
+        Wmt,
+        ww) {
         "use strict";
         var WmtClient = function () {
             Log.info("WmtClient", "constructor", "started");
@@ -98,7 +100,7 @@ define([
             MainMenu.initialize(this.controller);
 
             // Initialize the Time Slider Control
-            //DateTimeControls.initialize(this.controller);
+            DateTimeControls.initialize(this.controller);
 
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;

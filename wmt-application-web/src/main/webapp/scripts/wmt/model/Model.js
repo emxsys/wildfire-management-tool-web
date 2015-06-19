@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind */
 
 /**
  * @module Model
@@ -69,7 +69,7 @@ define([
         WeatherResource,
         WmtUtil,
         Wmt,
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * Creates a Model object that's assocaited with the given WorldWindow globe.

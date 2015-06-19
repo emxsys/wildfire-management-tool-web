@@ -28,21 +28,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 /**
  * The LocationDialog obtains a set of coordinates from the user.
  * @module LocationDialog
- * @param {Object} WorldWind 
  * @author Bruce Schubert
  * @author Theodore Walton
  */
 define([
-    './Controller',
-    '../../nasa/WorldWind'],
+    './Controller'],
     function (
-        Controller,
-        WorldWind) {
+        Controller) {
         "use strict";
         /**
          * @constructor

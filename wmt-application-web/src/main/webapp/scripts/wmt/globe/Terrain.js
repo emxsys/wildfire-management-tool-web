@@ -37,7 +37,7 @@ define([
     function (
         Log,
         WmtUtil,
-        WorldWind) {
+        ww) {
         "use strict";
 
         /**

@@ -33,7 +33,7 @@
 define([
     '../../nasa/WorldWind'],
     function (
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * @constructor

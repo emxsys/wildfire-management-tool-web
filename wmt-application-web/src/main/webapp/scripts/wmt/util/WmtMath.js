@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
 /**
  * Math utiltities module for WMT.
@@ -37,7 +37,7 @@
  * @param {Object} WorldWind
  */
 define(['../../nasa/WorldWind'],
-    function (WorldWind) {
+    function (ww) {
         "use strict";
         var WmtMath = {
             /**

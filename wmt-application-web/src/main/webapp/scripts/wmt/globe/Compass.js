@@ -3,18 +3,15 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
 /**
  * @exports Compass
  * @author t tgaskins $
  */
-define([
-    '../Wmt',
+define(['../Wmt',
     '../../nasa/WorldWind'],
-    function (
-        Wmt,
-        WorldWind) {
+    function (Wmt, ww) {
         "use strict";
 
         /**

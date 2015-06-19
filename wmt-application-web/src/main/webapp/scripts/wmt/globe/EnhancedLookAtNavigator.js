@@ -56,7 +56,7 @@ define([
         Vec3,
         Wmt,
         WWMath,
-        WorldWind) {
+        ww) {
         "use strict";
         var EnhancedLookAtNavigator = function (worldWindow) {
             // Using Classic Inheriticance Pattern #3 - Rent and Set Prototype. See JavaScript Patterns

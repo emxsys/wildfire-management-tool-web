@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 /**
  * The ControlPanel manifests a dropdown in the Control Panel:Globe 
@@ -41,7 +41,7 @@ define([
     '../util/Locator', 
     '../util/Messenger', 
     '../../nasa/WorldWind'], 
-function (Locator, Messenger, WorldWind) {
+function (Locator, Messenger, ww) {
     "use strict";
     /**
      * @constructor

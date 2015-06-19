@@ -48,7 +48,7 @@ define([
         Log,
         Terrain,
         WmtMath,
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * @constructor
