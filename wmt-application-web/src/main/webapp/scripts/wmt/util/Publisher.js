@@ -30,26 +30,35 @@
 
 /*global define*/
 
-define([],
-    function () {
+define(['../util/Log'],
+    function (Log) {
         "use strict";
         var Publisher = {
             subscribers: {
                 any: []
             },
             on: function (type, fn, context) {
+                if ((typeof type) === 'undefined') {
+                    var caller_line = (new Error()).stack.split("\n")[4];
+                    Log.warning('Publisher', 'on', 'type arg is "undefined", is this really the intent? ' + caller_line);
+                }
                 type = type || 'any';
-                fn = typeof fn === "function" ? fn : context[fn];
+                fn = (typeof fn === "function") ? fn : context[fn];
 
-                if ((typeof this.subscribers[type]) === "undefined") {
+                if ((typeof this.subscribers[type]) === 'undefined') {
                     this.subscribers[type] = [];
                 }
-                this.subscribers[type].push({fn: fn, context: context || this});
+                this.subscribers[type].push({
+                    fn: fn,
+                    context: context || this});
             },
             remove: function (type, fn, context) {
                 this.visitSubscribers('unsubscribe', type, fn, context);
             },
             fire: function (type, publication) {
+                if ((typeof type) === 'undefined') {
+                    throw new TypeError(Log.error('Publisher', 'fire', 'Event type is "undefined".'));
+                }
                 this.visitSubscribers('publish', type, publication);
             },
             visitSubscribers: function (action, type, arg, context) {
@@ -69,6 +78,9 @@ define([],
                 }
             },
             makePublisher: function (o) {
+                if (o.subscribers) {
+                    return; // o is already a Publisher
+                }
                 var i;
                 for (i in Publisher) {
                     if (Publisher.hasOwnProperty(i) && typeof Publisher[i] === 'function') {
