@@ -47,15 +47,13 @@ requirejs.config({
 //            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
 //            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
 //        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
-        //worldwind: "../nasa/WorldWind",
-        Log: "./util/Log",
-        WmtClient: "WmtClient"
     }
 });
 
-requirejs(['Log', 'WmtClient'],
-    function (Log, WmtClient) {
+requirejs([
+    './WmtClient',
+    '../nasa/WorldWind'],
+    function (WmtClient, ww) {
         "use strict";
         var app = new WmtClient();
-        Log.info("main", "", "started");
     });
