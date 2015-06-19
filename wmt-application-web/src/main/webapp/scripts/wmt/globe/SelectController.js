@@ -28,12 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind */
 
-define([
-    '../../nasa/WorldWind'],
-    function (
-        WorldWind) {
+define([],
+    function () {
         "use strict";
         /**
          * @constructor
@@ -53,12 +51,12 @@ define([
             var self = this,
                 tapRecognizer;
 
-            // Listen for mouse moves and tap gestutes to move an item
-            this.wwd.addEventListener("mousemove", function (event) {
-                self.handlePick(event);
-            });
             // Listen for mouse clicks to select an item
             this.wwd.addEventListener("mousedown", function (event) {
+                self.handlePick(event);
+            });
+            // Listen for mouse moves and tap gestutes to move an item
+            this.wwd.addEventListener("mousemove", function (event) {
                 self.handlePick(event);
             });
             // Listen for mouse clicks to select an item
@@ -100,18 +98,18 @@ define([
                     break;
                 case 'mousemove':
                     if (this.pickedItem) {
+                        // Get the mouse coords on the terrain
                         terrainObject = pickList.terrainObject();
                         if (terrainObject) {
-                            // Move the object if it has a movable capability, i.e. a moveToLatLon function
+                            // Move the object if it has a "Movable" capability, 
+                            // i.e. a moveToLatLon function.
                             if (this.pickedItem.userObject.moveToLatLon) {
                                 this.pickedItem.userObject.moveToLatLon(
                                     terrainObject.position.latitude,
                                     terrainObject.position.longitude);
-                                redrawRequired = true;
                             }
-                            // Move the object (a Renderable) if the picked object has a position object
+                            // Or, move the object (a Renderable) if it has a position object
                             else if (this.pickedItem.userObject.position) {
-                                terrainObject = pickList.terrainObject();
                                 this.pickedItem.userObject.position =
                                     new WorldWind.Position(
                                         terrainObject.position.latitude,
@@ -122,7 +120,6 @@ define([
                         }
                     }
                     break;
-                case 'mouseout':
                 case 'mouseup':
                     this.pickedItem = null;
                     this.selectedItems = [];
@@ -131,7 +128,8 @@ define([
             }
             // Prevent pan/drag operations on the globe when we're dragging an object.
             if (this.isDragging) {
-                o.stopImmediatePropagation();
+                o.preventDefault();
+                //o.stopImmediatePropagation();
             }
             // Update the window if we changed anything.
             if (redrawRequired) {
