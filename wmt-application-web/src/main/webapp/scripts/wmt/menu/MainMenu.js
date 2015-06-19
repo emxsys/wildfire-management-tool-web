@@ -43,15 +43,15 @@
 define([
     './ControlPanel',
     './LayerMenu',
-    '../view/MarkerPanel',
+    '../view/MarkerView',
     './SearchBox',
-    '../view/WeatherPanel'],
+    '../view/WeatherView'],
     function (
         ControlPanel,
         LayerMenu,
-        MarkerPanel,
+        MarkerView,
         SearchBox,
-        WeatherPanel) {
+        WeatherView) {
         "use strict";
         var MainMenu = {
             initialize: function (controller) {
@@ -123,8 +123,8 @@ define([
                 });
                 this.controlPanel = new ControlPanel(controller);
                 this.layerMenu = new LayerMenu(controller);
-                this.markerPanel = new MarkerPanel(controller);
-                //this.watherPanel = new WeatherPanel(controller);
+                this.markerPanel = new MarkerView(controller);
+                this.watherPanel = new WeatherView(controller);
                 this.searchBox = new SearchBox(controller);
             },
             /**
