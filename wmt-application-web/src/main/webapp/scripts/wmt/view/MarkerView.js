@@ -31,14 +31,15 @@
 /*global define, $ */
 
 /**
- * The MarkerPanel provides a view of the marker model objects. 
+ * The MarkerView provides a view of the marker model objects as Renderables on the globe 
+ * and as items in the Marker List.
  * 
  * @param {type} Log
  * @param {type} MarkerPalette
  * @param {type} Messenger
  * @param {type} Wmt
  * @param {type} WorldWind
- * @returns {MarkerPanel}
+ * @returns {MarkerView}
  */
 define([
     '../util/Log',
@@ -54,12 +55,12 @@ define([
         WorldWind) {
         "use strict";
         /**
-         * Constructs a MarkerPanel 
+         * Constructs a MarkerView object.
          * @constructor
          * @param {type} controller
-         * @returns {MarkerPanel}
+         * @returns {MarkerView}
          */
-        var MarkerPanel = function (controller) {
+        var MarkerView = function (controller) {
             var self = this,
                 i,
                 max;
@@ -126,7 +127,7 @@ define([
             this.markerLayer = this.ctrl.findLayer(Wmt.MARKERS_LAYER_NAME);
             if (!this.markerLayer) {
                 throw new Error(
-                    Log.error("MarkerMenu", "constructor",
+                    Log.error("MarkerView", "constructor",
                         "Could not find a Layer named " + Wmt.MARKERS_LAYER_NAME));
             }
 
@@ -159,7 +160,7 @@ define([
          * @param {Object} mkr Marker template with name and type properties.
          * @param {this} context
          */
-        MarkerPanel.prototype.createMarkerCallback = function (mkr, context) {
+        MarkerView.prototype.createMarkerCallback = function (mkr, context) {
             context.ctrl.addMarkerToGlobe(mkr);
         };
 
@@ -167,7 +168,7 @@ define([
         /**
          * Creates renderables for existing markers found in the local storage.
          */
-        MarkerPanel.prototype.loadExistingMarkers = function () {
+        MarkerView.prototype.loadExistingMarkers = function () {
             var markers = this.ctrl.model.markerManager.markers,
                 i,
                 max;
@@ -183,7 +184,7 @@ define([
          * for the marker node.
          * @param {type} markerNode The marker model object.
          */
-        MarkerPanel.prototype.handleMarkerAddedEvent = function (markerNode) {
+        MarkerView.prototype.handleMarkerAddedEvent = function (markerNode) {
             var template = this.getTemplate(markerNode.type);
 
             // Handle if the model is initialized before this panel is initialized
@@ -191,7 +192,7 @@ define([
                 return;
             }
             if (!template) {
-                Log.error("MarkerMenu", "handleMarkerAddedEvent", "Symbol not found for marker type: " + markerNode.type);
+                Log.error("MarkerView", "handleMarkerAddedEvent", "Symbol not found for marker type: " + markerNode.type);
                 // Flag this marker... so we don't save it
                 markerNode.invalid = true;
                 return;
@@ -203,7 +204,7 @@ define([
                 this.synchronizeMarkerList();
             }
             catch (e) {
-                Log.error("MarkerMenu", "handleMarkerAddedEvent", e.toString());
+                Log.error("MarkerView", "handleMarkerAddedEvent", e.toString());
             }
         };
 
@@ -211,7 +212,7 @@ define([
          * Removes the given marker from the globe and the marker list.
          * @param {Object} markerNode
          */
-        MarkerPanel.prototype.handleMarkerRemovedEvent = function (markerNode) {
+        MarkerView.prototype.handleMarkerRemovedEvent = function (markerNode) {
             var i,
                 max,
                 placename;
@@ -232,7 +233,7 @@ define([
                 this.synchronizeMarkerList();
             }
             catch (e) {
-                Log.error("MarkerMenu", "handleMarkerRemovedEvent", e.toString());
+                Log.error("MarkerView", "handleMarkerRemovedEvent", e.toString());
             }
         };
 
@@ -242,39 +243,39 @@ define([
          * @param {$(li)} markerName List item element
          * @param {string} action "goto", "edit", or remove
          */
-        MarkerPanel.prototype.onMarkerItemClick = function (markerName, action) {
-            var markers = this.markerLayer.renderables,
-                marker,
+        MarkerView.prototype.onMarkerItemClick = function (markerName, action) {
+            var placemarks = this.markerLayer.renderables,
+                placemark,
                 position,
                 i,
                 len;
 
-            for (i = 0, len = markers.length; i < len; i += 1) {
-                marker = markers[i];
-                if (marker.displayName === markerName) {
+            for (i = 0, len = placemarks.length; i < len; i += 1) {
+                placemark = placemarks[i];
+                if (placemark.displayName === markerName) {
                     switch (action) {
                         case 'goto':
-                            position = marker.position;
+                            position = placemark.position;
                             if (position) {
                                 this.ctrl.lookAtLatLon(position.latitude, position.longitude);
                             } else {
-                                Log.error("MarkerMenu", "onMarkerItemClick", "Marker position is undefined.");
+                                Log.error("MarkerView", "onMarkerItemClick", "Marker position is undefined.");
                             }
                             break;
                         case 'edit':
                             Messenger.infoGrowl('Rename is not implemented yet.');
-                            Log.error("MarkerMenu", "onMarkerItemClick", "Not implemented action: " + action);
+                            Log.error("MarkerView", "onMarkerItemClick", "Not implemented action: " + action);
                             break;
                         case 'remove':
-                            this.ctrl.model.markerManager.removeMarker(marker.displayName);
+                            this.manager.removeMarker(placemark.displayName);
                             break;
                         default:
-                            Log.error("MarkerMenu", "onMarkerItemClick", "Unhandled action: " + action);
+                            Log.error("MarkerView", "onMarkerItemClick", "Unhandled action: " + action);
                     }
                     return;
                 }
             }
-            Log.error("MarkerMenu", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
+            Log.error("MarkerView", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
         };
 
 
@@ -283,7 +284,7 @@ define([
          * @param {String} type Marker type, e.g., "pushpin-black".
          * @returns {Object} Marker template with name, type, category and symbol properties.
          */
-        MarkerPanel.prototype.getTemplate = function (type) {
+        MarkerView.prototype.getTemplate = function (type) {
             var i,
                 len;
 
@@ -307,7 +308,7 @@ define([
          * @param {MarkerNode} node Marker model object
          * @param {Object} template Palette item
          */
-        MarkerPanel.prototype.createRenderable = function (node, template) {
+        MarkerView.prototype.createRenderable = function (node, template) {
             var placemark,
                 attr = new WorldWind.PlacemarkAttributes(null),
                 hiliteAttr;
@@ -339,8 +340,7 @@ define([
             placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             placemark.displayName = node.name;
 
-
-//            marker.label = "Marker " + "\n"
+//          placemark.label = "Marker " + "\n"
 //                + "Lat " + latitude.toPrecision(4).toString() + "\n"
 //                + "Lon " + longitude.toPrecision(5).toString();
 
@@ -376,13 +376,14 @@ define([
 
 
         /**
-         * Synchronize the marker list with the renderables in the Markers layer.
+         * Synchronize the marker list with the marker nodes in the model.
          */
-        MarkerPanel.prototype.synchronizeMarkerList = function () {
+        MarkerView.prototype.synchronizeMarkerList = function () {
             var self = this,
-                markers = this.markerLayer.renderables,
-                markerList = $("#markerList"), markerItem,
-                marker,
+                markers = this.manager.markers,
+                markerList = $("#markerList"), 
+                markerItem,
+                markerNode,
                 i,
                 len;
 
@@ -390,13 +391,13 @@ define([
             markerList.children().remove();
 
             for (i = 0, len = markers.length; i < len; i += 1) {
-                marker = markers[i];
+                markerNode = markers[i];
                 //markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
                 markerItem =
                     '<div class="btn-group btn-block btn-group-sm">' +
-                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto">' + marker.displayName + '</button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerName="' + marker.displayName + '"></button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerName="' + marker.displayName + '"></button>' +
+                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto">' + markerNode.name + '</button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerName="' + markerNode.name + '"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerName="' + markerNode.name + '"></button>' +
                     '</div>';
                 markerList.append(markerItem);
             }
@@ -414,6 +415,6 @@ define([
             });
         };
 
-        return MarkerPanel;
+        return MarkerView;
     }
 );
