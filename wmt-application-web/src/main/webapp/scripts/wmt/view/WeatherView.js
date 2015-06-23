@@ -44,11 +44,13 @@
 define([
     '../util/Log',
     '../model/WeatherLookout',
+    '../view/WeatherMapSymbol',
     '../util/Messenger',
     '../Wmt'],
     function (
         Log,
         WeatherLookout,
+        WeatherMapSymbol,
         Messenger,
         Wmt) {
         "use strict";
@@ -158,50 +160,19 @@ define([
          * @param {WeatherLookout} wxLookout
          */
         WeatherView.prototype.createRenderable = function (wxLookout) {
-            var placemark,
+            var wxMapSymbol,
+                placemark,
                 placemarkAttr,
                 highlightAttr,
                 canvas = document.createElement("canvas"),
                 ctx2d = canvas.getContext("2d"),
                 img;
 
-            placemark = new WorldWind.Placemark(new WorldWind.Position(wxLookout.latitude, wxLookout.longitude, 0));
-            placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-            placemark.displayName = wxLookout.name; // This property is used to sync renderables and model objects
-            placemark.label = placemark.displayName;
+            wxMapSymbol = new WeatherMapSymbol(wxLookout);
 
-            placemarkAttr = new WorldWind.PlacemarkAttributes(this.commonAttr);
-            placemark.attributes = placemarkAttr;
-            highlightAttr = new WorldWind.PlacemarkAttributes(placemarkAttr);
-            highlightAttr.imageScale = placemarkAttr.imageScale * 1.2;
-            placemark.highlightAttributes = highlightAttr;
-
-            img = new Image();
-            img.width = '32';
-            img.height = '32';
-            img.onload = function () {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx2d.drawImage(img, 0, 0, img.width, img.height);
-                placemark.attributes.imageSource = new WorldWind.ImageSource(canvas);
-                placemark.highlightAttributes.imageSource =  new WorldWind.ImageSource(canvas);
-            };
-            img.src = Wmt.IMAGE_PATH + 'weather/was-cccsbcp----.svg';
-
-            // Add a reference to our wx lookout model object to the renderable.
-            // The model object will be returned in the picked object's userObject property.
-            placemark.pickDelegate = wxLookout;
-
-            // This object moved handler synchronizes the renderable with the model's location
-            placemark.handleObjectMovedEvent = function (wxLookout) {
-                placemark.position.latitude = wxLookout.latitude;
-                placemark.position.longitude = wxLookout.longitude;
-            };
-            // Subscribe the renderble to the model's location
-            wxLookout.on(Wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
 
             // Add the weather lookout symbol on the globe
-            this.weatherLayer.addRenderable(placemark);
+            this.weatherLayer.addRenderable(wxMapSymbol);
         };
 
 
