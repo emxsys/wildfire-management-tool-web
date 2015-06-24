@@ -67,14 +67,15 @@ define(['../../nasa/WorldWind'],
                 return Math.abs(time1.getTime() - time2.getTime()) * this.MILLISECS_TO_MINUTES;
             },
             /**
-             * Gets the number of minutes between two times.
-             */
-            /**
              * Gets the current domain from the active browser window.
              * @returns {String} E.g., returns http://emxsys.com from http://emxsys.com/documentation/index.html
              */
             currentDomain: function () {
                 return window.location.protocol + "//" + window.location.host;
+            },
+            pad: function (num, size) {
+                var s = "000000000" + num;
+                return s.substr(s.length - size);
             }
         };
         return WmtUtil;
