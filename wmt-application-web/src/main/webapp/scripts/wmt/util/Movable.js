@@ -34,6 +34,11 @@ define(['../util/Publisher', '../Wmt'],
     function (Publisher, Wmt) {
         "use strict";
         var Movable = {
+            moveStarted: function () {
+                if (this.isMovable) {
+                    this.fire(Wmt.EVENT_OBJECT_MOVE_STARTED, this);
+                }
+            },
             moveToLatLon: function (latitude, longitude) {
                 if (this.isMovable) {
                     this.latitude = latitude;
@@ -41,21 +46,34 @@ define(['../util/Publisher', '../Wmt'],
                     this.fire(Wmt.EVENT_OBJECT_MOVED, this);
                 }
             },
+            moveFinished: function () {
+                if (this.isMovable) {
+                    this.fire(Wmt.EVENT_OBJECT_MOVE_FINISHED, this);
+                }
+            },
+            /**
+             * Adds the the movable capabilities to the given object.
+             * @param {Object} o The object that will become movable.
+             */
             makeMovable: function (o) {
+                // Ensure we don't duplicate 
                 if (o.moveToLatLon) {
                     return; // o is already movable
                 }
+                // Add the functions
                 var i;
                 for (i in Movable) {
                     if (Movable.hasOwnProperty(i) && typeof Movable[i] === 'function') {
-                        if (Movable[i]===this.makeMovable) {
+                        if (Movable[i] === this.makeMovable) {
                             continue;
                         }
                         o[i] = Movable[i];
                     }
                 }
+                // Add the properties
                 o.isMovable = true;
-
+                
+                // Add the Publisher capability so that events can be generated.
                 Publisher.makePublisher(o);
             }
         };
