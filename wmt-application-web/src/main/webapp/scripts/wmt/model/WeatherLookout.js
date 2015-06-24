@@ -30,24 +30,50 @@
 
 /*global define*/
 
-define(['../util/Movable'],
-    function (Movable) {
+define([
+    '../util/Movable',
+    '../resource/WeatherResource',
+    '../Wmt'],
+    function (
+        Movable,
+        WeatherResource,
+        Wmt) {
         "use strict";
 
         var WeatherLookout = function (name, duration, rules, latitude, longitude) {
-            
+
             // Mix-in the Movable capability: i.e., the moveToLatLon function 
             // and EVENT_OBJECT_MOVED event publisher
             Movable.makeMovable(this);
-            
+
             this.name = name || 'Wx Lookout';
             this.duration = duration || 24;
             this.latitude = latitude;
             this.longitude = longitude;
-            
+
             this.rules = [];
             
+            // Self subscribe to move operations
+            this.on(Wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
+            
+            this.refresh();
         };
+
+        WeatherLookout.prototype.refresh = function () {
+            if (!this.latitude || !this.longitude || !this.duration) {
+                return;
+            }
+            var self = this;
+            WeatherResource.pointForecast(
+                this.latitude,
+                this.longitude,
+                this.duration,
+                function (json) {
+                    self.wxForecast = json;
+                    self.fire(Wmt.EVENT_WEATHER_LOOKOUT_CHANGED, self);
+                });
+        };
+
         return WeatherLookout;
 
     }
