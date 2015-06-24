@@ -39,26 +39,35 @@ define([
         "use strict";
 
         var SkyCoverPlacemark = function (latitude, longitude, skyCoverPct, eyeDistanceScaling) {
-            WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, 1000), eyeDistanceScaling);
+            WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-            
-            this.attributes =  new WorldWind.PlacemarkAttributes(null);
+
+            this.attributes = new WorldWind.PlacemarkAttributes(null);
             this.attributes.depthTest = false;
             this.attributes.imageScale = 0.5;
             this.attributes.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
                 WorldWind.OFFSET_FRACTION, 0.5);
             this.attributes.labelAttributes.offset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 0.5,
-                WorldWind.OFFSET_FRACTION, 1.0);
+                WorldWind.OFFSET_FRACTION, 0.5,     // Centered
+                WorldWind.OFFSET_FRACTION, 2.2);    // Below RH
             this.attributes.drawLeaderLine = true;
             this.attributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
-            this.attributes.labelAttributes.color = WorldWind.Color.YELLOW;
-
-            //this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
+            this.attributes.labelAttributes.color = WorldWind.Color.WHITE;
+            this.attributes.labelAttributes.depthTest = false;
+            this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
             //this.highlightAttributes.imageScale = placemarkAttr.imageScale * 1.2;
+            //this.eyeDistanceScalingThreshold = 2500000;
 
+            this.updateSkyCoverImage(skyCoverPct);
+
+        };
+        // Inherit Placemark parent methods
+        SkyCoverPlacemark.prototype = Object.create(WorldWind.Placemark.prototype);
+
+
+        SkyCoverPlacemark.prototype.updateSkyCoverImage = function (skyCoverPct) {
             var img = new Image(),
                 imgName,
                 self = this;
@@ -70,29 +79,28 @@ define([
 
                 canvas.width = img.width;
                 canvas.height = img.height;
-                
-                context.drawImage(img, 0, 0, img.width, img.height);
-                // Assign the loaded image to the placemark
-                self.attributes.imageSource = new WorldWind.ImageSource(canvas);
-                // Override the default "unique" key in order to reuse the texture
-                //self.attributes.imageSource.key = imgName;
-                //self.highlightAttributes.imageSource = new WorldWind.ImageSource(canvas);
+
+                // Execute drawImage after delay for IE 11 compatitiblity (else SecurityError thrown)
+                setTimeout(function () {
+                    context.drawImage(img, 0, 0, img.width, img.height);
+                    // Assign the loaded image to the placemark
+                    self.attributes.imageSource = new WorldWind.ImageSource(canvas);
+                    self.highlightAttributes.imageSource = new WorldWind.ImageSource(canvas);
+                }, 0);
             };
+            //img.crossOrigin = "Anonymous";    // Is this reqd for IE11 compatibility?
             if (skyCoverPct === undefined) {
                 imgName = 'sky_cover-missing.svg';
             }
             else if (!isNaN(skyCoverPct)) {
-                imgName = 'sky_cover-' + Math.round(skyCoverPct / 8) + '.8.svg';
+                imgName = 'sky_cover-' + Math.round(8 * (skyCoverPct / 100)) + '.8.svg';
             }
             else {
                 imgName = 'sky_cover-obscurred.svg';
             }
             // Fire the onload event
             img.src = Wmt.IMAGE_PATH + 'weather/' + imgName;
-
         };
-        // Inherit Placemark parent methods
-        SkyCoverPlacemark.prototype = Object.create(WorldWind.Placemark.prototype);
 
         return SkyCoverPlacemark;
     }

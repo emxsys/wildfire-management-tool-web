@@ -71,7 +71,9 @@ define([],
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
             
+            EVENT_OBJECT_MOVE_STARTED: "objectMoveStarted",
             EVENT_OBJECT_MOVED: "objectMoved",
+            EVENT_OBJECT_MOVE_FINISHED: "objectMoveFinished",
             
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
@@ -147,6 +149,9 @@ define([],
              * The URL for the weather REST service.
              */
             WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
+            
+            WEATHER_MAP_SYMBOL_ALTITUDE: 500,
+            
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"

@@ -32,34 +32,55 @@
 
 define([
     '../globe/EnhancedPlacemark',
+    '../util/WmtUtil',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
         EnhancedPlacemark,
+        WmtUtil,
         Wmt,
         ww) {
         "use strict";
 
+        /**
+         * @constructor
+         * @param {type} latitude
+         * @param {type} longitude
+         * @param {type} windSpdKts
+         * @param {type} windDirDeg
+         * @param {type} eyeDistanceScaling
+         * @returns {WindBarbPlacemark_L38.WindBarbPlacemark}
+         */
         var WindBarbPlacemark = function (latitude, longitude, windSpdKts, windDirDeg, eyeDistanceScaling) {
 
-            EnhancedPlacemark.call(this, new WorldWind.Position(latitude, longitude, 1000), eyeDistanceScaling);
+            EnhancedPlacemark.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
             this.attributes = new WorldWind.PlacemarkAttributes(null);
-            this.attributes.depthTest = false;
+            this.attributes.depthTest = true;
             this.attributes.imageScale = 0.3;
             this.attributes.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5, // Width centered
                 WorldWind.OFFSET_FRACTION, 0.5);// Height centered
-
-            //this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
+            this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
 
             this.imageRotation = 0;
 
+            this.updateWindBarbImage(windSpdKts, windDirDeg);
+        };
+        // Inherit the Placemark methods (Note: calls the Placemark constructor a 2nd time).
+        WindBarbPlacemark.prototype = Object.create(EnhancedPlacemark.prototype);
+
+        /**
+         * 
+         * @param {type} windSpdKts
+         * @param {type} windDirDeg
+         * @returns {undefined}
+         */
+        WindBarbPlacemark.prototype.updateWindBarbImage = function (windSpdKts, windDirDeg) {
             var img = new Image(),
-                knots = Math.round(windSpdKts / 5) * 5, // rounded to 5 kts
-                imgName = 'wind_spd-' + knots + 'kts.svg',
+                imgName,
                 self = this;
 
             // Draw the image in the canvas after loading
@@ -67,45 +88,40 @@ define([
                 var canvas = document.createElement("canvas"),
                     context = canvas.getContext("2d"),
                     size = Math.max(img.width, img.height) * 2,
-                    center = size / 2;
+                    center = size / 2,
+                    ccwRadians = (-windDirDeg + 90) * (Math.PI / 180);
 
                 // Create a square canvase
                 canvas.width = size;
                 canvas.height = size;
 
                 // Draw the image at the center of the canvas
-                self.rotateAbout(context, 90 * (Math.PI / 180), center, center);
-                context.drawImage(img, center, center);
+                self.rotateAbout(context, ccwRadians, center, center);
 
-                //context.translate(48, 32); // center
-                //context.rotate(225 * (Math.PI / 180));
-                //self.rotateAbout(context, 225 * (Math.PI / 180), 48, 48);
-                //context.drawImage(img, 48, 48, img.width, img.height);
-
-                // Assign the loaded image to the placemark
-                // Set override the default "unique" key in order to reuse the texture
-                self.attributes.imageSource = new WorldWind.ImageSource(canvas);
-                //self.attributes.imageSource.key = imgName;
-                //self.highlightAttributes.imageSource = new WorldWind.ImageSource(canvas);
+                // Execute drawImage after delay for ID 11 compatitiblity
+                setTimeout(function () {
+                    context.drawImage(img, center, center);
+                    // Assign the loaded image to the placemark
+                    self.attributes.imageSource = new WorldWind.ImageSource(canvas);
+                    self.highlightAttributes.imageSource = new WorldWind.ImageSource(canvas);
+                }, 0);
             };
             if (windSpdKts === undefined || isNaN(windSpdKts)) {
-                imgName = 'wind_spd-50kts.svg';
+                imgName = 'wind_spd-missing.svg';
             }
             else {
                 // Wind speed rounded to 5 kts
-                imgName = 'wind_spd-' + (Math.round(windSpdKts / 5) * 5) + 'kts.svg';
+                imgName = 'wind_spd-' + WmtUtil.pad((Math.round(windSpdKts / 5) * 5), 2) + 'kts.svg';
             }
             // Fire the onload event
             img.src = Wmt.IMAGE_PATH + 'weather/' + imgName;
 
         };
-        // Inherit the Placemark methods (Note: calls the Placemark constructor a 2nd time).
-        WindBarbPlacemark.prototype = Object.create(EnhancedPlacemark.prototype);
-
 
         /**
          * Rotates theta radians counterclockwise around the point (x,y). This can also be accomplished with a 
          * translate,rotate,translate sequence.
+         * Copied from the book "JavaScript: The Definitive Reference"
          * @param {Context} c
          * @param {Number} theta Radians
          * @param {Number} x
