@@ -52,6 +52,7 @@ define([
     './controller/Controller',
     './globe/DnDController',
     './globe/EnhancedLookAtNavigator',
+    './globe/EnhancedTextSupport',
     './globe/EnhancedViewControlsLayer',
     './globe/KeyboardControls',
     './util/Log',
@@ -66,6 +67,7 @@ define([
         Controller,
         DnDController,
         EnhancedLookAtNavigator,
+        EnhancedTextSupport,
         EnhancedViewControlsLayer,
         KeyboardControls,
         Log,
@@ -118,6 +120,9 @@ define([
         WmtClient.prototype.initializeGlobe = function () {
             // Create the World Window with a custom navigator object 
             this.wwd = new WorldWind.WorldWindow("canvasOne");
+            
+            // Override the default TextSupport with our custom verion
+            this.wwd.drawContext.textSupport = new EnhancedTextSupport();
 
             // Create the controller that mouseover highlighting objects in the globe;
             // add this controller as a new WorldWindow property .
