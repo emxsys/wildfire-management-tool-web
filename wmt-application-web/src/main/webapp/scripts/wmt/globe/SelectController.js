@@ -65,10 +65,10 @@ define([],
             });
 
             // Listen for tap gestures on mobile devices
-            tapRecognizer = new WorldWind.TapRecognizer(this.wwd);
-            tapRecognizer.addGestureListener(function (event) {
-                self.handlePick(event);
-            });
+//            tapRecognizer = new WorldWind.TapRecognizer(this.wwd);
+//            tapRecognizer.addGestureListener(function (event) {
+//                self.handlePick(event);
+//            });
 
         };
 
@@ -94,6 +94,12 @@ define([],
                     if (pickList.hasNonTerrainObjects()) {
                         this.pickedItem = pickList.topPickedObject();
                         this.isDragging = true;
+                        if (this.pickedItem) {
+                            // Move the object if it has a "Movable" capability
+                            if (this.pickedItem.userObject.moveStarted) {
+                                this.pickedItem.userObject.moveStarted();
+                            }
+                        }
                     }
                     break;
                 case 'mousemove':
@@ -121,6 +127,12 @@ define([],
                     }
                     break;
                 case 'mouseup':
+                    if (this.pickedItem) {
+                        // Move the object if it has a "Movable" capability
+                        if (this.pickedItem.userObject.moveFinished) {
+                            this.pickedItem.userObject.moveFinished();
+                        }
+                    }
                     this.pickedItem = null;
                     this.selectedItems = [];
                     this.isDragging = false;
@@ -135,7 +147,8 @@ define([],
             if (redrawRequired) {
                 this.wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
             }
-        };
+        }
+        ;
 
         return SelectController;
     }
