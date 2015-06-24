@@ -56,10 +56,10 @@ define([
             });
 
             // Listen for tap gestures on mobile devices
-            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd);
-            clickRecognizer.addGestureListener(function (event) {
-                self.handleDrop(event);
-            });
+//            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd);
+//            clickRecognizer.addGestureListener(function (event) {
+//                self.handleDrop(event);
+//            });
 
         };
 
