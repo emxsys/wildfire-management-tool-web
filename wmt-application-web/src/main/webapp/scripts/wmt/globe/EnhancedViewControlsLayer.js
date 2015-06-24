@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind */
 
 /**
  * The World Wind view controls are horizontal in nature, this implementation orients the controls vertically.
@@ -191,53 +191,6 @@ define([
                 this.fovNarrowControl.render(dc);
                 this.fovWideControl.render(dc);
             }
-        };
-
-        // Copied from parent. Augmented to ignore inactive controls
-        ViewControlsLayer.prototype.pickControl = function (pickPoint) {
-            var x = pickPoint[0], y = this.wwd.canvas.height - pickPoint[1],
-                control;
-
-            for (var i = 0; i < this.controls.length; i++) {
-                control = this.controls[i];
-
-                if (control.enabled) {
-                    if (x >= control.screenOffset.x && x <= (control.screenOffset.x + control.size)
-                        && y >= control.screenOffset.y && y <= (control.screenOffset.y + control.size)) {
-                        return control;
-                    }
-                }
-            }
-
-            return null;
-        };
-
-        // Copied from parent. Augmented to include goto and locate controls
-        EnhancedViewControlsLayer.prototype.determineOperation = function (ignore, topObject) {
-            var operation = null;
-
-            if (topObject && (topObject instanceof WorldWind.ScreenImage)) {
-                if (topObject === this.panControl) {
-                    operation = this.handlePan;
-                } else if (topObject === this.zoomInControl
-                    || topObject === this.zoomOutControl) {
-                    operation = this.handleZoom;
-                } else if (topObject === this.headingLeftControl
-                    || topObject === this.headingRightControl) {
-                    operation = this.handleHeading;
-                } else if (topObject === this.tiltUpControl
-                    || topObject === this.tiltDownControl) {
-                    operation = this.handleTilt;
-                } else if (topObject === this.exaggerationUpControl
-                    || topObject === this.exaggerationDownControl) {
-                    operation = this.handleExaggeration;
-                } else if (topObject === this.fovNarrowControl
-                    || topObject === this.fovWideControl) {
-                    operation = this.handleFov;
-                }
-            }
-
-            return operation;
         };
 
         return EnhancedViewControlsLayer;
