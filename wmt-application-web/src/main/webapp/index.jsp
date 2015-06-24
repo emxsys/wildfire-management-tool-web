@@ -67,7 +67,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <script src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js" type="text/javascript"></script>
         <script src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js" type="text/javascript"></script>
 
-        <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
 
         <!--For production, use content delivery network (CDN) libraries-->
         <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
@@ -833,7 +832,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>            
             </div>
         </div>    
+
         
+        <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
+
         <!--Google Analytics-->
         <script>
             (function (i, s, o, g, r, a, m) {
