@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WorldWind.js 3146 2015-06-03 22:00:33Z dcollins $
+ * @version $Id: WorldWind.js 3248 2015-06-24 19:49:10Z tgaskins $
  */
 define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
         './error/AbstractError',
@@ -36,6 +36,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './render/FramebufferTile',
         './render/FramebufferTileController',
         './geom/Frustum',
+        './shapes/GeographicMesh',
         './projections/GeographicProjection',
         './shapes/GeographicText',
         './gesture/GestureRecognizer',
@@ -118,6 +119,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './layer/TiledImageLayer',
         './util/TileFactory',
         './gesture/TiltRecognizer',
+        './gesture/Touch',
         './error/UnsupportedOperationError',
         './geom/Vec2',
         './geom/Vec3',
@@ -160,6 +162,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               FramebufferTile,
               FramebufferTileController,
               Frustum,
+              GeographicMesh,
               GeographicProjection,
               GeographicText,
               GestureRecognizer,
@@ -242,6 +245,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               TiledImageLayer,
               TileFactory,
               TiltRecognizer,
+              Touch,
               UnsupportedOperationError,
               Vec2,
               Vec3,
@@ -469,6 +473,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['FramebufferTile'] = FramebufferTile;
         WorldWind['FramebufferTileController'] = FramebufferTileController;
         WorldWind['Frustum'] = Frustum;
+        WorldWind['GeographicMesh'] = GeographicMesh;
         WorldWind['GeographicProjection'] = GeographicProjection;
         WorldWind['GeographicText'] = GeographicText;
         WorldWind['GestureRecognizer'] = GestureRecognizer;
@@ -551,6 +556,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['TiledImageLayer'] = TiledImageLayer;
         WorldWind['TileFactory'] = TileFactory;
         WorldWind['TiltRecognizer'] = TiltRecognizer;
+        WorldWind['Touch'] = Touch;
         WorldWind['UnsupportedOperationError'] = UnsupportedOperationError;
         WorldWind['Vec2'] = Vec2;
         WorldWind['Vec3'] = Vec3;

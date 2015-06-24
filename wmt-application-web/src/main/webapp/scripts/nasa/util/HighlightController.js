@@ -4,7 +4,7 @@
  */
 /**
  * @exports HighlightController
- * @version $Id: HighlightController.js 3024 2015-04-15 20:53:54Z tgaskins $
+ * @version $Id: HighlightController.js 3229 2015-06-19 23:53:04Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -78,8 +78,7 @@ define([
             this.worldWindow.addEventListener("mousemove", handlePick);
 
             // Listen for taps on mobile devices and highlight the placemarks that the user taps.
-            var tapRecognizer = new WorldWind.TapRecognizer(this.worldWindow);
-            tapRecognizer.addGestureListener(handlePick);
+            var tapRecognizer = new WorldWind.TapRecognizer(this.worldWindow, handlePick);
         };
 
         return HighlightController;

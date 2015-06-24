@@ -4,7 +4,7 @@
  */
 /**
  * @exports SurfaceTileRenderer
- * @version $Id: SurfaceTileRenderer.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: SurfaceTileRenderer.js 3217 2015-06-19 18:58:03Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -66,6 +66,8 @@ define([
                 return;
 
             this.isSurfaceShapeTileRendering = surfaceTiles[0] instanceof SurfaceShapeTile;
+
+            opacity *= dc.surfaceOpacity;
 
             // For each terrain tile, render it for each overlapping surface tile.
             program = this.beginRendering(dc, opacity);

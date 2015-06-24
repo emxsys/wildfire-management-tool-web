@@ -4,7 +4,7 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3206 2015-06-17 18:06:31Z tgaskins $
+ * @version $Id: DrawContext.js 3217 2015-06-19 18:58:03Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -250,6 +250,13 @@ define([
              * @default 500
              */
             this.fadeTime = 500;
+
+            /**
+             * The opacity to apply to terrain and surface shapes. Should be a number between 0 and 1.
+             * @type {Number}
+             * @default 1
+             */
+            this.surfaceOpacity = 1;
 
             /**
              * Frame statistics.

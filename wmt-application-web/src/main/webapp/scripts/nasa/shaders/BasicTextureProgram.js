@@ -4,7 +4,7 @@
  */
 /**
  * @exports BasicTextureProgram
- * @version $Id: BasicTextureProgram.js 2944 2015-03-31 16:05:58Z tgaskins $
+ * @version $Id: BasicTextureProgram.js 3216 2015-06-19 18:31:23Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -59,6 +59,7 @@ define([
                     '    gl_FragColor = color * floor(textureColor.a + 0.5);\n' +
                     'else\n' +
                     '    gl_FragColor = color * opacity;\n' +
+                    'if (gl_FragColor.a == 0.0) discard;\n' +
                     '}';
 
             // Call to the superclass, which performs shader program compiling and linking.

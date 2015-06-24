@@ -4,7 +4,7 @@
  */
 /**
  * @exports WorldWindow
- * @version $Id: WorldWindow.js 3210 2015-06-18 00:59:01Z tgaskins $
+ * @version $Id: WorldWindow.js 3230 2015-06-20 00:15:32Z dcollins $
  */
 define([
         './error/ArgumentError',
@@ -154,6 +154,16 @@ define([
             this.subsurfaceMode = false;
 
             /**
+             * The opacity to apply to terrain and surface shapes. This property is typically used when viewing
+             * the sub-surface. It modifies the opacity of the terrain and surface shapes as a whole. It should be
+             * a number between 0 and 1. It is compounded with the individual opacities of the image layers and
+             * surface shapes on the terrain.
+             * @type {Number}
+             * @default 1
+             */
+            this.surfaceOpacity = 1;
+
+            /**
              * Performance statistics for this WorldWindow.
              * @type {FrameStatistics}
              */
@@ -292,8 +302,8 @@ define([
                 entry = {
                     listeners: [],
                     callback: function (event) { // calls listeners in reverse registration order
-                        for (var i = entry.listeners.length - 1; i >= 0; i--) {
-                            event.worldWindow = thisWorldWindow;
+                        event.worldWindow = thisWorldWindow;
+                        for (var i = 0, len = entry.listeners.length; i < len; i++) {
                             entry.listeners[i](event);
                         }
                     }
@@ -303,7 +313,7 @@ define([
 
             var index = entry.listeners.indexOf(listener);
             if (index == -1) { // suppress duplicate listeners
-                entry.listeners.push(listener); // add the listener to the list
+                entry.listeners.splice(0, 0, listener); // insert the listener at the beginning of the list
 
                 if (entry.listeners.length == 1) { // first listener added, add the event listener callback
                     this.canvas.addEventListener(type, entry.callback, false);
@@ -573,6 +583,7 @@ define([
             dc.layers = this.layers;
             dc.navigatorState = this.navigator.currentState();
             dc.verticalExaggeration = this.verticalExaggeration;
+            dc.surfaceOpacity = this.surfaceOpacity;
             dc.deepPicking = this.deepPicking;
             dc.frameStatistics = this.frameStatistics;
             dc.update();
@@ -694,12 +705,18 @@ define([
             this.drawContext.renderShapes = true;
 
             if (this.subsurfaceMode && this.hasStencilBuffer) {
+                // Draw the surface and collect the ordered renderables.
                 this.drawContext.currentGlContext.disable(WebGLRenderingContext.STENCIL_TEST);
                 this.drawContext.surfaceShapeTileBuilder.clear();
                 this.drawLayers(true);
                 this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
                 if (!this.deferOrderedRendering) {
+                    // Clear the depth and stencil buffers prior to rendering the ordered renderables. This allows
+                    // sub-surface renderables to be drawn beneath the terrain. Turn on stenciling to capture the
+                    // fragments that ordered renderables draw. The terrain and surface shapes will be subsequently
+                    // drawn again, and the stencil buffer will ensure that they are drawn only where they overlap
+                    // the fragments drawn by the ordered renderables.
                     this.drawContext.currentGlContext.clear(
                         WebGLRenderingContext.DEPTH_BUFFER_BIT | WebGLRenderingContext.STENCIL_BUFFER_BIT);
                     this.drawContext.currentGlContext.enable(WebGLRenderingContext.STENCIL_TEST);
@@ -724,6 +741,8 @@ define([
         };
 
         WorldWindow.prototype.redrawSurface = function () {
+            // Draw the terrain and surface shapes but only where the current stencil buffer is non-zero.
+            // The non-zero fragments are from drawing the ordered renderables previously.
             this.drawContext.currentGlContext.stencilFunc(WebGLRenderingContext.EQUAL, 1, 1);
             this.drawContext.currentGlContext.stencilOp(
                 WebGLRenderingContext.KEEP, WebGLRenderingContext.KEEP, WebGLRenderingContext.KEEP);
