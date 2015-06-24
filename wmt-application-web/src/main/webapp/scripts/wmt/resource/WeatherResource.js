@@ -61,6 +61,23 @@ define([
                     + "&cloudCover=" + clouds;
                 console.log(url + '?' + query);
                 $.get(url, query, callback);
+            },
+            /**
+             * 
+             * @param {Number} latitude
+             * @param {Number} longitude
+             * @param {Number} duration
+             * @param {Function(JSON)} callback Receives a weather forecast JSON object.
+             */
+            pointForecast: function (latitude, longitude, duration, callback) {
+                // TODO: assert input values
+                var url = WmtUtil.currentDomain() + Wmt.WEATHER_REST_SERVICE + '/pointforecast' ,
+                    query = "mime-type=application/json"
+                    + "&latitude=" + latitude
+                    + "&longitude=" + longitude
+                    + "&duration=" + duration;
+                console.log(url + '?' + query);
+                $.get(url, query, callback);
             }
         };
         return WeatherResource;
