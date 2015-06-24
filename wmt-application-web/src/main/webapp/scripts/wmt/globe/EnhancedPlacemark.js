@@ -200,11 +200,14 @@ define([
             // BDS: Added this block (template from ScreenImage)
             ///////////////////////////////////////////////////
             if (this.imageRotation !== 0 || this.imageTilt !== 0) {
-                Placemark.matrix.multiplyByTranslation(0.5, 0.5, 0.0);
+                Placemark.matrix.multiplyByTranslation(0.5, 0.5, -0.5);
                 Placemark.matrix.multiplyByRotation(1, 0, 0, this.imageTilt);
                 Placemark.matrix.multiplyByRotation(0, 0, 1, this.imageRotation);
-                Placemark.matrix.multiplyByTranslation(-0.5, -0.5, 0.0);
+                Placemark.matrix.multiplyByTranslation(-0.5, -0.5, 0);
             }
+            ///////////////////////////////////////////////////
+            // BDS: End modification 
+            ///////////////////////////////////////////////////
             
             program.loadModelviewProjection(gl, Placemark.matrix);
 
