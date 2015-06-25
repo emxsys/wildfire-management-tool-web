@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind */
 
 
 /**
@@ -47,8 +47,8 @@ define([
         /**
          * Creates a KeyboardController that dispatches keystrokes from the 
          * WorldWind.WorldWindow to the Wmt.Controller.
-         * @param {WorldWindow} worldWindow Event generator.
-         * @param {Controller} controller Event handler.
+         * @param {WorldWindow} worldWindow The keyboard event generator.
+         * @param {Controller} controller The keyboard navigation handler.
          * @returns {KeyboardControls}
          */
         var KeyboardControls = function (worldWindow, controller) {
@@ -128,7 +128,7 @@ define([
          */
         KeyboardControls.prototype.resetHeadingAndTilt = function () {
             this.ctrl.resetHeadingAndTilt();
-        }
+        };
 
         /**
          * 

@@ -34,6 +34,8 @@
  * Provides the menu system, comprised of a Navbar and Sidebars with Accordions.
  * 
  * @param {ControlPanel} ControlPanel
+ * @param {DateTimeControls} DateTimeControls
+ * @param {KeyboardControls} KeyboardControls
  * @param {LayerMenu} LayerMenu
  * @param {MarkerPanel} MarkerPanel
  * @param {SearchBox} SearchBox
@@ -42,24 +44,35 @@
  */
 define([
     './ControlPanel',
+    './DateTimeControls',
+    './KeyboardControls',
     './LayerMenu',
     '../view/MarkerView',
     './SearchBox',
     '../view/WeatherView'],
     function (
         ControlPanel,
+        DateTimeControls,
+        KeyboardControls,
         LayerMenu,
         MarkerView,
         SearchBox,
         WeatherView) {
         "use strict";
         var MainMenu = {
-            initialize: function (controller) {
+            /**
+             * Initializes the main menu and its constituents.
+             * @param {Controller} controller 
+             * @param {Globe} globe The WorldWindow manager
+             */
+            initialize: function (controller, globe) {
                 var self = this;
-                this.ctrl = controller;
 
                 $(document).ready(function () {
 
+                    // Add keyboard controls to the globe: requires the Controller
+                    self.keyboardControls = new KeyboardControls(globe.wwd, controller);
+                
                     // Auto-collapse the navbar when one of its decendents are clicked
                     $('.nav a').on('click', function () {
                         $('#navbar').collapse('hide');
@@ -74,7 +87,7 @@ define([
                         $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
                         // Set the focus on the WorldWind canvas
                         // so the globe keyboard controls are active 
-                        $("#canvasOne").focus();
+                        $(globe.wwd.canvas).focus();
                     });
 
                     // Attach a click handler to the main menu items
@@ -120,12 +133,16 @@ define([
                         $('#collapsePanelsItem').trigger('click');
                     }
 
-                });
-                this.controlPanel = new ControlPanel(controller);
-                this.layerMenu = new LayerMenu(controller);
-                this.markerPanel = new MarkerView(controller);
-                this.watherPanel = new WeatherView(controller);
-                this.searchBox = new SearchBox(controller);
+                    // Initialize the constituent UI elements.
+                    this.controlPanel = new ControlPanel(controller);
+                    this.layerMenu = new LayerMenu(controller);
+                    this.markerPanel = new MarkerView(controller);
+                    this.watherPanel = new WeatherView(controller);
+                    this.searchBox = new SearchBox(controller);
+
+                    // Initialize the Time Slider Control
+                    DateTimeControls.initialize(controller);
+                });                
             },
             /**
              * 
