@@ -229,11 +229,8 @@ define([
             program.loadTextureMatrix(gl, this.texCoordMatrix);
 
             if (this.activeTexture) {
-                if (this.activeTexture != Placemark.currentTexture) { // avoid unnecessary texture state changes
-                    textureBound = this.activeTexture.bind(dc); // returns false if active texture is null or cannot be bound
-                    program.loadTextureEnabled(gl, textureBound);
-                    Placemark.currentTexture = this.activeTexture;
-                }
+                textureBound = this.activeTexture.bind(dc); // returns false if active texture is null or cannot be bound
+                program.loadTextureEnabled(gl, textureBound);
             } else {
                 program.loadTextureEnabled(gl, false);
             }
@@ -257,7 +254,6 @@ define([
 
                     textureBound = this.labelTexture.bind(dc);
                     program.loadTextureEnabled(gl, textureBound);
-                    Placemark.currentTexture = this.labelTexture;
                 } else {
                     program.loadTextureEnabled(gl, false);
                     program.loadColor(gl, this.pickColor);
