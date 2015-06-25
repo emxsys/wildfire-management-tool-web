@@ -28,6 +28,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*global define, $, WorldWind */
+
+/**
+ * 
+ * @param {type} DnDController
+ * @param {type} EnhancedLookAtNavigator
+ * @param {type} EnhancedTextSupport
+ * @param {type} EnhancedViewControlsLayer
+ * @param {type} ReticuleLayer
+ * @param {type} SelectController
+ * @param {type} SkyBackgroundLayer
+ * @param {type} Wmt
+ * @param {WorldWind} ww Ensure dependency on WorldWind is satisfied, but don't redefine the global.
+ * @returns {Globe}
+ */
 define([
     '../globe/DnDController',
     '../globe/EnhancedLookAtNavigator',
@@ -47,7 +62,7 @@ define([
         SelectController,
         SkyBackgroundLayer,
         Wmt,
-        ww) {
+        ww) {   
         "use strict";
         /**
          * Creates a Globe object which manages the WorldWindow object: wwd.
