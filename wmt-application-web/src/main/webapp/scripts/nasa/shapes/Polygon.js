@@ -4,7 +4,7 @@
  */
 /**
  * @exports Polygon
- * @version $Id: Polygon.js 3252 2015-06-24 21:08:21Z tgaskins $
+ * @version $Id: Polygon.js 3261 2015-06-25 01:16:31Z tgaskins $
  */
 define([
         '../shapes/AbstractShape',
@@ -81,10 +81,10 @@ define([
          *     specified is applied to the remaining segments. Texture coordinates for the polygon's texture are
          *     specified via this polygon's [textureCoordinates]{@link Polygon#textureCoordinates} property. Texture
          *     coordinates for extruded boundary segments are implicitly defined to fit the full texture to each
-         *     boundary segment. The imageOffset and imageScale properties of this polygon's shape attributes are not
-         *     utilized.
+         *     boundary segment.
          * <p>
-         *     When displayed on a 2D globe, this polygon displays as a {@link SurfacePolygon}.
+         *     When displayed on a 2D globe, this polygon displays as a {@link SurfacePolygon} if its
+         *     [useSurfaceShapeFor2D]{@link AbstractShape#useSurfaceShapeFor2D} property is true.
          *
          * @param {Position[][] | Position[]} boundaries A two-dimensional array containing the polygon boundaries.
          * Each entry of the array specifies the vertices of one boundary.
@@ -92,16 +92,18 @@ define([
          * in which case the polygon is assumed to have only one boundary.
          * Each boundary is considered implicitly closed, so the last position of the boundary need not and should not
          * duplicate the first position of the boundary.
+         * @param {ShapeAttributes} attributes The attributes to associate with this polygon. May be null, in which case
+         * default attributes are associated.
          *
          * @throws {ArgumentError} If the specified boundaries array is null or undefined.
          */
-        var Polygon = function (boundaries) {
+        var Polygon = function (boundaries, attributes) {
             if (!boundaries) {
                 throw new ArgumentError(
                     Logger.logMessage(Logger.LEVEL_SEVERE, "Polygon", "constructor", "missingBoundaries"));
             }
 
-            AbstractShape.call(this);
+            AbstractShape.call(this, attributes);
 
             if (boundaries.length > 0 && boundaries[0].latitude) {
                 boundaries = [boundaries];
@@ -253,6 +255,10 @@ define([
             var numSideTextures = this.activeAttributes.imageSource.length - 1;
             side = Math.min(side + 1, numSideTextures);
             return this.activeAttributes.imageSource[side];
+        };
+
+        Polygon.prototype.createSurfaceShape = function () {
+            return new SurfacePolygon(this.boundaries, null);
         };
 
         // Overridden from AbstractShape base class.

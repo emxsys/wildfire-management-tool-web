@@ -4,7 +4,7 @@
  */
 /**
  * @exports Text
- * @version $Id: Text.js 3206 2015-06-17 18:06:31Z tgaskins $
+ * @version $Id: Text.js 3262 2015-06-25 16:50:39Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -301,7 +301,9 @@ define([
             }
 
             //// Compute the text's screen point and distance to the eye point.
-            this.computeScreenPointAndEyeDistance(dc);
+            if (!this.computeScreenPointAndEyeDistance(dc)) {
+                return null;
+            }
 
             var labelFont = this.activeAttributes.font,
                 textureKey = this.text + labelFont.toString();
@@ -332,6 +334,7 @@ define([
         /**
          * Computes this shape's screen point and eye distance. Subclasses must override this method.
          * @param {DrawContext} dc The current draw context.
+         * @returns {Boolean} true if the screen point can be computed, otherwise false.
          * @protected
          */
         Text.prototype.computeScreenPointAndEyeDistance = function (dc) {

@@ -4,7 +4,7 @@
  */
 /**
  * @exports Path
- * @version $Id: Path.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: Path.js 3259 2015-06-25 00:53:55Z tgaskins $
  */
 define([
         '../shapes/AbstractShape',
@@ -67,16 +67,22 @@ define([
          * <p>
          *     A path displays as a curtain if its [extrude]{@link Path#extrude} property is true. A curtain extends
          *     from the line formed by the path positions to the ground.
+         * <p>
+         *     This shape uses a {@link SurfacePolyline} when drawing on 2D globes and this shape's
+         *     [useSurfaceShapeFor2D]{@link AbstractShape#useSurfaceShapeFor2D} is true.
+         *
          * @param {Position[]} positions An array containing the path positions.
+         * @param {ShapeAttributes} attributes The attributes to associate with this path. May be null, in which case
+         * default attributes are associated.
          * @throws {ArgumentError} If the specified positions array is null or undefined.
          */
-        var Path = function (positions) {
+        var Path = function (positions, attributes) {
             if (!positions) {
                 throw new ArgumentError(
                     Logger.logMessage(Logger.LEVEL_SEVERE, "Path", "constructor", "missingPositions"));
             }
 
-            AbstractShape.call(this);
+            AbstractShape.call(this, attributes);
 
             // Private. Documentation is with the defined property below.
             this._positions = positions;

@@ -4,7 +4,7 @@
  */
 /**
  * @exports GeographicMesh
- * @version $Id: GeographicMesh.js 3251 2015-06-24 21:07:49Z tgaskins $
+ * @version $Id: GeographicMesh.js 3261 2015-06-25 01:16:31Z tgaskins $
  */
 define([
         '../shapes/AbstractShape',
@@ -63,16 +63,19 @@ define([
          *     image is stretched over the full mesh. If texture coordinates are specified, there must be one texture
          *     coordinate for each vertex in the mesh.
          * <p>
-         *     When displayed on a 2D globe, this mesh displays as a {@link SurfacePolygon}.
+         *     When displayed on a 2D globe, this mesh displays as a {@link SurfacePolygon} if its
+         *     [useSurfaceShapeFor2D]{@link AbstractShape#useSurfaceShapeFor2D} property is true.
          *
          * @param {Position[][]} positions A two-dimensional array containing the mesh vertices.
          * Each entry of the array specifies the vertices of one row of the mesh. The arrays for all rows must
          * have the same length. There must be at least two rows, and each row must have at least two vertices.
+         * @param {ShapeAttributes} attributes The attributes to associate with this mesh. May be null, in which case
+         * default attributes are associated.
          *
          * @throws {ArgumentError} If the specified positions array is null or undefined, the number of rows or the
          * number of vertices per row is less than 2, or the array lengths are inconsistent.
          */
-        var GeographicMesh = function (positions) {
+        var GeographicMesh = function (positions, attributes) {
             if (!positions) {
                 throw new ArgumentError(
                     Logger.logMessage(Logger.LEVEL_SEVERE, "GeographicMesh", "constructor", "missingPositions"));
@@ -93,7 +96,7 @@ define([
                 }
             }
 
-            AbstractShape.call(this);
+            AbstractShape.call(this, attributes);
 
             /**
              * Indicates whether this mesh is pickable when the pick point intersects transparent pixels of the
@@ -170,7 +173,9 @@ define([
              * This mesh's texture coordinates if this mesh is textured. A texture coordinate must be
              * provided for each mesh position. The texture coordinates are specified as a two-dimensional array,
              * each entry of which specifies the texture coordinates for one row of the mesh. Each texture coordinate
-             * is a {@link Vec2} containing the s and t coordinates.
+             * is a {@link Vec2} containing the s and t coordinates. If no texture coordinates are specified and
+             * the attributes associated with this mesh indicate an image source, then texture coordinates are
+             * automatically generated for the mesh.
              * @type {Vec2[][]}
              * @default null
              * @memberof GeographicMesh.prototype
@@ -223,6 +228,29 @@ define([
             }
 
             return this.currentData.isExpired
+        };
+
+        // Overridden from AbstractShape base class.
+        GeographicMesh.prototype.createSurfaceShape = function () {
+            var boundaries = [];
+
+            for (var c = 0; c < this.numColumns; c++) {
+                boundaries.push(this._positions[0][c]);
+            }
+
+            for (var r = 1; r < this.numRows; r++) {
+                boundaries.push(this._positions[r][this.numColumns - 1]);
+            }
+
+            for (c = this.numColumns - 2; c >= 0; c--) {
+                boundaries.push(this._positions[this.numRows -1][c]);
+            }
+
+            for (r = this.numRows - 2; r > 0; r--) {
+                boundaries.push(this._positions[r][0]);
+            }
+
+            return new SurfacePolygon(boundaries, null);
         };
 
         // Overridden from AbstractShape base class.
