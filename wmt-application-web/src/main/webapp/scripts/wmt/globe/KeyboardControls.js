@@ -35,30 +35,38 @@
  * The KeyboardControls module provides keyboard controls for the globe.
  * 
  * @param {Log} Log
- * @param {WorldWind} WorldWind
  * @returns {KeyboardControls}
  * 
  * @@author Bruce Schubert
  */
 define([
-    '../controller/Controller',
-    '../util/Log',
-    '../../nasa/WorldWind'],
+    '../util/Log'],
     function (
-        Controller,
-        Log,
-        ww) {
+        Log) {
         "use strict";
+        /**
+         * Creates a KeyboardController that dispatches keystrokes from the 
+         * WorldWind.WorldWindow to the Wmt.Controller.
+         * @param {WorldWindow} worldWindow Event generator.
+         * @param {Controller} controller Event handler.
+         * @returns {KeyboardControls}
+         */
         var KeyboardControls = function (worldWindow, controller) {
             this.wwd = worldWindow;
             this.ctrl = controller;
 
+            // This event initialization is wrapped in a document ready function.
+            // Note: the canvas must be focusable; this can be accomplished
+            // by establishing the "tabindex" on the canvas element.
             var self = this;
-            $(worldWindow.canvas).keydown(function (event) {
-                self.handleKeyDown(event);
-            });
-            $(worldWindow.canvas).keyup(function (event) {
-                self.handleKeyUp(event);
+            $(function () {
+                var $canvas = $(worldWindow.canvas);
+                $canvas.keydown(function (event) {
+                    self.handleKeyDown(event);
+                });
+                $canvas.keyup(function (event) {
+                    self.handleKeyUp(event);
+                });
             });
             /**
              * The incremental amount to increase or decrease the eye distance (for zoom) each cycle.
@@ -79,8 +87,8 @@ define([
          * @param {KeyboardEvent} event
          */
         KeyboardControls.prototype.handleKeyDown = function (event) {
-            //Log.info('KeyboardControls', 'handleKeyDown', event.keyCode + ' pressed.');
-            //Log.info('KeyboardControls', 'handleKeyDown', "Target: " + event.target);
+            Log.info('KeyboardControls', 'handleKeyDown', event.keyCode + ' pressed.');
+            Log.info('KeyboardControls', 'handleKeyDown', "Target: " + event.target);
 
             if (event.keyCode === 187) {        // + key
                 this.handleZoom("zoomIn");
@@ -185,8 +193,12 @@ define([
                                 heading += 90;
                                 break;
                         }
-                        WorldWind.Location.greatCircleLocation(self.wwd.navigator.lookAtLocation,
-                            heading, distance, self.wwd.navigator.lookAtLocation);
+                        // Update the navigator's lookAtLocation
+                        WorldWind.Location.greatCircleLocation(
+                            self.wwd.navigator.lookAtLocation,
+                            heading,
+                            distance,
+                            self.wwd.navigator.lookAtLocation);
                         self.wwd.redraw();
                         setTimeout(setLookAtLocation, 50);
                     }

@@ -50,10 +50,16 @@ requirejs.config({
     }
 });
 
-requirejs([
-    './WmtClient',
-    '../nasa/WorldWind'],
-    function (WmtClient, ww) {
+requirejs(['./Wmt', './WmtClient', '../nasa/WorldWind'],
+    function (Wmt, WmtClient, WorldWind) {
         "use strict";
-        var app = new WmtClient();
+        
+        // Specify the where the World Wind resources are located.
+        WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
+        // Set the logging level for the World Wind library
+        WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+        
+        // Create the WMT and make it accessable via a global variable.
+        // This is the only global variable created by the web app.
+        window.WMT = new WmtClient();
     });
