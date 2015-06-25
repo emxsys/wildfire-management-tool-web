@@ -66,6 +66,7 @@ define([
             this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
 
             this.imageRotation = 0;
+            this.imageTilt = 0;
 
             this.updateWindBarbImage(windSpdKts, windDirDeg);
         };
@@ -81,6 +82,7 @@ define([
         WindBarbPlacemark.prototype.updateWindBarbImage = function (windSpdKts, windDirDeg) {
             var img = new Image(),
                 imgName,
+                knots,
                 self = this;
 
             // Draw the image in the canvas after loading
@@ -107,15 +109,20 @@ define([
                 }, 0);
             };
             if (windSpdKts === undefined || isNaN(windSpdKts)) {
-                imgName = 'wind_spd-missing.svg';
+                this.enabled = false;
+                return;
             }
-            else {
-                // Wind speed rounded to 5 kts
-                imgName = 'wind_spd-' + WmtUtil.pad((Math.round(windSpdKts / 5) * 5), 2) + 'kts.svg';
+            // Wind speed rounded to 5 kts
+            knots = Math.round(windSpdKts / 5) * 5;
+            if (knots === 0) {
+                this.enabled = false;
+                return;                
             }
-            // Fire the onload event
+            // Set the image -- which fires the onload event
+            imgName = 'wind_spd-' + WmtUtil.pad(knots, 2) + 'kts.svg';
             img.src = Wmt.IMAGE_PATH + 'weather/' + imgName;
 
+            this.enabled = true;
         };
 
         /**
