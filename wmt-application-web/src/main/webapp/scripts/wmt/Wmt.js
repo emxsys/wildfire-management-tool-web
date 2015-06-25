@@ -74,7 +74,9 @@ define([],
             EVENT_OBJECT_MOVE_STARTED: "objectMoveStarted",
             EVENT_OBJECT_MOVED: "objectMoved",
             EVENT_OBJECT_MOVE_FINISHED: "objectMoveFinished",
-            
+
+            EVENT_OBJECT_REMOVED: "objectRemoved",
+
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
             EVENT_MARKER_REMOVED: "markerRemoved",
