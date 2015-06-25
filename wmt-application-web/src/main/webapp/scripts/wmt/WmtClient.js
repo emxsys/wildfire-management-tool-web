@@ -36,57 +36,33 @@
  * @module {WmtClient}
  * 
  * @param {Object} Controller
- * @param {Object} EnhancedLookAtNavigator
- * @param {Object} EnhancedViewControlsLayer
- * @param {Object} KeyboardControls
- * @param {Object} Log
+ * @param {Object} Globe
  * @param {Object} MainMenu
- * @param {Object} PickController
- * @param {Object} ReticuleLayer
- * @param {Object} Settings
- * @param {Object} Wmt
  * 
  * @author Bruce Schubert
  */
 define([
     './controller/Controller',
     './globe/Globe',
-    './globe/KeyboardControls',
-    './util/Log',
-    './menu/MainMenu',
-    './menu/DateTimeControls',
-    './Wmt',
-    '../nasa/WorldWind'],
+    './menu/MainMenu'],
     function (
         Controller,
         Globe,
-        KeyboardControls,
-        Log,
-        MainMenu,
-        DateTimeControls,
-        Wmt,
-        WorldWind) {
+        MainMenu) {
         "use strict";
         var WmtClient = function () {
-            Log.info("WmtClient", "constructor", "started");
-
             // Initialize the WorldWindow
             this.globe = new Globe("canvasOne");
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.globe.wwd);
+            
             // The controller restores the Model from the previous session
             this.controller.restoreSession();
 
-            // Add keyboard controls to the globe: requires the Controller
-            this.keyboardControls = new KeyboardControls(this.globe.wwd, this.controller);
-
-            // Initialize the Navbar and Sidebars
-            MainMenu.initialize(this.controller);
-
-            // Initialize the Time Slider Control (TODO: Add this to the main menu)
-            DateTimeControls.initialize(this.controller);
+            // Initialize the Navbar, Sidebars and UI controls.
+            MainMenu.initialize(this.controller, this.globe);
 
             // Add event handler to save the current view (eye position) when the window closes
             var self = this;
@@ -96,7 +72,6 @@ define([
                 //return "Close WMT?";
                 return null;
             };
-            Log.info("WmtClient", "constructor", "finished.");
         };
 
         return WmtClient;
