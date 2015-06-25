@@ -31,17 +31,22 @@
 /*global define, WorldWind*/
 
 define([
-    '../globe/EnhancedGeographicText',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
-        EnhancedGeographicText,
         Wmt,
         ww) {
         "use strict";
-
+        
+        /**
+         * Creates a GeographicText component used to display the air temperature in a Weather Map Symbol.
+         * @param {Number} latitude
+         * @param {Number} longitude
+         * @param {String} airTempF
+         * @returns {AirTemperatureText}
+         */
         var AirTemperatureText = function (latitude, longitude, airTempF) {
-            EnhancedGeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), airTempF);
+            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), airTempF);
             
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             this.alwaysOnTop = true;
@@ -54,7 +59,7 @@ define([
             this.attributes.depthTest = false;
         };
         // Inherit Placemark parent methods
-        AirTemperatureText.prototype = Object.create(EnhancedGeographicText.prototype);
+        AirTemperatureText.prototype = Object.create(WorldWind.GeographicText.prototype);
         
         /**
          * Creates a clone of this object.

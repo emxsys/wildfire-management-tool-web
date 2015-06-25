@@ -30,18 +30,30 @@
 
 /*global define, WorldWind*/
 
+/**
+ * 
+ * @param {Wmt} Wmt WMT constants.
+ * @param {WorldWind} ww WorldWind dependency that doesn't redefine global.
+ * @returns {RelativeHumidityText}
+ */
 define([
-    '../globe/EnhancedGeographicText',
     '../Wmt',
     '../../nasa/WorldWind'],
     function (
-        EnhancedGeographicText,
         Wmt,
         ww) {
         "use strict";
 
+        /**
+         * Creates a GeographicText component for displaying relative humidity in a WeatherMapSymbol.
+         * @constructor
+         * @param {Number} latitude
+         * @param {Number} longitude
+         * @param {String} relHumidityPct
+         * @returns {RelativeHumidityText}
+         */
         var RelativeHumidityText = function (latitude, longitude, relHumidityPct) {
-            EnhancedGeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), relHumidityPct);
+            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), relHumidityPct);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             this.alwaysOnTop = true;
@@ -56,7 +68,7 @@ define([
 
         };
         // Inherit Placemark parent methods
-        RelativeHumidityText.prototype = Object.create(EnhancedGeographicText.prototype);
+        RelativeHumidityText.prototype = Object.create(WorldWind.GeographicText.prototype);
 
 
         /**
