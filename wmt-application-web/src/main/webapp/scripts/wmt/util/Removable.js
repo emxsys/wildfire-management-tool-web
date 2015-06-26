@@ -35,7 +35,7 @@ define(['../util/Publisher', '../Wmt'],
         "use strict";
         var Removable = {
             remove: function () {
-                if (this.canRemove) {
+                if (this.isRemovable) {
                     if (this.removeMe()) {
                         this.fire(Wmt.EVENT_OBJECT_REMOVED, this);
                     }
@@ -62,7 +62,7 @@ define(['../util/Publisher', '../Wmt'],
                     }
                 }
                 // Add the properties
-                o.canRemove = true;
+                o.isRemovable = true;
                 o.removeMe = removeCallback;
                 
                 // Add the Publisher capability so that events can be generated.

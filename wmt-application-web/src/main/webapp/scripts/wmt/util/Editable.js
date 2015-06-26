@@ -35,8 +35,10 @@ define(['../util/Publisher', '../Wmt'],
         "use strict";
         var Editable = {
             edit: function () {
-                if (!this.canEdit) {
-                    this.editMe();
+                if (this.isEditable) {
+                    if (this.editMe()) {
+                        this.fire(Wmt.EVENT_OBJECT_EDITED, this);
+                    }
                 }
             },
             /**
@@ -60,7 +62,7 @@ define(['../util/Publisher', '../Wmt'],
                     }
                 }
                 // Add the properties
-                o.canEdit = true;
+                o.isEditable = true;
                 o.editMe = editCallback;
                 
                 // Add the Publisher capability so that events can be generated.
