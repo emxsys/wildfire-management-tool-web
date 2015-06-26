@@ -32,8 +32,12 @@
 /*global define, $, WorldWind */
 
 define([
+    '../util/Log',
+    '../util/Messenger',
     '../../nasa/WorldWind'],
     function (
+        Log,
+        Messenger,
         ww) {
         "use strict";
         var SearchBox = function (controller) {
@@ -43,6 +47,8 @@ define([
 
             this.undoHistory = [];
             this.redoHistory = [];
+
+            this.searchSelection = null;
 
             var self = this;
             $("#searchText").on("keypress", function (e) {
@@ -102,7 +108,7 @@ define([
                 tokens,
                 latitude,
                 longitude,
-                target = this.ctrl.model.viewpoint.target;
+                currTarget = this.ctrl.model.viewpoint.target;
 
             if (queryString) {
 
@@ -112,30 +118,137 @@ define([
                     longitude = parseFloat(tokens[1]);
                     self.goToAnimator.goTo(new WorldWind.Location(latitude, longitude));
                 } else {
-                    this.geocoder.lookup(queryString, function (geocoder, result) {
-                        if (result.length > 0) {
+                    this.geocoder.lookup(queryString, function (geocoder, results) {
+                        if (results.length > 0) {
 //                            self.lastSearch = {
 //                                name: result[0].display_name,
 //                                latitude: parseFloat(result[0].lat),
 //                                longitude: parseFloat(result[0].lon)
 //                            };
-                            latitude = parseFloat(result[0].lat);
-                            longitude = parseFloat(result[0].lon);
+                            self.showSearchResultsDialog(results);
 
-                            WorldWind.Logger.log(
-                                WorldWind.Logger.LEVEL_INFO, queryString + ": " + latitude + ", " + longitude);
-
-                            // Remember our current target in the history
-                            if (target) {
-                                self.undoHistory.push(new WorldWind.Location(target.latitude, target.longitude));
-                            }
-                            self.redoHistory = [];
-                            self.redoCandidate = new WorldWind.Location(latitude, longitude);
-                            self.ctrl.lookAtLatLon(latitude, longitude);
+//                            latitude = parseFloat(results[0].lat);
+//                            longitude = parseFloat(results[0].lon);
+//
+//                            WorldWind.Logger.log(
+//                                WorldWind.Logger.LEVEL_INFO, queryString + ": " + latitude + ", " + longitude);
+//
+//                            // Remember our current target in the history
+//                            if (currTarget) {
+//                                self.undoHistory.push(new WorldWind.Location(currTarget.latitude, currTarget.longitude));
+//                            }
+//                            self.redoHistory = [];
+//                            self.redoCandidate = new WorldWind.Location(latitude, longitude);
+//                            self.ctrl.lookAtLatLon(latitude, longitude);
                         }
                     });
                 }
             }
+        };
+
+        SearchBox.prototype.gotoSelection = function () {
+            var latitude = parseFloat(this.searchSelection.lat),
+                longitude = parseFloat(this.searchSelection.lon),
+                target = this.ctrl.model.viewpoint.target;
+
+            Messenger.infoGrowl (this.searchSelection.display_name, "Going to:" );
+            
+            // Remember our current target in the history
+            if (target) {
+                this.undoHistory.push(new WorldWind.Location(target.latitude, target.longitude));
+            }
+            this.redoHistory = [];
+            this.redoCandidate = new WorldWind.Location(latitude, longitude);
+            this.ctrl.lookAtLatLon(latitude, longitude);
+
+        };
+
+        /**
+         * Shows the DateTime modal dialog.
+         * @param {Array} results description
+         */
+        SearchBox.prototype.showSearchResultsDialog = function (results) {
+            var self = this;
+
+            // Reset the selection
+            this.searchSelection = null;
+            // Populate the table
+            this.loadNominatimGeocoderResult(results);
+
+            // Build the dialog
+            $('#searchResults-dlg').puidialog({
+                //width: '600',
+                //height: '400',
+                showEffect: 'fade',
+                hideEffect: 'fade',
+                minimizable: false,
+                maximizable: true,
+                closable: true,
+                closeOnEscape: true,
+                modal: true,
+                responsive: true,
+                buttons: [{
+                        text: 'Go To',
+                        icon: 'ui-icon-check',
+                        disabled: 'true',
+                        click: function () {
+                            // Ok to close?
+                            if (self.searchSelection) {
+                                $('#searchResults-dlg').puidialog('hide');
+                                self.gotoSelection();
+                            }
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        icon: 'ui-icon-close',
+                        click: function () {
+                            // Unconditionally close
+                            $('#searchResults-dlg').puidialog('hide');
+                        }
+                    }]
+            });
+            $('#searchResults-dlg').puidialog('show');
+        };
+
+        SearchBox.prototype.loadNominatimGeocoderResult = function (resultArray) {
+            var self = this;
+            $('#searchResults-tbl').puidatatable({
+                caption: 'Nominatim',
+//                paginator: {
+//                    rows: 5
+//                },
+                columns: [
+                    {
+                        field: 'display_name',
+                        headerText: 'Name',
+                        headerStyle: 'width:80%',
+                        sortable: true
+                    },
+                    {
+                        field: 'type',
+                        headerText: 'Type',
+                        sortable: true
+                    },
+                ],
+                datasource: resultArray,
+                selectionMode: 'single',
+                rowSelect: function (event, resultItem) {
+//                    // Enable OK button
+//                    var dlg = $('#fuelModel-dlg'),
+//                        btn = dlg.find('button.pui-button:contains("OK")');
+//
+//                    btn.attr('disabled', 'false');
+                    // Save the selected row
+                    self.searchSelection = resultItem;
+                },
+                rowUnselect: function (event, result) {
+//                    // Disable OK button
+//                    var btn = $('#fuelModel-dlg').find('button.pui-button:contains("OK")');
+//                    btn.attr('disabled', 'true');
+                }
+            });
+
         };
 
         return SearchBox;

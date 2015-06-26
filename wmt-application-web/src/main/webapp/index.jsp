@@ -807,6 +807,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </div>        
 
+        <!--Prime UI Search Box Results Dialog--> 
+        <div id="searchResults-dlg" title="Search Results" style="display: none;">
+            <div id="searchResults-tbl">
+            </div>
+        </div>        
+        
         <!--Prime UI Weather Editor Dialog--> 
         <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
             <div class="weatherValues">
