@@ -120,26 +120,10 @@ define([
                 } else {
                     this.geocoder.lookup(queryString, function (geocoder, results) {
                         if (results.length > 0) {
-//                            self.lastSearch = {
-//                                name: result[0].display_name,
-//                                latitude: parseFloat(result[0].lat),
-//                                longitude: parseFloat(result[0].lon)
-//                            };
                             self.showSearchResultsDialog(results);
-
-//                            latitude = parseFloat(results[0].lat);
-//                            longitude = parseFloat(results[0].lon);
-//
-//                            WorldWind.Logger.log(
-//                                WorldWind.Logger.LEVEL_INFO, queryString + ": " + latitude + ", " + longitude);
-//
-//                            // Remember our current target in the history
-//                            if (currTarget) {
-//                                self.undoHistory.push(new WorldWind.Location(currTarget.latitude, currTarget.longitude));
-//                            }
-//                            self.redoHistory = [];
-//                            self.redoCandidate = new WorldWind.Location(latitude, longitude);
-//                            self.ctrl.lookAtLatLon(latitude, longitude);
+                        }
+                        else {
+                            Messenger.warningGrowl('There were no hits for "' + queryString + '".', "Check your spelling.");
                         }
                     });
                 }
@@ -151,8 +135,8 @@ define([
                 longitude = parseFloat(this.searchSelection.lon),
                 target = this.ctrl.model.viewpoint.target;
 
-            Messenger.infoGrowl (this.searchSelection.display_name, "Going to:" );
-            
+            Messenger.infoGrowl(this.searchSelection.display_name, "Going to:");
+
             // Remember our current target in the history
             if (target) {
                 this.undoHistory.push(new WorldWind.Location(target.latitude, target.longitude));
@@ -177,20 +161,19 @@ define([
 
             // Build the dialog
             $('#searchResults-dlg').puidialog({
-                //width: '600',
-                //height: '400',
+                width: '80%',
+                height: '80%',
                 showEffect: 'fade',
                 hideEffect: 'fade',
                 minimizable: false,
-                maximizable: true,
+                maximizable: false,
                 closable: true,
                 closeOnEscape: true,
                 modal: true,
                 responsive: true,
                 buttons: [{
                         text: 'Go To',
-                        icon: 'ui-icon-check',
-                        disabled: 'true',
+                        icon: 'fa-globe',
                         click: function () {
                             // Ok to close?
                             if (self.searchSelection) {
@@ -201,20 +184,29 @@ define([
                     },
                     {
                         text: 'Cancel',
-                        icon: 'ui-icon-close',
+                        icon: 'fa-close',
                         click: function () {
                             // Unconditionally close
                             $('#searchResults-dlg').puidialog('hide');
                         }
                     }]
             });
+            this.enableGoToButton(false);
             $('#searchResults-dlg').puidialog('show');
         };
+
+        SearchBox.prototype.enableGoToButton = function (enabled) {
+            var dlg = $('#searchResults-dlg'),
+                btn = dlg.find('span.pui-button-text:contains("Go To")').parent();
+            $(btn).puibutton(enabled ? 'enable' : 'disable');
+
+        };
+
 
         SearchBox.prototype.loadNominatimGeocoderResult = function (resultArray) {
             var self = this;
             $('#searchResults-tbl').puidatatable({
-                caption: 'Nominatim',
+//                caption: 'Nominatim',
 //                paginator: {
 //                    rows: 5
 //                },
@@ -229,23 +221,19 @@ define([
                         field: 'type',
                         headerText: 'Type',
                         sortable: true
-                    },
+                    }
                 ],
                 datasource: resultArray,
                 selectionMode: 'single',
                 rowSelect: function (event, resultItem) {
-//                    // Enable OK button
-//                    var dlg = $('#fuelModel-dlg'),
-//                        btn = dlg.find('button.pui-button:contains("OK")');
-//
-//                    btn.attr('disabled', 'false');
+                    // Enable OK button
+                    self.enableGoToButton(true);
                     // Save the selected row
                     self.searchSelection = resultItem;
                 },
                 rowUnselect: function (event, result) {
-//                    // Disable OK button
-//                    var btn = $('#fuelModel-dlg').find('button.pui-button:contains("OK")');
-//                    btn.attr('disabled', 'true');
+                    // Disable OK button
+                    self.enableGoToButton(false);
                 }
             });
 
