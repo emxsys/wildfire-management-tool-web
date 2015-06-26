@@ -58,12 +58,13 @@ define([
 
             // Inherit Renderable properties
             WorldWind.Renderable.call(this);
+            this.timeStr = '';
+            this.nameStr = '';
 
             this.skyCoverPlacemark = new SkyCoverPlacemark(wxModel.latitude, wxModel.longitude);
             this.windBarbPlacemark = new WindBarbPlacemark(wxModel.latitude, wxModel.longitude);
             this.airTemperatureText = new AirTemperatureText(wxModel.latitude, wxModel.longitude, 'F');
             this.relHumidityText = new RelativeHumidityText(wxModel.latitude, wxModel.longitude, '%');
-
 
             // Add a reference to our wx model object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
@@ -99,7 +100,8 @@ define([
 
                 // Display the forecast time in the label
                 // TODO: Get locale from settings
-                self.skyCoverPlacemark.label = '@ ' + time.toLocaleTimeString('en', timeOptions);
+                self.timeStr = '@ ' + time.toLocaleTimeString('en', timeOptions);
+                self.skyCoverPlacemark.label = self.nameStr + '\n' + self.timeStr;
 
                 // Update the values
                 self.skyCoverPlacemark.updateSkyCoverImage(skyCvr);
@@ -107,11 +109,27 @@ define([
                 self.airTemperatureText.text = airTmp + 'F';
                 self.relHumidityText.text = relHum + '%';
             };
+
+            // Create an EVENT_PLACE_CHANGED handler that updates the symbology
+            this.handlePlaceChangedEvent = function (wxModel) {
+                // Display the place name
+                if (wxModel.place) {
+                    for (var i = 0, max = wxModel.place.length; i < max; i++) {
+                        if (wxModel.place[i].type !== "Zip Code") {
+                            self.nameStr = wxModel.place[i].name;
+                            break;
+                        }
+                    }
+                    self.skyCoverPlacemark.label = self.nameStr + '\n' + self.timeStr;
+                }
+
+            };
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
             wxModel.on(Wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
-            wxModel.on(Wmt.EVENT_WEATHER_LOOKOUT_CHANGED, this.handleWeatherChangedEvent, this);
-            
-            
+            wxModel.on(Wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
+            wxModel.on(Wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
+
+
         };
         // Inherit Renderable functions.
         WeatherMapSymbol.prototype = Object.create(WorldWind.Renderable.prototype);
