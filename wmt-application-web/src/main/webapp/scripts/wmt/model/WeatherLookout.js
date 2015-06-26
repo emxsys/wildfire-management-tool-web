@@ -31,47 +31,86 @@
 /*global define*/
 
 define([
+    '../util/Editable',
+    '../util/Messenger',
     '../util/Movable',
+    '../resource/PlaceResource',
+    '../util/Removable',
     '../resource/WeatherResource',
     '../Wmt'],
     function (
+        Editable,
+        Messenger,
         Movable,
+        PlaceResource,
+        Removable,
         WeatherResource,
         Wmt) {
         "use strict";
 
         var WeatherLookout = function (name, duration, rules, latitude, longitude) {
 
-            // Mix-in the Movable capability: i.e., the moveToLatLon function 
-            // and EVENT_OBJECT_MOVED event publisher
+            // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             Movable.makeMovable(this);
 
+            // Make editable via menus: Fires the EVENT_OBJECT_EDITED event on success.
+            Editable.makeEditable(this, function () {
+                Messenger.infoGrowl("Sorry", "The edit feature has not been implemented yet.");
+                return false;
+            });
+            // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
+            Removable.makeRemovable(this, function () {
+                Messenger.infoGrowl("Sorry", "The delete feature has not been implemented yet.");
+                return false;
+            });
+
             this.name = name || 'Wx Lookout';
-            this.duration = duration || 24;
+            this.duration = duration || Wmt.configuration.wxForecastDurationHours;
             this.latitude = latitude;
             this.longitude = longitude;
 
             this.rules = [];
-            
-            // Self subscribe to move operations
+
+            // Self subscribe to move operations so we can update the forecast and place
+            // when the move is finished. We don't want to update during the move itself.
             this.on(Wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
-            
+
+            // Perform initial update
             this.refresh();
         };
+
 
         WeatherLookout.prototype.refresh = function () {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
-            var self = this;
+            var self = this,
+                i, max, item, place = [];
+            
+            // Get the weather forecast at this location
             WeatherResource.pointForecast(
                 this.latitude,
                 this.longitude,
                 this.duration,
-                function (json) {
+                function (json) { // Callback to process JSON result
                     self.wxForecast = json;
-                    self.fire(Wmt.EVENT_WEATHER_LOOKOUT_CHANGED, self);
-                });
+                    self.fire(Wmt.EVENT_WEATHER_CHANGED, self);
+                }
+            );
+            
+            // Get the place name(s) at this location
+            PlaceResource.places(
+                this.latitude,
+                this.longitude,
+                function (json) { // Callback to process YQL Geo.Places result
+                    for (i = 0, max = json.query.results.place.length; i < max; i++) {
+                        item = json.query.results.place[i];
+                        place[i] = {"name": item.name, "type": item.placeTypeName.content};
+                    }
+                    self.place = place;
+                    self.fire(Wmt.EVENT_PLACE_CHANGED, self);
+                }
+            );
         };
 
         return WeatherLookout;
