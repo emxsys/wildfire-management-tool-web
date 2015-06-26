@@ -57,6 +57,11 @@ define([
         WeatherManager,
         Wmt) {
         "use strict";
+        /**
+         * 
+         * @param {WorldWindow} worldWindow The primary WorldWindow globe.
+         * @returns {Controller}
+         */
         var Controller = function (worldWindow) {
             // The WorldWindow (globe) provides the spatial input 
             this.wwd = worldWindow;
