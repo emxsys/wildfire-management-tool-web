@@ -71,20 +71,25 @@ define([],
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
             
+            EVENT_OBJECT_EDITED: "objectEdited",
+            
             EVENT_OBJECT_MOVE_STARTED: "objectMoveStarted",
             EVENT_OBJECT_MOVED: "objectMoved",
             EVENT_OBJECT_MOVE_FINISHED: "objectMoveFinished",
 
             EVENT_OBJECT_REMOVED: "objectRemoved",
 
+            
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
             EVENT_MARKER_REMOVED: "markerRemoved",
             
             EVENT_FUELMOISTURE_CHANGED: "fuelMoistureChanged",
+            EVENT_PLACE_CHANGED: "placeChanged",
             EVENT_SURFACEFUEL_CHANGED: "surfaceFuelChanged",
             EVENT_SURFACEFIRE_CHANGED: "surfaceFireChanged",
             EVENT_TERRAIN_CHANGED: "terrainChanged",
+            
             EVENT_WEATHER_CHANGED: "weatherChanged",
             
             EVENT_WEATHER_LOOKOUT_ADDED: "weatherLookoutAdded",
@@ -164,7 +169,7 @@ define([],
         };
         /**
          * Holds configuration parameters for WMT. Applications may modify these parameters prior to creating
-         * their first World Wind objects. Configuration properties are:
+         * their first WMT objects. Configuration properties are:
          * <ul>
          *     <li><code>startupLatitude</code>: Initial "look at" latitude. Default is Ventura, CA.
          *     <li><code>startupLongitude</code>: Initial "look at" longitude. Default is Venura, CA.
@@ -175,6 +180,7 @@ define([],
          *     <li><code>viewControlOrientation</code>: horizontal or vertical. Default vertical.
          *     <li><code>showPanControl</code>: Show pan (left/right/up/down) controls. Default false.
          *     <li><code>showExaggerationControl</code>: Show vertical exaggeration controls. Default false.
+         *     <li><code>wxForecastDurationHours</code>: Number hours for a weather forecast. Default 24.
          * </ul>
          */
         Wmt.configuration = {
@@ -186,7 +192,8 @@ define([],
             startupRoll: 0,
             viewControlOrientation: "vertical",
             showPanControl: true,
-            showExaggerationControl: false
+            showExaggerationControl: false,
+            wxForecastDurationHours: 24
         };
 
         /**
