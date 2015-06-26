@@ -32,10 +32,8 @@
 
 define([
     '../view/AirTemperatureText',
+    '../view/ForecastTimeText',
     '../util/Log',
-    '../model/WeatherLookout',
-    '../util/Messenger',
-    '../util/Movable',
     '../view/RelativeHumidityText',
     '../view/SkyCoverPlacemark',
     '../view/WindBarbPlacemark',
@@ -43,10 +41,8 @@ define([
     '../../nasa/WorldWind'],
     function (
         AirTemperatureText,
+        ForecastTimeText,
         Log,
-        WeatherLookout,
-        Messenger,
-        Movable,
         RelativeHumidityText,
         SkyCoverPlacemark,
         WindBarbPlacemark,
@@ -58,13 +54,12 @@ define([
 
             // Inherit Renderable properties
             WorldWind.Renderable.call(this);
-            this.timeStr = '';
-            this.nameStr = '';
 
             this.skyCoverPlacemark = new SkyCoverPlacemark(wxModel.latitude, wxModel.longitude);
             this.windBarbPlacemark = new WindBarbPlacemark(wxModel.latitude, wxModel.longitude);
             this.airTemperatureText = new AirTemperatureText(wxModel.latitude, wxModel.longitude, 'F');
             this.relHumidityText = new RelativeHumidityText(wxModel.latitude, wxModel.longitude, '%');
+            this.forecastTimeText = new ForecastTimeText(wxModel.latitude, wxModel.longitude, ' ');
 
             // Add a reference to our wx model object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
@@ -72,6 +67,8 @@ define([
             this.windBarbPlacemark.pickDelegate = wxModel;
             this.airTemperatureText.pickDelegate = wxModel;
             this.relHumidityText.pickDelegate = wxModel;
+            this.forecastTimeText.pickDelegate = wxModel;
+            
             // Create an EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
             var self = this;
             this.handleObjectMovedEvent = function (wxModel) {
@@ -83,10 +80,12 @@ define([
                 self.airTemperatureText.position.longitude = wxModel.longitude;
                 self.relHumidityText.position.latitude = wxModel.latitude;
                 self.relHumidityText.position.longitude = wxModel.longitude;
+                self.forecastTimeText.position.latitude = wxModel.latitude;
+                self.forecastTimeText.position.longitude = wxModel.longitude;
             };
+            
             // Create an EVENT_WEATHER_CHANGED handler that updates the symbology
             this.handleWeatherChangedEvent = function (wxModel) {
-                // TODO: Update the symbols
                 self.wxForecast = wxModel.wxForecast;
                 var values = wxModel.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather[0].values,
                     isoTime = wxModel.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather[0]['@time'],
@@ -98,32 +97,28 @@ define([
                     skyCvr = values[4],
                     timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
 
-                // Display the forecast time in the label
-                // TODO: Get locale from settings
-                self.timeStr = '@ ' + time.toLocaleTimeString('en', timeOptions);
-                self.skyCoverPlacemark.label = self.nameStr + '\n' + self.timeStr;
-
                 // Update the values
                 self.skyCoverPlacemark.updateSkyCoverImage(skyCvr);
                 self.windBarbPlacemark.updateWindBarbImage(wndSpd, wndDir);
                 self.airTemperatureText.text = airTmp + 'F';
                 self.relHumidityText.text = relHum + '%';
+                self.forecastTimeText.text = '@ ' + time.toLocaleTimeString('en', timeOptions);
             };
 
-            // Create an EVENT_PLACE_CHANGED handler that updates the symbology
+            // Create an EVENT_PLACE_CHANGED handler that updates the label
             this.handlePlaceChangedEvent = function (wxModel) {
                 // Display the place name
                 if (wxModel.place) {
+                    // Use the first place name (ordered by granularity) that's not a zip code
                     for (var i = 0, max = wxModel.place.length; i < max; i++) {
                         if (wxModel.place[i].type !== "Zip Code") {
-                            self.nameStr = wxModel.place[i].name;
-                            break;
+                            self.skyCoverPlacemark.label = wxModel.place[i].name;
+                            return;
                         }
                     }
-                    self.skyCoverPlacemark.label = self.nameStr + '\n' + self.timeStr;
                 }
-
             };
+            
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
             wxModel.on(Wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
             wxModel.on(Wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
@@ -150,6 +145,7 @@ define([
             this.windBarbPlacemark.render(dc);
             this.airTemperatureText.render(dc);
             this.relHumidityText.render(dc);
+            this.forecastTimeText.render(dc);
         };
 
         return WeatherMapSymbol;

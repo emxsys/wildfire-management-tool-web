@@ -54,6 +54,7 @@ define([
                 WorldWind.OFFSET_FRACTION, 2.2);    // Below RH
             this.attributes.drawLeaderLine = true;
             this.attributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
+            this.attributes.leaderLineAttributes.outlineWidth = 2;
             this.attributes.labelAttributes.color = WorldWind.Color.WHITE;
             this.attributes.labelAttributes.depthTest = false;
             this.highlightAttributes = new WorldWind.PlacemarkAttributes(this.attributes);
