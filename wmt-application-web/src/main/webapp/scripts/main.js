@@ -68,8 +68,8 @@ requirejs.config({
 //    }
 });
 
-requirejs(['wmt/Wmt', 'wmt/WmtClient', 'worldwind'],
-    function (Wmt, WmtClient, ww) {
+requirejs(['wmt/Wmt', 'wmt/WmtClient'],
+    function (Wmt, WmtClient, worldwind) {
         "use strict";
 
         // Specify the where the World Wind resources are located.
