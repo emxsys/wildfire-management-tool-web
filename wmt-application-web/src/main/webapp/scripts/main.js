@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global requirejs*/
+/*global requirejs, WorldWind*/
 
 /**
  * Top-level script file that does not define a module containing a configuration object.
@@ -36,9 +36,13 @@
  * @author Bruce Schubert
  */
 requirejs.config({
-    baseUrl: "scripts/wmt",
     waitSeconds: 60,
-    "paths": {
+    // By default load any module IDs from NAWA WorldWind folder.
+    // This is required to satisfy the relative paths in the WW source
+    // when using the local WorldWind resources.
+    baseUrl: 'thirdparty/nasa',
+    // Paths are essentially named variables used in define and requre 
+    paths: {
 //        // Specify a path to jquery, the second declaration is local fallback
 //        jquery: [
 //            "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min",
@@ -47,18 +51,32 @@ requirejs.config({
 //            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
 //            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
 //        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
+        wmt: "../../scripts/wmt", // WMT path prefix
+        worldwind: [
+            "http://worldwindserver.net/webworldwind/worldwindlib",
+            "WorldWind"
+        ]
     }
+    // shim should not be used on AMD scripts
+//    shim: {
+//        "primeui": {
+//            deps: ["jqueryui"]
+//        },
+//        "jqueryui": {
+//            deps: ["jquery"]
+//        }
+//    }
 });
 
-requirejs(['./Wmt', './WmtClient', '../nasa/WorldWind'],
-    function (Wmt, WmtClient, WorldWind) {
+requirejs(['wmt/Wmt', 'wmt/WmtClient', 'worldwind'],
+    function (Wmt, WmtClient, ww) {
         "use strict";
-        
+
         // Specify the where the World Wind resources are located.
         WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
         // Set the logging level for the World Wind library
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-        
+
         // Create the WMT and make it accessable via a global variable.
         // This is the only global variable created by the web app.
         window.WMT = new WmtClient();
