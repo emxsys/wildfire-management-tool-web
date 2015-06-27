@@ -64,9 +64,11 @@ define([
          * @param {WorldWindow} worldWindow The primary WorldWindow globe.
          * @returns {Controller}
          */
-        var Controller = function (worldWindow) {
+        var Controller = function (globe) {
             // The WorldWindow (globe) provides the spatial input 
-            this.wwd = worldWindow;
+            this.globe = globe;
+            this.wwd = globe.wwd;
+            
             // Create the other input managers
             this.timeManager = new TimeManager(this);
             this.locationManager = new LocationManager(this);
@@ -76,8 +78,8 @@ define([
             this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
             this.isAnimating = false;
 
-            // Create the MVC Model
-            this.model = new Model(worldWindow);
+            // Create the MVC Model on the primary globe
+            this.model = new Model(this.wwd);
 
             // Create MVC Views
             this.coordinatesView = new CoordinatesView(this.wwd);
@@ -189,17 +191,10 @@ define([
             this.wwd.navigator.range = eyeAltMsl;
             this.wwd.navigator.tilt = 0;
             this.wwd.redraw();
-
-            if (this.isAnimating) {
-                this.goToAnimator.cancel();
-            }
-            this.isAnimating = true;
-            this.goToAnimator.goTo(new WorldWind.Position(latitude, longitude, tgtEyeAltMsl), function () {
-                self.isAnimating = false;
+            
+            this.globe.goto(latitude, longitude, tgtEyeAltMsl, function () {
                 self.updateSpatialData();
             });
-//            this.wwd.navigator.lookAtLocation.latitude = latitude;
-//            this.wwd.navigator.lookAtLocation.longitude = longitude;
         };
 
         /**
@@ -234,17 +229,7 @@ define([
          * @returns {Layer}
          */
         Controller.prototype.findLayer = function (name) {
-            var layer,
-                i,
-                len;
-
-            // Find the Markers layer in the World Window's layer list.
-            for (i = 0, len = this.wwd.layers.length; i < len; i += 1) {
-                layer = this.wwd.layers[i];
-                if (layer.displayName === name) {
-                    return layer;
-                }
-            }
+            return this.globe.findLayer(name);
         };
 
         /**
@@ -267,13 +252,7 @@ define([
          * Resets the viewpoint to the startup configuration settings.
          */
         Controller.prototype.resetGlobe = function () {
-            this.wwd.navigator.lookAtLocation.latitude = Number(Wmt.configuration.startupLatitude);
-            this.wwd.navigator.lookAtLocation.longitude = Number(Wmt.configuration.startupLongitude);
-            this.wwd.navigator.range = Number(Wmt.configuration.startupAltitude);
-            this.wwd.navigator.heading = Number(Wmt.configuration.startupHeading);
-            this.wwd.navigator.tilt = Number(Wmt.configuration.startupTilt);
-            this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
-            this.wwd.redraw();
+            this.globe.reset();
         };
 
 
@@ -281,8 +260,7 @@ define([
          * Resets the viewpoint to north up.
          */
         Controller.prototype.resetHeading = function () {
-            this.wwd.navigator.heading = Number(0);
-            this.wwd.redraw();
+            this.globe.resetHeading();
         };
 
 
