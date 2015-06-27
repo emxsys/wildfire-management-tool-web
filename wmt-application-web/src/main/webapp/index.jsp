@@ -810,10 +810,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>        
 
             <!--Prime UI Search Box Results Dialog--> 
-            <div id="searchResults-dlg" title="Search Results" style="display: none;">
+            <div id="searchResults-dlg" title="Search Results" style="z-index: 2000; display: none;">
                 <div id="searchResults-tbl">
                 </div>
-                <div id="searchResults-globe">
+                <div id="searchResults-globe" title="Preview" style="width: 100%; height: 300">
+                    <canvas id="canvasPreview">
+                        <h1>Your browser does not support HTML5 Canvas.</h1>
+                    </canvas>                
                 </div>
             </div>        
 
