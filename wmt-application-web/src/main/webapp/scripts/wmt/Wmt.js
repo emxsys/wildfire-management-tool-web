@@ -125,6 +125,12 @@ define([],
             /**
              * The display name for the layer that displays markers.
              */
+            
+            LAYER_NAME_COMPASS: "Compass",
+            LAYER_NAME_RETICLE: "Crosshairs",
+            LAYER_NAME_SKY: "Sky",
+            LAYER_NAME_VIEW_CONTROLS: "Controls",
+            
             MARKERS_LAYER_NAME: "Markers",
             /**
              * The local storage key for markers.
@@ -135,6 +141,15 @@ define([],
              * @default 20,000,000 meters.
              */
             NAVIGATOR_MAX_RANGE: 20000000,
+            
+            PROJECTION_NAME_3D: "3D",
+            PROJECTION_NAME_EQ_RECT: "Equirectangular",
+            PROJECTION_NAME_MERCATOR: "Mercator",
+            PROJECTION_NAME_NORTH_POLAR: "North Polar",
+            PROJECTION_NAME_SOUTH_POLAR: "South Polar",
+            PROJECTION_NAME_NORTH_UPS: "North UPS",
+            PROJECTION_NAME_SOUTH_UPS: "South UPS",
+            
             /**
              * The URL for the sunlight REST service.
              */
@@ -200,7 +215,8 @@ define([],
             viewControlOrientation: "vertical",
             showPanControl: true,
             showExaggerationControl: false,
-            wxForecastDurationHours: 24
+            showFieldOfViewControl: false,
+            wxForecastDurationHours: 48
         };
 
         return Wmt;
