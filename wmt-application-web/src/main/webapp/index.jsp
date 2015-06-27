@@ -813,6 +813,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div id="searchResults-dlg" title="Search Results" style="display: none;">
                 <div id="searchResults-tbl">
                 </div>
+                <div id="searchResults-globe">
+                </div>
             </div>        
 
             <!--Prime UI Weather Editor Dialog--> 
