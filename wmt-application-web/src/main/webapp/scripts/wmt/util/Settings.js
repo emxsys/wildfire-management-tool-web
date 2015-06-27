@@ -36,8 +36,8 @@
  * @author Bruce Schubert
  */
 define([
-    '../util/Log',
-    '../Wmt'],
+    'wmt/util/Log',
+    'wmt/Wmt'],
     function (
         Log,
         Wmt) {

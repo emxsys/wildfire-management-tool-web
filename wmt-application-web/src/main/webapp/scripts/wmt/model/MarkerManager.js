@@ -31,9 +31,9 @@
 /*global define*/
 
 define([
-    './MarkerNode',
-    '../util/Publisher',
-    '../Wmt'],
+    'wmt/model/MarkerNode',
+    'wmt/util/Publisher',
+    'wmt/Wmt'],
     function (
         MarkerNode,
         Publisher,

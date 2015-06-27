@@ -30,7 +30,7 @@
 
 /*global define*/
 
-define(['../util/Publisher', '../model/WeatherLookout', '../Wmt'],
+define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
     function (Publisher, WeatherLookout, Wmt) {
         "use strict";
         var WeatherLookoutManager = function (model) {

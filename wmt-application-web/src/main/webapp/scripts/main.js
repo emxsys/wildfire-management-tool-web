@@ -31,13 +31,13 @@
 /*global requirejs, WorldWind*/
 
 /**
- * Top-level script file that does not define a module containing a configuration object.
+ * Top-level script file that does not define a module.
  * @link http://requirejs.org/docs/api.html#config
  * @author Bruce Schubert
  */
 requirejs.config({
-    waitSeconds: 60,
-    // By default load any module IDs from NAWA WorldWind folder.
+    waitSeconds: 7,
+    // By default load any module IDs from NASA WorldWind folder.
     // This is required to satisfy the relative paths in the WW source
     // when using the local WorldWind resources.
     baseUrl: 'thirdparty/nasa',
@@ -77,7 +77,7 @@ requirejs(['wmt/Wmt', 'wmt/WmtClient'],
         // Set the logging level for the World Wind library
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
-        // Create the WMT and make it accessable via a global variable.
-        // This is the only global variable created by the web app.
+        // Create the WMT app and make it accessable via a global variable.
+        // This is the only global variable created by the WMT.
         window.WMT = new WmtClient();
     });

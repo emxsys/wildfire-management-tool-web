@@ -37,10 +37,8 @@
  * @author Theodore Walton
  */
 define([
-    './Controller',
     'worldwind'],
     function (
-        Controller,
         ww) {
         "use strict";
         /**

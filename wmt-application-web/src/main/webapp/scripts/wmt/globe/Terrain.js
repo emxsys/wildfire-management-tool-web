@@ -31,8 +31,8 @@
 /*global define*/
 
 define([
-    '../util/Log',
-    '../util/WmtUtil',
+    'wmt/util/Log',
+    'wmt/util/WmtUtil',
     'worldwind'],
     function (
         Log,

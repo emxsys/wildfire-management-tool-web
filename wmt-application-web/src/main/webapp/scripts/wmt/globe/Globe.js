@@ -44,14 +44,14 @@
  * @returns {Globe}
  */
 define([
-    '../globe/DnDController',
-    '../globe/EnhancedLookAtNavigator',
-    '../globe/EnhancedTextSupport',
-    '../globe/EnhancedViewControlsLayer',
-    '../globe/ReticuleLayer',
-    '../globe/SelectController',
-    '../globe/SkyBackgroundLayer',
-    '../Wmt',
+    'wmt/globe/DnDController',
+    'wmt/globe/EnhancedLookAtNavigator',
+    'wmt/globe/EnhancedTextSupport',
+    'wmt/globe/EnhancedViewControlsLayer',
+    'wmt/globe/ReticuleLayer',
+    'wmt/globe/SelectController',
+    'wmt/globe/SkyBackgroundLayer',
+    'wmt/Wmt',
     'worldwind'],
     function (
         DnDController,

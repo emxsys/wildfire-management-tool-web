@@ -9,7 +9,7 @@
  * @exports Compass
  * @author t tgaskins $
  */
-define(['../Wmt',
+define(['wmt/Wmt',
     'worldwind'],
     function (Wmt, ww) {
         "use strict";

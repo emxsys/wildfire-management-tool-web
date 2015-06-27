@@ -43,13 +43,13 @@
  * @returns {MainMenu}
  */
 define([
-    './ControlPanel',
-    './DateTimeControls',
-    './KeyboardControls',
-    './LayerMenu',
-    '../view/MarkerView',
-    './SearchBox',
-    '../view/WeatherView'],
+    'wmt/menu/ControlPanel',
+    'wmt/menu/DateTimeControls',
+    'wmt/menu/KeyboardControls',
+    'wmt/menu/LayerMenu',
+    'wmt/view/MarkerView',
+    'wmt/menu/SearchBox',
+    'wmt/view/WeatherView'],
     function (
         ControlPanel,
         DateTimeControls,

@@ -31,13 +31,13 @@
 /*global define, $, WorldWind */
 
 define([
-    '../view/AirTemperatureText',
-    '../view/ForecastTimeText',
-    '../util/Log',
-    '../view/RelativeHumidityText',
-    '../view/SkyCoverPlacemark',
-    '../view/WindBarbPlacemark',
-    '../Wmt',
+    'wmt/view/AirTemperatureText',
+    'wmt/view/ForecastTimeText',
+    'wmt/util/Log',
+    'wmt/view/RelativeHumidityText',
+    'wmt/view/SkyCoverPlacemark',
+    'wmt/view/WindBarbPlacemark',
+    'wmt/Wmt',
     'worldwind'],
     function (
         AirTemperatureText,

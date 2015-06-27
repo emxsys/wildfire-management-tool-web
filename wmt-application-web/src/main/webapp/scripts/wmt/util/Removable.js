@@ -30,7 +30,7 @@
 
 /*global define*/
 
-define(['../util/Publisher', '../Wmt'],
+define(['wmt/util/Publisher', 'wmt/Wmt'],
     function (Publisher, Wmt) {
         "use strict";
         var Removable = {

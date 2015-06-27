@@ -31,9 +31,9 @@
 /*global define, WorldWind*/
 
 define([
-    '../globe/EnhancedPlacemark',
-    '../util/WmtUtil',
-    '../Wmt',
+    'wmt/globe/EnhancedPlacemark',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt',
     'worldwind'],
     function (
         EnhancedPlacemark,

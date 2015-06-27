@@ -40,8 +40,8 @@
  * @author Bruce Schubert
  */
 define([
-    '../util/Formatter',
-    '../globe/Terrain',
+    'wmt/util/Formatter',
+    'wmt/globe/Terrain',
     'worldwind'],
     function (
         Formatter,

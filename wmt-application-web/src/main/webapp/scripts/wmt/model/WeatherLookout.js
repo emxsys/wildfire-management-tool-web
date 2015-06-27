@@ -31,13 +31,13 @@
 /*global define*/
 
 define([
-    '../util/Editable',
-    '../util/Messenger',
-    '../util/Movable',
-    '../resource/PlaceResource',
-    '../util/Removable',
-    '../resource/WeatherResource',
-    '../Wmt'],
+    'wmt/util/Editable',
+    'wmt/util/Messenger',
+    'wmt/util/Movable',
+    'wmt/resource/PlaceResource',
+    'wmt/util/Removable',
+    'wmt/resource/WeatherResource',
+    'wmt/Wmt'],
     function (
         Editable,
         Messenger,

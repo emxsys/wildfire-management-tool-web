@@ -32,8 +32,8 @@
 /*global define*/
 
 define([
-    '../util/Log',
-    '../globe/Terrain',
+    'wmt/util/Log',
+    'wmt/globe/Terrain',
     'worldwind'],
     function (
         Log,

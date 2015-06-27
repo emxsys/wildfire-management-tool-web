@@ -40,7 +40,7 @@
  * @@author Bruce Schubert
  */
 define([
-    '../util/Log',
+    'wmt/util/Log',
     'worldwind'],
     function (
         Log,

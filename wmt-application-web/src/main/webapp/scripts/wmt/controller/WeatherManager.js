@@ -37,8 +37,8 @@
  
  *  * @author Bruce Schubert
  */
-define(['./Controller'],
-    function (Controller) {
+define(['worldwind'],
+    function (ww) {
         "use strict";
         /**
          * @constructor

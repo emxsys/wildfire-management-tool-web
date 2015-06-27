@@ -42,10 +42,10 @@
  * @returns {MarkerView}
  */
 define([
-    '../util/Log',
-    '../menu/MarkerPalette',
-    '../util/Messenger',
-    '../Wmt',
+    'wmt/util/Log',
+    'wmt/menu/MarkerPalette',
+    'wmt/util/Messenger',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Log,

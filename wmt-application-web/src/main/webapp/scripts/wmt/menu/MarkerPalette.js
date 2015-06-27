@@ -38,7 +38,7 @@
  *  * @author Bruce Schubert
  */
 define([
-    '../Wmt'],
+    'wmt/Wmt'],
     function (
         Wmt) {
         "use strict";

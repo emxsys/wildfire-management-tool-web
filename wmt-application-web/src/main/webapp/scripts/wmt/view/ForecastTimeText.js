@@ -31,7 +31,7 @@
 /*global define, WorldWind*/
 
 define([
-    '../Wmt',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Wmt,

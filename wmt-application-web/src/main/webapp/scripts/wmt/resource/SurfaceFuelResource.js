@@ -31,10 +31,10 @@
 /*global define, $ */
 
 define([
-    '../util/Log',
-    '../util/Messenger',
-    '../util/WmtUtil',
-    '../Wmt'],
+    'wmt/util/Log',
+    'wmt/util/Messenger',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt'],
     function (
         Log,
         Messenger,

@@ -30,7 +30,7 @@
 
 /*global define*/
 
-define(['../util/Log'],
+define(['wmt/util/Log'],
     function (Log) {
         "use strict";
         var Publisher = {

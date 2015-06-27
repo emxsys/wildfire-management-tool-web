@@ -40,8 +40,8 @@
  * @author Bruce Schubert
  */
 define([
-    '../util/Log',
-    '../util/Messenger',
+    'wmt/util/Log',
+    'wmt/util/Messenger',
     'worldwind'],
     function (
         Log,

@@ -42,9 +42,9 @@
  * @author Bruce Schubert
  */
 define([
-    './controller/Controller',
-    './globe/Globe',
-    './menu/MainMenu'],
+    'wmt/controller/Controller',
+    'wmt/globe/Globe',
+    'wmt/menu/MainMenu'],
     function (
         Controller,
         Globe,

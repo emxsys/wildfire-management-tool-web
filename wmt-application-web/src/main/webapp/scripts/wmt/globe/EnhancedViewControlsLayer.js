@@ -41,7 +41,7 @@
  * @author Bruce Schubert
  */
 define([
-    '../Wmt',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Wmt,

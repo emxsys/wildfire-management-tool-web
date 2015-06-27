@@ -39,7 +39,7 @@
  * @author Bruce Schubert
  */
 define([
-    '../util/Formatter',
+    'wmt/util/Formatter',
     'worldwind'],
     function (
         Formatter,

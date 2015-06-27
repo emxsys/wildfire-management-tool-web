@@ -31,9 +31,9 @@
 /*global define, $ */
 
 define([
-    '../util/Messenger',
-    '../util/WmtUtil',
-    '../Wmt'],
+    'wmt/util/Messenger',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt'],
     function (
         Messenger,
         WmtUtil,

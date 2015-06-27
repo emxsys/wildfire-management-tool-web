@@ -38,8 +38,8 @@
  * @returns {ControlPanel}
  */
 define([
-    '../util/Locator', 
-    '../util/Messenger', 
+    'wmt/util/Locator', 
+    'wmt/util/Messenger', 
     'worldwind'], 
 function (Locator, Messenger, ww) {
     "use strict";

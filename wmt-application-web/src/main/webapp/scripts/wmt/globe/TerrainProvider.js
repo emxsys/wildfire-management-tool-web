@@ -40,9 +40,9 @@
  * @author Bruce Schubert
  */
 define([
-    '../util/Log',
-    './Terrain',
-    '../util/WmtMath',
+    'wmt/util/Log',
+    'wmt/globe/Terrain',
+    'wmt/util/WmtMath',
     'worldwind'],
     function (
         Log,

@@ -31,7 +31,7 @@
 /*global define, $ */
 
 define([
-    '../util/Log',
+    'wmt/util/Log',
     'worldwind'],
     function (
         Log,

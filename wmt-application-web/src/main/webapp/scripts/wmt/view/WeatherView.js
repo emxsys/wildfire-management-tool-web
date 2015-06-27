@@ -42,11 +42,11 @@
  * @returns {WeatherView}
  */
 define([
-    '../util/Log',
-    '../model/WeatherLookout',
-    '../view/WeatherMapSymbol',
-    '../util/Messenger',
-    '../Wmt',
+    'wmt/util/Log',
+    'wmt/model/WeatherLookout',
+    'wmt/view/WeatherMapSymbol',
+    'wmt/util/Messenger',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Log,

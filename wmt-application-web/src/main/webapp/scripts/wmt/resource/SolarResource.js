@@ -31,9 +31,9 @@
 /*global define, $ */
 
 define([
-    '../util/Log',
-    '../util/WmtUtil',
-    '../Wmt'],
+    'wmt/util/Log',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt'],
     function (
         Log,
         WmtUtil,

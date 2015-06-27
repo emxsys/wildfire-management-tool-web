@@ -31,10 +31,11 @@
 
 /*global define, $, WorldWind */
 
+
 define([
-    '../util/Log',
-    '../util/Messenger',
-    '../Wmt',
+    'wmt/util/Log',
+    'wmt/util/Messenger',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Log,
@@ -42,11 +43,21 @@ define([
         Wmt,
         ww) {
         "use strict";
+        /**
+         * Creates the SearchBox and Back/Forward (undo/redo) buttons (in the NavBar).
+         * The SearchBox searches for an address, placename, airport or coordiantes, and then
+         * goes centers the globe on the selected location.
+         * 
+         * @param {type} controller
+         * @returns {SearchBox}
+         */
         var SearchBox = function (controller) {
             this.ctrl = controller;
 
+            // The object that performs the lookup
             this.geocoder = new WorldWind.NominatimGeocoder();
 
+            // The search history used by the undo/redo buttons
             this.undoHistory = [];
             this.redoHistory = [];
 
@@ -70,7 +81,6 @@ define([
                 }, 0);
             });
         };
-
 
         SearchBox.prototype.onSearchUndo = function (event) {
             if (this.undoHistory.length > 0) {

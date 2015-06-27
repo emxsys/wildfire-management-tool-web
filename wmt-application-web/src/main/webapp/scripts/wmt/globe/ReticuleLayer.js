@@ -42,9 +42,9 @@
  */
 
 define([
-    './Compass',
-    './Crosshairs',
-    '../Wmt',
+    'wmt/globe/Compass',
+    'wmt/globe/Crosshairs',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Compass,

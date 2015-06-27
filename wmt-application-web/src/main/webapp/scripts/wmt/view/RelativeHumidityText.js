@@ -37,7 +37,7 @@
  * @returns {RelativeHumidityText}
  */
 define([
-    '../Wmt',
+    'wmt/Wmt',
     'worldwind'],
     function (
         Wmt,
