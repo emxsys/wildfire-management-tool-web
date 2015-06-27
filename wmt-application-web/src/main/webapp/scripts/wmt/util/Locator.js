@@ -42,7 +42,7 @@
 define([
     '../util/Log',
     '../util/Messenger',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Log,
         Messenger,

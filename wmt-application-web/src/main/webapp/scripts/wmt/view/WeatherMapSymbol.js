@@ -38,7 +38,7 @@ define([
     '../view/SkyCoverPlacemark',
     '../view/WindBarbPlacemark',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         AirTemperatureText,
         ForecastTimeText,

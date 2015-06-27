@@ -31,7 +31,7 @@
 /*global define, $ */
 
 define([
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         ww) {
         "use strict";

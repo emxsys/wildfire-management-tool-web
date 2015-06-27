@@ -42,7 +42,8 @@ define([
     '../view/SolarView',
     './TimeManager',
     './WeatherManager',
-    '../Wmt'],
+    '../Wmt',
+    'worldwind'],
     function (
         CoordinatesView,
         FuelModelManager,
@@ -55,7 +56,8 @@ define([
         SolarView,
         TimeManager,
         WeatherManager,
-        Wmt) {
+        Wmt,
+        ww) {
         "use strict";
         /**
          * 

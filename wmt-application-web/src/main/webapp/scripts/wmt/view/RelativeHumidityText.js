@@ -38,7 +38,7 @@
  */
 define([
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Wmt,
         ww) {

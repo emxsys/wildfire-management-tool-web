@@ -34,7 +34,7 @@ define([
     '../globe/EnhancedPlacemark',
     '../util/WmtUtil',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         EnhancedPlacemark,
         WmtUtil,

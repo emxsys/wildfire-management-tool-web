@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 /**
  * The MarkerView provides a view of the marker model objects as Renderables on the globe 
@@ -46,13 +46,13 @@ define([
     '../menu/MarkerPalette',
     '../util/Messenger',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Log,
         MarkerPalette,
         Messenger,
         Wmt,
-        WorldWind) {
+        ww) {
         "use strict";
         /**
          * Constructs a MarkerView object.

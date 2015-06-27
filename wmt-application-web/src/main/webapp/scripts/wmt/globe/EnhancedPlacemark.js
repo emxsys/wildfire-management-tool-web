@@ -28,61 +28,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WebGLRenderingContext */
+/*global define, WebGLRenderingContext, WorldWind */
 
-define([
-        '../../nasa/error/ArgumentError',
-        '../../nasa/shaders/BasicTextureProgram',
-        '../../nasa/util/Color',
-        '../../nasa/util/Font',
-        '../../nasa/util/Logger',
-        '../../nasa/geom/Matrix',
-        '../../nasa/pick/PickedObject',
-        '../../nasa/shapes/Placemark',
-        '../../nasa/shapes/PlacemarkAttributes',
-        '../../nasa/render/Renderable',
-        '../../nasa/geom/Vec2',
-        '../../nasa/geom/Vec3',
-        '../../nasa/util/WWMath'
-    ],
-    function (ArgumentError,
-              BasicTextureProgram,
-              Color,
-              Font,
-              Logger,
-              Matrix,
-              PickedObject,
-              Placemark,
-              PlacemarkAttributes,
-              Renderable,
-              Vec2,
-              Vec3,
-              WWMath) {
+define(['worldwind'],
+    function (ww) {
         "use strict";
 
         var EnhancedPlacemark = function (position, eyeDistanceScaling) {
 
-            Placemark.call(this, position, eyeDistanceScaling);
-            
-            this.imageRotation  = 0;
-            this.imageTilt  = 0;
+            WorldWind.Placemark.call(this, position, eyeDistanceScaling);
+
+            this.imageRotation = 0;
+            this.imageTilt = 0;
 
         };
-        EnhancedPlacemark.prototype = Object.create(Placemark.prototype);
+        EnhancedPlacemark.prototype = Object.create(WorldWind.Placemark.prototype);
 
         /**
          * Copies the contents of a specified placemark to this placemark.
          * @param {EnhancedPlacemark} that The placemark to copy.
          */
         EnhancedPlacemark.prototype.copy = function (that) {
-            
+
             // Delegate to the super function
-            Placemark.prototype.copy.call(this, that);
-            
+            WorldWind.Placemark.prototype.copy.call(this, that);
+
             // Add imageRotation and imageTilt properties
             this.imageRotation = that.imageRotation;
             this.imageTilt = that.imageTilt;
-                       
+
             return this;
         };
 
@@ -137,7 +111,7 @@ define([
             // Draw the leader line first so that the image and label have visual priority.
             if (this.mustDrawLeaderLine(dc)) {
                 if (!this.leaderLinePoints) {
-                    this.leaderLinePoints = new Float32Array(6);
+                    this.leaderLinePoints = new WorldWind.Float32Array(6);
                 }
 
                 this.leaderLinePoints[0] = this.groundPoint[0]; // computed during makeOrderedRenderable
@@ -162,8 +136,8 @@ define([
                 program.loadColor(gl, dc.pickingMode ? this.pickColor :
                     this.activeAttributes.leaderLineAttributes.outlineColor);
 
-                Placemark.matrix.copy(dc.navigatorState.modelviewProjection);
-                program.loadModelviewProjection(gl, Placemark.matrix);
+                WorldWind.Placemark.matrix.copy(dc.navigatorState.modelviewProjection);
+                program.loadModelviewProjection(gl, WorldWind.Placemark.matrix);
 
                 if (!this.activeAttributes.leaderLineAttributes.depthTest) {
                     gl.disable(WebGLRenderingContext.DEPTH_TEST);
@@ -193,23 +167,23 @@ define([
             gl.vertexAttribPointer(program.vertexPointLocation, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
 
             // Compute and specify the MVP matrix.
-            Placemark.matrix.copy(dc.screenProjection);
-            Placemark.matrix.multiplyMatrix(this.imageTransform);
-            
+            WorldWind.Placemark.matrix.copy(dc.screenProjection);
+            WorldWind.Placemark.matrix.multiplyMatrix(this.imageTransform);
+
             ///////////////////////////////////////////////////
             // BDS: Added this block (template from ScreenImage)
             ///////////////////////////////////////////////////
             if (this.imageRotation !== 0 || this.imageTilt !== 0) {
-                Placemark.matrix.multiplyByTranslation(0.5, 0.5, -0.5);
-                Placemark.matrix.multiplyByRotation(1, 0, 0, this.imageTilt);
-                Placemark.matrix.multiplyByRotation(0, 0, 1, this.imageRotation);
-                Placemark.matrix.multiplyByTranslation(-0.5, -0.5, 0);
+                WorldWind.Placemark.matrix.multiplyByTranslation(0.5, 0.5, -0.5);
+                WorldWind.Placemark.matrix.multiplyByRotation(1, 0, 0, this.imageTilt);
+                WorldWind.Placemark.matrix.multiplyByRotation(0, 0, 1, this.imageRotation);
+                WorldWind.Placemark.matrix.multiplyByTranslation(-0.5, -0.5, 0);
             }
             ///////////////////////////////////////////////////
             // BDS: End modification 
             ///////////////////////////////////////////////////
-            
-            program.loadModelviewProjection(gl, Placemark.matrix);
+
+            program.loadModelviewProjection(gl, WorldWind.Placemark.matrix);
 
             // Enable texture for both normal display and for picking. If picking is enabled in the shader (set in
             // beginDrawing() above) then the texture's alpha component is still needed in order to modulate the
@@ -241,9 +215,9 @@ define([
             if (this.mustDrawLabel() && this.currentVisibility > 0) {
                 program.loadOpacity(gl, dc.pickingMode ? 1 : this.layer.opacity * this.currentVisibility);
 
-                Placemark.matrix.copy(dc.screenProjection);
-                Placemark.matrix.multiplyMatrix(this.labelTransform);
-                program.loadModelviewProjection(gl, Placemark.matrix);
+                WorldWind.Placemark.matrix.copy(dc.screenProjection);
+                WorldWind.Placemark.matrix.multiplyMatrix(this.labelTransform);
+                program.loadModelviewProjection(gl, WorldWind.Placemark.matrix);
 
                 if (!dc.pickingMode && this.labelTexture) {
                     this.texCoordMatrix.setToIdentity();

@@ -45,7 +45,7 @@ define([
     './Compass',
     './Crosshairs',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Compass,
         Crosshairs,

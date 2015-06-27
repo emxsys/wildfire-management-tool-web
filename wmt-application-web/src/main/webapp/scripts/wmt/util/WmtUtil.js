@@ -35,7 +35,7 @@
  * @author Bruce Schubert
  * @module {util/WmtUtil}
  */
-define(['../../nasa/WorldWind'],
+define(['worldwind'],
     function (ww) {
         "use strict";
         var WmtUtil = {

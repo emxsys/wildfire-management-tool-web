@@ -40,7 +40,7 @@
 define([
     '../util/Locator', 
     '../util/Messenger', 
-    '../../nasa/WorldWind'], 
+    'worldwind'], 
 function (Locator, Messenger, ww) {
     "use strict";
     /**

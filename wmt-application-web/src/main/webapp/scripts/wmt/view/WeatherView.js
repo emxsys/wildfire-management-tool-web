@@ -46,13 +46,15 @@ define([
     '../model/WeatherLookout',
     '../view/WeatherMapSymbol',
     '../util/Messenger',
-    '../Wmt'],
+    '../Wmt',
+    'worldwind'],
     function (
         Log,
         WeatherLookout,
         WeatherMapSymbol,
         Messenger,
-        Wmt) {
+        Wmt,
+        ww) {
         "use strict";
         /**
          * @constructor

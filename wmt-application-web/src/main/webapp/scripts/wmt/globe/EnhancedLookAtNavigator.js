@@ -28,45 +28,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind */
 
 
 define([
-    '../../nasa/geom/Angle',
     '../util/Log',
-    '../../nasa/navigate/LookAtNavigator',
-    '../../nasa/geom/Matrix',
-    '../../nasa/geom/Location',
-    '../../nasa/geom/Position',
-    '../../nasa/gesture/TiltRecognizer',
-    '../../nasa/geom/Vec2',
-    '../../nasa/geom/Vec3',
     '../Wmt',
-    '../../nasa/util/WWMath',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
-        Angle,
         Log,
-        LookAtNavigator,
-        Matrix,
-        Location,
-        Position,
-        TiltRecognizer,
-        Vec2,
-        Vec3,
         Wmt,
-        WWMath,
         ww) {
         "use strict";
         var EnhancedLookAtNavigator = function (worldWindow) {
             // Using Classic Inheriticance Pattern #3 - Rent and Set Prototype. See JavaScript Patterns
-            LookAtNavigator.call(this, worldWindow);
+            WorldWind.LookAtNavigator.call(this, worldWindow);
 
             this.wwd = worldWindow;
 
-            this.lastEyePosition = new Position();
+            this.lastEyePosition = new WorldWind.Position();
             // Use the parent object's 'safe' settings for our initial 'last' settings
-            this.lastLookAtLocation = new Location(this.lookAtLocation.latitude, this.lookAtLocation.longitude);
+            this.lastLookAtLocation = new WorldWind.Location(this.lookAtLocation.latitude, this.lookAtLocation.longitude);
             this.lastRange = this.range;
             this.lastHeading = this.heading;
             this.lastTilt = this.tilt;
@@ -81,7 +63,7 @@ define([
 //
 
         };
-        EnhancedLookAtNavigator.prototype = Object.create(LookAtNavigator.prototype);
+        EnhancedLookAtNavigator.prototype = Object.create(WorldWind.LookAtNavigator.prototype);
 
         /**
          * Returns the intercept position of a ray from the eye to the lookAtLocation.
@@ -89,7 +71,7 @@ define([
          */
         EnhancedLookAtNavigator.prototype.terrainInterceptPosition = function () {
             var wwd = this.wwd,
-                centerPoint = new Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
+                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
                 terrainObject = wwd.pickTerrain(centerPoint).terrainObject();
 
             if (terrainObject) {
@@ -198,29 +180,29 @@ define([
                 this.roll = this.lastRoll;
             }
             // Clamp latitude to between -90 and +90, and normalize longitude to between -180 and +180.
-            this.lookAtLocation.latitude = WWMath.clamp(this.lookAtLocation.latitude, -90, 90);
-            this.lookAtLocation.longitude = Angle.normalizedDegreesLongitude(this.lookAtLocation.longitude);
+            this.lookAtLocation.latitude = WorldWind.WWMath.clamp(this.lookAtLocation.latitude, -90, 90);
+            this.lookAtLocation.longitude = WorldWind.Angle.normalizedDegreesLongitude(this.lookAtLocation.longitude);
 
             // Clamp range to values greater than 1 in order to prevent degenerating to a first-person navigator when
             // range is zero.
-            this.range = WWMath.clamp(this.range, 1, Wmt.NAVIGATOR_MAX_RANGE);
+            this.range = WorldWind.WWMath.clamp(this.range, 1, Wmt.NAVIGATOR_MAX_RANGE);
 
             // Normalize heading to between -180 and +180.
-            this.heading = Angle.normalizedDegrees(this.heading);
+            this.heading = WorldWind.Angle.normalizedDegrees(this.heading);
 
             // Clamp tilt to between 0 and +90 to prevent the viewer from going upside down.
-            this.tilt = WWMath.clamp(this.tilt, 0, 90);
+            this.tilt = WorldWind.WWMath.clamp(this.tilt, 0, 90);
 
             // Normalize heading to between -180 and +180.
-            this.roll = Angle.normalizedDegrees(this.roll);
+            this.roll = WorldWind.Angle.normalizedDegrees(this.roll);
 
             // Apply 2D limits when the globe is 2D.
             if (this.worldWindow.globe.is2D() && this.enable2DLimits) {
                 // Clamp range to prevent more than 360 degrees of visible longitude.
                 var nearDist = this.nearDistance,
-                    nearWidth = WWMath.perspectiveFrustumRectangle(this.worldWindow.viewport, nearDist).width,
+                    nearWidth = WorldWind.WWMath.perspectiveFrustumRectangle(this.worldWindow.viewport, nearDist).width,
                     maxRange = 2 * Math.PI * this.worldWindow.globe.equatorialRadius * (nearDist / nearWidth);
-                this.range = WWMath.clamp(this.range, 1, maxRange);
+                this.range = WorldWind.WWMath.clamp(this.range, 1, maxRange);
 
                 // Force tilt to 0 when in 2D mode to keep the viewer looking straight down.
                 this.tilt = 0;
@@ -242,7 +224,7 @@ define([
             var wwd = this.wwd,
                 navigatorState = this.intermediateState(),
                 eyePoint = navigatorState.eyePoint,
-                eyePos = new Position(),
+                eyePos = new WorldWind.Position(),
                 terrainElev;
 
             // Get the eye position in geographic coords
@@ -268,11 +250,11 @@ define([
         EnhancedLookAtNavigator.prototype.intermediateState = function () {
             // this.applyLimits(); -- Don't do this!!
             var globe = this.worldWindow.globe,
-                lookAtPosition = new Position(
+                lookAtPosition = new WorldWind.Position(
                     this.lookAtLocation.latitude,
                     this.lookAtLocation.longitude,
                     0),
-                modelview = Matrix.fromIdentity();
+                modelview = WorldWind.Matrix.fromIdentity();
 
             modelview.multiplyByLookAtModelview(lookAtPosition, this.range, this.heading, this.tilt, this.roll, globe);
 

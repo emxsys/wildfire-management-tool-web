@@ -52,7 +52,7 @@ define([
     '../globe/SelectController',
     '../globe/SkyBackgroundLayer',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         DnDController,
         EnhancedLookAtNavigator,
@@ -62,10 +62,10 @@ define([
         SelectController,
         SkyBackgroundLayer,
         Wmt,
-        ww) {   
+        worldwind) {   
         "use strict";
         /**
-         * Creates a Globe object which manages the WorldWindow object: wwd.
+         * Creates a Globe object which manages a WorldWindow object created for the given canvas.
          * @constructor
          * @param {String} canvasName The canvas element ID for the WorldWindow canvas.
          * @returns {Globe}

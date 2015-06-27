@@ -43,7 +43,7 @@ define([
     '../util/Log',
     './Terrain',
     '../util/WmtMath',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Log,
         Terrain,

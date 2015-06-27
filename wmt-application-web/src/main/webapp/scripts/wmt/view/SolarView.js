@@ -32,10 +32,10 @@
 
 define([
     '../util/Log',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Log,
-        WorldWind) {
+        ww) {
         "use strict";
         var SolarView = {
             handleSunlightChanged: function (sunlight) {

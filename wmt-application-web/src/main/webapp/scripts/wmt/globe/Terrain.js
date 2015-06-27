@@ -33,7 +33,7 @@
 define([
     '../util/Log',
     '../util/WmtUtil',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Log,
         WmtUtil,

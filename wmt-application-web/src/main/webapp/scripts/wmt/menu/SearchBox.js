@@ -34,10 +34,12 @@
 define([
     '../util/Log',
     '../util/Messenger',
-    '../../nasa/WorldWind'],
+    '../Wmt',
+    'worldwind'],
     function (
         Log,
         Messenger,
+        Wmt,
         ww) {
         "use strict";
         var SearchBox = function (controller) {
@@ -67,8 +69,6 @@ define([
                     $('#searchText').select();
                 }, 0);
             });
-
-
         };
 
 
@@ -172,7 +172,7 @@ define([
                 modal: true,
                 responsive: true,
                 buttons: [{
-                        text: 'Go To',
+                        text: Wmt.BUTTON_TEXT_GOTO,
                         icon: 'fa-globe',
                         click: function () {
                             // Ok to close?
@@ -183,7 +183,7 @@ define([
                         }
                     },
                     {
-                        text: 'Cancel',
+                        text: Wmt.BUTTON_TEXT_CANCEL,
                         icon: 'fa-close',
                         click: function () {
                             // Unconditionally close
@@ -197,7 +197,7 @@ define([
 
         SearchBox.prototype.enableGoToButton = function (enabled) {
             var dlg = $('#searchResults-dlg'),
-                btn = dlg.find('span.pui-button-text:contains("Go To")').parent();
+                btn = dlg.find('span.pui-button-text:contains("' + Wmt.BUTTON_TEXT_GOTO + '")').parent();
             $(btn).puibutton(enabled ? 'enable' : 'disable');
 
         };

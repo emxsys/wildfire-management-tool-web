@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, $ */
+/*global define, $, WorldWind*/
 
 /**
  * The MouseCoordinates displays the position under the mouse.
@@ -42,11 +42,11 @@
 define([
     '../util/Formatter',
     '../globe/Terrain',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Formatter,
         Terrain,
-        WorldWind) {
+        ww) {
         "use strict";
         var CoordinatesView = function (worldWindow) {
             //

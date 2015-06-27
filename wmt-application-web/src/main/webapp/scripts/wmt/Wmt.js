@@ -50,6 +50,13 @@ define([],
              * @constant
              */
             VERSION: "0.0.0",
+            
+            BUTTON_TEXT_CANCEL: 'Cancel',
+            BUTTON_TEXT_GOTO: 'Go To',
+            BUTTON_TEXT_NO: 'No',
+            BUTTON_TEXT_OK: 'OK',
+            BUTTON_TEXT_YES: 'Yes',
+
             /**
              * Publish/subscibe event name for notifcation of mouse position on the globe.
              * @constant
@@ -164,7 +171,7 @@ define([],
              * @default "scripts/nasa/"
              * @constant
              */
-            WORLD_WIND_PATH: "scripts/nasa/"
+            WORLD_WIND_PATH: "thirdparty/nasa/"
 
         };
         /**
@@ -195,11 +202,6 @@ define([],
             showExaggerationControl: false,
             wxForecastDurationHours: 24
         };
-
-        /**
-         * Declaration of the Wmt global.
-         */
-        //window.Wmt = Wmt;
 
         return Wmt;
     }

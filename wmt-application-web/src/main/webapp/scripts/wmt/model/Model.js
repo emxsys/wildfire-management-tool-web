@@ -54,7 +54,7 @@ define([
     '../resource/WeatherResource',
     '../util/WmtUtil',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         FuelMoistureResource,
         Log,

@@ -57,7 +57,7 @@ define([
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
             this.controller = new Controller(this.globe.wwd);
-            
+
             // The controller restores the Model from the previous session
             this.controller.restoreSession();
 

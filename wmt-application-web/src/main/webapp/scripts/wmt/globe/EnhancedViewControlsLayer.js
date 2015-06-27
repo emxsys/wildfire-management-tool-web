@@ -41,11 +41,9 @@
  * @author Bruce Schubert
  */
 define([
-    '../../nasa/layer/ViewControlsLayer',
     '../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
-        ViewControlsLayer,
         Wmt,
         ww) {
         "use strict";
@@ -62,7 +60,7 @@ define([
         var EnhancedViewControlsLayer = function (worldWindow) {
             // Classic Pattern #2 - Rent-a-Constructor. See JavaScript Patterns - Code Reuse Patterns
             // Creates a copy of parent members
-            ViewControlsLayer.call(this, worldWindow);
+            WorldWind.ViewControlsLayer.call(this, worldWindow);
 
             // Set defaults from configuration
             this.showPanControl = Wmt.configuration.showPanControl;
@@ -78,14 +76,14 @@ define([
         };
 
         // Classic Pattern #3 - Rent and Set Prototype. See JavaScript Patterns - Code Reuse Patterns
-        EnhancedViewControlsLayer.prototype = Object.create(ViewControlsLayer.prototype);
+        EnhancedViewControlsLayer.prototype = Object.create(WorldWind.ViewControlsLayer.prototype);
 
 
         // Copied from parent. Modified to perform vertical layout.
         EnhancedViewControlsLayer.prototype.doRender = function (dc) {
             // Let the parent perform the default horizontal layout
             if (this.orientation !== "vertical") {
-                ViewControlsLayer.prototype.doRender(dc);
+                WorldWind.ViewControlsLayer.prototype.doRender(dc);
                 return;
             }
             // Othewise, do vertical layout (copied from ViewControlsLayer and edited).
@@ -151,7 +149,7 @@ define([
                 this.zoomOutControl.render(dc);
                 this.zoomInControl.render(dc);
                 y -= this.zoomOutControl.size;
-            } 
+            }
 
             if (this.showHeadingControl) {
                 this.headingRightControl.screenOffset.x = x;
@@ -161,7 +159,7 @@ define([
                 this.headingRightControl.render(dc);
                 this.headingLeftControl.render(dc);
                 y -= this.headingLeftControl.size;
-            } 
+            }
 
             if (this.showTiltControl) {
                 this.tiltDownControl.screenOffset.x = x;

@@ -30,8 +30,8 @@
 
 /*global define, WorldWind */
 
-define([],
-    function () {
+define(['worldwind'],
+    function (ww) {
         "use strict";
         /**
          * @constructor

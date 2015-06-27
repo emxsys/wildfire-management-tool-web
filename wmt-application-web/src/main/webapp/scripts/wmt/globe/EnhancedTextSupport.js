@@ -6,22 +6,11 @@
  * @exports TextSupport
  * @version $Id: TextSupport.js 2941 2015-03-30 21:11:43Z tgaskins $
  */
-define([
-        '../../nasa/error/ArgumentError',
-        '../../nasa/shaders/BasicTextureProgram',
-        '../../nasa/util/Color',
-        '../../nasa/util/Logger',
-        '../../nasa/geom/Matrix',
-        '../../nasa/render/Texture',
-        '../../nasa/geom/Vec2'
-    ],
-    function (ArgumentError,
-              BasicTextureProgram,
-              Color,
-              Logger,
-              Matrix,
-              Texture,
-              Vec2) {
+
+/*global define, WorldWind */
+
+define(['worldwind'],
+    function (ww) {
         "use strict";
 
         /**
@@ -52,20 +41,20 @@ define([
          */
         EnhancedTextSupport.prototype.textSize = function (text, font) {
             if (text.length === 0) {
-                return new Vec2(0, 0);
+                return new WorldWind.Vec2(0, 0);
             }
 
             this.ctx2D.font = font.fontString;
 
             var lines = text.split("\n"),
                 height = lines.length * (font.size * (1 + this.lineSpacing)),
-                maxWidth = 0;
+                i, lines, maxWidth = 0;
 
-            for (var i = 0; i < lines.length; i++) {
+            for (i = 0; i < lines.length; i++) {
                 maxWidth = Math.max(maxWidth, this.ctx2D.measureText(lines[i]).width);
             }
 
-            return new Vec2(maxWidth, height);
+            return new WorldWind.Vec2(maxWidth, height);
         };
 
         /**
@@ -90,13 +79,13 @@ define([
             ctx2D.font = font.fontString;
             ctx2D.textBaseline = "top";
             ctx2D.textAlign = font.horizontalAlignment;
-            ctx2D.fillStyle = Color.WHITE.toHexString(false);
-            
+            ctx2D.fillStyle = WorldWind.Color.WHITE.toHexString(false);
+
             // BDS: Modification. Styles for strokeText(...)
             ctx2D.shadowBlur = blurSize;
             ctx2D.shadowColor = "black";
             ctx2D.shadowOffsetX = 0;
-            
+
             // BDS: Adjust for blur margin
             if (font.horizontalAlignment === "left") {
                 x = 0 + blurSize;
@@ -108,14 +97,14 @@ define([
 
             for (var i = 0; i < lines.length; i++) {
                 y = i * font.size * (1 + this.lineSpacing);
-                
+
                 // BDS: Modification. Added calls to strokeText(...)
                 ctx2D.strokeText(lines[i], x, y);
-                
+
                 ctx2D.fillText(lines[i], x, y);
             }
 
-            return new Texture(gl, canvas2D);
+            return new WorldWind.Texture(gl, canvas2D);
         };
 
         return EnhancedTextSupport;

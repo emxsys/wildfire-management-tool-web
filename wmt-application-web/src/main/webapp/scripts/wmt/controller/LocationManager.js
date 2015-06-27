@@ -37,9 +37,11 @@
  * @author Theodore Walton
  */
 define([
-    './Controller'],
+    './Controller',
+    'worldwind'],
     function (
-        Controller) {
+        Controller,
+        ww) {
         "use strict";
         /**
          * @constructor
@@ -47,7 +49,7 @@ define([
          */
         var LocationManager = function (controller) {
             var self = this;
-            
+
             this.ctrl = controller;
             this.position = new WorldWind.Position();
             this.initialize();
@@ -67,7 +69,7 @@ define([
          */
         LocationManager.prototype.initialize = function () {
             var self = this;
-            
+
             $('#location-dlg').puidialog({
                 showEffect: 'fade',
                 hideEffect: 'fade',

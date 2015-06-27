@@ -10,7 +10,7 @@
  * @author t tgaskins $
  */
 define(['../Wmt',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (Wmt, ww) {
         "use strict";
 

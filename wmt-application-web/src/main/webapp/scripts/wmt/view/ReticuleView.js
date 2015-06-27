@@ -40,10 +40,10 @@
  */
 define([
     '../util/Formatter',
-    '../../nasa/WorldWind'],
+    'worldwind'],
     function (
         Formatter,
-        WorldWind) {
+        ww) {
         "use strict";
         var ReticuleView = function (worldWindow) {
             //

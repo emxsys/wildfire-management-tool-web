@@ -40,9 +40,11 @@
  * @@author Bruce Schubert
  */
 define([
-    '../util/Log'],
+    '../util/Log',
+    'worldwind'],
     function (
-        Log) {
+        Log,
+        ww) {
         "use strict";
         /**
          * Creates a KeyboardController that dispatches keystrokes from the 
