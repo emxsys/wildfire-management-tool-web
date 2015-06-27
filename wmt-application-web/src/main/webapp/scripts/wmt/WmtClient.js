@@ -51,12 +51,12 @@ define([
         MainMenu) {
         "use strict";
         var WmtClient = function () {
-            // Initialize the WorldWindow
+            // Initialize the primary WorldWindow
             this.globe = new Globe("canvasOne");
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views
-            this.controller = new Controller(this.globe.wwd);
+            this.controller = new Controller(this.globe);
 
             // The controller restores the Model from the previous session
             this.controller.restoreSession();
