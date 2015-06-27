@@ -79,7 +79,7 @@ define([
                     includeTiltControls: false,
                     includeZoomControls: true
                 },
-                [// Choose any one of these imagery layers
+                [// Choose any one of these imagery layers plus the renderable layer (to show hits):
                     //new WorldWind.BingAerialWithLabelsLayer(null),
                     //new WorldWind.BingRoadsLayer(null),
                     new WorldWind.OpenStreetMapImageLayer(null),
@@ -114,6 +114,10 @@ define([
             });
         };
 
+        /**
+         * Handles the Undo button events by restoring the previous position stored in history.
+         * @param {type} event
+         */
         SearchBox.prototype.onSearchUndo = function (event) {
             if (this.undoHistory.length > 0) {
                 var prevLocation = this.undoHistory.pop(),
@@ -126,6 +130,11 @@ define([
             }
         };
 
+        /**
+         * Handles the Redo button event, by setting the position from the last undo.
+         * @param {type} event
+         * @returns {undefined}
+         */
         SearchBox.prototype.onSearchRedo = function (event) {
             if (this.redoHistory.length > 0) {
                 var location = this.redoHistory.pop();
@@ -136,7 +145,13 @@ define([
             }
         };
 
-
+        /**
+         * Handles the keystrokes in the SearchBox and responds to the enter key to invoke the search
+         * TODO: could perform an autocomplete.
+         * @param {type} searchInput
+         * @param {type} event
+         * @returns {undefined}
+         */
         SearchBox.prototype.onSearchTextKeyPress = function (searchInput, event) {
             if (event.keyCode === 13) {
                 searchInput.blur();
@@ -145,6 +160,11 @@ define([
         };
 
 
+        /**
+         * Performs the search for the user's search criterial
+         * @param {type} queryString
+         * @returns {undefined}
+         */
         SearchBox.prototype.performSearch = function (queryString) {
             var self = this,
                 tokens,
@@ -173,7 +193,7 @@ define([
         };
 
         /**
-         * Shows the SearchResults modal dialog.
+         * Shows the SearchResults modal dialog containing the search results and the embedded globe.
          * @param {Array} results description
          */
         SearchBox.prototype.showResultsDialog = function (results) {
@@ -307,12 +327,19 @@ define([
             });
         };
 
+        /**
+         * Enables or disables the Go To button.
+         * @param {Boolean} enabled
+         */
         SearchBox.prototype.enableGoToButton = function (enabled) {
             var dlg = $('#searchResults-dlg'),
                 btn = dlg.find('span.pui-button-text:contains("' + Wmt.BUTTON_TEXT_GOTO + '")').parent();
             $(btn).puibutton(enabled ? 'enable' : 'disable');
         };
 
+        /**
+         * Previews the selected item by centering the globe on the item's location.
+         */
         SearchBox.prototype.previewSelection = function () {
             var latitude = parseFloat(this.searchSelection.lat),
                 longitude = parseFloat(this.searchSelection.lon);
@@ -321,6 +348,9 @@ define([
         };
 
 
+        /**
+         * Inokes the "go to" animation on the primary globe.
+         */
         SearchBox.prototype.gotoSelection = function () {
             var latitude = parseFloat(this.searchSelection.lat),
                 longitude = parseFloat(this.searchSelection.lon),
