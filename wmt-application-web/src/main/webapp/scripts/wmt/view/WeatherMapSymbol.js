@@ -32,6 +32,7 @@
 
 define([
     'wmt/view/AirTemperatureText',
+    'wmt/controller/Controller',
     'wmt/view/ForecastTimeText',
     'wmt/util/Log',
     'wmt/view/RelativeHumidityText',
@@ -41,6 +42,7 @@ define([
     'worldwind'],
     function (
         AirTemperatureText,
+        Controller,
         ForecastTimeText,
         Log,
         RelativeHumidityText,
@@ -54,7 +56,11 @@ define([
 
             // Inherit Renderable properties
             WorldWind.Renderable.call(this);
-
+            
+            // Maintain a reference to the weather object this symbol represents
+            this.wxModel = wxModel;
+            
+            // Create the weather map symbol components
             this.skyCoverPlacemark = new SkyCoverPlacemark(wxModel.latitude, wxModel.longitude);
             this.windBarbPlacemark = new WindBarbPlacemark(wxModel.latitude, wxModel.longitude);
             this.airTemperatureText = new AirTemperatureText(wxModel.latitude, wxModel.longitude, 'F');
@@ -86,23 +92,16 @@ define([
             
             // Create an EVENT_WEATHER_CHANGED handler that updates the symbology
             this.handleWeatherChangedEvent = function (wxModel) {
-                self.wxForecast = wxModel.wxForecast;
-                var values = wxModel.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather[0].values,
-                    isoTime = wxModel.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather[0]['@time'],
-                    time = new Date(isoTime),
-                    airTmp = values[0],
-                    relHum = values[1],
-                    wndSpd = values[2],
-                    wndDir = values[3],
-                    skyCvr = values[4],
+                
+                var wx = wxModel.getFirstForecast(),
                     timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
 
                 // Update the values
-                self.skyCoverPlacemark.updateSkyCoverImage(skyCvr);
-                self.windBarbPlacemark.updateWindBarbImage(wndSpd, wndDir);
-                self.airTemperatureText.text = airTmp + 'F';
-                self.relHumidityText.text = relHum + '%';
-                self.forecastTimeText.text = '@ ' + time.toLocaleTimeString('en', timeOptions);
+                self.skyCoverPlacemark.updateSkyCoverImage(wx.skyCoverPct);
+                self.windBarbPlacemark.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
+                self.airTemperatureText.text = wx.airTemperatureF + 'F';
+                self.relHumidityText.text = wx.relaltiveHumidityPct + '%';
+                self.forecastTimeText.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
             };
 
             // Create an EVENT_PLACE_CHANGED handler that updates the label
@@ -118,12 +117,26 @@ define([
                     }
                 }
             };
+
+            // Create an EVENT_PLACE_CHANGED handler that updates the label
+            this.handleTimeChangedEvent = function (time) {
+                var wx = this.wxModel.getForecastAt(time),
+                    timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
+
+                // Update the values
+                self.skyCoverPlacemark.updateSkyCoverImage(wx.skyCoverPct);
+                self.windBarbPlacemark.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
+                self.airTemperatureText.text = wx.airTemperatureF + 'F';
+                self.relHumidityText.text = wx.relaltiveHumidityPct + '%';
+                self.forecastTimeText.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
+            };
             
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
             wxModel.on(Wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
             wxModel.on(Wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
             wxModel.on(Wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
-
+            
+            Controller.model.on(Wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
 
         };
         // Inherit Renderable functions.
