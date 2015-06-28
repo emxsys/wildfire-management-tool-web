@@ -193,9 +193,9 @@ define([
                 lookout = lookouts[i];
                 item =
                     '<div class="btn-group btn-block btn-group-sm">' +
-                    ' <button type="button" class="col-sm-8 btn btn-default wxlookout-goto">' + lookout.name + '</button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default wxlookout-edit glyphicon glyphicon-pencil" style="top: 0" lookoutName="' + lookout.name + '"></button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default wxlookout-remove glyphicon glyphicon-trash" style="top: 0" lookoutName="' + lookout.name + '"></button>' +
+                    ' <button type="button" class="col-sm-8 btn btn-default wxlookout-goto" lookoutId="' + lookout.id + '">' + lookout.name + '</button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default wxlookout-edit glyphicon glyphicon-pencil" style="top: 0" lookoutId="' + lookout.id + '"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default wxlookout-remove glyphicon glyphicon-trash" style="top: 0" lookoutId="' + lookout.id + '"></button>' +
                     '</div>';
                 $list.append(item);
             }
@@ -203,29 +203,29 @@ define([
 
             // Add event handler to the buttons
             $list.find('button.wxlookout-goto').on('click', function (event) {
-                self.onWeatherItemClick($(this).text(), "goto");
+                self.onWeatherItemClick($(this).attr('lookoutId'), "goto");
             });
             $list.find('button.wxlookout-edit').on('click', function (event) {
-                self.onWeatherItemClick($(this).attr('lookoutName'), "edit");
+                self.onWeatherItemClick($(this).attr('lookoutId'), "edit");
             });
             $list.find('button.wxlookout-remove').on('click', function (event) {
-                self.onWeatherItemClick($(this).attr('lookoutName'), "remove");
+                self.onWeatherItemClick($(this).attr('lookoutId'), "remove");
             });
         };
 
         /**
          * Handler for clicking any one of the weather buttons in the weather list.  
-         * @param {$(li)} lookoutName List item element
+         * @param {$(li)} lookoutId List item element
          * @param {string} action "goto", "edit", or remove
          */
-        WeatherView.prototype.onWeatherItemClick = function (lookoutName, action) {
+        WeatherView.prototype.onWeatherItemClick = function (lookoutId, action) {
             var lookouts = this.manager.wxLookouts,
                 lookout,
                 i, len;
 
             for (i = 0, len = lookouts.length; i < len; i += 1) {
                 lookout = lookouts[i];
-                if (lookout.name === lookoutName) {
+                if (lookout.id === lookoutId) {
                     switch (action) {
                         case 'goto':
                             this.ctrl.lookAtLatLon(lookout.latitude, lookout.longitude);
@@ -235,7 +235,7 @@ define([
                             Log.error("WeatherView", "onWeatherItemClick", "Not implemented action: " + action);
                             break;
                         case 'remove':
-                            this.manager.removeLookout(lookout.name);
+                            this.manager.removeLookout(lookout.id);
                             break;
                         default:
                             Log.error("WeatherView", "onWeatherItemClick", "Unhandled action: " + action);
