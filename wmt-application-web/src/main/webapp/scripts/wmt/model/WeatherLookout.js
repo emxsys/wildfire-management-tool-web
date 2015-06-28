@@ -32,19 +32,23 @@
 
 define([
     'wmt/util/Editable',
+    'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/util/Movable',
     'wmt/resource/PlaceResource',
     'wmt/util/Removable',
     'wmt/resource/WeatherResource',
+    'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
         Editable,
+        Log,
         Messenger,
         Movable,
         PlaceResource,
         Removable,
         WeatherResource,
+        WmtUtil,
         Wmt) {
         "use strict";
 
@@ -79,25 +83,91 @@ define([
             this.refresh();
         };
 
+        WeatherLookout.prototype.getFirstForecast = function () {
+            return this.getForecastAt(null);
+        };
 
+        /**
+         * Returns the forecast nearest the given time.
+         * @param {Date} time The date/time used to select the forecast. If null, the first forecast is returned.
+         * @returns {Object} The 
+         *   {
+         *       forecastTime: Date,
+         *       airTempF: Number,
+         *       relHumidityPct: Number,
+         *       windSpdKts: Number,
+         *       windDirDeg: Number,
+         *       skyCoverPct: Number
+         *   }
+         */
+        WeatherLookout.prototype.getForecastAt = function (time) {
+            if (!this.temporalWx || this.temporalWx.length === 0) {
+                throw Error(Log.error('WeatherLookout', 'getForecastAt', 'missingWeatherData'));
+            }
+            var wxTime,
+                wxTimeNext,
+                minutesSpan,
+                minutesElapsed,
+                forecast,
+                i, max;
+
+            // Use the earliest forecast if time arg is not provided
+            if (!time) {
+                forecast = this.temporalWx[0];
+            }
+            else {
+                for (i = 0, max = this.temporalWx.length; i < max; i++) {
+                    wxTime = this.temporalWx[i].time;
+                    if (time.getTime() < wxTime.getTime()) {    // compare millisecs from epoch
+                        break;
+                    }
+                    if (i === max - 1) {
+                        // This is the last wx entry. Use it!
+                        break;
+                    }
+                    // Take a peek at the next entry's time 
+                    wxTimeNext = this.temporalWx[i + 1].time;
+                    minutesSpan = WmtUtil.minutesBetween(wxTime, wxTimeNext);
+                    minutesElapsed = WmtUtil.minutesBetween(wxTime, time);
+                    if (minutesElapsed < (minutesSpan / 2)) {
+                        break;
+                    }
+                }
+                forecast = this.temporalWx[i];
+            }
+            return {
+                time: forecast.time,
+//                types: this.range,
+//                values: forecast.values
+                airTemperatureF: forecast.values[0],
+                relaltiveHumidityPct: forecast.values[1],
+                windSpeedKts: forecast.values[2],
+                windDirectionDeg: forecast.values[3],
+                skyCoverPct: forecast.values[4]
+            };
+        };
+
+        /**
+         * Updates the weather lookout's weather forecast and location. 
+         */
         WeatherLookout.prototype.refresh = function () {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
             var self = this,
                 i, max, item, place = [];
-            
+
             // Get the weather forecast at this location
             WeatherResource.pointForecast(
                 this.latitude,
                 this.longitude,
                 this.duration,
                 function (json) { // Callback to process JSON result
-                    self.wxForecast = json;
+                    self.processForecast(json);
                     self.fire(Wmt.EVENT_WEATHER_CHANGED, self);
                 }
             );
-            
+
             // Get the place name(s) at this location
             PlaceResource.places(
                 this.latitude,
@@ -113,8 +183,28 @@ define([
             );
         };
 
+
+        WeatherLookout.prototype.processForecast = function (json) {
+            Log.info('WeatherLookout', 'processForecast', JSON.stringify(json));
+
+            var isoTime, i, max;
+
+            this.wxForecast = json;
+            this.temporalWx = this.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather;
+            this.range = this.wxForecast.spatioTemporalWeather.range;
+
+            // Add a Date object to each temporal entry
+            for (var i = 0, max = this.temporalWx.length; i < max; i++) {
+                // .@time doesn't work because of the '@', so we use ['@time']
+                isoTime = this.temporalWx[i]['@time'];
+                this.temporalWx[i].time = new Date(isoTime);
+            }
+
+        }
+
         return WeatherLookout;
 
     }
+
 );
 
