@@ -58,6 +58,24 @@ define(['worldwind'],
                 return angleRad * WorldWind.EARTH_RADIUS;
             },
             /**
+             * Generates a GUID-like string.
+             * http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+             * @returns {String} Generated GUID.
+             */
+            guid: function () {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+//                function s4() {
+//                    return Math.floor((1 + Math.random()) * 0x10000)
+//                        .toString(16)
+//                        .substring(1);
+//                }
+//                return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+//                    s4() + '-' + s4() + s4() + s4();
+            },
+            /**
              * Gets the number of minutes between two times.
              * @param {Date} time1
              * @param {Date} time2
