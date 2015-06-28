@@ -49,20 +49,19 @@ define([
         /**
          * Creates a KeyboardController that dispatches keystrokes from the 
          * WorldWind.WorldWindow to the Wmt.Controller.
-         * @param {WorldWindow} worldWindow The keyboard event generator.
-         * @param {Controller} controller The keyboard navigation handler.
+         * @param {Globe} globe The keyboard event generator.
          * @returns {KeyboardControls}
          */
-        var KeyboardControls = function (worldWindow, controller) {
-            this.wwd = worldWindow;
-            this.ctrl = controller;
+        var KeyboardControls = function (globe) {
+            this.globe = globe;
+            this.wwd = globe.wwd;
 
             // This event initialization is wrapped in a document ready function.
             // Note: the canvas must be focusable; this can be accomplished
             // by establishing the "tabindex" on the canvas element.
             var self = this;
             $(function () {
-                var $canvas = $(worldWindow.canvas);
+                var $canvas = $(globe.wwd.canvas);
                 $canvas.keydown(function (event) {
                     self.handleKeyDown(event);
                 });
@@ -122,14 +121,14 @@ define([
          * Reset the view to North up.
          */
         KeyboardControls.prototype.resetHeading = function () {
-            this.ctrl.resetHeading();
+            this.globe.resetHeading();
         };
 
         /**
          * Reset the view to North up and nadir.
          */
         KeyboardControls.prototype.resetHeadingAndTilt = function () {
-            this.ctrl.resetHeadingAndTilt();
+            //this.ctrl.resetHeadingAndTilt();
         };
 
         /**

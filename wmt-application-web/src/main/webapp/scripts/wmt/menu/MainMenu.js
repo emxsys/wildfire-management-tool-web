@@ -43,17 +43,17 @@
  * @returns {MainMenu}
  */
 define([
+    'wmt/controller/Controller',
     'wmt/menu/ControlPanel',
     'wmt/menu/DateTimeControls',
-    'wmt/menu/KeyboardControls',
     'wmt/menu/LayerMenu',
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
     'wmt/view/WeatherView'],
     function (
+        controller,
         ControlPanel,
         DateTimeControls,
-        KeyboardControls,
         LayerMenu,
         MarkerView,
         SearchBox,
@@ -63,15 +63,12 @@ define([
             /**
              * Initializes the main menu and its constituents.
              * @param {Controller} controller 
-             * @param {Globe} globe The WorldWindow manager
+             * @param {Globe} globe The primary globe associated with keyboard controls
              */
-            initialize: function (controller, globe) {
+            initialize: function () {
                 var self = this;
 
                 $(document).ready(function () {
-
-                    // Add keyboard controls to the globe: requires the Controller
-                    self.keyboardControls = new KeyboardControls(globe.wwd, controller);
                 
                     // Auto-collapse the navbar when one of its decendents are clicked
                     $('.nav a').on('click', function () {

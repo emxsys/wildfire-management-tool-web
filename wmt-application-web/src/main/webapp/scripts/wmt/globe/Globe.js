@@ -48,6 +48,7 @@ define([
     'wmt/globe/EnhancedLookAtNavigator',
     'wmt/globe/EnhancedTextSupport',
     'wmt/globe/EnhancedViewControlsLayer',
+    'wmt/globe/KeyboardControls',
     'wmt/util/Log',
     'wmt/globe/ReticuleLayer',
     'wmt/globe/SelectController',
@@ -59,6 +60,7 @@ define([
         EnhancedLookAtNavigator,
         EnhancedTextSupport,
         EnhancedViewControlsLayer,
+        KeyboardControls,
         Log,
         ReticuleLayer,
         SelectController,
@@ -98,8 +100,9 @@ define([
 
             // TODO: Change to globe controllers instead of wwd controllers.
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
-            this.wwd.selectController = new SelectController(this.wwd);
-            this.wwd.dndController = new DnDController(this.wwd);
+            this.selectController = new SelectController(this.wwd);
+            this.dndController = new DnDController(this.wwd);
+            this.keyboardControls = new KeyboardControls(this);
 
             // Add the custom navigator after the select controller so the select controller can
             // consume the mouse events and preempt the pan/drag operation during object move operations.

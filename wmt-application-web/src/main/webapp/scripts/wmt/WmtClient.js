@@ -35,9 +35,9 @@
  * 
  * @module {WmtClient}
  * 
- * @param {Object} Controller
+ * @param {Object} controller
  * @param {Object} Globe
- * @param {Object} MainMenu
+ * @param {Object} mainMenu
  * 
  * @author Bruce Schubert
  */
@@ -46,28 +46,28 @@ define([
     'wmt/globe/Globe',
     'wmt/menu/MainMenu'],
     function (
-        Controller,
+        controller,
         Globe,
-        MainMenu) {
+        mainMenu) {
         "use strict";
         var WmtClient = function () {
-            // Initialize the primary WorldWindow
+            
+            // Create the primary globe
             this.globe = new Globe("canvasOne");
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
-            // The controller will create model and the views
-            this.controller = new Controller(this.globe);
-
-            // The controller restores the Model from the previous session
-            this.controller.restoreSession();
+            // The controller will create model and the views on the primary globe. 
+            // Then restore the model from the previous session.
+            controller.initialize(this.globe);
+            controller.restoreSession();
 
             // Initialize the Navbar, Sidebars and UI controls.
-            MainMenu.initialize(this.controller, this.globe);
+            // Do this AFTER the controller is initialized.
+            mainMenu.initialize();
 
             // Add event handler to save the current view (eye position) when the window closes
-            var self = this;
             window.onbeforeunload = function () {
-                self.controller.saveSession();
+                controller.saveSession();
                 // Return null to close quietly on Chrome FireFox.
                 //return "Close WMT?";
                 return null;
