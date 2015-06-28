@@ -30,8 +30,14 @@
 
 /*global define*/
 
-define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
-    function (Publisher, WeatherLookout, Wmt) {
+define([
+    'wmt/util/Publisher',
+    'wmt/model/WeatherLookout',
+    'wmt/Wmt'],
+    function (
+        Publisher,
+        WeatherLookout,
+        Wmt) {
         "use strict";
         var WeatherLookoutManager = function (model) {
             // Mix-in Publisher capability (publish/subscribe pattern)
@@ -47,13 +53,13 @@ define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
             this.fire(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, lookout);
         };
 
-        WeatherLookoutManager.prototype.removeLookout = function (uniqueName) {
+        WeatherLookoutManager.prototype.removeLookout = function (id) {
             var i,
                 max,
                 removed;
 
             for (i = 0, max = this.wxLookouts.length; i < max; i++) {
-                if (this.wxLookouts[i].name === uniqueName) {
+                if (this.wxLookouts[i].id === id) {
                     removed = this.wxLookouts.splice(i, 1);
                     break;
                 }
@@ -63,16 +69,16 @@ define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
             }
         };
 
-
         /**
          * Saves the weather lookouts collection to local storage.
          */
         WeatherLookoutManager.prototype.saveLookouts = function () {
-            var validLookouts = this.wxLookouts.filter(function (lookout) {
-                return !lookout.invalid;
-            }),
-                string = JSON.stringify(validLookouts, ['name','duration','rules','latitude','longitude']);
-            
+            var validLookouts = this.wxLookouts.filter(
+                function (lookout) {
+                    return !lookout.invalid;
+                }),
+                string = JSON.stringify(validLookouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
+
             localStorage.setItem(Wmt.WEATHER_LOOKOUTS_STORAGE_KEY, string);
         };
 
@@ -94,7 +100,8 @@ define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
                     array[i].duration,
                     array[i].rules,
                     array[i].latitude,
-                    array[i].longitude));
+                    array[i].longitude,
+                    array[i].id));
             }
         };
 
@@ -139,7 +146,6 @@ define(['wmt/util/Publisher', 'wmt/model/WeatherLookout', 'wmt/Wmt'],
 
             return uniqueName;
         };
-
 
         return WeatherLookoutManager;
     }
