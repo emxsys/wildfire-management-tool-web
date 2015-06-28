@@ -52,7 +52,7 @@ define([
         Wmt) {
         "use strict";
 
-        var WeatherLookout = function (name, duration, rules, latitude, longitude) {
+        var WeatherLookout = function (name, duration, rules, latitude, longitude, id) {
 
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             Movable.makeMovable(this);
@@ -68,6 +68,7 @@ define([
                 return false;
             });
 
+            this.id = id || WmtUtil.guid();
             this.name = name || 'Wx Lookout';
             this.duration = duration || Wmt.configuration.wxForecastDurationHours;
             this.latitude = latitude;
@@ -151,11 +152,18 @@ define([
          * Updates the weather lookout's weather forecast and location. 
          */
         WeatherLookout.prototype.refresh = function () {
+            this.refreshForecast();
+            this.refreshPlace();
+        };
+
+        /**
+         * Updates this object's weather attribute. 
+         */
+        WeatherLookout.prototype.refreshForecast = function () {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
-            var self = this,
-                i, max, item, place = [];
+            var self = this;
 
             // Get the weather forecast at this location
             WeatherResource.pointForecast(
@@ -167,23 +175,47 @@ define([
                     self.fire(Wmt.EVENT_WEATHER_CHANGED, self);
                 }
             );
+        };
+
+        /**
+         * Updates this object's place attributes. 
+         */
+        WeatherLookout.prototype.refreshPlace = function () {
+            if (!this.latitude || !this.longitude || !this.duration) {
+                return;
+            }
+            var self = this,
+                i, max, item, place = [];
 
             // Get the place name(s) at this location
             PlaceResource.places(
                 this.latitude,
                 this.longitude,
                 function (json) { // Callback to process YQL Geo.Places result
+                    
+                    // Load all the places into a place object array
                     for (i = 0, max = json.query.results.place.length; i < max; i++) {
                         item = json.query.results.place[i];
                         place[i] = {"name": item.name, "type": item.placeTypeName.content};
                     }
                     self.place = place;
+                    
+                    // Apply the first place name (ordered by granularity) that's not a zip code
+                    for (var i = 0, max = place.length; i < max; i++) {
+                        if (place[i].type !== "Zip Code") {
+                            self.placeName = place[i].name;
+                            break;
+                        }
+                    }
                     self.fire(Wmt.EVENT_PLACE_CHANGED, self);
                 }
             );
         };
 
-
+        /**
+         * 
+         * @param {type} json
+         */
         WeatherLookout.prototype.processForecast = function (json) {
             Log.info('WeatherLookout', 'processForecast', JSON.stringify(json));
 
@@ -200,7 +232,7 @@ define([
                 this.temporalWx[i].time = new Date(isoTime);
             }
 
-        }
+        };
 
         return WeatherLookout;
 
