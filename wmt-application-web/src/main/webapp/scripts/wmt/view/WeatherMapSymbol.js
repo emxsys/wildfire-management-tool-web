@@ -34,7 +34,6 @@ define([
     'wmt/view/AirTemperatureText',
     'wmt/controller/Controller',
     'wmt/view/ForecastTimeText',
-    'wmt/util/Log',
     'wmt/view/RelativeHumidityText',
     'wmt/view/SkyCoverPlacemark',
     'wmt/view/WindBarbPlacemark',
@@ -44,7 +43,6 @@ define([
         AirTemperatureText,
         Controller,
         ForecastTimeText,
-        Log,
         RelativeHumidityText,
         SkyCoverPlacemark,
         WindBarbPlacemark,
@@ -141,8 +139,6 @@ define([
         };
         // Inherit Renderable functions.
         WeatherMapSymbol.prototype = Object.create(WorldWind.Renderable.prototype);
-
-
 
         /**
          * Render this WeatherMapSymbol. 
