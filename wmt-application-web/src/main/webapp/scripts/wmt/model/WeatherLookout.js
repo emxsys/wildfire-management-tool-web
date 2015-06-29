@@ -59,16 +59,22 @@ define([
 
             // Make editable via menus: Fires the EVENT_OBJECT_EDITED event on success.
             Editable.makeEditable(this, function () {
-                Messenger.infoGrowl("Sorry", "The edit feature has not been implemented yet.");
+                Messenger.infoGrowl("The edit feature has not been implemented yet.", "Sorry");
                 return false;
             });
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
             Removable.makeRemovable(this, function () {
-                Messenger.infoGrowl("Sorry", "The delete feature has not been implemented yet.");
-                return false;
+                // TODO: Ask for confirmation; return false if veto'd
+                return true;    // fire's a notification that allow the delete to proceed.
             });
 
+            /**
+             * The unique id used to identify this particular weather object
+             */
             this.id = id || WmtUtil.guid();
+            /**
+             * The display name
+             */
             this.name = name || 'Wx Lookout';
             this.duration = duration || Wmt.configuration.wxForecastDurationHours;
             this.latitude = latitude;
@@ -103,7 +109,7 @@ define([
          */
         WeatherLookout.prototype.getForecastAt = function (time) {
             if (!this.temporalWx || this.temporalWx.length === 0) {
-                throw Error(Log.error('WeatherLookout', 'getForecastAt', 'missingWeatherData'));
+                throw new Error(Log.error('WeatherLookout', 'getForecastAt', 'missingWeatherData'));
             }
             var wxTime,
                 wxTimeNext,
@@ -192,16 +198,16 @@ define([
                 this.latitude,
                 this.longitude,
                 function (json) { // Callback to process YQL Geo.Places result
-                    
+
                     // Load all the places into a place object array
                     for (i = 0, max = json.query.results.place.length; i < max; i++) {
                         item = json.query.results.place[i];
                         place[i] = {"name": item.name, "type": item.placeTypeName.content};
                     }
                     self.place = place;
-                    
+
                     // Apply the first place name (ordered by granularity) that's not a zip code
-                    for (var i = 0, max = place.length; i < max; i++) {
+                    for (i = 0, max = place.length; i < max; i++) {
                         if (place[i].type !== "Zip Code") {
                             self.placeName = place[i].name;
                             break;
@@ -217,7 +223,7 @@ define([
          * @param {type} json
          */
         WeatherLookout.prototype.processForecast = function (json) {
-            Log.info('WeatherLookout', 'processForecast', JSON.stringify(json));
+            //Log.info('WeatherLookout', 'processForecast', JSON.stringify(json));
 
             var isoTime, i, max;
 
@@ -226,12 +232,11 @@ define([
             this.range = this.wxForecast.spatioTemporalWeather.range;
 
             // Add a Date object to each temporal entry
-            for (var i = 0, max = this.temporalWx.length; i < max; i++) {
+            for (i = 0, max = this.temporalWx.length; i < max; i++) {
                 // .@time doesn't work because of the '@', so we use ['@time']
                 isoTime = this.temporalWx[i]['@time'];
                 this.temporalWx[i].time = new Date(isoTime);
             }
-
         };
 
         return WeatherLookout;

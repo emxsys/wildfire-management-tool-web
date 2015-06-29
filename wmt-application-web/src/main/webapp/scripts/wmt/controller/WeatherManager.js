@@ -37,17 +37,18 @@
  
  *  * @author Bruce Schubert
  */
-define(['worldwind'],
-    function (ww) {
+define([
+    'worldwind'],
+    function (
+        ww) {
         "use strict";
         /**
          * @constructor
          * @returns {WeatherManager}
          */
-        var WeatherManager = function (controller) {
+        var WeatherManager = function () {
             var self = this;
 
-            this.ctrl = controller;
             this.position = new WorldWind.Position();
             this.initialize();
 

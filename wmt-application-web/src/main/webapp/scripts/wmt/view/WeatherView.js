@@ -42,17 +42,17 @@
  * @returns {WeatherView}
  */
 define([
+    'wmt/controller/Controller',
     'wmt/util/Log',
     'wmt/model/WeatherLookout',
     'wmt/view/WeatherMapSymbol',
-    'wmt/util/Messenger',
     'wmt/Wmt',
     'worldwind'],
     function (
+        controller,
         Log,
         WeatherLookout,
         WeatherMapSymbol,
-        Messenger,
         Wmt,
         ww) {
         "use strict";
@@ -61,15 +61,14 @@ define([
          * @param {type} controller
          * @returns {WeatherView}
          */
-        var WeatherView = function (controller) {
+        var WeatherView = function () {
 
-            this.ctrl = controller;
-            this.manager = this.ctrl.model.weatherLookoutManager;
+            this.manager = controller.model.weatherLookoutManager;
             this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, this.handleWeatherAddedEvent, this);
             this.manager.on(Wmt.EVENT_WEATHER_LOOKOUT_REMOVED, this.handleWeatherRemovedEvent, this);
 
             // Get the RenderableLayer that we'll add the weathers to.
-            this.weatherLayer = this.ctrl.findLayer(Wmt.WEATHER_LAYER_NAME);
+            this.weatherLayer = controller.globe.findLayer(Wmt.WEATHER_LAYER_NAME);
             if (!this.weatherLayer) {
                 throw new Error(
                     Log.error("WeatherView", "constructor",
@@ -94,9 +93,8 @@ define([
             this.loadExistingWeatherLookouts();
 
             // Add button event handlers
-            var self = this;
             $("#createWeatherLookout").on("click", function (event) {
-                self.ctrl.addWeatherLookoutToGlobe(new WeatherLookout());
+                controller.addWeatherLookoutToGlobe(new WeatherLookout());
             });
             // Initially show the Lookouts tab
             $('#weatherLookoutsBody').collapse('show');
@@ -144,7 +142,7 @@ define([
             try {
                 for (i = 0, max = this.weatherLayer.renderables.length; i < max; i++) {
                     renderable = this.weatherLayer.renderables[i];
-                    if (renderable.displayName === wxLookout.name) {
+                    if (renderable.wxLookout.id === wxLookout.id) {
                         this.weatherLayer.renderables.splice(i, 1);
                         break;
                     }
@@ -162,17 +160,11 @@ define([
          * @param {WeatherLookout} wxLookout
          */
         WeatherView.prototype.createRenderable = function (wxLookout) {
-            var wxMapSymbol,
-                placemark,
-                placemarkAttr,
-                highlightAttr,
-                canvas = document.createElement("canvas"),
-                ctx2d = canvas.getContext("2d"),
-                img;
+            var wxMapSymbol = new WeatherMapSymbol(wxLookout);
 
-            wxMapSymbol = new WeatherMapSymbol(wxLookout);
-
-
+            // Maintain a reference to the weather object this symbol represents
+            wxMapSymbol.wxLookout = wxLookout;
+            
             // Add the weather lookout symbol on the globe
             this.weatherLayer.addRenderable(wxMapSymbol);
         };
@@ -199,7 +191,7 @@ define([
                     '</div>';
                 $list.append(item);
             }
-            this.ctrl.redrawGlobe();
+            controller.globe.redraw();
 
             // Add event handler to the buttons
             $list.find('button.wxlookout-goto').on('click', function (event) {
@@ -228,14 +220,13 @@ define([
                 if (lookout.id === lookoutId) {
                     switch (action) {
                         case 'goto':
-                            this.ctrl.lookAtLatLon(lookout.latitude, lookout.longitude);
+                            controller.lookAtLatLon(lookout.latitude, lookout.longitude);
                             break;
                         case 'edit':
-                            Messenger.infoGrowl('Rename is not implemented yet.');
-                            Log.error("WeatherView", "onWeatherItemClick", "Not implemented action: " + action);
+                            lookout.edit();
                             break;
                         case 'remove':
-                            this.manager.removeLookout(lookout.id);
+                            lookout.remove();
                             break;
                         default:
                             Log.error("WeatherView", "onWeatherItemClick", "Unhandled action: " + action);

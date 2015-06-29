@@ -47,26 +47,47 @@ define([
 
         };
 
+        /**
+         * Adds the given lookout to to the manager.
+         * @param {WeatherLookout} lookout
+         */
         WeatherLookoutManager.prototype.addLookout = function (lookout) {
+            // Ensure we have a unique name by appending a (n) to duplicates.
             lookout.name = this.generateUniqueName(lookout.name || "Wx Lookout");
+            
+            // Subscribe to removal notifications
+            lookout.on(Wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
+
+            // Manage this object
             this.wxLookouts.push(lookout);
+            
             this.fire(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, lookout);
         };
 
-        WeatherLookoutManager.prototype.removeLookout = function (id) {
-            var i,
-                max,
+        /**
+         * Removes the given lookout from the manager.
+         * @param {WeatherLookout} lookout
+         * @returns {Boolean}
+         */
+        WeatherLookoutManager.prototype.removeLookout = function (lookout) {
+            var i, max,
                 removed;
-
+            
+            // Find the lookout item with the given id (should create an associative array)
             for (i = 0, max = this.wxLookouts.length; i < max; i++) {
-                if (this.wxLookouts[i].id === id) {
+                if (this.wxLookouts[i].id === lookout.id) {
                     removed = this.wxLookouts.splice(i, 1);
                     break;
                 }
             }
             if (removed && removed.length > 0) {
+                // Remove our subscription/reference to the lookout
+                lookout.cancelSubscription(Wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
+                // Notify others.
                 this.fire(Wmt.EVENT_WEATHER_LOOKOUT_REMOVED, removed[0]);
+                return true;
             }
+            return false;
         };
 
         /**
@@ -95,7 +116,7 @@ define([
             // Convert JSON array to array of WeatherLookout objects
             array = JSON.parse(string);
             for (i = 0, max = array.length; i < max; i++) {
-                this.wxLookouts.push(new WeatherLookout(
+                this.addLookout(new WeatherLookout(
                     array[i].name,
                     array[i].duration,
                     array[i].rules,
