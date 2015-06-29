@@ -33,69 +33,69 @@
  * 
  * @returns {LayerMenu}
  */
-define([], function () {
-    "use strict";
-    var LayerMenu = function (controller) {
-        var self = this;
+define(['wmt/controller/Controller'],
+    function (controller) {
+        "use strict";
+        var LayerMenu = function () {
+            var self = this;
 
-        this.ctrl = controller;
-        this.wwd = controller.wwd;
+            this.wwd = controller.wwd;
 
-        // Populate the Layers menu with menu items
-        this.synchronizeLayerList();
+            // Populate the Layers menu with menu items
+            this.synchronizeLayerList();
 
-        // Attach a click handler to the new layer menu items
-        $('#layerList').find('li').on('click', function (event) {
-            self.onLayerClick($(this));
-        });
-    };
+            // Attach a click handler to the new layer menu items
+            $('#layerList').find('li').on('click', function (event) {
+                self.onLayerClick($(this));
+            });
+        };
 
-    LayerMenu.prototype.onLayerClick = function (layerItem) {
-        var layerName = layerItem.text(),
-            i,
-            len,
-            layer;
+        LayerMenu.prototype.onLayerClick = function (layerItem) {
+            var layerName = layerItem.text(),
+                i,
+                len,
+                layer;
 
-        // Update the layer state for the selected layer.
-        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
-            layer = this.wwd.layers[i];
-            if (layer.displayName === layerName) {
-                layer.enabled = !layer.enabled;
+            // Update the layer state for the selected layer.
+            for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+                layer = this.wwd.layers[i];
+                if (layer.displayName === layerName) {
+                    layer.enabled = !layer.enabled;
+                    this.highlightLayer(layer, layerItem);
+
+                    controller.globe.redraw();
+                }
+            }
+        };
+
+        LayerMenu.prototype.synchronizeLayerList = function () {
+            var layerListItem = $("#layerList"),
+                layerItem,
+                layer,
+                i,
+                len;
+
+            layerListItem.remove('a');
+
+            // Synchronize the displayed layer list with the World Window's layer list.
+            for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+                layer = this.wwd.layers[i];
+                if (layer.hide) {
+                    continue;
+                }
+                layerItem = $('<li class="list-group-item">' + layer.displayName + '</li>');
+                layerListItem.append(layerItem);
                 this.highlightLayer(layer, layerItem);
-
-                this.ctrl.redrawGlobe();
             }
-        }
-    };
+        };
 
-    LayerMenu.prototype.synchronizeLayerList = function () {
-        var layerListItem = $("#layerList"),
-            layerItem,
-            layer,
-            i,
-            len;
-
-        layerListItem.remove('a');
-
-        // Synchronize the displayed layer list with the World Window's layer list.
-        for (i = 0, len = this.wwd.layers.length; i < len; i++) {
-            layer = this.wwd.layers[i];
-            if (layer.hide) {
-                continue;
+        LayerMenu.prototype.highlightLayer = function (layer, layerItem) {
+            if (layer.enabled) {
+                layerItem.addClass("active");
+            } else {
+                layerItem.removeClass("active");
             }
-            layerItem = $('<li class="list-group-item">' + layer.displayName + '</li>');
-            layerListItem.append(layerItem);
-            this.highlightLayer(layer, layerItem);
-        }
-    };
+        };
 
-    LayerMenu.prototype.highlightLayer = function (layer, layerItem) {
-        if (layer.enabled) {
-            layerItem.addClass("active");
-        } else {
-            layerItem.removeClass("active");
-        }
-    };
-
-    return LayerMenu;
-});
+        return LayerMenu;
+    });

@@ -32,13 +32,12 @@
 
 
 
-define([],
-    function () {
+define(['wmt/controller/Controller'],
+    function (controller) {
         "use strict";
         var DateTimeControls = {
             intervalID: -1,
-            initialize: function (controller) {
-                this.ctrl = controller;
+            initialize: function () {
                 $('#timeControlSlider').slider({
                     animate: 'fast',
                     min: -100,
@@ -51,7 +50,7 @@ define([],
                 $("#timeControlSlider").on('mousedown', $.proxy(this.onMousedown, this));
                 $("#timeControlSlider").on('mouseup', $.proxy(this.onMouseup, this));
                 // The slide event provides events from the keyboard
-                $("#timeControlSlider").on('slide', $.proxy(this.onSlide, this)); 
+                $("#timeControlSlider").on('slide', $.proxy(this.onSlide, this));
 
             },
             onMousedown: function (event) {
@@ -66,7 +65,7 @@ define([],
             whileMousedown: function () {
                 var value = $("#timeControlSlider").slider("value");
                 //console.log("whileMousedown: " + value);
-                this.ctrl.incrementDateTime(Math.pow(value, 2) * (value < 0 ? -1 : 1));
+                controller.incrementDateTime(Math.pow(value, 2) * (value < 0 ? -1 : 1));
             },
             onMouseup: function (event) {
                 //console.log("onMouseup: clearing interval timer");
@@ -77,7 +76,7 @@ define([],
             },
             onSlide: function (event, ui) {
                 //console.log("onSlide: " + ui.value);
-                this.ctrl.incrementDateTime(Math.pow(ui.value, 2) * (ui.value < 0 ? -1 : 1));
+                controller.incrementDateTime(Math.pow(ui.value, 2) * (ui.value < 0 ? -1 : 1));
             }
         };
 

@@ -38,20 +38,24 @@
  * @returns {ControlPanel}
  */
 define([
+    'wmt/controller/Controller',
     'wmt/util/Locator', 
     'wmt/util/Messenger', 
     'worldwind'], 
-function (Locator, Messenger, ww) {
+function (
+    controller,
+    Locator, 
+    messenger, 
+    ww) {
     "use strict";
     /**
      * @constructor
      * @param {Controller} controller
      * @returns {ControlPanel}
      */
-    var ControlPanel = function (controller) {
+    var ControlPanel = function () {
         var self = this;
 
-        this.ctrl = controller;
         this.wwd = controller.wwd;
         this.self = this;
 
@@ -72,17 +76,17 @@ function (Locator, Messenger, ww) {
         });
         // Add Control Panel > Globe event handlers
         $("#followMe").on("click", function (event) {
-            Messenger.infoGrowl("Follow Me not implemented yet.","<h2>Sorry</h2>");
+            messenger.infoGrowl("Follow Me not implemented yet.","<h2>Sorry</h2>");
         });
         // Add Control Panel > Globe event handlers
         $("#resetGlobe").on("click", function (event) {
-            self.ctrl.resetGlobe(event);
+            controller.globe.reset();
         });
         $("#resetHeading").on("click", function (event) {
-            self.ctrl.resetHeading(event);
+            controller.globe.resetHeading();
         });
         $("#resetView").on("click", function (event) {
-            self.ctrl.resetHeadingAndTilt(event);
+            controller.globe.resetHeadingAndTilt();
         });
 
         // Initially, show the Location tab
@@ -125,7 +129,7 @@ function (Locator, Messenger, ww) {
                 this.wwd.globe = this.flatGlobe;
             }
         }
-        this.ctrl.redrawGlobe();
+        controller.globe.redraw();
     };
 
     ControlPanel.prototype.createProjectionList = function () {

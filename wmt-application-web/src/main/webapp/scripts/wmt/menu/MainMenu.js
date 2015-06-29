@@ -131,11 +131,11 @@ define([
                     }
 
                     // Initialize the constituent UI elements.
-                    this.controlPanel = new ControlPanel(controller);
-                    this.layerMenu = new LayerMenu(controller);
-                    this.markerPanel = new MarkerView(controller);
-                    this.watherPanel = new WeatherView(controller);
-                    this.searchBox = new SearchBox(controller);
+                    this.controlPanel = new ControlPanel();
+                    this.layerMenu = new LayerMenu();
+                    this.markerPanel = new MarkerView();
+                    this.watherPanel = new WeatherView();
+                    this.searchBox = new SearchBox();
 
                     // Initialize the Time Slider Control
                     DateTimeControls.initialize(controller);

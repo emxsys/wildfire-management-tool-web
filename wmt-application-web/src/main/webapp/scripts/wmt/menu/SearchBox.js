@@ -33,12 +33,14 @@
 
 
 define([
+    'wmt/controller/Controller',
     'wmt/globe/Globe',
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/Wmt',
     'worldwind'],
     function (
+        controller,
         Globe,
         Log,
         Messenger,
@@ -53,8 +55,7 @@ define([
          * @param {type} controller
          * @returns {SearchBox}
          */
-        var SearchBox = function (controller) {
-            this.ctrl = controller;
+        var SearchBox = function () {
 
             // The object that performs the lookup
             this.geocoder = new WorldWind.NominatimGeocoder();
@@ -121,11 +122,11 @@ define([
         SearchBox.prototype.onSearchUndo = function (event) {
             if (this.undoHistory.length > 0) {
                 var prevLocation = this.undoHistory.pop(),
-                    curTgt = this.ctrl.model.viewpoint.target;
+                    curTgt = controller.model.viewpoint.target;
 
                 if (prevLocation) {
                     this.redoHistory.push(new WorldWind.Location(curTgt.latitude, curTgt.longitude));
-                    this.ctrl.lookAtLatLon(prevLocation.latitude, prevLocation.longitude);
+                    controller.lookAtLatLon(prevLocation.latitude, prevLocation.longitude);
                 }
             }
         };
@@ -140,7 +141,7 @@ define([
                 var location = this.redoHistory.pop();
                 if (location) {
                     this.undoHistory.push(location);
-                    this.ctrl.lookAtLatLon(location.latitude, location.longitude);
+                    controller.lookAtLatLon(location.latitude, location.longitude);
                 }
             }
         };
@@ -169,8 +170,7 @@ define([
             var self = this,
                 tokens,
                 latitude,
-                longitude,
-                currTarget = this.ctrl.model.viewpoint.target;
+                longitude;
 
             if (queryString) {
 
@@ -241,7 +241,6 @@ define([
                     }]
             });
             this.enableGoToButton(false);
-            $('#searchResults-dlg')
             $('#searchResults-dlg').puidialog('show');
         };
 
@@ -259,8 +258,8 @@ define([
             // Use the default range for the projection, then let use set the range
             // with the zoom keys.  The user's range will persist between searches.
             this.globe.lookAt(
-                this.ctrl.model.viewpoint.target.latitude,
-                this.ctrl.model.viewpoint.target.longitude
+                controller.model.viewpoint.target.latitude,
+                controller.model.viewpoint.target.longitude
                 );
 
             // Clear previous results
@@ -354,7 +353,7 @@ define([
         SearchBox.prototype.gotoSelection = function () {
             var latitude = parseFloat(this.searchSelection.lat),
                 longitude = parseFloat(this.searchSelection.lon),
-                target = this.ctrl.model.viewpoint.target;
+                target = controller.model.viewpoint.target;
 
             Messenger.infoGrowl(this.searchSelection.display_name, "Going to:");
 
@@ -364,7 +363,7 @@ define([
             }
             this.redoHistory = [];
             this.redoCandidate = new WorldWind.Location(latitude, longitude);
-            this.ctrl.lookAtLatLon(latitude, longitude);
+            controller.lookAtLatLon(latitude, longitude);
         };
 
         return SearchBox;
