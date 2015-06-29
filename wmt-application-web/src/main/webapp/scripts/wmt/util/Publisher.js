@@ -30,17 +30,31 @@
 
 /*global define*/
 
+/**
+ * The Publisher module provides the publish/subscribe pattern via a mix-in style.
+ * This implementation is from the "JavaScript Patterns" book by Stoyan Stefanov.
+ * 
+ * @param {Log} log
+ * @returns {Publisher}
+ */
 define(['wmt/util/Log'],
-    function (Log) {
+    function (log) {
         "use strict";
         var Publisher = {
             subscribers: {
                 any: []
             },
+            /**
+             * Creates a subscription on the given event type.
+             * @param {String} type The event type.
+             * @param {Function} fn The handler for the event.
+             * @param {Object} context The context for the handler. Optional.
+             */
             on: function (type, fn, context) {
                 if ((typeof type) === 'undefined') {
                     var caller_line = (new Error()).stack.split("\n")[4];
-                    Log.warning('Publisher', 'on', 'type arg is "undefined", is this really the intent? ' + caller_line);
+                    log.error('Publisher', 'on', 'type arg is "undefined", is this really the intent? ' + caller_line);
+//                    throw new (log.error('Publisher', 'on', 'type arg is "undefined", is this really the intent?'));
                 }
                 type = type || 'any';
                 fn = (typeof fn === "function") ? fn : context[fn];
@@ -52,15 +66,35 @@ define(['wmt/util/Log'],
                     fn: fn,
                     context: context || this});
             },
-            remove: function (type, fn, context) {
+            /**
+             * Cancels the subscription to the given event.  This function is the opposite of on(...) and it's 
+             * arguments must match those passed to on(...)
+             * @param {String} type The event type.
+             * @param {Function} fn The handler for the event.
+             * @param {Object} context The context for the handler. Optional.
+             */
+            cancelSubscription: function (type, fn, context) {
                 this.visitSubscribers('unsubscribe', type, fn, context);
             },
+            /**
+             * Fires the event by calling each of the subscribers event handler.
+             * @param {String} type The event type.
+             * @param {Object} publication The event payload, often "this".
+             */
             fire: function (type, publication) {
                 if ((typeof type) === 'undefined') {
-                    throw new TypeError(Log.error('Publisher', 'fire', 'Event type is "undefined".'));
+                    throw new TypeError(log.error('Publisher', 'fire', 'Event type is "undefined".'));
                 }
                 this.visitSubscribers('publish', type, publication);
             },
+            /**
+             * Internal function the 
+             * @param {type} action
+             * @param {type} type
+             * @param {type} arg
+             * @param {type} context
+             * @returns {undefined}
+             */
             visitSubscribers: function (action, type, arg, context) {
                 var pubtype = type || 'any',
                     subscribers = this.subscribers[pubtype],
@@ -77,6 +111,10 @@ define(['wmt/util/Log'],
                     }
                 }
             },
+            /**
+             * Makes the given object a Publisher by adding the this object's functions and properties to it.
+             * @param {Object} o The object that becomes a publisher.
+             */
             makePublisher: function (o) {
                 if (o.subscribers) {
                     return; // o is already a Publisher
