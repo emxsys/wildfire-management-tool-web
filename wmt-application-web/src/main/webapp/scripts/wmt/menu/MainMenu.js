@@ -69,7 +69,15 @@ define([
                 var self = this;
 
                 $(document).ready(function () {
-                
+                    
+                    
+
+                    //Fill out globe to screen if the nav-bar isn't displayed.
+                    if ($('#mainMenu').css("display").indexOf("none") > -1) {
+                        $("body").css("padding-top", "0px");
+                        $('#wmtweb').css('height', 'calc(100vh)');
+                    }
+
                     // Auto-collapse the navbar when one of its decendents are clicked
                     $('.nav a').on('click', function () {
                         $('#navbar').collapse('hide');
@@ -126,7 +134,7 @@ define([
 
                     // But on phones or small portrait mode tablets, we want the activated panel to be hidden
                     // so we click the Collapse button.
-                    if ($(document).width < 768)                    {
+                    if ($(document).width < 768) {
                         $('#collapsePanelsItem').trigger('click');
                     }
 

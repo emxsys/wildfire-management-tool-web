@@ -40,6 +40,7 @@
  * @param {Object} mainMenu
  * 
  * @author Bruce Schubert
+ * @author Theodore Walton
  */
 define([
     'wmt/controller/Controller',
@@ -65,6 +66,33 @@ define([
             // Do this AFTER the controller is initialized.
             mainMenu.initialize();
 
+                      
+            // Initialize the Mobile Slide Menus
+            MobileMenu.initialize(this.controller);
+            var mobileControlPanel = new MobileMenu.Menu(
+                '#mobileControlPanel',                      
+                'slide-right',
+                '#c-maskCtrlPanel',  
+                '#mobileControlPanelButton',
+                '',
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileLocationMenu = new MobileMenu.Menu(
+                '#mobileLocation',                      
+                'slide-top',
+                '#c-maskLocation',  
+                '#ctrlPanelLocation',
+                '',
+                '110',
+                '85%',
+                '100%'
+                );
+            
+            // Initialize the Time Slider Control
+            DateTimeControls.initialize(this.controller);
+            
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();

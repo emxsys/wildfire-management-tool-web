@@ -50,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <link rel="stylesheet" type="text/css" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
         <link rel="stylesheet" type="text/css" href="./thirdparty/pace/pace-theme-big-counter.css"/>
         <link rel="stylesheet" type="text/css" href="./css/WMT.css"/>
+        <link rel="stylesheet" href="./css/MobileMenu.css"/>
 
         <script>
             // Pace.js Progress Bar options
@@ -81,7 +82,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <body style="padding-top: 50px;"> 
 
         <!--Main Menu-->
-        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin">
+        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs">
             <div class="container-fluid">
                 <!--Navbar: Collapsed Menu-->
                 <div class="navbar-header">
@@ -355,6 +356,58 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>            
                 </div>
 
+    <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                        <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
+                    </ul>
+                </div>
+            </div>
+            <div class="row-full">
+                <span style="float:right;">||</span>
+            </div>
+        </div>
+    </nav>
+
+    <div id="c-maskMain" class="c-mask" ></div>
+    
+    <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                        <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Globe</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Settings</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Options</a></li>            
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="c-maskCtrlPanel" class="c-mask"></div>
+    
+    <nav id="mobileLocation" class="hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                               
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="c-maskLocation" class="c-mask"></div>
+    
+    
                 <!--Layers Sidebar-->
                 <div id="layersPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
@@ -849,8 +902,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
 
-            <!--Google Analytics-->
-            <script>
+    <!--Google Analytics-->
+    <script>
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
