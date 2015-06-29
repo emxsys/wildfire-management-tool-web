@@ -1,12 +1,13 @@
 /*  WMT.css  
     author: Theodore Walton
+    author: Bruce Schubert 
 */
 
 #coordinateOverlay {
-    position: absolute;  /* inset the coordinate overlay's top right relative to the container's top left */
-    top: 50px;
-    left: 40%;
-    table-layout: fixed;  /*fixed column widths specified below */
+    //position: absolute;  /* inset the coordinate overlay's top right relative to the container's top left */
+    //top: 50px;
+    //left: 40%;
+    //table-layout: fixed;  /*fixed column widths specified below */
     pointer-events: none;  /*ignore mouse and touch events in the coordinate overlay */
 }
 
@@ -25,11 +26,11 @@
 }
 
 #timeControlSlider {
-    position: absolute;  /* "Lifts" the element to actually overlay the globe canvas */
+    //position: absolute;  /* "Lifts" the element to actually overlay the globe canvas */
     float:left; /* Push to the left side of the globe */
     height:25px;
-    top:5px;
-    left:5px;
+    //top:5px;
+    //left:5px;
 }
 
 #timeControlSlider .ui-slider-handle {
@@ -95,7 +96,16 @@ img.icon {
     -ms-user-select: none;
     -o-user-select: none;
     pointer-events: none;
-} 
+}
+.interactive {
+    -webkit-touch-callout: auto !important;
+    -webkit-user-select: auto !important;
+    -khtml-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    -o-user-select: auto !important;
+    pointer-events: auto !important;
+}
 
 .noselect {
     -webkit-touch-callout: none;

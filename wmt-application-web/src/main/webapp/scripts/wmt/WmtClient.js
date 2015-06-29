@@ -40,15 +40,19 @@
  * @param {Object} mainMenu
  * 
  * @author Bruce Schubert
+ * @author Theodore Walton
  */
 define([
     'wmt/controller/Controller',
     'wmt/globe/Globe',
-    'wmt/menu/MainMenu'],
+    'wmt/menu/MainMenu',
+    'wmt/menu/MobileMenu'
+    ],
     function (
         controller,
         Globe,
-        mainMenu) {
+        mainMenu,
+        mobileMenu) {
         "use strict";
         var WmtClient = function () {
             
@@ -64,7 +68,31 @@ define([
             // Initialize the Navbar, Sidebars and UI controls.
             // Do this AFTER the controller is initialized.
             mainMenu.initialize();
-
+                      
+            // Initialize the Mobile Slide Menus
+            mobileMenu.initialize();
+            var mobileControlPanel = new mobileMenu.Menu(
+                '#mobileControlPanel',                      
+                'slide-right',
+                '#c-maskCtrlPanel',  
+                '#mobileControlPanelButton',
+                '',
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileLocationMenu = new mobileMenu.Menu(
+                '#mobileLocation',                      
+                'slide-top',
+                '#c-maskLocation',  
+                '#ctrlPanelLocation',
+                '',
+                '110',
+                '85%',
+                '100%'
+                );
+            
+            
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();

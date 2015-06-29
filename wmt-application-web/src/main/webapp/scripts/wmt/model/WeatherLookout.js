@@ -210,6 +210,9 @@ define([
                     for (i = 0, max = place.length; i < max; i++) {
                         if (place[i].type !== "Zip Code") {
                             self.placeName = place[i].name;
+                            
+                            // Until we have an editor, use the placename for the name
+                            self.name = self.placeName;
                             break;
                         }
                     }

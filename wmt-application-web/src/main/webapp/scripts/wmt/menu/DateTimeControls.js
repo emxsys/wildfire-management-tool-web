@@ -31,7 +31,13 @@
 /*global define, $ */
 
 
-
+/**
+ * The DateTimeControls module is responsible for the Time Slider that updates the application time.
+ * @param {Controller} controller The Controller singleton.
+ * @returns {DateTimeControls}
+ * 
+ * @author Theodore Walton
+ */
 define(['wmt/controller/Controller'],
     function (controller) {
         "use strict";
@@ -79,18 +85,6 @@ define(['wmt/controller/Controller'],
                 controller.incrementDateTime(Math.pow(ui.value, 2) * (ui.value < 0 ? -1 : 1));
             }
         };
-
-
-//        $("#timeControlSlider").on("slide", function (event, ui) {
-//            //: Figure out how to asynchronously Call out to REST service to update application time, so that the slider can still move and reset while the calls are being made.
-//           var currentValue = ui.value;
-//            while ($("#timeControlSlider").slider("value") != 0 && currentValue == ui.value) {                
-//                setTimeout(function() {
-//            console.log(ui.value + ":" + $("#timeControlSlider").slider("value"));
-//                },250);
-//            }        
-//        });
-
         return DateTimeControls;
     }
 

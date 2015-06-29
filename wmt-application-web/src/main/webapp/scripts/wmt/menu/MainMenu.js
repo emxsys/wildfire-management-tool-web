@@ -41,6 +41,9 @@
  * @param {SearchBox} SearchBox
  * @param {WeatherPanel} WeatherPanel
  * @returns {MainMenu}
+ * 
+ * @author Bruce Schubert
+ * @author Theodore Walton
  */
 define([
     'wmt/controller/Controller',
@@ -69,7 +72,13 @@ define([
                 var self = this;
 
                 $(document).ready(function () {
-                
+                    
+                    //Fill out globe to screen if the nav-bar isn't displayed.
+                    if ($('#mainMenu').css("display").indexOf("none") > -1) {
+                        $("body").css("padding-top", "0px");
+                        $('#wmtweb').css('height', 'calc(100vh)');
+                    }
+
                     // Auto-collapse the navbar when one of its decendents are clicked
                     $('.nav a').on('click', function () {
                         $('#navbar').collapse('hide');
@@ -84,7 +93,7 @@ define([
                         $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
                         // Set the focus on the WorldWind canvas
                         // so the globe keyboard controls are active 
-                        $(globe.wwd.canvas).focus();
+                        $(controller.globe.wwd.canvas).focus();
                     });
 
                     // Attach a click handler to the main menu items
@@ -126,7 +135,7 @@ define([
 
                     // But on phones or small portrait mode tablets, we want the activated panel to be hidden
                     // so we click the Collapse button.
-                    if ($(document).width < 768)                    {
+                    if ($(document).width < 768) {
                         $('#collapsePanelsItem').trigger('click');
                     }
 
