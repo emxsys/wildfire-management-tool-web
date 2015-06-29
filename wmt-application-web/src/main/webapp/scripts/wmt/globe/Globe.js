@@ -98,6 +98,11 @@ define([
             // Create the World Window
             this.wwd = new WorldWind.WorldWindow(canvasName);
 
+            var self = this;
+            this.wwd.addEventListener("click", function (event) {
+                self.setFocus();
+            });
+
             // Override the default TextSupport with our custom verion that draws outline text
             this.wwd.drawContext.textSupport = new EnhancedTextSupport();
 
@@ -218,7 +223,7 @@ define([
          * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
          * @return {Terrain} A WMT Terrain object at the screen point.
          */
-        Globe.prototype.terrainAtScreenPoint = function (screenPoint) {
+        Globe.prototype.getTerrainAtScreenPoint = function (screenPoint) {
             var terrainObject,
                 terrain;
 
@@ -260,11 +265,13 @@ define([
                 wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
 
                 // Get the target (the point under the reticule)
-                target = this.terrainAtScreenPoint(centerPoint);
+                target = this.getTerrainAtScreenPoint(centerPoint);
+                
+                // Return the viewpoint
                 viewpoint = new Viewpoint(eyePos, target);
                 this.lastViewpoint.copy(viewpoint);
-
                 return viewpoint;
+                
             } catch (e) {
                 Log.error("Globe", "getViewpoint", e.toString());
                 return Viewpoint.INVALID;
@@ -362,6 +369,10 @@ define([
             this.wwd.redraw(); // calls applyLimits which changes the location
 
             this.lookAt(lat, lon);
+        };
+        
+        Globe.prototype.setFocus = function() {
+            this.wwd.canvas.focus();
         };
 
         /**

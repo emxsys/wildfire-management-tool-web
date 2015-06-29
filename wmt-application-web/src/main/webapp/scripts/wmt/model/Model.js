@@ -202,7 +202,7 @@ define([
             }
             this.lastMousePoint.copy(mousePoint);
 
-            var terrain = this.globe.terrainAtScreenPoint(mousePoint);
+            var terrain = this.globe.getTerrainAtScreenPoint(mousePoint);
             // Persist a copy of the terrain in our model for non-subscribers
             this.terrainAtMouse.copy(terrain);
             // Update subscribers
