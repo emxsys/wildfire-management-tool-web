@@ -79,7 +79,7 @@ define([
                 this.isAnimating = false;
 
                 // Create the MVC Model on the primary globe
-                this.model = new Model(this.wwd);
+                this.model = new Model(this.globe);
 
                 // Create MVC Views
                 this.coordinatesView = new CoordinatesView(this.wwd);
@@ -143,7 +143,7 @@ define([
                         markerTemplate.longitude);
                 };
                 // Start the DnD for the marker
-                this.wwd.dndController.armDrop(markerTemplate, onDropCallback);
+                this.globe.dndController.armDrop(markerTemplate, onDropCallback);
             },
             /**
              * Creates a weather lookout on the globe at the user's drop point.
@@ -159,7 +159,7 @@ define([
                         self.model.weatherLookoutManager.addLookout(wxLookout);
                     };
                 // Start the DnD for the lookout
-                this.wwd.dndController.armDrop(wxLookout, onDropCallback);
+                this.globe.dndController.armDrop(wxLookout, onDropCallback);
             },
             /**
              * Updates the globe view.
@@ -176,9 +176,9 @@ define([
                 // 
                 var self = this,
                     eyeAltMsl = this.model.viewpoint.eye.altitude,
-                    eyePosGrdElev = this.model.terrainProvider.elevationAtLatLon(this.model.viewpoint.eye.latitude, this.model.viewpoint.eye.longitude),
+                    eyePosGrdElev = this.globe.terrainProvider.elevationAtLatLon(this.model.viewpoint.eye.latitude, this.model.viewpoint.eye.longitude),
                     eyeAltAgl = Math.max(eyeAltMsl - eyePosGrdElev, 100),
-                    tgtPosElev = this.model.terrainProvider.elevationAtLatLon(latitude, longitude),
+                    tgtPosElev = this.globe.terrainProvider.elevationAtLatLon(latitude, longitude),
                     tgtEyeAltMsl = Math.max(tgtPosElev + eyeAltAgl, 100);
 
                 // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
@@ -215,53 +215,11 @@ define([
                 this.model.updateFuelModel(fuelModel);
             },
             /**
-             * Finds the World Wind Layer in the layer list with the given display name.
-             * @param {String} name Display name of the layer
-             * @returns {Layer}
-             */
-            findLayer: function (name) {
-                return this.globe.findLayer(name);
-            },
-            /**
              * Returns the terrain at the reticule.
              * @returns {Terrain} Controller.model.viewpoint.target}
              */
             getTargetTerrain: function () {
                 return this.model.viewpoint.target;
-            },
-            /** 
-             * Redraws the World Window.
-             */
-            redrawGlobe: function () {
-                this.wwd.redraw();
-            },
-            /**
-             * Resets the viewpoint to the startup configuration settings.
-             */
-            resetGlobe: function () {
-                this.globe.reset();
-            },
-            /**
-             * Resets the viewpoint to north up.
-             */
-            resetHeading: function () {
-                this.globe.resetHeading();
-            },
-            /**
-             * Resets the viewpoint to north up and nadir.
-             */
-            resetHeadingAndTilt: function () {
-                // Tilting the view will change the location due to a bug in 
-                // the early release of WW.  So we set the location to the 
-                // current crosshairs position (viewpoint) to resolve this issue
-                var lat = this.model.viewpoint.target.latitude,
-                    lon = this.model.viewpoint.target.longitude;
-
-                this.wwd.navigator.heading = 0;
-                this.wwd.navigator.tilt = 0;
-                this.wwd.redraw();  // calls applyLimits which changes the location
-
-                this.lookAtLatLon(lat, lon);
             },
             restoreSession: function () {
                 this.model.markerManager.restoreMarkers();

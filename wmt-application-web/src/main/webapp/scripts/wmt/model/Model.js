@@ -51,7 +51,6 @@ define([
     'wmt/globe/TerrainProvider',
     'wmt/globe/Viewpoint',
     'wmt/model/WeatherLookoutManager',
-    'wmt/resource/WeatherResource',
     'wmt/util/WmtUtil',
     'wmt/Wmt',
     'worldwind'],
@@ -66,7 +65,6 @@ define([
         TerrainProvider,
         Viewpoint,
         WeatherLookoutManager,
-        WeatherResource,
         WmtUtil,
         Wmt,
         ww) {
@@ -77,12 +75,11 @@ define([
          * @param {WorldWindo} worldWindow The canvas and globe.
          * @returns {Model}
          */
-        var Model = function (worldWindow) {
+        var Model = function (globe) {
             // Mix-in Publisher capability (publish/subscribe pattern)
             Publisher.makePublisher(this);
 
-            this.wwd = worldWindow;
-            this.terrainProvider = new TerrainProvider(worldWindow);
+            this.globe = globe;
             this.markerManager = new MarkerManager(this);
             this.weatherLookoutManager = new WeatherLookoutManager(this);
 
@@ -97,7 +94,6 @@ define([
             this.weather = null;
 
             // Internals
-            this.lastEyePoint = new WorldWind.Vec3();
             this.lastMousePoint = new WorldWind.Vec2();
             this.lastSolarTarget = new Terrain(0, 0, 0, 0, 0);
             this.lastSolarTime = new Date(0);
@@ -165,16 +161,6 @@ define([
                     this.lastSolarTime = time;
                 }
             }
-
-            // WEATHER:
-            // Update the weather property when the elapsed time has gone past the threshold
-            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
-//                WeatherResource.sunlightAtLatLonTime(this.lastSolarTarget.latitude, this.lastSolarTarget.longitude, time,
-//                    function (sunlight) {
-//                        self.handleSunlight(sunlight);  // callback
-//                    });
-//                this.lastSolarTime = time;
-            }
             Log.info("Model", "updateAppTime", time.toLocaleString());
 
             this.applicationTime = time;
@@ -185,27 +171,9 @@ define([
          * Updates model propeties associated with the globe's view.
          */
         Model.prototype.updateEyePosition = function () {
-            // Compute the World Window's current eye position.
-            var wwd = this.wwd,
-                self = this,
-                centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
-                navigatorState = wwd.navigator.currentState(),
-                eyePoint = navigatorState.eyePoint,
-                eyePos = new WorldWind.Position(),
-                target,
-                viewpoint;
-
-            // Avoid costly computations if nothing changed
-            if (eyePoint.equals(this.lastEyePoint)) {
-                return;
-            }
-            this.lastEyePoint.copy(eyePoint);
-
-            // Get the attributes for eye position and the target (the point under the reticule)
-            wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
-            //eyeGroundElev = wwd.globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
-            target = this.terrainAtScreenPoint(centerPoint);
-            viewpoint = new Viewpoint(eyePos, target);
+            var self = this,
+                viewpoint = this.globe.getViewpoint(),
+                target = viewpoint.target;
 
             // Initate a request to update the sunlight property when we've moved a significant distance
             if (!this.lastSolarTarget || this.lastSolarTarget.distanceBetween(target) > this.SUNLIGHT_DISTANCE_THRESHOLD) {
@@ -217,6 +185,7 @@ define([
             }
             // Persist a copy of the new position in our model for non-subscribers
             this.viewpoint.copy(viewpoint);
+
             // Update viewpointChanged subscribers
             this.fire(Wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
         };
@@ -233,38 +202,13 @@ define([
             }
             this.lastMousePoint.copy(mousePoint);
 
-            var terrain = this.terrainAtScreenPoint(mousePoint);
+            var terrain = this.globe.terrainAtScreenPoint(mousePoint);
             // Persist a copy of the terrain in our model for non-subscribers
             this.terrainAtMouse.copy(terrain);
             // Update subscribers
             this.fire(Wmt.EVENT_MOUSE_MOVED, terrain);
         };
 
-
-        /**
-         * Gets terrain at the screen point.
-         * 
-         * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
-         */
-        Model.prototype.terrainAtScreenPoint = function (screenPoint) {
-            var wwd = this.wwd,
-                terrainObject,
-                terrain;
-
-            // Get the WW terrain at the screen point, it supplies the lat/lon
-            terrainObject = wwd.pickTerrain(screenPoint).terrainObject();
-            if (terrainObject) {
-                // Get the WMT terrain at the picked lat/lon
-                terrain = this.terrainProvider.terrainAtLatLon(
-                    terrainObject.position.latitude,
-                    terrainObject.position.longitude);
-            } else {
-                // Probably above the horizon.
-                terrain = new Terrain();
-                terrain.copy(Terrain.INVALID);
-            }
-            return terrain;
-        };
 
 
         /**

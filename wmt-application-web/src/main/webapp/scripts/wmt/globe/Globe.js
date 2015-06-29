@@ -40,7 +40,7 @@
  * @param {type} SelectController
  * @param {type} SkyBackgroundLayer
  * @param {type} Wmt
- * @param {WorldWind} ww Ensure dependency on WorldWind is satisfied, but don't redefine the global.
+ * @param {WorldWind} ww Ensure dependency on WorldWind is satisfied, but doesn't redefine the global.
  * @returns {Globe}
  */
 define([
@@ -53,6 +53,9 @@ define([
     'wmt/globe/ReticuleLayer',
     'wmt/globe/SelectController',
     'wmt/globe/SkyBackgroundLayer',
+    'wmt/globe/Terrain',
+    'wmt/globe/TerrainProvider',
+    'wmt/globe/Viewpoint',
     'wmt/Wmt',
     'worldwind'],
     function (
@@ -65,6 +68,9 @@ define([
         ReticuleLayer,
         SelectController,
         SkyBackgroundLayer,
+        Terrain,
+        TerrainProvider,
+        Viewpoint,
         Wmt,
         ww) {
         "use strict";
@@ -98,7 +104,6 @@ define([
             this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
             this.isAnimating = false;
 
-            // TODO: Change to globe controllers instead of wwd controllers.
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
             this.selectController = new SelectController(this.wwd);
             this.dndController = new DnDController(this.wwd);
@@ -107,6 +112,8 @@ define([
             // Add the custom navigator after the select controller so the select controller can
             // consume the mouse events and preempt the pan/drag operation during object move operations.
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
+
+            this.terrainProvider = new TerrainProvider(this.wwd);
 
             // Create the default layers
             var self = this,
@@ -126,7 +133,7 @@ define([
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new WorldWind.RenderableLayer(Wmt.MARKERS_LAYER_NAME), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(Wmt.WEATHER_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(Wmt.WEATHER_LAYER_NAME), enabled: true}
                 ],
                 layer,
                 i, max;
@@ -180,6 +187,11 @@ define([
             window.onresize = function () {
                 self.wwd.redraw();
             };
+
+            // Internals
+            this.lastEyePoint = new WorldWind.Vec3();
+            this.lastViewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
+
         };
 
 
@@ -201,6 +213,63 @@ define([
             }
         };
 
+        /**
+         * Gets terrain at the screen point.
+         * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
+         * @return {Terrain} A WMT Terrain object at the screen point.
+         */
+        Globe.prototype.terrainAtScreenPoint = function (screenPoint) {
+            var terrainObject,
+                terrain;
+
+            // Get the WW terrain at the screen point, it supplies the lat/lon
+            terrainObject = this.wwd.pickTerrain(screenPoint).terrainObject();
+            if (terrainObject) {
+                // Get the WMT terrain at the picked lat/lon
+                terrain = this.terrainProvider.terrainAtLatLon(
+                    terrainObject.position.latitude,
+                    terrainObject.position.longitude);
+            } else {
+                // Probably above the horizon.
+                terrain = new Terrain();
+                terrain.copy(Terrain.INVALID);
+            }
+            return terrain;
+        };
+
+        /**
+         * Gets the current viewpoint at the center of the viewport.
+         * @@returns {Viewpoint} A Viewpoint representing the the eye position and the target position.
+         */
+        Globe.prototype.getViewpoint = function () {
+            try {
+                var wwd = this.wwd,
+                    centerPoint = new WorldWind.Vec2(wwd.canvas.width / 2, wwd.canvas.height / 2),
+                    navigatorState = wwd.navigator.currentState(),
+                    eyePoint = navigatorState.eyePoint,
+                    eyePos = new WorldWind.Position(),
+                    target, viewpoint;
+
+                // Avoid costly computations if nothing changed
+                if (eyePoint.equals(this.lastEyePoint)) {
+                    return this.lastViewpoint;
+                }
+                this.lastEyePoint.copy(eyePoint);
+
+                // Get the current eye position 
+                wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
+
+                // Get the target (the point under the reticule)
+                target = this.terrainAtScreenPoint(centerPoint);
+                viewpoint = new Viewpoint(eyePos, target);
+                this.lastViewpoint.copy(viewpoint);
+
+                return viewpoint;
+            } catch (e) {
+                Log.error("Globe", "getViewpoint", e.toString());
+                return Viewpoint.INVALID;
+            }
+        };
 
         /**
          * Updates the globe via animation.
@@ -277,7 +346,28 @@ define([
             this.wwd.redraw();
         };
 
+        /**
+         * Resets the viewpoint to north up and nadir.
+         */
+        Globe.prototype.resetHeadingAndTilt = function () {
+            // Tilting the view will change the location due to a bug in 
+            // the early release of WW.  So we set the location to the 
+            // current crosshairs position (viewpoint) to resolve this issue
+            var viewpoint = this.getViewpoint(),
+                lat = viewpoint.target.latitude,
+                lon = viewpoint.target.longitude;
 
+            this.wwd.navigator.heading = 0;
+            this.wwd.navigator.tilt = 0;
+            this.wwd.redraw(); // calls applyLimits which changes the location
+
+            this.lookAt(lat, lon);
+        };
+
+        /**
+         * Establishes the projection for this globe.
+         * @param {String} projectionName A PROJECTION_NAME_* constant.
+         */
         Globe.prototype.setProjection = function (projectionName) {
             if (projectionName === Wmt.PROJECTION_NAME_3D) {
                 if (!this.roundGlobe) {
