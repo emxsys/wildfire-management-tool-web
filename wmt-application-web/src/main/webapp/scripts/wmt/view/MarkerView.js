@@ -42,12 +42,14 @@
  * @returns {MarkerView}
  */
 define([
+    'wmt/controller/Controller',
     'wmt/util/Log',
     'wmt/menu/MarkerPalette',
     'wmt/util/Messenger',
     'wmt/Wmt',
     'worldwind'],
     function (
+        controller,
         Log,
         MarkerPalette,
         Messenger,
@@ -60,13 +62,12 @@ define([
          * @param {type} controller
          * @returns {MarkerView}
          */
-        var MarkerView = function (controller) {
+        var MarkerView = function () {
             var self = this,
                 i,
                 max;
 
-            this.ctrl = controller;
-            this.manager = this.ctrl.model.markerManager;
+            this.manager = controller.model.markerManager;
             this.manager.on(Wmt.EVENT_MARKER_ADDED, this.handleMarkerAddedEvent, this);
             this.manager.on(Wmt.EVENT_MARKER_REMOVED, this.handleMarkerRemovedEvent, this);
 
@@ -124,7 +125,7 @@ define([
             }
 
             // Get the RenderableLayer that we'll add the markers to.
-            this.markerLayer = this.ctrl.findLayer(Wmt.MARKERS_LAYER_NAME);
+            this.markerLayer = controller.globe.findLayer(Wmt.MARKERS_LAYER_NAME);
             if (!this.markerLayer) {
                 throw new Error(
                     Log.error("MarkerView", "constructor",
@@ -169,9 +170,8 @@ define([
          * Creates renderables for existing markers found in the local storage.
          */
         MarkerView.prototype.loadExistingMarkers = function () {
-            var markers = this.ctrl.model.markerManager.markers,
-                i,
-                max;
+            var markers = controller.model.markerManager.markers,
+                i, max;
 
             for (i = 0, max = markers.length; i < max; i++) {
                 this.handleMarkerAddedEvent(markers[i]);
@@ -257,7 +257,7 @@ define([
                         case 'goto':
                             position = placemark.position;
                             if (position) {
-                                this.ctrl.lookAtLatLon(position.latitude, position.longitude);
+                                controller.lookAtLatLon(position.latitude, position.longitude);
                             } else {
                                 Log.error("MarkerView", "onMarkerItemClick", "Marker position is undefined.");
                             }
@@ -363,8 +363,8 @@ define([
 
             // Add a reference to our model object and a movable capability to the renderable
             placemark.model = node;
-            placemark.moveToLatLon = function(latitude, longitude) {
-                this.position.latitude  = latitude;
+            placemark.moveToLatLon = function (latitude, longitude) {
+                this.position.latitude = latitude;
                 this.position.longitude = longitude;
                 this.model.latitude = latitude;
                 this.model.longitude = longitude;
@@ -381,7 +381,7 @@ define([
         MarkerView.prototype.synchronizeMarkerList = function () {
             var self = this,
                 markers = this.manager.markers,
-                markerList = $("#markerList"), 
+                markerList = $("#markerList"),
                 markerItem,
                 markerNode,
                 i,
@@ -401,7 +401,7 @@ define([
                     '</div>';
                 markerList.append(markerItem);
             }
-            this.ctrl.redrawGlobe();
+            controller.globe.redraw();
 
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
