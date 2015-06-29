@@ -19,7 +19,7 @@
   border: #000000;
   cursor: pointer;
   transition: background 0.3s;
-  z-index: 101;
+  z-index: 52;
 }
 
 .c-hamburger:focus {

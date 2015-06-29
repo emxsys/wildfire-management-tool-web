@@ -195,13 +195,64 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>
 
+    <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                        <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
+                    </ul>
+                </div>
+            </div>
+            <div class="row-full">
+                <span style="float:right;">||</span>
+            </div>
+        </div>
+    </nav>
+
+    <div id="c-maskMain" class="c-mask" ></div>
+    
+    <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                        <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Globe</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Settings</a></li>
+                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Options</a></li>            
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="c-maskCtrlPanel" class="c-mask"></div>
+    
+    <nav id="mobileLocation" class="hidden-md hidden-lg c-menu">
+        <div class="container-fluid" style="margin-top:37px">
+            <div class="row" style="padding-top: 10px">
+                <div class="col-xs-9 col-sm-9"
+                     <ul class="c-menu__items">
+                               
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="c-maskLocation" class="c-mask"></div>
+    
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
             <!--Content-->
             <div class="row-full">
 
                 <!--Control Panel Sidebar-->
-                <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar"
+                <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar hidden-xs"
                      style="display:none;">
                     <h4>
                         <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -356,58 +407,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>            
                 </div>
 
-    <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">
-        <div class="container-fluid" style="margin-top:37px">
-            <div class="row" style="padding-top: 10px">
-                <div class="col-xs-9 col-sm-9"
-                     <ul class="c-menu__items">
-                        <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
-                    </ul>
-                </div>
-            </div>
-            <div class="row-full">
-                <span style="float:right;">||</span>
-            </div>
-        </div>
-    </nav>
-
-    <div id="c-maskMain" class="c-mask" ></div>
-    
-    <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
-        <div class="container-fluid" style="margin-top:37px">
-            <div class="row" style="padding-top: 10px">
-                <div class="col-xs-9 col-sm-9"
-                     <ul class="c-menu__items">
-                        <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Globe</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Settings</a></li>
-                        <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Options</a></li>            
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-    
-    <div id="c-maskCtrlPanel" class="c-mask"></div>
-    
-    <nav id="mobileLocation" class="hidden-md hidden-lg c-menu">
-        <div class="container-fluid" style="margin-top:37px">
-            <div class="row" style="padding-top: 10px">
-                <div class="col-xs-9 col-sm-9"
-                     <ul class="c-menu__items">
-                               
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-    
-    <div id="c-maskLocation" class="c-mask"></div>
-    
-    
                 <!--Layers Sidebar-->
                 <div id="layersPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
@@ -723,6 +722,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <h1>Your browser does not support HTML5 Canvas.</h1>
                         </canvas>
                         <!--DOM UI elements go here!-->                
+                <div class="container-full non-interactive" Style="position:absolute;top:5px">
+                    <div class="row">
+                        <!--Control Panel Button-->
+                        <div class="col-xs-2 col-sm-2 hidden-md hidden-lg">
+                            <button id="mobileMenuButton" class="c-hamburger c-hamburger--htla interactive">
+                                <span>toggle menu</span>
+                            </button>
+                        </div>
+                        <!--DateTime slider-->
+                        <div id="timeControlSlider" class="col-xs-7 col-sm-7 interactive"></div>
+                        <a class="col-xs-3 col-sm-3 interactive" href="#" style="float:right;">
+                            <img alt="WMT" src="./images/wmt-web-white-53x24.png" style='float:right;'>
+                        </a>
+                    </div>
                         <!--<div class='container-full'>-->  
                         <!--DateTime slider-->
                         <div id="timeControlSlider" class="col-xs-7 col-sm-7"></div>

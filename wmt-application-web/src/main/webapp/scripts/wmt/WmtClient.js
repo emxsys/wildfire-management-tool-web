@@ -45,11 +45,14 @@
 define([
     'wmt/controller/Controller',
     'wmt/globe/Globe',
-    'wmt/menu/MainMenu'],
+    'wmt/menu/MainMenu',
+    './menu/MobileMenu'
+    ],
     function (
         controller,
         Globe,
-        mainMenu) {
+        mainMenu,
+        MobileMenu) {
         "use strict";
         var WmtClient = function () {
             
@@ -90,8 +93,6 @@ define([
                 '100%'
                 );
             
-            // Initialize the Time Slider Control
-            DateTimeControls.initialize(this.controller);
             
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
