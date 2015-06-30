@@ -32,91 +32,108 @@
 
 define([
     'wmt/util/Publisher',
-    'wmt/model/WeatherLookout',
+    'wmt/model/WeatherScout',
     'wmt/Wmt'],
     function (
-        Publisher,
-        WeatherLookout,
-        Wmt) {
+        publisher,
+        WeatherScout,
+        wmt) {
         "use strict";
-        var WeatherLookoutManager = function (model) {
+        var WeatherScoutManager = function (model) {
             // Mix-in Publisher capability (publish/subscribe pattern)
-            Publisher.makePublisher(this);
+            publisher.makePublisher(this);
             this.model = model;
-            this.wxLookouts = [];
+            this.scouts = [];
 
         };
 
         /**
-         * Adds the given lookout to to the manager.
-         * @param {WeatherLookout} lookout
+         * Adds the given scout to to the manager.
+         * @param {WeatherScout} scout
          */
-        WeatherLookoutManager.prototype.addLookout = function (lookout) {
+        WeatherScoutManager.prototype.addScout = function (scout) {
             // Ensure we have a unique name by appending a (n) to duplicates.
-            lookout.name = this.generateUniqueName(lookout.name || "Wx Lookout");
-            
+            scout.name = this.generateUniqueName(scout.name || "Wx Scout");
+
             // Subscribe to removal notifications
-            lookout.on(Wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
+            scout.on(wmt.EVENT_OBJECT_REMOVED, this.removeScout, this);
 
             // Manage this object
-            this.wxLookouts.push(lookout);
-            
-            this.fire(Wmt.EVENT_WEATHER_LOOKOUT_ADDED, lookout);
+            this.scouts.push(scout);
+
+            this.fire(wmt.EVENT_WEATHER_SCOUT_ADDED, scout);
         };
 
         /**
-         * Removes the given lookout from the manager.
-         * @param {WeatherLookout} lookout
+         * Finds the weather scout with the given id.
+         * @param {String} id System assigned id for the scout.
+         * @returns {WeatherScout} The scout object if found, else null.
+         */
+        WeatherScoutManager.prototype.findScout = function (id) {
+            var scout, i, len;
+
+            for (i = 0, len = this.scouts.length; i < len; i += 1) {
+                scout = this.scouts[i];
+                if (scout.id === id) {
+                    return scout;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Removes the given scout from the manager.
+         * @param {WeatherScout} scout
          * @returns {Boolean}
          */
-        WeatherLookoutManager.prototype.removeLookout = function (lookout) {
+        WeatherScoutManager.prototype.removeScout = function (scout) {
             var i, max,
                 removed;
-            
-            // Find the lookout item with the given id (should create an associative array)
-            for (i = 0, max = this.wxLookouts.length; i < max; i++) {
-                if (this.wxLookouts[i].id === lookout.id) {
-                    removed = this.wxLookouts.splice(i, 1);
+
+            // Find the scout item with the given id (should create an associative array)
+            for (i = 0, max = this.scouts.length; i < max; i++) {
+                if (this.scouts[i].id === scout.id) {
+                    removed = this.scouts.splice(i, 1);
                     break;
                 }
             }
             if (removed && removed.length > 0) {
-                // Remove our subscription/reference to the lookout
-                lookout.cancelSubscription(Wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
+                // Remove our subscription/reference to the scout
+                scout.cancelSubscription(wmt.EVENT_OBJECT_REMOVED, this.removeScout, this);
                 // Notify others.
-                this.fire(Wmt.EVENT_WEATHER_LOOKOUT_REMOVED, removed[0]);
+                this.fire(wmt.EVENT_WEATHER_SCOUT_REMOVED, removed[0]);
                 return true;
             }
             return false;
         };
 
         /**
-         * Saves the weather lookouts collection to local storage.
+         * Saves the weather scouts collection to local storage.
          */
-        WeatherLookoutManager.prototype.saveLookouts = function () {
-            var validLookouts = this.wxLookouts.filter(
-                function (lookout) {
-                    return !lookout.invalid;
+        WeatherScoutManager.prototype.saveScouts = function () {
+            var validScouts = this.scouts.filter(
+                function (scout) {
+                    return !scout.invalid;
                 }),
-                string = JSON.stringify(validLookouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
+                string = JSON.stringify(validScouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
 
-            localStorage.setItem(Wmt.WEATHER_LOOKOUTS_STORAGE_KEY, string);
+            localStorage.setItem(wmt.WEATHER_SCOUTS_STORAGE_KEY, string);
         };
 
         /**
-         * Restores the weather lookouts collection from local storage.
+         * Restores the weather scouts collection from local storage.
          */
-        WeatherLookoutManager.prototype.restoreLookouts = function () {
-            var string = localStorage.getItem(Wmt.WEATHER_LOOKOUTS_STORAGE_KEY),
+        WeatherScoutManager.prototype.restoreScouts = function () {
+            var string = localStorage.getItem(wmt.WEATHER_SCOUTS_STORAGE_KEY),
                 array,
                 i, max;
             if (!string || string === 'null') {
                 return;
             }
-            // Convert JSON array to array of WeatherLookout objects
+            // Convert JSON array to array of WeatherScout objects
             array = JSON.parse(string);
             for (i = 0, max = array.length; i < max; i++) {
-                this.addLookout(new WeatherLookout(
+                this.addScout(new WeatherScout(
                     array[i].name,
                     array[i].duration,
                     array[i].rules,
@@ -131,7 +148,7 @@ define([
          * @param {String} name
          * @returns {String}
          */
-        WeatherLookoutManager.prototype.generateUniqueName = function (name) {
+        WeatherScoutManager.prototype.generateUniqueName = function (name) {
             var uniqueName = name.trim(),
                 isUnique,
                 suffixes,
@@ -144,8 +161,8 @@ define([
                 // Assume uniqueness, set to false if we find a matching name
                 isUnique = true;
 
-                for (i = 0, len = this.wxLookouts.length; i < len; i += 1) {
-                    if (this.wxLookouts[i].name === uniqueName) {
+                for (i = 0, len = this.scouts.length; i < len; i += 1) {
+                    if (this.scouts[i].name === uniqueName) {
 
                         isUnique = false;
 
@@ -168,7 +185,7 @@ define([
             return uniqueName;
         };
 
-        return WeatherLookoutManager;
+        return WeatherScoutManager;
     }
 );
 

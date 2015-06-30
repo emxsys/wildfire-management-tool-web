@@ -41,29 +41,29 @@ define([
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
-        Openable,
-        Log,
-        Messenger,
-        Movable,
+        openable,
+        log,
+        messenger,
+        movable,
         PlaceResource,
-        Removable,
+        removable,
         WeatherResource,
-        WmtUtil,
-        Wmt) {
+        util,
+        wmt) {
         "use strict";
 
-        var WeatherLookout = function (name, duration, rules, latitude, longitude, id) {
+        var WeatherScout = function (name, duration, rules, latitude, longitude, id) {
 
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
-            Movable.makeMovable(this);
+            movable.makeMovable(this);
 
             // Make editable via menus: Fires the EVENT_OBJECT_OPENED event on success.
-            Openable.makeOpenable(this, function () {
-                Messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
+            openable.makeOpenable(this, function () {
+                messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
                 return false;
             });
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
-            Removable.makeRemovable(this, function () {
+            removable.makeRemovable(this, function () {
                 // TODO: Ask for confirmation; return false if veto'd
                 return true;    // fire's a notification that allow the delete to proceed.
             });
@@ -71,12 +71,12 @@ define([
             /**
              * The unique id used to identify this particular weather object
              */
-            this.id = id || WmtUtil.guid();
+            this.id = id || util.guid();
             /**
              * The display name
              */
             this.name = name || 'Wx Lookout';
-            this.duration = duration || Wmt.configuration.wxForecastDurationHours;
+            this.duration = duration || wmt.configuration.wxForecastDurationHours;
             this.latitude = latitude;
             this.longitude = longitude;
 
@@ -84,13 +84,13 @@ define([
 
             // Self subscribe to move operations so we can update the forecast and place
             // when the move is finished. We don't want to update during the move itself.
-            this.on(Wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
+            this.on(wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
 
             // Perform initial update
             this.refresh();
         };
 
-        WeatherLookout.prototype.getFirstForecast = function () {
+        WeatherScout.prototype.getFirstForecast = function () {
             return this.getForecastAt(null);
         };
 
@@ -107,9 +107,9 @@ define([
          *       skyCoverPct: Number
          *   }
          */
-        WeatherLookout.prototype.getForecastAt = function (time) {
+        WeatherScout.prototype.getForecastAt = function (time) {
             if (!this.temporalWx || this.temporalWx.length === 0) {
-                throw new Error(Log.error('WeatherLookout', 'getForecastAt', 'missingWeatherData'));
+                throw new Error(log.error('WeatherScout', 'getForecastAt', 'missingWeatherData'));
             }
             var wxTime,
                 wxTimeNext,
@@ -134,8 +134,8 @@ define([
                     }
                     // Take a peek at the next entry's time 
                     wxTimeNext = this.temporalWx[i + 1].time;
-                    minutesSpan = WmtUtil.minutesBetween(wxTime, wxTimeNext);
-                    minutesElapsed = WmtUtil.minutesBetween(wxTime, time);
+                    minutesSpan = util.minutesBetween(wxTime, wxTimeNext);
+                    minutesElapsed = util.minutesBetween(wxTime, time);
                     if (minutesElapsed < (minutesSpan / 2)) {
                         break;
                     }
@@ -157,7 +157,7 @@ define([
         /**
          * Updates the weather lookout's weather forecast and location. 
          */
-        WeatherLookout.prototype.refresh = function () {
+        WeatherScout.prototype.refresh = function () {
             this.refreshForecast();
             this.refreshPlace();
         };
@@ -165,7 +165,7 @@ define([
         /**
          * Updates this object's weather attribute. 
          */
-        WeatherLookout.prototype.refreshForecast = function () {
+        WeatherScout.prototype.refreshForecast = function () {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
@@ -178,7 +178,7 @@ define([
                 this.duration,
                 function (json) { // Callback to process JSON result
                     self.processForecast(json);
-                    self.fire(Wmt.EVENT_WEATHER_CHANGED, self);
+                    self.fire(wmt.EVENT_WEATHER_CHANGED, self);
                 }
             );
         };
@@ -186,7 +186,7 @@ define([
         /**
          * Updates this object's place attributes. 
          */
-        WeatherLookout.prototype.refreshPlace = function () {
+        WeatherScout.prototype.refreshPlace = function () {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
@@ -216,7 +216,7 @@ define([
                             break;
                         }
                     }
-                    self.fire(Wmt.EVENT_PLACE_CHANGED, self);
+                    self.fire(wmt.EVENT_PLACE_CHANGED, self);
                 }
             );
         };
@@ -225,8 +225,8 @@ define([
          * 
          * @param {type} json
          */
-        WeatherLookout.prototype.processForecast = function (json) {
-            //Log.info('WeatherLookout', 'processForecast', JSON.stringify(json));
+        WeatherScout.prototype.processForecast = function (json) {
+            //Log.info('WeatherScout', 'processForecast', JSON.stringify(json));
 
             var isoTime, i, max;
 
@@ -242,7 +242,7 @@ define([
             }
         };
 
-        return WeatherLookout;
+        return WeatherScout;
 
     }
 
