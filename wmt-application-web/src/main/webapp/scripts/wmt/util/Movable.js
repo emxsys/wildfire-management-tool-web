@@ -30,25 +30,44 @@
 
 /*global define*/
 
-define(['wmt/util/Publisher', 'wmt/Wmt'],
-    function (Publisher, Wmt) {
+/**
+ * Movable is a mix-in module that adds "move" capabilites to an object.
+ * 
+ * @param {Publisher} publisher Extends the object with publish event capabilites.
+ * @param {WmtUtil} utils Utilties.
+ * @param {Wmt} wmt Constants.
+ * @returns {Movable}
+ * 
+ * @author Bruce Schubert
+ */
+define([
+    'wmt/util/Publisher',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt'],
+    function (
+        publisher,
+        utils,
+        wmt) {
         "use strict";
         var Movable = {
             moveStarted: function () {
                 if (this.isMovable) {
-                    this.fire(Wmt.EVENT_OBJECT_MOVE_STARTED, this);
+                    this.fire(wmt.EVENT_OBJECT_MOVE_STARTED, this);
                 }
             },
             moveToLatLon: function (latitude, longitude) {
                 if (this.isMovable) {
-                    this.latitude = latitude;
-                    this.longitude = longitude;
-                    this.fire(Wmt.EVENT_OBJECT_MOVED, this);
+                    if (!utils.nearlyEquals(this.latitude, latitude) ||
+                        !utils.nearlyEquals(this.longitude, longitude)) {
+                        this.latitude = latitude;
+                        this.longitude = longitude;
+                        this.fire(wmt.EVENT_OBJECT_MOVED, this);
+                    }
                 }
             },
             moveFinished: function () {
                 if (this.isMovable) {
-                    this.fire(Wmt.EVENT_OBJECT_MOVE_FINISHED, this);
+                    this.fire(wmt.EVENT_OBJECT_MOVE_FINISHED, this);
                 }
             },
             /**
@@ -72,9 +91,9 @@ define(['wmt/util/Publisher', 'wmt/Wmt'],
                 }
                 // Add the properties
                 o.isMovable = true;
-                
+
                 // Add the Publisher capability so that events can be generated.
-                Publisher.makePublisher(o);
+                publisher.makePublisher(o);
             }
         };
         return Movable;
