@@ -100,9 +100,9 @@ define([],
             
             EVENT_WEATHER_CHANGED: "weatherChanged",
             
-            EVENT_WEATHER_LOOKOUT_ADDED: "weatherLookoutAdded",
-            EVENT_WEATHER_LOOKOUT_CHANGED: "weatherLookoutChanged",
-            EVENT_WEATHER_LOOKOUT_REMOVED: "weatherLookoutRemoved",
+            EVENT_WEATHER_SCOUT_ADDED: "weatherScoutAdded",
+            EVENT_WEATHER_SCOUT_CHANGED: "weatherScoutChanged",
+            EVENT_WEATHER_SCOUT_REMOVED: "weatherScoutRemoved",
             /**
              * The display name for the layer that displays fire behavior lookouts.
              */

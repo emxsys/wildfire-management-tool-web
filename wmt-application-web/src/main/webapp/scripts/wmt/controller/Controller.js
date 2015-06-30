@@ -48,8 +48,8 @@ define([
         CoordinatesView,
         FuelModelManager,
         LocationManager,
-        Log,
-        Messenger,
+        log,
+        messenger,
         Model,
         ReticuleView,
         Settings,
@@ -121,16 +121,15 @@ define([
             },
             /**
              * Starts a drag-n-drop operation that creates the given marker on the globe at the drop point.
-             * 
              * @param {Object} markerTemplate A marker template containing name:String and type:String properties.
              */
-            addMarkerToGlobe: function (markerTemplate) {
+            dropMarkerOnGlobe: function (markerTemplate) {
                 var self = this,
                     onDropCallback;
 
                 if (this.markerDnDCount < 2) {
                     this.markerDnDCount++;
-                    Messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
+                    messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
                 }
                 // This callback function is invoked when the DnD drop is completed.
                 // The DnD controller will add/update the marker lat/lon properties
@@ -146,20 +145,19 @@ define([
                 this.globe.dndController.armDrop(markerTemplate, onDropCallback);
             },
             /**
-             * Creates a weather lookout on the globe at the user's drop point.
-             * 
-             * @param {WeatherLookout} wxLookout A weather lookout containing name and rules[] properties.
+             * Creates a weather scout on the globe at the user's drop point.
+             * @param {WeatherScout} wxScout A weather scout containing name and rules[] properties.
              */
-            addWeatherLookoutToGlobe: function (wxLookout) {
+            dropWeatherScoutOnGlobe: function (wxScout) {
                 var self = this,
-                    onDropCallback = function (wxLookout) {
+                    onDropCallback = function (wxScout) {
                         // This callback function is invoked when the DnD drop is completed.
-                        // The DnD controller will add/update the lookout object lat/lon properties
+                        // The DnD controller will add/update the scout object lat/lon properties
                         // at the drop point prior to invoking this function.
-                        self.model.weatherLookoutManager.addLookout(wxLookout);
+                        self.model.weatherScoutManager.addScout(wxScout);
                     };
-                // Start the DnD for the lookout
-                this.globe.dndController.armDrop(wxLookout, onDropCallback);
+                // Start the DnD for the scout
+                this.globe.dndController.armDrop(wxScout, onDropCallback);
             },
             /**
              * Updates the globe view.
@@ -168,7 +166,7 @@ define([
              */
             lookAtLatLon: function (latitude, longitude) {
                 if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-                    Log.error("Controller", "lookAtLatLon", "Invalid Latitude and/or Longitude.");
+                    log.error("Controller", "lookAtLatLon", "Invalid Latitude and/or Longitude.");
                     return;
                 }
                 // TODO: Make AGL and MSL elevations a function of the model
@@ -223,7 +221,7 @@ define([
             },
             restoreSession: function () {
                 this.model.markerManager.restoreMarkers();
-                this.model.weatherLookoutManager.restoreLookouts();
+                this.model.weatherScoutManager.restoreScouts();
                 this.restoreSessionView();
             },
             restoreSessionView: function () {
@@ -232,7 +230,7 @@ define([
             saveSession: function () {
                 this.saveSessionView();
                 this.model.markerManager.saveMarkers();
-                this.model.weatherLookoutManager.saveLookouts();
+                this.model.weatherScoutManager.saveScouts();
             },
             saveSessionView: function () {
                 Settings.saveSessionSettings(this);

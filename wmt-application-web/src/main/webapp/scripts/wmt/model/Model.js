@@ -33,7 +33,7 @@
 /**
  * @module Model
  * 
- * @param {Object} Publisher - Mixin module providing publish/subscribe pattern.
+ * @param {Object} publisher - Mixin module providing publish/subscribe pattern.
  * @param {Object} Terrain
  * @param {Object} TerrainProvider
  * @param {Object} WorldWind
@@ -48,25 +48,23 @@ define([
     'wmt/resource/SolarResource',
     'wmt/resource/SurfaceFuelResource',
     'wmt/globe/Terrain',
-    'wmt/globe/TerrainProvider',
     'wmt/globe/Viewpoint',
-    'wmt/model/WeatherLookoutManager',
+    'wmt/model/WeatherScoutManager',
     'wmt/util/WmtUtil',
     'wmt/Wmt',
     'worldwind'],
     function (
         FuelMoistureResource,
-        Log,
+        log,
         MarkerManager,
-        Publisher,
+        publisher,
         SolarResource,
         SurfaceFuelResource,
         Terrain,
-        TerrainProvider,
         Viewpoint,
-        WeatherLookoutManager,
-        WmtUtil,
-        Wmt,
+        WeatherScoutManager,
+        util,
+        wmt,
         ww) {
         "use strict";
         /**
@@ -77,11 +75,11 @@ define([
          */
         var Model = function (globe) {
             // Mix-in Publisher capability (publish/subscribe pattern)
-            Publisher.makePublisher(this);
+            publisher.makePublisher(this);
 
             this.globe = globe;
             this.markerManager = new MarkerManager(this);
-            this.weatherLookoutManager = new WeatherLookoutManager(this);
+            this.weatherScoutManager = new WeatherScoutManager(this);
 
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
@@ -108,9 +106,9 @@ define([
          */
         Model.prototype.updateFuelModel = function (fuelModel) {
             if (!fuelModel) {
-                throw new Error(Log.error("Model", "updateFuelModel", "missingFuelModel"));
+                throw new Error(log.error("Model", "updateFuelModel", "missingFuelModel"));
             }
-            Log.info("Model", "updateFuelModel", fuelModel.modelName);
+            log.info("Model", "updateFuelModel", fuelModel.modelName);
             this.fuelModel = fuelModel;
 
             // Testing fuel moisture and surface fuel.
@@ -143,7 +141,7 @@ define([
 
             // SUNLIGHT: 
             // Update the sunlight angles when the elapsed time has gone past the threshold (15 min)
-            if (WmtUtil.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
+            if (util.minutesBetween(this.lastSolarTime, time) > this.SUNLIGHT_TIME_THRESHOLD) {
                 if (this.processingSunlight) {
                     // Cache the latest request. handleSunlight() will process the pending request.
                     this.pendingSolarTime = time;
@@ -161,10 +159,10 @@ define([
                     this.lastSolarTime = time;
                 }
             }
-            Log.info("Model", "updateAppTime", time.toLocaleString());
+            log.info("Model", "updateAppTime", time.toLocaleString());
 
             this.applicationTime = time;
-            this.fire(Wmt.EVENT_TIME_CHANGED, time);
+            this.fire(wmt.EVENT_TIME_CHANGED, time);
         };
 
         /**
@@ -187,7 +185,7 @@ define([
             this.viewpoint.copy(viewpoint);
 
             // Update viewpointChanged subscribers
-            this.fire(Wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
+            this.fire(wmt.EVENT_VIEWPOINT_CHANGED, viewpoint);
         };
 
 
@@ -206,7 +204,7 @@ define([
             // Persist a copy of the terrain in our model for non-subscribers
             this.terrainAtMouse.copy(terrain);
             // Update subscribers
-            this.fire(Wmt.EVENT_MOUSE_MOVED, terrain);
+            this.fire(wmt.EVENT_MOUSE_MOVED, terrain);
         };
 
 
@@ -220,9 +218,9 @@ define([
             this.sunlight = sunlight;
             // Reset our "processing flag"
             this.processingSunlight = false;
-            Log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
+            log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
             // Update sunlightChanged subscribers
-            this.fire(Wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
+            this.fire(wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
 
             // If there's a pending request, initiate another update
             if (this.pendingSolarTime) {
@@ -241,9 +239,9 @@ define([
             var self = this;
 
             this.fuelMoisture = fuelMoisture;
-            Log.info("Model", "handleFuelMoisture", "FuelMoistureTuple: " + JSON.stringify(fuelMoisture));
+            log.info("Model", "handleFuelMoisture", "FuelMoistureTuple: " + JSON.stringify(fuelMoisture));
             // Update fuelMoistureChanged subscribers
-            this.fire(Wmt.EVENT_FUELMOISTURE_CHANGED, fuelMoisture);
+            this.fire(wmt.EVENT_FUELMOISTURE_CHANGED, fuelMoisture);
 
             if (this.fuelModel && this.fuelMoisture) {
                 // Update the surface fuel property when the fuel model changes
@@ -262,9 +260,9 @@ define([
          */
         Model.prototype.handleSurfaceFuel = function (surfaceFuel) {
             this.surfaceFuel = surfaceFuel;
-            Log.info("Model", "handleSurfaceFuel", "SurfaceFuel: " + JSON.stringify(surfaceFuel));
+            log.info("Model", "handleSurfaceFuel", "SurfaceFuel: " + JSON.stringify(surfaceFuel));
             // Update surfaceFuelChanged subscribers
-            this.fire(Wmt.EVENT_SURFACEFUEL_CHANGED, surfaceFuel);
+            this.fire(wmt.EVENT_SURFACEFUEL_CHANGED, surfaceFuel);
         };
 
         return Model;

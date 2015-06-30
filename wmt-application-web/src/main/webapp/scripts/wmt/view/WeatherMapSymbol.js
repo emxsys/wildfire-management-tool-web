@@ -30,6 +30,20 @@
 
 /*global define, $, WorldWind */
 
+/**
+ * The WeatherMapSymbol module renders a composite WorldWind.Renderable representing a weather station.
+ * @param {type} AirTemperatureText
+ * @param {type} controller
+ * @param {type} ForecastTimeText
+ * @param {type} RelativeHumidityText
+ * @param {type} SkyCoverPlacemark
+ * @param {type} WindBarbPlacemark
+ * @param {type} wmt
+ * @param {type} ww
+ * @returns {WeatherMapSymbol}
+ * 
+ * @author Bruce Schubert
+ */
 define([
     'wmt/view/AirTemperatureText',
     'wmt/controller/Controller',
@@ -41,12 +55,12 @@ define([
     'worldwind'],
     function (
         AirTemperatureText,
-        Controller,
+        controller,
         ForecastTimeText,
         RelativeHumidityText,
         SkyCoverPlacemark,
         WindBarbPlacemark,
-        Wmt,
+        wmt,
         ww) {
         "use strict";
 
@@ -130,11 +144,11 @@ define([
             };
             
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
-            wxModel.on(Wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
-            wxModel.on(Wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
-            wxModel.on(Wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
+            wxModel.on(wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
+            wxModel.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
+            wxModel.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             
-            Controller.model.on(Wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
+            controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
 
         };
         // Inherit Renderable functions.
