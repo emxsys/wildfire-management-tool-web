@@ -51,7 +51,7 @@ define(['worldwind'],
             var self = this,
                 tapRecognizer;
 
-            // Listen for mouse clicks to select an item
+            // Listen for mouse down to select an item
             this.wwd.addEventListener("mousedown", function (event) {
                 self.handlePick(event);
             });
@@ -59,8 +59,12 @@ define(['worldwind'],
             this.wwd.addEventListener("mousemove", function (event) {
                 self.handlePick(event);
             });
-            // Listen for mouse clicks to select an item
+            // Listen for mouse up to release an item
             this.wwd.addEventListener("mouseup", function (event) {
+                self.handlePick(event);
+            });
+            // Listen for double clicks to open an item
+            this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
             });
 
@@ -95,15 +99,17 @@ define(['worldwind'],
                         this.pickedItem = pickList.topPickedObject();
                         this.isDragging = true;
                         if (this.pickedItem) {
-                            // Move the object if it has a "Movable" capability
+                            // Initiate a move if the object has a "Movable" capability
                             if (this.pickedItem.userObject.moveStarted) {
                                 this.pickedItem.userObject.moveStarted();
                             }
                         }
+                    } else {
+                        this.pickedItem = null;
                     }
                     break;
                 case 'mousemove':
-                    if (this.pickedItem) {
+                    if (this.pickedItem && this.isDragging) {
                         // Get the mouse coords on the terrain
                         terrainObject = pickList.terrainObject();
                         if (terrainObject) {
@@ -114,34 +120,40 @@ define(['worldwind'],
                                     terrainObject.position.latitude,
                                     terrainObject.position.longitude);
                             }
-                            // Or, move the object (a Renderable) if it has a position object
-                            else if (this.pickedItem.userObject.position) {
-                                this.pickedItem.userObject.position =
-                                    new WorldWind.Position(
-                                        terrainObject.position.latitude,
-                                        terrainObject.position.longitude,
-                                        this.pickedItem.userObject.position.elevation);
-                                redrawRequired = true;
-                            }
+// Only move "Movables"; uncomment to allow ordinary renderables to be moved.                        
+//                            // Or, move the object (a Renderable) if it has a position object
+//                            else if (this.pickedItem.userObject.position) {
+//                                this.pickedItem.userObject.position =
+//                                    new WorldWind.Position(
+//                                        terrainObject.position.latitude,
+//                                        terrainObject.position.longitude,
+//                                        this.pickedItem.userObject.position.elevation);
+//                                redrawRequired = true;
+//                            }
                         }
                     }
                     break;
                 case 'mouseup':
                     if (this.pickedItem) {
-                        // Move the object if it has a "Movable" capability
+                        // Finish the move if the object a "Movable" capability
                         if (this.pickedItem.userObject.moveFinished) {
                             this.pickedItem.userObject.moveFinished();
                         }
                     }
-                    this.pickedItem = null;
-                    this.selectedItems = [];
                     this.isDragging = false;
+                    break;
+                case 'dblclick':
+                    if (this.pickedItem) {
+                        if (this.pickedItem.userObject.isOpenable &&
+                            this.pickedItem.userObject.open) {
+                            this.pickedItem.userObject.open();
+                        }
+                    }
                     break;
             }
             // Prevent pan/drag operations on the globe when we're dragging an object.
             if (this.isDragging) {
                 o.preventDefault();
-                //o.stopImmediatePropagation();
             }
             // Update the window if we changed anything.
             if (redrawRequired) {
