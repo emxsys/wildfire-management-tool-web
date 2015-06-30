@@ -33,19 +33,20 @@
 /**
  * Provides the menu system, comprised of a Navbar and Sidebars with Accordions.
  * 
- * @param {ControlPanel} ControlPanel
- * @param {DateTimeControls} DateTimeControls
- * @param {KeyboardControls} KeyboardControls
- * @param {LayerMenu} LayerMenu
- * @param {MarkerPanel} MarkerPanel
- * @param {SearchBox} SearchBox
- * @param {WeatherPanel} WeatherPanel
+ * @param {AboutBox} aboutBox Shows copyright, credits, licenses.
+ * @param {ControlPanel} ControlPanel Shows the globe settings sidebar.
+ * @param {DateTimeControls} dateTimeControls Manifests the time slider.
+ * @param {LayerMenu} LayerMenu Shows the layer list sidebar.
+ * @param {MarkerView} MarkerView Shows the marker list sidebar.
+ * @param {SearchBox} SearchBox Shows the search box in the nav bar
+ * @param {WeatherView} weatherView Shows the weather scouts.
  * @returns {MainMenu}
  * 
  * @author Bruce Schubert
  * @author Theodore Walton
  */
 define([
+    'wmt/menu/AboutBox',
     'wmt/controller/Controller',
     'wmt/menu/ControlPanel',
     'wmt/menu/DateTimeControls',
@@ -54,13 +55,14 @@ define([
     'wmt/menu/SearchBox',
     'wmt/view/WeatherView'],
     function (
+        aboutBox,
         controller,
         ControlPanel,
-        DateTimeControls,
+        dateTimeControls,
         LayerMenu,
         MarkerView,
         SearchBox,
-        WeatherView) {
+        weatherView) {
         "use strict";
         var MainMenu = {
             /**
@@ -143,11 +145,12 @@ define([
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();
-                    this.watherPanel = new WeatherView();
+                    weatherView.initialize();
                     this.searchBox = new SearchBox();
 
                     // Initialize the Time Slider Control
-                    DateTimeControls.initialize(controller);
+                    dateTimeControls.initialize();
+                    aboutBox.initialize();
                 });                
             },
             /**
