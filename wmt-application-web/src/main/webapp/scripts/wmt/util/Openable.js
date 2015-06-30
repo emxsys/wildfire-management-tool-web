@@ -30,46 +30,57 @@
 
 /*global define*/
 
-define(['wmt/util/Publisher', 'wmt/Wmt'],
-    function (Publisher, Wmt) {
+/**
+ * Openable is a mix-in module that adds the "Open" capabilities to an object.
+ * @param {Publisher} publisher Extends the object by adding the event generator
+ * @param {Wmt} wmt Constants.
+ * @returns {Openable}
+ * 
+ * @author Bruce Schubert
+ */
+define([
+    'wmt/util/Publisher', 
+    'wmt/Wmt'],
+    function (publisher, wmt) {
         "use strict";
-        var Editable = {
-            edit: function () {
-                if (this.isEditable) {
-                    if (this.editMe()) {
-                        this.fire(Wmt.EVENT_OBJECT_EDITED, this);
+        
+        var Openable = {
+            open: function () {
+                if (this.isOpenable) {
+                    if (this.openMe()) {
+                        this.fire(wmt.EVENT_OBJECT_OPENED, this);
                     }
                 }
             },
             /**
-             * Adds the the editable capabilities to the given object.
-             * @param {Object} o The object that will become editable.
-             * @param {Boolean Function()} editCallback The function that performs the edit.
+             * Adds the the Openable capabilities to the given object.
+             * @param {Object} o The object that will become openable.
+             * @param {Boolean Function()} openCallback The function that performs the edit.
              */
-            makeEditable: function (o, editCallback) {
+            makeOpenable: function (o, openCallback) {
                 // Ensure we don't duplicate 
-                if (o.edit) {
-                    return; // o is already editable
+                if (o.open) {
+                    return; // o is already openable
                 }
                 // Add the function(s)
                 var i;
-                for (i in Editable) {
-                    if (Editable.hasOwnProperty(i) && typeof Editable[i] === 'function') {
-                        if (Editable[i] === this.makeEditable) {
+                for (i in Openable) {
+                    if (Openable.hasOwnProperty(i) && typeof Openable[i] === 'function') {
+                        if (Openable[i] === this.makeOpenable) {
                             continue;
                         }
-                        o[i] = Editable[i];
+                        o[i] = Openable[i];
                     }
                 }
                 // Add the properties
-                o.isEditable = true;
-                o.editMe = editCallback;
+                o.isOpenable = true;
+                o.openMe = openCallback;
                 
                 // Add the Publisher capability so that events can be generated.
-                Publisher.makePublisher(o);
+                publisher.makePublisher(o);
             }
         };
-        return Editable;
+        return Openable;
     }
 );
 
