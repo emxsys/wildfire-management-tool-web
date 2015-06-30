@@ -31,20 +31,30 @@
 
 /*global define, $, WorldWind */
 
-
+/**
+ * The SearchBox module gathers search criteria from the user, performs a query,  
+ * displays the search results, and "goes to" the selected result.
+ * 
+ * @param {type} controller Contains the primary globe.
+ * @param {type} Globe The embedded preview globe
+ * @param {type} messenger Provides "growl" notifications
+ * @param {type} wmt Constants.
+ * @param {type} ww
+ * @returns {SearchBox}
+ * 
+ * @author Bruce Schubert
+ */
 define([
     'wmt/controller/Controller',
     'wmt/globe/Globe',
-    'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/Wmt',
     'worldwind'],
     function (
         controller,
         Globe,
-        Log,
-        Messenger,
-        Wmt,
+        messenger,
+        wmt,
         ww) {
         "use strict";
         /**
@@ -86,7 +96,7 @@ define([
                     new WorldWind.OpenStreetMapImageLayer(null),
                     new WorldWind.RenderableLayer("Results")
                 ]);
-            this.globe.setProjection(Wmt.PROJECTION_NAME_MERCATOR);
+            this.globe.setProjection(wmt.PROJECTION_NAME_MERCATOR);
             this.globe.wwd.addLayer(this.resultsLayer);
             this.resultsLayer = this.globe.findLayer("Results");
             // Initialize the panel that hosts the globe.
@@ -185,7 +195,7 @@ define([
                             self.showResultsDialog(results);
                         }
                         else {
-                            Messenger.warningGrowl('There were no hits for "' + queryString + '".', "Check your spelling.");
+                            messenger.warningGrowl('There were no hits for "' + queryString + '".', "Check your spelling.");
                         }
                     });
                 }
@@ -221,7 +231,7 @@ define([
                 //appendTo: "div#wmtweb",
                 responsive: true,
                 buttons: [{
-                        text: Wmt.BUTTON_TEXT_GOTO,
+                        text: wmt.BUTTON_TEXT_GOTO,
                         icon: 'fa-globe',
                         click: function () {
                             // Ok to close?
@@ -232,7 +242,7 @@ define([
                         }
                     },
                     {
-                        text: Wmt.BUTTON_TEXT_CANCEL,
+                        text: wmt.BUTTON_TEXT_CANCEL,
                         icon: 'fa-close',
                         click: function () {
                             // Unconditionally close
@@ -332,7 +342,7 @@ define([
          */
         SearchBox.prototype.enableGoToButton = function (enabled) {
             var dlg = $('#searchResults-dlg'),
-                btn = dlg.find('span.pui-button-text:contains("' + Wmt.BUTTON_TEXT_GOTO + '")').parent();
+                btn = dlg.find('span.pui-button-text:contains("' + wmt.BUTTON_TEXT_GOTO + '")').parent();
             $(btn).puibutton(enabled ? 'enable' : 'disable');
         };
 
@@ -355,7 +365,7 @@ define([
                 longitude = parseFloat(this.searchSelection.lon),
                 target = controller.model.viewpoint.target;
 
-            Messenger.infoGrowl(this.searchSelection.display_name, "Going to:");
+            messenger.infoGrowl(this.searchSelection.display_name, "Going to:");
 
             // Remember our current target in the history
             if (target) {
