@@ -29,18 +29,17 @@
  */
 
 /*global define, $ */
-
 /**
- * The MarkerDialog gathers marker properties from the user.
- * @module MarkerDialog
- * @param {Object} WorldWind 
- 
- *  * @author Bruce Schubert
+ * The MarkerPalette provides a list of markers that can be dragged onto the globe.
+ * @param {Wmt} wmt Constants.
+ * @returns {MarkerPalette}
+ * 
+ * @author Bruce Schubert
  */
 define([
     'wmt/Wmt'],
     function (
-        Wmt) {
+        wmt) {
         "use strict";
         /**
          * 
