@@ -78,7 +78,8 @@ define([],
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
             
-            EVENT_OBJECT_EDITED: "objectEdited",
+            EVENT_OBJECT_OPENED: "objectOpened",
+            EVENT_OBJECT_CHANGED: "objectChanged",
             
             EVENT_OBJECT_MOVE_STARTED: "objectMoveStarted",
             EVENT_OBJECT_MOVED: "objectMoved",
