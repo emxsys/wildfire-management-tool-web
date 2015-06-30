@@ -30,14 +30,27 @@
 
 /*global define*/
 
-define(['wmt/util/Publisher', 'wmt/Wmt'],
-    function (Publisher, Wmt) {
+/**
+ * Removable is a mix-in module that adds "remove" capabilites to an object.
+ * 
+ * @param {Publisher} publisher Extends the object with publish event capabilites.
+ * @param {Wmt} wmt Constants.
+ * @returns {Removable}
+ * 
+ * @author Bruce Schubert
+ */
+define([
+    'wmt/util/Publisher',
+    'wmt/Wmt'],
+    function (
+        publisher,
+        wmt) {
         "use strict";
         var Removable = {
             remove: function () {
                 if (this.isRemovable) {
                     if (this.removeMe()) {
-                        this.fire(Wmt.EVENT_OBJECT_REMOVED, this);
+                        this.fire(wmt.EVENT_OBJECT_REMOVED, this);
                     }
                 }
             },
@@ -64,9 +77,9 @@ define(['wmt/util/Publisher', 'wmt/Wmt'],
                 // Add the properties
                 o.isRemovable = true;
                 o.removeMe = removeCallback;
-                
+
                 // Add the Publisher capability so that events can be generated.
-                Publisher.makePublisher(o);
+                publisher.makePublisher(o);
             }
         };
         return Removable;
