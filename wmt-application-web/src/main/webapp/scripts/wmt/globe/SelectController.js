@@ -67,6 +67,10 @@ define(['worldwind'],
             this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
             });
+            // Listen for double clicks to open an item
+            this.wwd.addEventListener("contextmenu", function (event) {
+                self.handlePick(event);
+            });
 
             // Listen for tap gestures on mobile devices
 //            tapRecognizer = new WorldWind.TapRecognizer(this.wwd);
@@ -76,12 +80,18 @@ define(['worldwind'],
 
         };
 
+        /**
+         * Performs the pick apply the appropriate action on the selected item.
+         * @param {Event or TapRecognizer} o The input argument is either an Event or a TapRecognizer. Both have the 
+         *  same properties for determiningthe mouse or tap location.
+         */
         SelectController.prototype.handlePick = function (o) {
             // The input argument is either an Event or a TapRecognizer. Both have the same properties for determining
             // the mouse or tap location.
             var type = o.type,
                 x = o.clientX,
                 y = o.clientY,
+                button = o.button,
                 redrawRequired,
                 pickList,
                 terrainObject;
@@ -94,14 +104,18 @@ define(['worldwind'],
 
             switch (type) {
                 case 'mousedown':
-                    pickList = this.wwd.pick(this.wwd.canvasCoordinates(x, y));
+                    // Handles right and left-clicks 
                     if (pickList.hasNonTerrainObjects()) {
+                        // Establish the picked item - may be used by click, dblclick and contextmenu handlers
                         this.pickedItem = pickList.topPickedObject();
-                        this.isDragging = true;
                         if (this.pickedItem) {
-                            // Initiate a move if the object has a "Movable" capability
-                            if (this.pickedItem.userObject.moveStarted) {
-                                this.pickedItem.userObject.moveStarted();
+                            // Handle left-button
+                            if (button === 0) {
+                                // Initiate a move if the object has a "Movable" capability
+                                if (this.pickedItem.userObject.moveStarted) {
+                                    this.isDragging = true;
+                                    this.pickedItem.userObject.moveStarted();
+                                }
                             }
                         }
                     } else {
@@ -109,17 +123,19 @@ define(['worldwind'],
                     }
                     break;
                 case 'mousemove':
-                    if (this.pickedItem && this.isDragging) {
-                        // Get the mouse coords on the terrain
-                        terrainObject = pickList.terrainObject();
-                        if (terrainObject) {
-                            // Move the object if it has a "Movable" capability, 
-                            // i.e. a moveToLatLon function.
-                            if (this.pickedItem.userObject.moveToLatLon) {
-                                this.pickedItem.userObject.moveToLatLon(
-                                    terrainObject.position.latitude,
-                                    terrainObject.position.longitude);
-                            }
+                    // Handle left-click drags
+                    if (button === 0) {
+                        if (this.pickedItem && this.isDragging) {
+                            // Get the mouse coords on the terrain
+                            terrainObject = pickList.terrainObject();
+                            if (terrainObject) {
+                                // Move the object if it has a "Movable" capability, 
+                                // i.e. a moveToLatLon function.
+                                if (this.pickedItem.userObject.moveToLatLon) {
+                                    this.pickedItem.userObject.moveToLatLon(
+                                        terrainObject.position.latitude,
+                                        terrainObject.position.longitude);
+                                }
 // Only move "Movables"; uncomment to allow ordinary renderables to be moved.                        
 //                            // Or, move the object (a Renderable) if it has a position object
 //                            else if (this.pickedItem.userObject.position) {
@@ -130,23 +146,34 @@ define(['worldwind'],
 //                                        this.pickedItem.userObject.position.elevation);
 //                                redrawRequired = true;
 //                            }
+                            }
                         }
                     }
                     break;
                 case 'mouseup':
-                    if (this.pickedItem) {
-                        // Finish the move if the object a "Movable" capability
-                        if (this.pickedItem.userObject.moveFinished) {
-                            this.pickedItem.userObject.moveFinished();
+                    // Handle left-click release
+                    if (button === 0) {
+                        if (this.pickedItem) {
+                            // Finish the move if the object a "Movable" capability
+                            if (this.pickedItem.userObject.moveFinished) {
+                                this.pickedItem.userObject.moveFinished();
+                            }
                         }
+                        this.isDragging = false;
                     }
-                    this.isDragging = false;
                     break;
                 case 'dblclick':
                     if (this.pickedItem) {
-                        if (this.pickedItem.userObject.isOpenable &&
-                            this.pickedItem.userObject.open) {
+                        if (this.pickedItem.userObject.open) {
                             this.pickedItem.userObject.open();
+                        }
+                    }
+                    break;
+                case 'contextmenu':
+                    if (this.pickedItem) {
+                        // Handles right-mouse click
+                        if (this.pickedItem.userObject.showContextMenu) {
+                            this.pickedItem.userObject.showContextMenu();
                         }
                     }
                     break;
