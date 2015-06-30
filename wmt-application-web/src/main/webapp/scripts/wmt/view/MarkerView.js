@@ -162,7 +162,7 @@ define([
          * @param {this} context
          */
         MarkerView.prototype.createMarkerCallback = function (mkr, context) {
-            context.ctrl.addMarkerToGlobe(mkr);
+            context.ctrl.dropMarkerOnGlobe(mkr);
         };
 
 
