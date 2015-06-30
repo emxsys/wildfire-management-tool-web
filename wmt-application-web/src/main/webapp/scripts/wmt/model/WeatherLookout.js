@@ -31,7 +31,7 @@
 /*global define*/
 
 define([
-    'wmt/util/Editable',
+    'wmt/util/Openable',
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/util/Movable',
@@ -41,7 +41,7 @@ define([
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
-        Editable,
+        Openable,
         Log,
         Messenger,
         Movable,
@@ -57,9 +57,9 @@ define([
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             Movable.makeMovable(this);
 
-            // Make editable via menus: Fires the EVENT_OBJECT_EDITED event on success.
-            Editable.makeEditable(this, function () {
-                Messenger.infoGrowl("The edit feature has not been implemented yet.", "Sorry");
+            // Make editable via menus: Fires the EVENT_OBJECT_OPENED event on success.
+            Openable.makeOpenable(this, function () {
+                Messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
                 return false;
             });
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
