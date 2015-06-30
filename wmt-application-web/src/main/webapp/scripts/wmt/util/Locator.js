@@ -33,90 +33,73 @@
 /**
  * The Locator module is responsble for locating the host device's geographic location
  * and centering the globe's crosshairs on this location.
- * @param {type} Log
- * @param {type} Messenger
- * @param {type} WorldWind
+ * @param {type} log
+ * @param {type} messenger
  * @module Locator
  * @author Bruce Schubert
  */
 define([
-    'wmt/util/Log',
-    'wmt/util/Messenger',
-    'worldwind'],
+    'wmt/controller/Controller',
+    'wmt/util/Messenger'],
     function (
-        Log,
-        Messenger,
-        ww) {
+        controller,
+        messenger) {
         "use strict";
-        /**
-         * @constructor
-         * @param {Controller} controller Object that will be updated by the Locator.
-         * @returns {Locator}
-         */
-        var Locator = function (controller) {
-            if (!controller) {
-                throw new WorldWind.ArgumentError(
-                    Log.error("Locator", "constructor", "missingController"));
-            }
+        var Locator = {
             /**
-             * The locate...() methods update the globe via the controller.
+             * Center's the globe on the user's current position using the GeoLocation API.
+             * @description Centers the globe on the user's current position.
+             * @public
              */
-            this.controller = controller;
-        };
-        /**
-         * Center's the globe on the user's current position using the GeoLocation API.
-         * @description Centers the globe on the user's current position.
-         * @public
-         */
-        Locator.prototype.locateCurrentPosition = function () {
-            // Prerequisite: GeoLocation API
-            if (!window.navigator.geolocation) {
-                Messenger.growl("warn", "Locate Not Supported",
-                    "Sorry, your system doesn't support GeoLocation.", 5000);
-                return;
+            locateCurrentPosition: function () {
+                // Prerequisite: GeoLocation API
+                if (!window.navigator.geolocation) {
+                    messenger.growl("warn", "Locate Not Supported",
+                        "Sorry, your system doesn't support GeoLocation.", 5000);
+                    return;
+                }
+
+                messenger.growl("info", "Locating...", "Setting your location.", 1500);
+
+                // Use the GeoLocation API to get the current position.
+                window.navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        /**
+                         * onSuccess callback centers the crosshairs on the given position
+                         * @param {GeoLocation.Position} position Coordinates and accuracy information.
+                         */
+                        controller.lookAtLatLon(
+                            position.coords.latitude,
+                            position.coords.longitude);
+                    },
+                    function (error) {
+                        /**
+                         * onFail callback notifies the user of the error
+                         * @param {GeoLocation.PositionError} error Error message and code.
+                         */
+                        var reason, message;
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                reason = "User denied the request for Geolocation.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                reason = "Location information is unavailable.";
+                                break;
+                            case error.TIMEOUT:
+                                reason = "The request to get user location timed out.";
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                reason = "An unknown error occurred in Geolocation.";
+                                break;
+                            default:
+                                reason = "An unhandled error occurred in Geolocation.";
+                        }
+                        message = "<h3>Sorry. " + reason + "</h3>"
+                            + "<p>Details: " + error.message + "</p>";
+                        messenger.notify(message);
+
+                    });
             }
-
-            Messenger.growl("info", "Locating...", "Setting your location.", 1500);
-
-            // Use the GeoLocation API to get the current position.
-            var self = this;
-            window.navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    /**
-                     * onSuccess callback centers the crosshairs on the given position
-                     * @param {GeoLocation.Position} position Coordinates and accuracy information.
-                     */
-                    self.controller.lookAtLatLon(
-                        position.coords.latitude,
-                        position.coords.longitude);
-                },
-                function (error) {
-                    /**
-                     * onFail callback notifies the user of the error
-                     * @param {GeoLocation.PositionError} error Error message and code.
-                     */
-                    var reason, message;
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            reason = "User denied the request for Geolocation.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            reason = "Location information is unavailable.";
-                            break;
-                        case error.TIMEOUT:
-                            reason = "The request to get user location timed out.";
-                            break;
-                        case error.UNKNOWN_ERROR:
-                            reason = "An unknown error occurred in Geolocation.";
-                            break;
-                        default:
-                            reason = "An unhandled error occurred in Geolocation.";
-                    }
-                    message = "<h3>Sorry. " + reason + "</h3>"
-                        + "<p>Details: " + error.message + "</p>";
-                    Messenger.notify(message);
-
-                });
         };
 
         return Locator;

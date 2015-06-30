@@ -44,7 +44,7 @@ define([
     'worldwind'], 
 function (
     controller,
-    Locator, 
+    locator, 
     messenger, 
     ww) {
     "use strict";
@@ -71,7 +71,6 @@ function (
 
         // Add Control Panel > Globe event handlers
         $("#findMe").on("click", function (event) {
-            var locator = new Locator(self.ctrl);
             locator.locateCurrentPosition();
         });
         // Add Control Panel > Globe event handlers
