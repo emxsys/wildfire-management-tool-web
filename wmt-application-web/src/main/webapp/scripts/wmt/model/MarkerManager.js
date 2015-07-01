@@ -36,8 +36,8 @@ define([
     'wmt/Wmt'],
     function (
         MarkerNode,
-        Publisher,
-        Wmt) {
+        publisher,
+        wmt) {
         "use strict";
         /**
          * @constructor
@@ -47,20 +47,18 @@ define([
         var MarkerManager = function (model) {
 
             // Mix-in Publisher capability for publish/subscribe subject/observer pattern
-            Publisher.makePublisher(this);
-
+            publisher.makePublisher(this);
+            
             this.model = model;
             this.markers = [];
-
-            this.restoreMarkers();
         };
 
-        MarkerManager.prototype.addMarker = function (name, type, lat, lon) {
+        MarkerManager.prototype.addMarker = function (marker) {
             // Add marker to managed list
-            var marker = new MarkerNode(this.generateUniqueName(name), type, lat, lon);
+            marker.name = this.generateUniqueName(marker.name);
 
             this.markers.push(marker);
-            this.fire(Wmt.EVENT_MARKER_ADDED, marker);
+            this.fire(wmt.EVENT_MARKER_ADDED, marker);
         };
 
         MarkerManager.prototype.removeMarker = function (uniqueName) {
@@ -74,7 +72,7 @@ define([
                     break;
                 }
             }
-            this.fire(Wmt.EVENT_MARKER_REMOVED, removed[0]);
+            this.fire(wmt.EVENT_MARKER_REMOVED, removed[0]);
         };
 
 
@@ -83,12 +81,10 @@ define([
          */
         MarkerManager.prototype.saveMarkers = function () {
             // Ignore markers that have been flagged as "invalid"
-            var validMarkers = this.markers.filter(function (marker) {
-                return !marker.invalid;
-            }),
-                string = JSON.stringify(validMarkers);
-
-            localStorage.setItem(Wmt.STORAGE_KEY_MARKERS, string);
+            var validMarkers = this.markers.filter(function (marker) { return !marker.invalid; }),
+                markersString = JSON.stringify(validMarkers, ['id', 'name', 'type', 'latitude', 'longitude']);
+            // Set the key/value pair
+            localStorage.setItem(wmt.STORAGE_KEY_MARKERS, markersString);
         };
 
 
@@ -96,19 +92,20 @@ define([
          * Restores the markers list from local storage.
          */
         MarkerManager.prototype.restoreMarkers = function () {
-            var string = localStorage.getItem(Wmt.STORAGE_KEY_MARKERS),
-                i;
+            var string = localStorage.getItem(wmt.STORAGE_KEY_MARKERS),
+                array, max, i;
 
-            if (!string || string === 'null') {
-                return;
+            // Convert JSON array to array of WeatherScout objects
+            array = JSON.parse(string);
+            for (i = 0, max = array.length; i < max; i++) {
+                this.addMarker(new MarkerNode(
+                    array[i].name,
+                    array[i].type,
+                    array[i].latitude,
+                    array[i].longitude,
+                    array[i].id));
             }
-            // Load the entire collection
-            this.markers = JSON.parse(string);
 
-            // Notify all observers/subscribers
-            for (i = 0; i < this.markers.length; i++) {
-                this.fire(Wmt.EVENT_MARKER_ADDED, this.markers[i]);
-            }
         };
 
 

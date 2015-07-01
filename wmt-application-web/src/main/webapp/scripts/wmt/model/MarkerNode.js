@@ -30,11 +30,49 @@
 
 /*global define*/
 
-define([],
-    function () {
+define([
+    'wmt/util/ContextSensitive',
+    'wmt/util/Openable',
+    'wmt/util/Log',
+    'wmt/util/Messenger',
+    'wmt/util/Movable',
+    'wmt/util/Removable',
+    'wmt/util/WmtUtil'],
+    function (
+        contextSensitive,
+        openable,
+        log,
+        messenger,
+        movable,
+        removable,
+        util) {
         "use strict";
 
-        var MarkerNode = function (uniqueName, type, lat, lon) {
+        var MarkerNode = function (uniqueName, type, lat, lon, id) {
+
+            // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
+            movable.makeMovable(this);
+
+            // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
+            openable.makeOpenable(this, function () {
+                messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
+                return false;
+            });
+            // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
+            removable.makeRemovable(this, function () {
+                // TODO: Ask for confirmation; return false if veto'd
+                return true;    // return true to fire a notification that allows the delete to proceed.
+            });
+            // Make context sensiive by the SelectController: shows the context menu.
+            contextSensitive.makeContextSenstive(this, function () {
+                messenger.infoGrowl("Show menu with delete, open, and lock/unlock", "TODO");
+            });
+
+            /**
+             * The unique id used to identify this particular weather object
+             */
+            this.id = id || util.guid();
+
             this.name = uniqueName;
             this.type = type;
             this.latitude = lat;

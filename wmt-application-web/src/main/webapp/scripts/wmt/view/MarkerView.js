@@ -39,6 +39,7 @@ define([
     'wmt/controller/Controller',
     'wmt/view/symbols/IcsMarker',
     'wmt/util/Log',
+    'wmt/model/MarkerNode',
     'wmt/menu/MarkerPalette',
     'wmt/util/Messenger',
     'wmt/view/symbols/Pushpin',
@@ -48,6 +49,7 @@ define([
         controller,
         IcsMarker,
         log,
+        MarkerNode,
         MarkerPalette,
         messenger,
         Pushpin,
@@ -102,11 +104,12 @@ define([
 
         /**
          * Callback function that invokes the Controller.AddMarkerToGlobe function.
-         * @param {Object} mkr Marker template with name and type properties.
+         * @param {Object} mkrTmpl Marker template with name and type properties.
          * @param {this} context
          */
-        MarkerView.prototype.createMarkerCallback = function (mkr, context) {
-            controller.dropMarkerOnGlobe(mkr);
+        MarkerView.prototype.createMarkerCallback = function (mkrTmpl, context) {
+            // TODO: Palette should return template
+            controller.dropMarkerOnGlobe(new MarkerNode(mkrTmpl.name, mkrTmpl.type));
         };
 
 
@@ -270,14 +273,14 @@ define([
             placemark.markerCategory = template.category;
             placemark.markerType = template.type;
 
-            // Add a reference to our model object and a movable capability to the renderable
-            placemark.model = node;
-            placemark.moveToLatLon = function (latitude, longitude) {
-                this.position.latitude = latitude;
-                this.position.longitude = longitude;
-                this.model.latitude = latitude;
-                this.model.longitude = longitude;
+            // Establish the Publisher/Subscriber relationship between this symbol and its node
+            placemark.pickDelegate = node;
+            placemark.handleObjectMovedEvent = function (node) {
+                placemark.position.latitude = node.latitude;
+                placemark.position.longitude = node.longitude;
             };
+            node.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
+            
 
             // Render the marker on the globe
             this.markerLayer.addRenderable(placemark);
@@ -309,8 +312,6 @@ define([
                     '</div>';
                 markerList.append(markerItem);
             }
-            controller.globe.redraw();
-
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
                 self.onMarkerItemClick($(this).text(), "goto");
