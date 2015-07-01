@@ -30,8 +30,12 @@
 
 /*global define, $, WorldWind */
 
-define(['worldwind'],
-    function (ww) {
+define([
+    'wmt/util/WmtUtil',
+    'worldwind'],
+    function (
+        util,
+        ww) {
         "use strict";
         /**
          * @constructor
@@ -47,6 +51,8 @@ define(['worldwind'],
             this.selectedItems = [];
             // The top item in the pick list
             this.pickedItem = null;
+            // The clicked/double-clicked 
+            this.clickedItem = null;
 
             var self = this,
                 tapRecognizer;
@@ -65,11 +71,15 @@ define(['worldwind'],
             this.wwd.addEventListener("mouseup", function (event) {
                 self.handlePick(event);
             });
+            // Listen for single clicks to select an item
+            this.wwd.addEventListener("click", function (event) {
+                self.handlePick(event);
+            });
             // Listen for double clicks to open an item
             this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
             });
-            // Listen for double clicks to open an item
+            // Listen for right clicks to open menu
             this.wwd.addEventListener("contextmenu", function (event) {
                 self.handlePick(event);
             });
@@ -108,37 +118,48 @@ define(['worldwind'],
                 case 'mousedown':
                     // Handles right and left-clicks 
                     if (pickList.hasNonTerrainObjects()) {
-                        // Establish the picked item - may be used by click, dblclick and contextmenu handlers
+
+                        // Establish the picked item - may be used by mousemove, click, dblclick and contextmenu handlers
                         this.pickedItem = pickList.topPickedObject();
+
                         if (this.pickedItem) {
-                            // Handle left-button
-                            if (button === 0) {
-                                // Initiate a move if the object has a "Movable" capability
-                                if (this.pickedItem.userObject.moveStarted) {
-                                    this.isDragging = true;
-                                    this.pickedItem.userObject.moveStarted();
-                                }
-                            }
+                            // Capture the initial mouse down points for comparison in mousemove
+                            // to detemine if whether to initiate dragging of the picked item.
+                            this.mouseDownX = x;
+                            this.mouseDownY = y;
                         }
                     } else {
                         this.pickedItem = null;
                     }
                     break;
                 case 'mousemove':
-                    // Handle left-click drags
-                    if (button === 0) {
-                        if (this.pickedItem && this.isDragging) {
-                            // Get the mouse coords on the terrain
-                            terrainObject = pickList.terrainObject();
-                            if (terrainObject) {
-                                // Move the object if it has a "Movable" capability, 
-                                // i.e. a moveToLatLon function.
-                                if (this.pickedItem.userObject.moveToLatLon) {
-                                    this.pickedItem.userObject.moveToLatLon(
-                                        terrainObject.position.latitude,
-                                        terrainObject.position.longitude);
+                    if (this.pickedItem) {
+                        // Handle left-click drag/move
+                        if (button === 0) {
+                            // Initiate dragging only if the mouse has moved a few pixels.
+                            if (!this.isDragging &&
+                                (Math.abs(this.mouseDownX - x) > 2 || Math.abs(this.mouseDownY - y) > 2)) {
+                                this.isDragging = true;
+                                // "Start" the move if the object has a "Movable" capability
+                                if (this.pickedItem.userObject.moveStarted) {
+                                    // Fires EVENT_OBJECT_MOVE_STARTED
+                                    this.pickedItem.userObject.moveStarted();
                                 }
-// Only move "Movables"; uncomment to allow ordinary renderables to be moved.                        
+                            }
+                            // Perform the actual move of the picked object
+                            if (this.isDragging) {
+                                // Get the new terrain coords at the pick point
+                                terrainObject = pickList.terrainObject();
+                                if (terrainObject) {
+                                    // Do the move if the object has a "Movable" capability
+                                    if (this.pickedItem.userObject.moveToLatLon) {
+                                        // Fires EVENT_OBJECT_MOVED
+                                        this.pickedItem.userObject.moveToLatLon(
+                                            terrainObject.position.latitude,
+                                            terrainObject.position.longitude);
+                                    }
+                                }
+// Uncomment to allow ordinary renderables to be moved.                        
 //                            // Or, move the object (a Renderable) if it has a position object
 //                            else if (this.pickedItem.userObject.position) {
 //                                this.pickedItem.userObject.position =
@@ -153,25 +174,39 @@ define(['worldwind'],
                     }
                     break;
                 case 'mouseup':
-                    // Handle left-click release
-                    if (button === 0) {
-                        if (this.pickedItem) {
-                            // Finish the move if the object a "Movable" capability
+                    if (this.pickedItem) {
+                        // Finish the move if the object a "Movable" capability    
+                        if (this.isDragging) {
                             if (this.pickedItem.userObject.moveFinished) {
+                                // Fires EVENT_OBJECT_MOVE_FINISHED
                                 this.pickedItem.userObject.moveFinished();
                             }
+                            this.pickedItem = null;
                         }
-                        this.isDragging = false;
                     }
+                    this.isDragging = false;
+                    break;
+                case 'click':
+                    // TODO: implement Selectable capabilities
+                    // Remember the clicked item for dblclick processing
+                    this.clickedItem = this.pickedItem;
+                    if (this.clickedItem.userObject.select) {
+                        this.clickedItem.userObject.select();
+                    }
+                    // Release the picked item so mousemove doesn't act on it
+                    this.pickedItem = null;
                     break;
                 case 'dblclick':
-                    if (this.pickedItem) {
-                        if (this.pickedItem.userObject.open) {
-                            this.pickedItem.userObject.open();
+                    if (this.clickedItem) {
+                        if (this.clickedItem.userObject.open) {
+                            this.clickedItem.userObject.open();
                         }
+                        // Release the picked item so mousemove doesn't act on it
+                        this.pickedItem = null;
                     }
                     break;
                 case 'contextmenu':
+                    this.isDragging = false;
                     if (this.pickedItem) {
                         // Invoke the object's context menu if it has one
                         if (this.pickedItem.userObject.showContextMenu) {
@@ -180,6 +215,8 @@ define(['worldwind'],
                             // Otherwise, build a context menu from standard capabilities
 //                            $('#globeContextMenu-popup').puimenu('show');
                         }
+                        // Release the picked item so mousemove doesn't act on it
+                        this.pickedItem = null;
                     }
                     break;
             }
