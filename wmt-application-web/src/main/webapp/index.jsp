@@ -685,6 +685,67 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         Fires
                     </h4>
                     <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">
+                        <!--Fire Lookouts-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading collapsed" 
+                                 data-toggle="collapse" 
+                                 data-parent="#fireAccordion" 
+                                 href="#fireLookoutsBody" 
+                                 aria-expanded="false" 
+                                 aria-controls="fireLookoutsBody"
+                                 role="tab" 
+                                 id="fireLookoutsHeading">
+                                <h4 class="panel-title">
+                                    Lookouts
+                                </h4>
+                            </div>
+                            <div id="fireLookoutsBody" 
+                                 class="panel-collapse collapse" 
+                                 role="tabpanel" 
+                                 aria-labelledby="fireLookoutsHeading">
+                                <div class="panel-body">
+                                    <button id="createFireLookout" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a fire lookout to the globe.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add
+                                    </button>
+                                    <ul class="list-group pre-scrollable" 
+                                        id="fireLookoutList">
+                                    </ul>                              
+                                </div>
+                            </div>
+                        </div>       
+                        <!--Fire Incidents-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading collapsed" 
+                                 data-toggle="collapse" 
+                                 data-parent="#fireAccordion" 
+                                 href="#fireIncidentsBody" 
+                                 aria-expanded="false" 
+                                 aria-controls="fireIncidentsBody"
+                                 role="tab" 
+                                 id="fireIncidentsHeading">
+                                <h4 class="panel-title">
+                                    Incidents
+                                </h4>
+                            </div>
+                            <div id="fireIncidentsBody" 
+                                 class="panel-collapse collapse" 
+                                 role="tabpanel" 
+                                 aria-labelledby="fireIncidentsHeading">
+                                <div class="panel-body">
+                                    <ul class="list-group pre-scrollable" 
+                                        id="fireIncidentList">
+                                    </ul>                              
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--Fire Settings-->
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="firesSettingsHeading">
                                 <h4 class="panel-title">
