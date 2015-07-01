@@ -109,6 +109,10 @@ define([],
              */
             FIRE_BEHAVIOR_LAYER_NAME: "Fire Lookouts",
             /**
+             * The local storage key for weather lookouts.
+             */
+            FIRE_LOOKOUTS_STORAGE_KEY: "firelookouts",
+            /**
              * The display name for the layer that displays fire perimeters and related data.
              */
             FIRE_PERIMETERS_LAYER_NAME: "Fire Perimeters",
@@ -175,7 +179,7 @@ define([],
             /**
              * The local storage key for weather lookouts.
              */
-            WEATHER_LOOKOUTS_STORAGE_KEY: "wxlookouts",
+            WEATHER_LOOKOUTS_STORAGE_KEY: "wxscouts",
             /**
              * The URL for the weather REST service.
              */
