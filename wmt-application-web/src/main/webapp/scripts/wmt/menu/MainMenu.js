@@ -50,6 +50,7 @@ define([
     'wmt/controller/Controller',
     'wmt/menu/ControlPanel',
     'wmt/menu/DateTimeControls',
+    'wmt/view/FireView',
     'wmt/menu/LayerMenu',
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
@@ -59,6 +60,7 @@ define([
         controller,
         ControlPanel,
         dateTimeControls,
+        fireView,
         LayerMenu,
         MarkerView,
         SearchBox,
@@ -143,6 +145,7 @@ define([
 
                     // Initialize the constituent UI elements.
                     this.controlPanel = new ControlPanel();
+                    fireView.initialize();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();
                     weatherView.initialize();
