@@ -31,69 +31,57 @@
 /*global define*/
 
 /**
- * Movable is a mix-in module that adds "move" capabilites to an object.
- * 
- * @param {Publisher} publisher Extends the object with publish event capabilites.
- * @param {WmtUtil} utils Utilties.
+ * Selectable is a mix-in module that adds the "select" capabilities to an object.
+ * @param {Publisher} publisher Extends the object by adding the event generator.
  * @param {Wmt} wmt Constants.
- * @returns {Movable}
+ * @returns {Selectable}
  * 
  * @author Bruce Schubert
  */
 define([
-    'wmt/util/Publisher',
-    'wmt/util/WmtUtil',
+    'wmt/util/Publisher', 
     'wmt/Wmt'],
-    function (
-        publisher,
-        utils,
-        wmt) {
+    function (publisher, wmt) {
         "use strict";
-        var Movable = {
-            moveStarted: function () {
-                if (this.isMovable) {
-                    this.fire(wmt.EVENT_OBJECT_MOVE_STARTED, this);
-                }
-            },
-            moveToLatLon: function (latitude, longitude) {
-                if (this.isMovable) {
-                    this.latitude = latitude;
-                    this.longitude = longitude;
-                    this.fire(wmt.EVENT_OBJECT_MOVED, this);
-                }
-            },
-            moveFinished: function () {
-                if (this.isMovable) {
-                    this.fire(wmt.EVENT_OBJECT_MOVE_FINISHED, this);
+        
+        var Selectable = {
+            select: function () {
+                if (this.isSelectable) {
+                    if (this.selectMe()) {
+                        // Fire the selected event if we succeeded.
+                        this.fire(wmt.EVENT_OBJECT_SELECTED, this);
+                    }
                 }
             },
             /**
-             * Adds the the movable capabilities to the given object.
-             * @param {Object} o The object that will become movable.
+             * Adds the the Selectable capabilities to the given object.
+             * @param {Object} o The object that will become selectable.
+             * @param {Boolean Function()} selectCallback The function that performs the edit.
              */
-            makeMovable: function (o) {
+            makeSelectable: function (o, selectCallback) {
                 // Ensure we don't duplicate 
-                if (o.moveToLatLon) {
-                    return; // o is already movable
+                if (o.select) {
+                    return; // o is already selectable
                 }
-                // Add the functions
+                // Add the function(s)
                 var i;
-                for (i in Movable) {
-                    if (Movable.hasOwnProperty(i) && typeof Movable[i] === 'function') {
-                        if (Movable[i] === this.makeMovable) {
+                for (i in Selectable) {
+                    if (Selectable.hasOwnProperty(i) && typeof Selectable[i] === 'function') {
+                        if (Selectable[i] === this.makeSelectable) {
                             continue;
                         }
-                        o[i] = Movable[i];
+                        o[i] = Selectable[i];
                     }
                 }
                 // Add the properties
-                o.isMovable = true;
-
+                o.isSelectable = true;
+                o.selectMe = selectCallback;
+                
                 // Add the Publisher capability so that events can be generated.
                 publisher.makePublisher(o);
             }
         };
-        return Movable;
+        return Selectable;
     }
 );
 

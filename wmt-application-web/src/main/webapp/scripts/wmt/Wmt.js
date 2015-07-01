@@ -50,36 +50,31 @@ define([],
              * @constant
              */
             VERSION: "0.0.0",
-            
             BUTTON_TEXT_CANCEL: 'Cancel',
             BUTTON_TEXT_GOTO: 'Go To',
             BUTTON_TEXT_NO: 'No',
             BUTTON_TEXT_OK: 'OK',
             BUTTON_TEXT_YES: 'Yes',
-
-            EVENT_FIRE_BEHAVIOR_CHANGED: "fireBehaviorChanged",           
+            EVENT_FIRE_BEHAVIOR_CHANGED: "fireBehaviorChanged",
             EVENT_FIRE_LOOKOUT_ADDED: "fireLookoutAdded",
             EVENT_FIRE_LOOKOUT_CHANGED: "fireLookoutChanged",
             EVENT_FIRE_LOOKOUT_REMOVED: "fireLookoutRemoved",
-            
             EVENT_FUELMOISTURE_CHANGED: "fuelMoistureChanged",
-            
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
             EVENT_MARKER_REMOVED: "markerRemoved",
-
             /**
              * Publish/subscibe event name for notifcation of mouse position on the globe.
              * @constant
              */
             EVENT_MOUSE_MOVED: "mouseMoved",
-
             EVENT_OBJECT_OPENED: "objectOpened",
             EVENT_OBJECT_CHANGED: "objectChanged",
             EVENT_OBJECT_MOVE_STARTED: "objectMoveStarted",
             EVENT_OBJECT_MOVED: "objectMoved",
             EVENT_OBJECT_MOVE_FINISHED: "objectMoveFinished",
             EVENT_OBJECT_REMOVED: "objectRemoved",
+            EVENT_OBJECT_SELECTED: "objectSelected",
             EVENT_PLACE_CHANGED: "placeChanged",
             /**
              * Publish/subscibe event name for notifcation of changes in the sunlight.
@@ -99,8 +94,7 @@ define([],
              * @constant
              */
             EVENT_VIEWPOINT_CHANGED: "viewpointChanged",
-            
-            EVENT_WEATHER_CHANGED: "weatherChanged",           
+            EVENT_WEATHER_CHANGED: "weatherChanged",
             EVENT_WEATHER_SCOUT_ADDED: "weatherScoutAdded",
             EVENT_WEATHER_SCOUT_CHANGED: "weatherScoutChanged",
             EVENT_WEATHER_SCOUT_REMOVED: "weatherScoutRemoved",
@@ -127,19 +121,17 @@ define([],
             /**
              * The display name for the layer that displays markers.
              */
-            
+
             LAYER_NAME_COMPASS: "Compass",
             LAYER_NAME_RETICLE: "Crosshairs",
             LAYER_NAME_SKY: "Sky",
             LAYER_NAME_VIEW_CONTROLS: "Controls",
-            
             MARKERS_LAYER_NAME: "Markers",
             /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
              */
             NAVIGATOR_MAX_RANGE: 20000000,
-            
             PROJECTION_NAME_3D: "3D",
             PROJECTION_NAME_EQ_RECT: "Equirectangular",
             PROJECTION_NAME_MERCATOR: "Mercator",
@@ -147,7 +139,6 @@ define([],
             PROJECTION_NAME_SOUTH_POLAR: "South Polar",
             PROJECTION_NAME_NORTH_UPS: "North UPS",
             PROJECTION_NAME_SOUTH_UPS: "South UPS",
-            
             /**
              * The local storage key for fire lookouts.
              */
@@ -160,7 +151,6 @@ define([],
              * The local storage key for weather scouts.
              */
             STORAGE_KEY_WEATHER_SCOUTS: "wxscouts",
-
             /**
              * The URL for the sunlight REST service.
              */
@@ -185,9 +175,7 @@ define([],
              * The URL for the weather REST service.
              */
             WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
-            
             WEATHER_MAP_SYMBOL_ALTITUDE: 500,
-            
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
