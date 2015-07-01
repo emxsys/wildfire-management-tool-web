@@ -30,7 +30,25 @@
 
 /*global define*/
 
+/**
+ * The WeatherScout module.
+ * 
+ * @param {ContextSensitive} constextSensitive Adds context menu capability.
+ * @param {Openable} openable Adds open capability.
+ * @param {Log} log Logger.
+ * @param {Messenger} messenger UI notifications.
+ * @param {Movable} movable Adds move capabilities.
+ * @param {PlaceResource} PlaceResource Gets place names.
+ * @param {Removable} removable Adds remove capability.
+ * @param {WeatherResource} WeatherResource Gets weather forecasts.
+ * @param {WmtUtil} util Utilities.
+ * @param {Wmt} wmt Constants.
+ * @returns {WeatherScout}
+ * 
+ * @author Bruce Schubert
+ */
 define([
+    'wmt/util/ContextSensitive',
     'wmt/util/Openable',
     'wmt/util/Log',
     'wmt/util/Messenger',
@@ -41,6 +59,7 @@ define([
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
+        contextSensitive,
         openable,
         log,
         messenger,
@@ -57,7 +76,7 @@ define([
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             movable.makeMovable(this);
 
-            // Make editable via menus: Fires the EVENT_OBJECT_OPENED event on success.
+            // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
             openable.makeOpenable(this, function () {
                 messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
                 return false;
@@ -65,7 +84,11 @@ define([
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
             removable.makeRemovable(this, function () {
                 // TODO: Ask for confirmation; return false if veto'd
-                return true;    // fire's a notification that allow the delete to proceed.
+                return true;    // return true to fire a notification that allows the delete to proceed.
+            });
+            // Make context sensiive by the SelectController: shows the context menu.
+            contextSensitive.makeContextSenstive(this, function() {
+                messenger.infoGrowl("Show menu with delete, open, and lock/unlock", "TODO");                
             });
 
             /**
@@ -75,7 +98,7 @@ define([
             /**
              * The display name
              */
-            this.name = name || 'Wx Lookout';
+            this.name = name || 'Wx Scout';
             this.duration = duration || wmt.configuration.wxForecastDurationHours;
             this.latitude = latitude;
             this.longitude = longitude;

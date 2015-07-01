@@ -47,9 +47,7 @@ define([
         var ContextSenstive = {
             showContextMenu: function () {
                 if (this.isContextSenstive) {
-                    if (this.showMyContextMenu()) {
-                        this.fire(wmt.EVENT_OBJECT_OPENED, this);
-                    }
+                    this.showMyContextMenu();
                 }
             },
             /**

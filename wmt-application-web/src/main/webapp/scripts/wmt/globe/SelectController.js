@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WorldWind */
+/*global define, $, WorldWind */
 
 define(['worldwind'],
     function (ww) {
@@ -50,6 +50,8 @@ define(['worldwind'],
 
             var self = this,
                 tapRecognizer;
+
+//            $('#globeContextMenu-popup').puimenu();
 
             // Listen for mouse down to select an item
             this.wwd.addEventListener("mousedown", function (event) {
@@ -171,9 +173,12 @@ define(['worldwind'],
                     break;
                 case 'contextmenu':
                     if (this.pickedItem) {
-                        // Handles right-mouse click
+                        // Invoke the object's context menu if it has one
                         if (this.pickedItem.userObject.showContextMenu) {
                             this.pickedItem.userObject.showContextMenu();
+                        } else {
+                            // Otherwise, build a context menu from standard capabilities
+//                            $('#globeContextMenu-popup').puimenu('show');
                         }
                     }
                     break;

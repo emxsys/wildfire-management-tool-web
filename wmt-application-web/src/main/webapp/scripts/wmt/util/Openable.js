@@ -48,6 +48,7 @@ define([
             open: function () {
                 if (this.isOpenable) {
                     if (this.openMe()) {
+                        // Fire the opened event if we succeeded.
                         this.fire(wmt.EVENT_OBJECT_OPENED, this);
                     }
                 }
