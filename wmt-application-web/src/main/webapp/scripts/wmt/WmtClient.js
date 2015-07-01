@@ -47,7 +47,7 @@ define([
     'wmt/globe/Globe',
     'wmt/menu/MainMenu',
     'wmt/menu/MobileMenu'
-    ],
+],
     function (
         controller,
         Globe,
@@ -55,26 +55,24 @@ define([
         mobileMenu) {
         "use strict";
         var WmtClient = function () {
-            
+
             // Create the primary globe
             this.globe = new Globe("canvasOne");
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views on the primary globe. 
-            // Then restore the model from the previous session.
             controller.initialize(this.globe);
-            controller.restoreSession();
 
             // Initialize the Navbar, Sidebars and UI controls.
             // Do this AFTER the controller is initialized.
             mainMenu.initialize();
-                      
+
             // Initialize the Mobile Slide Menus
             mobileMenu.initialize();
             var mobileControlPanel = new mobileMenu.Menu(
-                '#mobileControlPanel',                      
+                '#mobileControlPanel',
                 'slide-right',
-                '#c-maskCtrlPanel',  
+                '#c-maskCtrlPanel',
                 '#mobileControlPanelButton',
                 '',
                 '100',
@@ -82,17 +80,17 @@ define([
                 '85%'
                 );
             var mobileLocationMenu = new mobileMenu.Menu(
-                '#mobileLocation',                      
+                '#mobileLocation',
                 'slide-top',
-                '#c-maskLocation',  
+                '#c-maskLocation',
                 '#ctrlPanelLocation',
                 '',
                 '110',
                 '85%',
                 '100%'
                 );
-            
-            
+
+
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();
@@ -100,6 +98,10 @@ define([
                 //return "Close WMT?";
                 return null;
             };
+
+            // Now that MVC is set up, restore the model from the previous session.
+            controller.restoreSession();
+
         };
 
         return WmtClient;
