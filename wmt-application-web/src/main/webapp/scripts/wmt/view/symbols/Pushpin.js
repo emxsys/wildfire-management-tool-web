@@ -31,11 +31,11 @@
 /*global define, WorldWind*/
 
 /**
- * The IcsMarker draws an ICS Symbol on the globe.
+ * The Pushpin draws a pushpin symbol on the globe.
  * @param {Log} log Console logging.
  * @param {Wmt} wmt Constants.
  * @param {WorldWind} ww 
- * @returns {IcsMarker}
+ * @returns {Pushpin}
  * 
  * @author Bruce Schubert
  */
@@ -49,19 +49,19 @@ define([
         ww) {
         "use strict";
 
-        var IcsMarker = function (latitude, longitude, icsSymbolType, eyeDistanceScaling) {
+        var Pushpin = function (latitude, longitude, pushpinType, eyeDistanceScaling) {
             // Inherit Placemark properties
             WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, 0), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             //this.eyeDistanceScalingThreshold = 2500000;
 
-            // Establish the common attributes for ICS Markers
+            // Establish the common attributes for pushpins
             this.attributes = new WorldWind.PlacemarkAttributes(null);
             this.attributes.depthTest = true;
-            this.attributes.imageScale = 1.5;
+            this.attributes.imageScale = 0.8;
             this.attributes.imageOffset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 0.5,
+                WorldWind.OFFSET_FRACTION, 0.3,
                 WorldWind.OFFSET_FRACTION, 0.0);
             this.attributes.labelAttributes.offset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
@@ -76,71 +76,55 @@ define([
             this.highlightAttributes.imageScale = this.attributes.imageScale * 1.2;
 
             // Set the image source and name for the placemark
-            this.updateMarker(IcsMarker.findTemplate(icsSymbolType));
+            this.updatePushpin(Pushpin.findTemplate(pushpinType));
 
         };
         // Inherit Placemark functions
-        IcsMarker.prototype = Object.create(WorldWind.Placemark.prototype);
+        Pushpin.prototype = Object.create(WorldWind.Placemark.prototype);
 
         // CAUTION: changing the type value may cause existing markers in local storage to be lost!
         // 
-        // ICS Marker Types
-        IcsMarker.templates = [
-            {type: "ics-aerial-hazard", name: "Aerial Hazard ", symbol: "Aerial_Hazard24.png"},
-            {type: "ics-aerial-ignition", name: "Aerial Ignition ", symbol: "Aerial_Ignition24.png"},
-            {type: "ics-airport", name: "Airport ", symbol: "Airport_124.png"},
-            {type: "ics-archaeological-site", name: "Archaeological Site ", symbol: "Archaeological_Site_124.png"},
-            {type: "ics-branch-break", name: "Branch Break ", symbol: "Branch_Break24.png"},
-            {type: "ics-camp", name: "Camp ", symbol: "Camp24.png"},
-            {type: "ics-division-break", name: "Division Break ", symbol: "Division_Break24.png"},
-            {type: "ics-drop-point", name: "Drop Point ", symbol: "Drop_Point24.png"},
-            {type: "ics-fire-location", name: "Fire Location ", symbol: "Fire_Location24.png"},
-            {type: "ics-fire-origin", name: "Fire Origin ", symbol: "Fire_Origin24.png"},
-            {type: "ics-fire-station", name: "Fire Station ", symbol: "Fire_Station24.png"},
-            {type: "ics-first-aid", name: "First Aid ", symbol: "First_Aid_124.png"},
-            {type: "ics-heat-sorce", name: "Heat Source ", symbol: "Heat_Source24.png"},
-            {type: "ics-helibase", name: "Helibase ", symbol: "Helibase24.png"},
-            {type: "ics-helispot", name: "Helispot ", symbol: "Helispot24.png"},
-            {type: "ics-historical-site", name: "Historical Site ", symbol: "Historical_Site24.png"},
-            {type: "ics-incident-base", name: "Incident Base ", symbol: "Incident_Base24.png"},
-            {type: "ics-incident-command-post", name: "Incident Command Post ", symbol: "Incident_Command_Post24.png"},
-            {type: "ics-medi-vac", name: "MediVac Site ", symbol: "MediVac_Site24.png"},
-            {type: "ics-mobile-weather-unit", name: "Mobile Weather Unit ", symbol: "Mobile_Weather_Unit24.png"},
-            {type: "ics-repeater", name: "Repeater ", symbol: "Repeater24.png"},
-            {type: "ics-retardant-pickup", name: "Retardant Pickup ", symbol: "Retardant_Pickup24.png"},
-            {type: "ics-safety-zone", name: "Safety Zone ", symbol: "Safety_Zone_024.png"},
-            {type: "ics-staging-area", name: "Staging Area ", symbol: "Staging_Area24.png"},
-            {type: "ics-water-source", name: "Water Source ", symbol: "Water_Source24.png"}
+        // Pushpin Types
+        Pushpin.templates = [
+            {type: "pushpin-black", name: "Black ", symbol: "castshadow-black.png"},
+            {type: "pushpin-red", name: "Red ", symbol: "castshadow-red.png"},
+            {type: "pushpin-green", name: "Green ", symbol: "castshadow-green.png"},
+            {type: "pushpin-blue", name: "Blue ", symbol: "castshadow-blue.png"},
+            {type: "pushpin-teal", name: "Teal ", symbol: "castshadow-teal.png"},
+            {type: "pushpin-orange", name: "Orange ", symbol: "castshadow-orange.png"},
+            {type: "pushpin-purple", name: "Purple ", symbol: "castshadow-purple.png"},
+            {type: "pushpin-brown", name: "Brown ", symbol: "castshadow-brown.png"},
+            {type: "pushpin-white", name: "White ", symbol: "castshadow-white.png"}
         ];
 
         /**
-         * Finds the ICS marker template for the given type.
-         * @param {String} type An IcsMarker.templates[] type.
-         * @returns {IcsMarker.templates[] item} The matching template object.
+         * Finds the Pushpin template for the given color.
+         * @param {String} type An Pushpin.templates[] type.
+         * @returns {Pushpin.templates[] item} The matching template object.
          */
-        IcsMarker.findTemplate = function (type) {
+        Pushpin.findTemplate = function (type) {
             var i, max;
-            for (i = 0, max = IcsMarker.templates.length; i < max; i++) {
-                if (type === IcsMarker.templates[i].type) {
-                    return IcsMarker.templates[i];
+            for (i = 0, max = Pushpin.templates.length; i < max; i++) {
+                if (type === Pushpin.templates[i].type) {
+                    return Pushpin.templates[i];
                 }
             }
             // Not found!
-            throw new Error(log.error('IcsMarker', 'findTemplate', 'Invalid symbol type: ' + type));
+            throw new Error(log.error('Pushpin', 'findTemplate', 'Invalid pushpin type: ' + type));
         };
 
         /**
          * Updates this placemark's symbol and display name based on the type.
-         * @param {Object} type An IcsMarker.templates[] item.
+         * @param {Object} type An Pushpin.templates[] item.
          */
-        IcsMarker.prototype.updateMarker = function (template) {
-            this.attributes.imageSource = wmt.IMAGE_PATH + 'ics/' + template.symbol;
+        Pushpin.prototype.updatePushpin = function (template) {
+            this.attributes.imageSource = wmt.WORLD_WIND_PATH + 'images/pushpins/' + template.symbol;
             this.highlightAttributes.imageSource = this.attributes.imageSource;
             this.displayName = template.name;
         };
 
 
-        return IcsMarker;
+        return Pushpin;
     }
 );
 
