@@ -43,9 +43,9 @@ define([
          * @param {Number} latitude
          * @param {Number} longitude
          * @param {String} airTempF
-         * @returns {AirTemperatureText}
+         * @returns {AirTemperature}
          */
-        var AirTemperatureText = function (latitude, longitude, airTempF) {
+        var AirTemperature = function (latitude, longitude, airTempF) {
             WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), airTempF);
             
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
@@ -59,21 +59,21 @@ define([
             this.attributes.depthTest = false;
         };
         // Inherit Placemark parent methods
-        AirTemperatureText.prototype = Object.create(WorldWind.GeographicText.prototype);
+        AirTemperature.prototype = Object.create(WorldWind.GeographicText.prototype);
         
         /**
          * Creates a clone of this object.
-         * @returns {AirTemperatureText}
+         * @returns {AirTemperature}
          */
-        AirTemperatureText.prototype.clone = function () {
-            var clone = new AirTemperatureText(this.position.latitude, this.position.longitude, this.text);
+        AirTemperature.prototype.clone = function () {
+            var clone = new AirTemperature(this.position.latitude, this.position.longitude, this.text);
             clone.copy(this);
             clone.pickDelegate = this.pickDelegate ? this.pickDelegate : this;
             clone.attributes = new WorldWind.TextAttributes(this.attributes);
             return clone;
         };
         
-        return AirTemperatureText;
+        return AirTemperature;
     }
 );
 

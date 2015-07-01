@@ -34,7 +34,7 @@
  * 
  * @param {Wmt} wmt WMT constants.
  * @param {WorldWind} ww WorldWind dependency that doesn't redefine global.
- * @returns {RelativeHumidityText}
+ * @returns {RelativeHumidity}
  */
 define([
     'wmt/Wmt',
@@ -50,9 +50,9 @@ define([
          * @param {Number} latitude
          * @param {Number} longitude
          * @param {String} relHumidityPct
-         * @returns {RelativeHumidityText}
+         * @returns {RelativeHumidity}
          */
-        var RelativeHumidityText = function (latitude, longitude, relHumidityPct) {
+        var RelativeHumidity = function (latitude, longitude, relHumidityPct) {
             WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), relHumidityPct);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
@@ -68,15 +68,15 @@ define([
 
         };
         // Inherit Placemark parent methods
-        RelativeHumidityText.prototype = Object.create(WorldWind.GeographicText.prototype);
+        RelativeHumidity.prototype = Object.create(WorldWind.GeographicText.prototype);
 
 
         /**
          * Creates a clone of this object.
-         * @returns {RelativeHumidityText}
+         * @returns {RelativeHumidity}
          */
-        RelativeHumidityText.prototype.clone = function () {
-            var clone = new RelativeHumidityText(this.position.latitude, this.position.longitude, this.text);
+        RelativeHumidity.prototype.clone = function () {
+            var clone = new RelativeHumidity(this.position.latitude, this.position.longitude, this.text);
             clone.copy(this);
             clone.pickDelegate = this.pickDelegate ? this.pickDelegate : this;
             clone.attributes = new WorldWind.TextAttributes(this.attributes);
@@ -84,7 +84,7 @@ define([
         };
 
 
-        return RelativeHumidityText;
+        return RelativeHumidity;
     }
 );
 

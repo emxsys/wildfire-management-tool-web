@@ -37,44 +37,43 @@ define([
         wmt,
         ww) {
         "use strict";
-        
+
         /**
          * Creates a GeographicText component used to display the forecast time in a Weather Map Symbol.
          * @param {Number} latitude
          * @param {Number} longitude
          * @param {String} timeString
-         * @returns {ForecastTimeText}
+         * @returns {ForecastTime}
          */
-        var ForecastTimeText = function (latitude, longitude, timeString
-            ) {
+        var ForecastTime = function (latitude, longitude, timeString) {
             WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), timeString);
-            
+
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             this.alwaysOnTop = true;
-            this.attributes =  new WorldWind.TextAttributes(null);
+            this.attributes = new WorldWind.TextAttributes(null);
             this.attributes.scale = 1.0;
             this.attributes.offset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 0.5,     // Center
+                WorldWind.OFFSET_FRACTION, 0.5, // Center
                 WorldWind.OFFSET_FRACTION, 3.0);   // Below Place label
             this.attributes.color = WorldWind.Color.WHITE;
             this.attributes.depthTest = false;
         };
         // Inherit Placemark parent methods
-        ForecastTimeText.prototype = Object.create(WorldWind.GeographicText.prototype);
-        
+        ForecastTime.prototype = Object.create(WorldWind.GeographicText.prototype);
+
         /**
          * Creates a clone of this object.
-         * @returns {ForecastTimeText}
+         * @returns {ForecastTime}
          */
-        ForecastTimeText.prototype.clone = function () {
-            var clone = new ForecastTimeText(this.position.latitude, this.position.longitude, this.text);
+        ForecastTime.prototype.clone = function () {
+            var clone = new ForecastTime(this.position.latitude, this.position.longitude, this.text);
             clone.copy(this);
             clone.pickDelegate = this.pickDelegate ? this.pickDelegate : this;
             clone.attributes = new WorldWind.TextAttributes(this.attributes);
             return clone;
         };
-        
-        return ForecastTimeText;
+
+        return ForecastTime;
     }
 );
 
