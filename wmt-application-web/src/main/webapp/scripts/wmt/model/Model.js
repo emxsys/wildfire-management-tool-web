@@ -31,18 +31,25 @@
 /*global define, $, WorldWind */
 
 /**
- * @module Model
  * 
- * @param {Object} publisher - Mixin module providing publish/subscribe pattern.
- * @param {Object} Terrain
- * @param {Object} TerrainProvider
- * @param {Object} WorldWind
- * 
- * @author Bruce Schubert
+ * @param {FuelMoistureResource} FuelMoistureResource
+ * @param {Log} log
+ * @param {MarkerManager} MarkerManager
+ * @param {Publisher} publisher
+ * @param {SolarResource} SolarResource
+ * @param {SurfaceFuelResource} SurfaceFuelResource
+ * @param {Terrain} Terrain
+ * @param {Viewpoint} Viewpoint
+ * @param {WeatherScoutManager} WeatherScoutManager
+ * @param {WmtUtil} util
+ * @param {Wmt} wmt
+ * @param {WorldWind} ww
+ * @returns {Model_L50.Model}
  */
 define([
     'wmt/resource/FuelMoistureResource',
     'wmt/util/Log',
+    'wmt/model/FireLookoutManager',
     'wmt/model/MarkerManager',
     'wmt/util/Publisher',
     'wmt/resource/SolarResource',
@@ -56,6 +63,7 @@ define([
     function (
         FuelMoistureResource,
         log,
+        FireLookoutManager,
         MarkerManager,
         publisher,
         SolarResource,
@@ -80,6 +88,7 @@ define([
             this.globe = globe;
             this.markerManager = new MarkerManager(this);
             this.weatherScoutManager = new WeatherScoutManager(this);
+            this.fireLookoutManager = new FireLookoutManager(this);
 
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
@@ -208,7 +217,6 @@ define([
         };
 
 
-
         /**
          * Callback function that receives sunlight data from a REST resource.
          * 
@@ -251,7 +259,6 @@ define([
 
             }
         };
-
 
         /**
          * Callback function that receives surface fuel data from a REST resource.
