@@ -153,9 +153,9 @@ define([
             },
             /**
              * Starts a drag-n-drop operation that creates the given marker on the globe at the drop point.
-             * @param {Object} markerTemplate A marker template containing name:String and type:String properties.
+             * @param {Object} marker A marker node.
              */
-            dropMarkerOnGlobe: function (markerTemplate) {
+            dropMarkerOnGlobe: function (marker) {
                 var self = this,
                     onDropCallback;
 
@@ -163,18 +163,12 @@ define([
                     this.markerDnDCount++;
                     messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
                 }
-                // This callback function is invoked when the DnD drop is completed.
-                // The DnD controller will add/update the marker lat/lon properties
-                // at the drop point prior to invoking this function.
-                onDropCallback = function (markerTemplate) {
-                    self.model.markerManager.addMarker(
-                        markerTemplate.name,
-                        markerTemplate.type,
-                        markerTemplate.latitude,
-                        markerTemplate.longitude);
+                // This callback function is invoked when the DnD drop is completed. DnD updates the marker's lat/lon
+                onDropCallback = function (marker) {
+                    self.model.markerManager.addMarker(marker);
                 };
-                // Start the DnD for the marker
-                this.globe.dndController.armDrop(markerTemplate, onDropCallback);
+                // Start the DnD for the marker with the callback
+                this.globe.dndController.armDrop(marker, onDropCallback);
             },
             /**
              * Creates a weather scout on the globe at the user's drop point.
@@ -254,6 +248,7 @@ define([
             restoreSession: function () {
                 this.model.markerManager.restoreMarkers();
                 this.model.weatherScoutManager.restoreScouts();
+                this.model.fireLookoutManager.restoreLookouts();
                 this.restoreSessionView();
             },
             restoreSessionView: function () {
@@ -263,6 +258,7 @@ define([
                 this.saveSessionView();
                 this.model.markerManager.saveMarkers();
                 this.model.weatherScoutManager.saveScouts();
+                this.model.fireLookoutManager.saveLookouts();
             },
             saveSessionView: function () {
                 Settings.saveSessionSettings(this);
