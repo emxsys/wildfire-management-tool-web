@@ -37,8 +37,8 @@ define([
     'worldwind'],
     function (
         EnhancedPlacemark,
-        WmtUtil,
-        Wmt,
+        util,
+        wmt,
         ww) {
         "use strict";
 
@@ -53,7 +53,7 @@ define([
          */
         var WindBarbPlacemark = function (latitude, longitude, windSpdKts, windDirDeg, eyeDistanceScaling) {
 
-            EnhancedPlacemark.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
+            EnhancedPlacemark.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
@@ -119,8 +119,8 @@ define([
                 return;                
             }
             // Set the image -- which fires the onload event
-            imgName = 'wind_spd-' + WmtUtil.pad(knots, 2) + 'kts.svg';
-            img.src = Wmt.IMAGE_PATH + 'weather/' + imgName;
+            imgName = 'wind_spd-' + util.pad(knots, 2) + 'kts.svg';
+            img.src = wmt.IMAGE_PATH + 'weather/' + imgName;
 
             this.enabled = true;
         };

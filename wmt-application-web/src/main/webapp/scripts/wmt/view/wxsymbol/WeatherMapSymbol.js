@@ -45,12 +45,12 @@
  * @author Bruce Schubert
  */
 define([
-    'wmt/view/AirTemperatureText',
+    'wmt/view/wxsymbol/AirTemperatureText',
     'wmt/controller/Controller',
-    'wmt/view/ForecastTimeText',
-    'wmt/view/RelativeHumidityText',
-    'wmt/view/SkyCoverPlacemark',
-    'wmt/view/WindBarbPlacemark',
+    'wmt/view/wxsymbol/ForecastTimeText',
+    'wmt/view/wxsymbol/RelativeHumidityText',
+    'wmt/view/wxsymbol/SkyCoverPlacemark',
+    'wmt/view/wxsymbol/WindBarbPlacemark',
     'wmt/Wmt',
     'worldwind'],
     function (

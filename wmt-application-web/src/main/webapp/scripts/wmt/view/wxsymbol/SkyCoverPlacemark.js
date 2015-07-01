@@ -34,12 +34,12 @@ define([
     'wmt/Wmt',
     'worldwind'],
     function (
-        Wmt,
+        wmt,
         ww) {
         "use strict";
 
         var SkyCoverPlacemark = function (latitude, longitude, skyCoverPct, eyeDistanceScaling) {
-            WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
+            WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
@@ -100,7 +100,7 @@ define([
                 imgName = 'sky_cover-obscurred.svg';
             }
             // Fire the onload event
-            img.src = Wmt.IMAGE_PATH + 'weather/' + imgName;
+            img.src = wmt.IMAGE_PATH + 'weather/' + imgName;
         };
 
         return SkyCoverPlacemark;

@@ -30,50 +30,61 @@
 
 /*global define, WorldWind*/
 
+/**
+ * 
+ * @param {Wmt} wmt WMT constants.
+ * @param {WorldWind} ww WorldWind dependency that doesn't redefine global.
+ * @returns {RelativeHumidityText}
+ */
 define([
     'wmt/Wmt',
     'worldwind'],
     function (
-        Wmt,
+        wmt,
         ww) {
         "use strict";
-        
+
         /**
-         * Creates a GeographicText component used to display the air temperature in a Weather Map Symbol.
+         * Creates a GeographicText component for displaying relative humidity in a WeatherMapSymbol.
+         * @constructor
          * @param {Number} latitude
          * @param {Number} longitude
-         * @param {String} airTempF
-         * @returns {AirTemperatureText}
+         * @param {String} relHumidityPct
+         * @returns {RelativeHumidityText}
          */
-        var AirTemperatureText = function (latitude, longitude, airTempF) {
-            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), airTempF);
-            
+        var RelativeHumidityText = function (latitude, longitude, relHumidityPct) {
+            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), relHumidityPct);
+
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             this.alwaysOnTop = true;
-            this.attributes =  new WorldWind.TextAttributes(null);
+            this.attributes = new WorldWind.TextAttributes(null);
             this.attributes.scale = 1.0;
             this.attributes.offset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 1.3,     // Left
-                WorldWind.OFFSET_FRACTION, -0.3);   // Upper
-            this.attributes.color = WorldWind.Color.YELLOW;
+                WorldWind.OFFSET_FRACTION, 1.3, // Left
+                WorldWind.OFFSET_FRACTION, 1.3);    // Lower
+            this.attributes.color = WorldWind.Color.CYAN;
             this.attributes.depthTest = false;
+            //this.declutterGroup = 3; // same as airtemp
+
         };
         // Inherit Placemark parent methods
-        AirTemperatureText.prototype = Object.create(WorldWind.GeographicText.prototype);
-        
+        RelativeHumidityText.prototype = Object.create(WorldWind.GeographicText.prototype);
+
+
         /**
          * Creates a clone of this object.
-         * @returns {AirTemperatureText}
+         * @returns {RelativeHumidityText}
          */
-        AirTemperatureText.prototype.clone = function () {
-            var clone = new AirTemperatureText(this.position.latitude, this.position.longitude, this.text);
+        RelativeHumidityText.prototype.clone = function () {
+            var clone = new RelativeHumidityText(this.position.latitude, this.position.longitude, this.text);
             clone.copy(this);
             clone.pickDelegate = this.pickDelegate ? this.pickDelegate : this;
             clone.attributes = new WorldWind.TextAttributes(this.attributes);
             return clone;
         };
-        
-        return AirTemperatureText;
+
+
+        return RelativeHumidityText;
     }
 );
 
