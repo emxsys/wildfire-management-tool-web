@@ -30,6 +30,23 @@
 
 /*global define, $, WorldWind*/
 
+/**
+ * 
+ * @param {type} CoordinatesView
+ * @param {type} FuelModelManager
+ * @param {type} LocationManager
+ * @param {type} log
+ * @param {type} messenger
+ * @param {type} Model
+ * @param {type} ReticuleView
+ * @param {type} Settings
+ * @param {type} SolarView
+ * @param {type} TimeManager
+ * @param {type} WeatherManager
+ * @param {type} Wmt
+ * @param {type} ww
+ * @returns {Controller_L50.Controller}
+ */
 define([
     'wmt/view/CoordinatesView',
     'wmt/controller/FuelModelManager',
@@ -118,6 +135,21 @@ define([
                     self.handleTouchEvent(event);
                 });
 
+            },
+            /**
+             * Creates a fire lookout on the globe at the user's drop point.
+             * @param {FireLookout} fireLookout A fire lookout containing name and rules[] properties.
+             */
+            dropFireLookoutOnGlobe: function (fireLookout) {
+                var self = this,
+                    onDropCallback = function (fireLookout) {
+                        // This callback function is invoked when the DnD drop is completed.
+                        // The DnD controller will add/update the scout object lat/lon properties
+                        // at the drop point prior to invoking this function.
+                        self.model.fireLookoutManager.addLookout(fireLookout);
+                    };
+                // Start the DnD for the lookout
+                this.globe.dndController.armDrop(fireLookout, onDropCallback);
             },
             /**
              * Starts a drag-n-drop operation that creates the given marker on the globe at the drop point.

@@ -166,5 +166,6 @@
         <module>wmt-time</module>
         <module>wmt-jfree</module>
         <module>wmt-weather-nws</module>
+        <module>wmt-weather-mesowest</module>
     </modules>
 </project>

@@ -34,47 +34,46 @@ define([
     'wmt/Wmt',
     'worldwind'],
     function (
-        Wmt,
+        wmt,
         ww) {
         "use strict";
         
         /**
-         * Creates a GeographicText component used to display the forecast time in a Weather Map Symbol.
+         * Creates a GeographicText component used to display the air temperature in a Weather Map Symbol.
          * @param {Number} latitude
          * @param {Number} longitude
-         * @param {String} timeString
-         * @returns {ForecastTimeText}
+         * @param {String} airTempF
+         * @returns {AirTemperatureText}
          */
-        var ForecastTimeText = function (latitude, longitude, timeString
-            ) {
-            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, Wmt.WEATHER_MAP_SYMBOL_ALTITUDE), timeString);
+        var AirTemperatureText = function (latitude, longitude, airTempF) {
+            WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.WEATHER_MAP_SYMBOL_ALTITUDE), airTempF);
             
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
             this.alwaysOnTop = true;
             this.attributes =  new WorldWind.TextAttributes(null);
             this.attributes.scale = 1.0;
             this.attributes.offset = new WorldWind.Offset(
-                WorldWind.OFFSET_FRACTION, 0.5,     // Center
-                WorldWind.OFFSET_FRACTION, 3.0);   // Below Place label
-            this.attributes.color = WorldWind.Color.WHITE;
+                WorldWind.OFFSET_FRACTION, 1.3,     // Left
+                WorldWind.OFFSET_FRACTION, -0.3);   // Upper
+            this.attributes.color = WorldWind.Color.YELLOW;
             this.attributes.depthTest = false;
         };
         // Inherit Placemark parent methods
-        ForecastTimeText.prototype = Object.create(WorldWind.GeographicText.prototype);
+        AirTemperatureText.prototype = Object.create(WorldWind.GeographicText.prototype);
         
         /**
          * Creates a clone of this object.
-         * @returns {ForecastTimeText}
+         * @returns {AirTemperatureText}
          */
-        ForecastTimeText.prototype.clone = function () {
-            var clone = new ForecastTimeText(this.position.latitude, this.position.longitude, this.text);
+        AirTemperatureText.prototype.clone = function () {
+            var clone = new AirTemperatureText(this.position.latitude, this.position.longitude, this.text);
             clone.copy(this);
             clone.pickDelegate = this.pickDelegate ? this.pickDelegate : this;
             clone.attributes = new WorldWind.TextAttributes(this.attributes);
             return clone;
         };
         
-        return ForecastTimeText;
+        return AirTemperatureText;
     }
 );
 

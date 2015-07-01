@@ -48,7 +48,7 @@ define([
     'wmt/controller/Controller',
     'wmt/util/Log',
     'wmt/util/Messenger',
-    'wmt/view/WeatherMapSymbol',
+    'wmt/view/wxsymbol/WeatherMapSymbol',
     'wmt/model/WeatherScout',
     'wmt/Wmt',
     'worldwind'],

@@ -262,4 +262,64 @@ public class WeatherResourceTest extends JerseyTest {
         System.out.println(">>>> " + XmlUtil.format(response.getEntity(String.class)));
     }
 
+    @Test
+    public void testGetAreaObservationsTEXT() {
+        System.out.println(
+            "========================"
+            + "TESTING: GetAreaObservationsTEXT"
+            + "========================");
+        ClientResponse response = super.webResource.path("weather/areaobservations")
+            .queryParam("minLatitude", Double.toString(34.0))
+            .queryParam("minLongitude", Double.toString(-120.0))
+            .queryParam("maxLatitude", Double.toString(35.0))
+            .queryParam("maxLongitude", Double.toString(-118.0))
+            .queryParam("duration", Integer.toString(24))
+            .accept(MediaType.TEXT_PLAIN)
+            .get(ClientResponse.class);
+        assertTrue(response.toString(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.TEXT_PLAIN + " but found: " + response.getType(),
+            response.getType().equals(MediaType.TEXT_PLAIN_TYPE));
+        System.out.println(">>>> " + response.getEntity(String.class));
+    }
+
+    @Test
+    public void testGetAreaObservationsJSON() {
+        System.out.println(
+            "========================"
+            + "TESTING: GetAreaObservationsJSON"
+            + "========================");
+        ClientResponse response = super.webResource.path("weather/areaobservations")
+            .queryParam("minLatitude", Double.toString(34.0))
+            .queryParam("minLongitude", Double.toString(-120.0))
+            .queryParam("maxLatitude", Double.toString(35.0))
+            .queryParam("maxLongitude", Double.toString(-118.0))
+            .queryParam("duration", Integer.toString(24))
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
+        assertTrue(response.toString(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+        System.out.println(">>>> " + JsonUtil.format(response.getEntity(String.class)));
+    }
+
+    @Test
+    public void testGetAreaObservationsXML() {
+        System.out.println(
+            "========================"
+                + "TESTING: GetAreaObservationsXML"
+                + "========================");
+        ClientResponse response = super.webResource.path("weather/areaobservations")
+            .queryParam("minLatitude", Double.toString(34.0))
+            .queryParam("minLongitude", Double.toString(-120.0))
+            .queryParam("maxLatitude", Double.toString(35.0))
+            .queryParam("maxLongitude", Double.toString(-118.0))
+            .queryParam("duration", Integer.toString(24))
+            .accept(MediaType.APPLICATION_XML)
+            .get(ClientResponse.class);
+        assertTrue(response.toString(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.APPLICATION_XML + " but found: " + response.getType(),
+            response.getType().equals(MediaType.APPLICATION_XML_TYPE));
+        System.out.println(">>>> " + XmlUtil.format(response.getEntity(String.class)));
+    }
+
 }

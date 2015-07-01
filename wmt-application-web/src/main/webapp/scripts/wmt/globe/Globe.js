@@ -31,17 +31,26 @@
 /*global define, $, WorldWind */
 
 /**
+ * The Globe module manages the WorldWindow object and add capabilities to the globe not found in the 
+ * Web World Wind library.
  * 
- * @param {type} DnDController
- * @param {type} EnhancedLookAtNavigator
- * @param {type} EnhancedTextSupport
- * @param {type} EnhancedViewControlsLayer
- * @param {type} ReticuleLayer
- * @param {type} SelectController
- * @param {type} SkyBackgroundLayer
- * @param {type} Wmt
- * @param {WorldWind} ww Ensure dependency on WorldWind is satisfied, but doesn't redefine the global.
+ * @param {DnDController} DnDController Drag-N-Drop controller.
+ * @param {EnhancedLookAtNavigator} EnhancedLookAtNavigator Doesn't allow the eye pos to go below the terrain.
+ * @param {EnhancedTextSupport} EnhancedTextSupport Provides outline text.
+ * @param {EnhancedViewControlsLayer} EnhancedViewControlsLayer Provides a vertical layout.
+ * @param {KeyboardControls} KeyboardControls Provides keyboard navigation for the globe.
+ * @param {Log} log Logger.
+ * @param {ReticuleLayer} ReticuleLayer Crosshairs.
+ * @param {SelectController} SelectController Provides select and move of globe renderables.
+ * @param {SkyBackgroundLayer} SkyBackgroundLayer Adaptive sky color.
+ * @param {Terrain} Terrain Aspect, slope and elevation.
+ * @param {TerrainProvider} TerrainProvider Provides terrain data.
+ * @param {Viewpoint} Viewpoint Eye position and target terrain.
+ * @param {Wmt} wmt Constants.
+ * @param {WorldWind} ww
  * @returns {Globe}
+ * 
+ * @author Bruce Schubert
  */
 define([
     'wmt/globe/DnDController',
@@ -64,14 +73,14 @@ define([
         EnhancedTextSupport,
         EnhancedViewControlsLayer,
         KeyboardControls,
-        Log,
+        log,
         ReticuleLayer,
         SelectController,
         SkyBackgroundLayer,
         Terrain,
         TerrainProvider,
         Viewpoint,
-        Wmt,
+        wmt,
         ww) {
         "use strict";
         /**
@@ -98,11 +107,6 @@ define([
             // Create the World Window
             this.wwd = new WorldWind.WorldWindow(canvasName);
 
-            var self = this;
-            this.wwd.addEventListener("click", function (event) {
-                self.setFocus();
-            });
-
             // Override the default TextSupport with our custom verion that draws outline text
             this.wwd.drawContext.textSupport = new EnhancedTextSupport();
 
@@ -125,20 +129,22 @@ define([
                 showBackground = options ? options.showBackground : true,
                 showReticule = options ? options.showReticule : true,
                 showViewControls = options ? options.showViewControls : true,
-                includePanControls = options ? options.includePanControls : Wmt.configuration.showPanControl,
+                includePanControls = options ? options.includePanControls : wmt.configuration.showPanControl,
                 includeRotateControls = options ? options.includeRotateControls : true,
                 includeTiltControls = options ? options.includeTiltControls : true,
                 includeZoomControls = options ? options.includeZoomControls : true,
-                includeExaggerationControls = options ? options.includeExaggerationControls : Wmt.configuration.showExaggerationControl,
-                includeFieldOfViewControls = options ? options.includeFieldOfViewControls : Wmt.configuration.showFiewOfViewControl,
+                includeExaggerationControls = options ? options.includeExaggerationControls : wmt.configuration.showExaggerationControl,
+                includeFieldOfViewControls = options ? options.includeFieldOfViewControls : wmt.configuration.showFiewOfViewControl,
                 defaultLayers = [
                     {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
-                    {layer: new WorldWind.RenderableLayer(Wmt.MARKERS_LAYER_NAME), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(Wmt.WEATHER_LAYER_NAME), enabled: true}
+                    {layer: new WorldWind.RenderableLayer(wmt.FIRE_PERIMETERS_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.WEATHER_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.MARKERS_LAYER_NAME), enabled: true}
                 ],
                 layer,
                 i, max;
@@ -177,12 +183,12 @@ define([
             // Add optional view controls layer
             if (showViewControls || showViewControls === undefined) {
                 layer = new EnhancedViewControlsLayer(this.wwd);
-                layer.showPanControl = (includePanControls === undefined) ? Wmt.configuration.showPanControl : includePanControls;
+                layer.showPanControl = (includePanControls === undefined) ? wmt.configuration.showPanControl : includePanControls;
                 layer.showHeadingControl = (includeRotateControls === undefined) ? true : includeRotateControls;
                 layer.showTiltControl = (includeTiltControls === undefined) ? true : includeTiltControls;
                 layer.showZoomControl = (includeZoomControls === undefined) ? true : includeZoomControls;
-                layer.showExaggerationControl = (includeExaggerationControls === undefined) ? Wmt.configuration.showExaggerationControl : includeExaggerationControls;
-                layer.showFieldOfViewControl = (includeFieldOfViewControls === undefined) ? Wmt.configuration.showFieldOfViewControl : includeFieldOfViewControls;
+                layer.showExaggerationControl = (includeExaggerationControls === undefined) ? wmt.configuration.showExaggerationControl : includeExaggerationControls;
+                layer.showFieldOfViewControl = (includeFieldOfViewControls === undefined) ? wmt.configuration.showFieldOfViewControl : includeFieldOfViewControls;
 
                 layer.hide = true; // hidden in layer list
                 this.wwd.addLayer(layer);
@@ -192,6 +198,9 @@ define([
             window.onresize = function () {
                 self.wwd.redraw();
             };
+            this.wwd.addEventListener("click", function (event) {
+                self.setFocus();
+            });
 
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
@@ -273,7 +282,7 @@ define([
                 return viewpoint;
                 
             } catch (e) {
-                Log.error("Globe", "getViewpoint", e.toString());
+                log.error("Globe", "getViewpoint", e.toString());
                 return Viewpoint.INVALID;
             }
         };
@@ -287,7 +296,7 @@ define([
          */
         Globe.prototype.goto = function (latitude, longitude, range, callback) {
             if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-                Log.error("Globe", "gotoLatLon", "Invalid Latitude and/or Longitude.");
+                log.error("Globe", "gotoLatLon", "Invalid Latitude and/or Longitude.");
                 return;
             }
             var self = this;
@@ -312,7 +321,7 @@ define([
          */
         Globe.prototype.lookAt = function (latitude, longitude, range) {
             if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-                Log.error("Globe", "lookAt", "Invalid Latitude and/or Longitude.");
+                log.error("Globe", "lookAt", "Invalid Latitude and/or Longitude.");
                 return;
             }
             this.wwd.navigator.lookAtLocation.latitude = latitude;
@@ -335,12 +344,12 @@ define([
          * Resets the viewpoint to the startup configuration settings.
          */
         Globe.prototype.reset = function () {
-            this.wwd.navigator.lookAtLocation.latitude = Number(Wmt.configuration.startupLatitude);
-            this.wwd.navigator.lookAtLocation.longitude = Number(Wmt.configuration.startupLongitude);
-            this.wwd.navigator.range = Number(Wmt.configuration.startupAltitude);
-            this.wwd.navigator.heading = Number(Wmt.configuration.startupHeading);
-            this.wwd.navigator.tilt = Number(Wmt.configuration.startupTilt);
-            this.wwd.navigator.roll = Number(Wmt.configuration.startupRoll);
+            this.wwd.navigator.lookAtLocation.latitude = Number(wmt.configuration.startupLatitude);
+            this.wwd.navigator.lookAtLocation.longitude = Number(wmt.configuration.startupLongitude);
+            this.wwd.navigator.range = Number(wmt.configuration.startupAltitude);
+            this.wwd.navigator.heading = Number(wmt.configuration.startupHeading);
+            this.wwd.navigator.tilt = Number(wmt.configuration.startupTilt);
+            this.wwd.navigator.roll = Number(wmt.configuration.startupRoll);
             this.wwd.redraw();
         };
 
@@ -380,7 +389,7 @@ define([
          * @param {String} projectionName A PROJECTION_NAME_* constant.
          */
         Globe.prototype.setProjection = function (projectionName) {
-            if (projectionName === Wmt.PROJECTION_NAME_3D) {
+            if (projectionName === wmt.PROJECTION_NAME_3D) {
                 if (!this.roundGlobe) {
                     this.roundGlobe = new WorldWind.Globe(new WorldWind.EarthElevationModel());
                 }
@@ -393,17 +402,17 @@ define([
                     this.flatGlobe = new WorldWind.Globe2D();
                 }
 
-                if (projectionName === Wmt.PROJECTION_NAME_EQ_RECT) {
+                if (projectionName === wmt.PROJECTION_NAME_EQ_RECT) {
                     this.flatGlobe.projection = new WorldWind.ProjectionEquirectangular();
-                } else if (projectionName === Wmt.PROJECTION_NAME_MERCATOR) {
+                } else if (projectionName === wmt.PROJECTION_NAME_MERCATOR) {
                     this.flatGlobe.projection = new WorldWind.ProjectionMercator();
-                } else if (projectionName === Wmt.PROJECTION_NAME_NORTH_POLAR) {
+                } else if (projectionName === wmt.PROJECTION_NAME_NORTH_POLAR) {
                     this.flatGlobe.projection = new WorldWind.ProjectionPolarEquidistant("North");
-                } else if (projectionName === Wmt.PROJECTION_NAME_SOUTH_POLAR) {
+                } else if (projectionName === wmt.PROJECTION_NAME_SOUTH_POLAR) {
                     this.flatGlobe.projection = new WorldWind.ProjectionPolarEquidistant("South");
-                } else if (projectionName === Wmt.PROJECTION_NAME_NORTH_UPS) {
+                } else if (projectionName === wmt.PROJECTION_NAME_NORTH_UPS) {
                     this.flatGlobe.projection = new WorldWind.ProjectionUPS("North");
-                } else if (projectionName === Wmt.PROJECTION_NAME_SOUTH_UPS) {
+                } else if (projectionName === wmt.PROJECTION_NAME_SOUTH_UPS) {
                     this.flatGlobe.projection = new WorldWind.ProjectionUPS("South");
                 }
 
