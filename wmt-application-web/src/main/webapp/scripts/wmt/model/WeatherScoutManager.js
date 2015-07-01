@@ -117,14 +117,14 @@ define([
                 }),
                 string = JSON.stringify(validScouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
 
-            localStorage.setItem(wmt.WEATHER_SCOUTS_STORAGE_KEY, string);
+            localStorage.setItem(wmt.STORAGE_KEY_WEATHER_SCOUTS, string);
         };
 
         /**
          * Restores the weather scouts collection from local storage.
          */
         WeatherScoutManager.prototype.restoreScouts = function () {
-            var string = localStorage.getItem(wmt.WEATHER_SCOUTS_STORAGE_KEY),
+            var string = localStorage.getItem(wmt.STORAGE_KEY_WEATHER_SCOUTS),
                 array,
                 i, max;
             if (!string || string === 'null') {

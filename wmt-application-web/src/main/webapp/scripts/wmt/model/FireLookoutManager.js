@@ -31,12 +31,14 @@
 /*global define*/
 
 define([
-    'wmt/util/Publisher',
     'wmt/model/FireLookout',
+    'wmt/util/Log',
+    'wmt/util/Publisher',
     'wmt/Wmt'],
     function (
-        publisher,
         FireLookout,
+        log,
+        publisher,
         wmt) {
         "use strict";
         var FireLookoutManager = function (model) {
@@ -117,15 +119,16 @@ define([
                 }),
                 string = JSON.stringify(validLookouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
 
-            localStorage.setItem(wmt.FIRE_LOOKOUTS_STORAGE_KEY, string);
+            localStorage.setItem(wmt.STORAGE_KEY_FIRE_LOOKOUTS, string);
         };
 
         /**
          * Restores the fire lookouts collection from local storage.
          */
         FireLookoutManager.prototype.restoreLookouts = function () {
-            var string = localStorage.getItem(wmt.FIRE_LOOKOUTS_STORAGE_KEY),
+            var string = localStorage.getItem(wmt.STORAGE_KEY_FIRE_LOOKOUTS),
                 array,
+                item,
                 i, max;
             if (!string || string === 'null') {
                 return;
@@ -133,13 +136,16 @@ define([
             // Convert JSON array to array of FireLookout objects
             array = JSON.parse(string);
             for (i = 0, max = array.length; i < max; i++) {
-                this.addLookout(new FireLookout(
-                    array[i].name,
-                    array[i].duration,
-                    array[i].rules,
-                    array[i].latitude,
-                    array[i].longitude,
-                    array[i].id));
+                item = array[i];
+                if (isNaN(item.latitude) || isNaN(item.longitude)) {
+                    log.error("FireLookoutManager", "restoreLookouts", "Invalid lat/lon. Ignored.");
+                } else {
+                    this.addLookout(new FireLookout(
+                        array[i].name,
+                        array[i].latitude,
+                        array[i].longitude,
+                        array[i].id));
+                }
             }
         };
 

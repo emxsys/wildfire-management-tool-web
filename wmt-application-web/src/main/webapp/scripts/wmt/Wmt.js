@@ -109,10 +109,6 @@ define([],
              */
             FIRE_BEHAVIOR_LAYER_NAME: "Fire Lookouts",
             /**
-             * The local storage key for weather lookouts.
-             */
-            FIRE_LOOKOUTS_STORAGE_KEY: "firelookouts",
-            /**
              * The display name for the layer that displays fire perimeters and related data.
              */
             FIRE_PERIMETERS_LAYER_NAME: "Fire Perimeters",
@@ -139,10 +135,6 @@ define([],
             
             MARKERS_LAYER_NAME: "Markers",
             /**
-             * The local storage key for markers.
-             */
-            MARKERS_STORAGE_KEY: "markers",
-            /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
              */
@@ -156,6 +148,19 @@ define([],
             PROJECTION_NAME_NORTH_UPS: "North UPS",
             PROJECTION_NAME_SOUTH_UPS: "South UPS",
             
+            /**
+             * The local storage key for fire lookouts.
+             */
+            STORAGE_KEY_FIRE_LOOKOUTS: "firelookouts",
+            /**
+             * The local storage key for markers.
+             */
+            STORAGE_KEY_MARKERS: "markers",
+            /**
+             * The local storage key for weather scouts.
+             */
+            STORAGE_KEY_WEATHER_SCOUTS: "wxscouts",
+
             /**
              * The URL for the sunlight REST service.
              */
@@ -176,10 +181,6 @@ define([],
              * The display name for the layer that displays weather stations and lookouts.
              */
             WEATHER_LAYER_NAME: "Weather",
-            /**
-             * The local storage key for weather lookouts.
-             */
-            WEATHER_LOOKOUTS_STORAGE_KEY: "wxscouts",
             /**
              * The URL for the weather REST service.
              */

@@ -88,7 +88,7 @@ define([
             }),
                 string = JSON.stringify(validMarkers);
 
-            localStorage.setItem(Wmt.MARKERS_STORAGE_KEY, string);
+            localStorage.setItem(Wmt.STORAGE_KEY_MARKERS, string);
         };
 
 
@@ -96,7 +96,7 @@ define([
          * Restores the markers list from local storage.
          */
         MarkerManager.prototype.restoreMarkers = function () {
-            var string = localStorage.getItem(Wmt.MARKERS_STORAGE_KEY),
+            var string = localStorage.getItem(Wmt.STORAGE_KEY_MARKERS),
                 i;
 
             if (!string || string === 'null') {
