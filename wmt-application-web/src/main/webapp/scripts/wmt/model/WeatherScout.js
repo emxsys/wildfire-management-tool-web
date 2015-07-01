@@ -223,6 +223,10 @@ define([
                 function (json) { // Callback to process YQL Geo.Places result
 
                     // Load all the places into a place object array
+                    if (!json.query.results) {
+                        log.error("WeatherScout","refreshPlace","json.query.results is null");
+                        return;
+                    }
                     for (i = 0, max = json.query.results.place.length; i < max; i++) {
                         item = json.query.results.place[i];
                         place[i] = {"name": item.name, "type": item.placeTypeName.content};
