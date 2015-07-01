@@ -84,17 +84,18 @@ define([
 
         // CAUTION: changing the type value may cause existing markers in local storage to be lost!
         // 
+        Pushpin.imagePath = wmt.WORLD_WIND_PATH + 'images/pushpins/';
         // Pushpin Types
         Pushpin.templates = [
-            {type: "pushpin-black", name: "Black ", symbol: "castshadow-black.png"},
-            {type: "pushpin-red", name: "Red ", symbol: "castshadow-red.png"},
-            {type: "pushpin-green", name: "Green ", symbol: "castshadow-green.png"},
-            {type: "pushpin-blue", name: "Blue ", symbol: "castshadow-blue.png"},
-            {type: "pushpin-teal", name: "Teal ", symbol: "castshadow-teal.png"},
-            {type: "pushpin-orange", name: "Orange ", symbol: "castshadow-orange.png"},
-            {type: "pushpin-purple", name: "Purple ", symbol: "castshadow-purple.png"},
-            {type: "pushpin-brown", name: "Brown ", symbol: "castshadow-brown.png"},
-            {type: "pushpin-white", name: "White ", symbol: "castshadow-white.png"}
+            {type: "pushpin-black", name: "Black ", symbol: Pushpin.imagePath + "castshadow-black.png"},
+            {type: "pushpin-red", name: "Red ", symbol: Pushpin.imagePath + "castshadow-red.png"},
+            {type: "pushpin-green", name: "Green ", symbol: Pushpin.imagePath + "castshadow-green.png"},
+            {type: "pushpin-blue", name: "Blue ", symbol: Pushpin.imagePath + "castshadow-blue.png"},
+            {type: "pushpin-teal", name: "Teal ", symbol: Pushpin.imagePath + "castshadow-teal.png"},
+            {type: "pushpin-orange", name: "Orange ", symbol: Pushpin.imagePath + "castshadow-orange.png"},
+            {type: "pushpin-purple", name: "Purple ", symbol: Pushpin.imagePath + "castshadow-purple.png"},
+            {type: "pushpin-brown", name: "Brown ", symbol: Pushpin.imagePath + "castshadow-brown.png"},
+            {type: "pushpin-white", name: "White ", symbol: Pushpin.imagePath + "castshadow-white.png"}
         ];
 
         /**
@@ -118,7 +119,7 @@ define([
          * @param {Object} type An Pushpin.templates[] item.
          */
         Pushpin.prototype.updatePushpin = function (template) {
-            this.attributes.imageSource = wmt.WORLD_WIND_PATH + 'images/pushpins/' + template.symbol;
+            this.attributes.imageSource = template.symbol;
             this.highlightAttributes.imageSource = this.attributes.imageSource;
             this.displayName = template.name;
         };

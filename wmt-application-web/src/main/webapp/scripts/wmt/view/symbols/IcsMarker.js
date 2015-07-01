@@ -82,35 +82,36 @@ define([
         // Inherit Placemark functions
         IcsMarker.prototype = Object.create(WorldWind.Placemark.prototype);
 
+        IcsMarker.imagePath = wmt.IMAGE_PATH + 'ics/';
         // CAUTION: changing the type value may cause existing markers in local storage to be lost!
         // 
         // ICS Marker Types
         IcsMarker.templates = [
-            {type: "ics-aerial-hazard", name: "Aerial Hazard ", symbol: "Aerial_Hazard24.png"},
-            {type: "ics-aerial-ignition", name: "Aerial Ignition ", symbol: "Aerial_Ignition24.png"},
-            {type: "ics-airport", name: "Airport ", symbol: "Airport_124.png"},
-            {type: "ics-archaeological-site", name: "Archaeological Site ", symbol: "Archaeological_Site_124.png"},
-            {type: "ics-branch-break", name: "Branch Break ", symbol: "Branch_Break24.png"},
-            {type: "ics-camp", name: "Camp ", symbol: "Camp24.png"},
-            {type: "ics-division-break", name: "Division Break ", symbol: "Division_Break24.png"},
-            {type: "ics-drop-point", name: "Drop Point ", symbol: "Drop_Point24.png"},
-            {type: "ics-fire-location", name: "Fire Location ", symbol: "Fire_Location24.png"},
-            {type: "ics-fire-origin", name: "Fire Origin ", symbol: "Fire_Origin24.png"},
-            {type: "ics-fire-station", name: "Fire Station ", symbol: "Fire_Station24.png"},
-            {type: "ics-first-aid", name: "First Aid ", symbol: "First_Aid_124.png"},
-            {type: "ics-heat-sorce", name: "Heat Source ", symbol: "Heat_Source24.png"},
-            {type: "ics-helibase", name: "Helibase ", symbol: "Helibase24.png"},
-            {type: "ics-helispot", name: "Helispot ", symbol: "Helispot24.png"},
-            {type: "ics-historical-site", name: "Historical Site ", symbol: "Historical_Site24.png"},
-            {type: "ics-incident-base", name: "Incident Base ", symbol: "Incident_Base24.png"},
-            {type: "ics-incident-command-post", name: "Incident Command Post ", symbol: "Incident_Command_Post24.png"},
-            {type: "ics-medi-vac", name: "MediVac Site ", symbol: "MediVac_Site24.png"},
-            {type: "ics-mobile-weather-unit", name: "Mobile Weather Unit ", symbol: "Mobile_Weather_Unit24.png"},
-            {type: "ics-repeater", name: "Repeater ", symbol: "Repeater24.png"},
-            {type: "ics-retardant-pickup", name: "Retardant Pickup ", symbol: "Retardant_Pickup24.png"},
-            {type: "ics-safety-zone", name: "Safety Zone ", symbol: "Safety_Zone_024.png"},
-            {type: "ics-staging-area", name: "Staging Area ", symbol: "Staging_Area24.png"},
-            {type: "ics-water-source", name: "Water Source ", symbol: "Water_Source24.png"}
+            {type: "ics-aerial-hazard", name: "Aerial Hazard ", symbol: IcsMarker.imagePath + "Aerial_Hazard24.png"},
+            {type: "ics-aerial-ignition", name: "Aerial Ignition ", symbol: IcsMarker.imagePath + "Aerial_Ignition24.png"},
+            {type: "ics-airport", name: "Airport ", symbol: IcsMarker.imagePath +  "Airport_124.png"},
+            {type: "ics-archaeological-site", name: "Archaeological Site ", symbol: IcsMarker.imagePath + "Archaeological_Site_124.png"},
+            {type: "ics-branch-break", name: "Branch Break ", symbol: IcsMarker.imagePath + "Branch_Break24.png"},
+            {type: "ics-camp", name: "Camp ", symbol: IcsMarker.imagePath + "Camp24.png"},
+            {type: "ics-division-break", name: "Division Break ", symbol: IcsMarker.imagePath + "Division_Break24.png"},
+            {type: "ics-drop-point", name: "Drop Point ", symbol: IcsMarker.imagePath + "Drop_Point24.png"},
+            {type: "ics-fire-location", name: "Fire Location ", symbol: IcsMarker.imagePath + "Fire_Location24.png"},
+            {type: "ics-fire-origin", name: "Fire Origin ", symbol: IcsMarker.imagePath + "Fire_Origin24.png"},
+            {type: "ics-fire-station", name: "Fire Station ", symbol: IcsMarker.imagePath + "Fire_Station24.png"},
+            {type: "ics-first-aid", name: "First Aid ", symbol: IcsMarker.imagePath + "First_Aid_124.png"},
+            {type: "ics-heat-sorce", name: "Heat Source ", symbol: IcsMarker.imagePath + "Heat_Source24.png"},
+            {type: "ics-helibase", name: "Helibase ", symbol: IcsMarker.imagePath + "Helibase24.png"},
+            {type: "ics-helispot", name: "Helispot ", symbol: IcsMarker.imagePath + "Helispot24.png"},
+            {type: "ics-historical-site", name: "Historical Site ", symbol: IcsMarker.imagePath + "Historical_Site24.png"},
+            {type: "ics-incident-base", name: "Incident Base ", symbol: IcsMarker.imagePath + "Incident_Base24.png"},
+            {type: "ics-incident-command-post", name: "Incident Command Post ", symbol: IcsMarker.imagePath + "Incident_Command_Post24.png"},
+            {type: "ics-medi-vac", name: "MediVac Site ", symbol: IcsMarker.imagePath + "MediVac_Site24.png"},
+            {type: "ics-mobile-weather-unit", name: "Mobile Weather Unit ", symbol: IcsMarker.imagePath + "Mobile_Weather_Unit24.png"},
+            {type: "ics-repeater", name: "Repeater ", symbol: IcsMarker.imagePath + "Repeater24.png"},
+            {type: "ics-retardant-pickup", name: "Retardant Pickup ", symbol: IcsMarker.imagePath + "Retardant_Pickup24.png"},
+            {type: "ics-safety-zone", name: "Safety Zone ", symbol: IcsMarker.imagePath + "Safety_Zone_024.png"},
+            {type: "ics-staging-area", name: "Staging Area ", symbol: IcsMarker.imagePath + "Staging_Area24.png"},
+            {type: "ics-water-source", name: "Water Source ", symbol: IcsMarker.imagePath + "Water_Source24.png"}
         ];
 
         /**
@@ -134,7 +135,7 @@ define([
          * @param {Object} type An IcsMarker.templates[] item.
          */
         IcsMarker.prototype.updateMarker = function (template) {
-            this.attributes.imageSource = wmt.IMAGE_PATH + 'ics/' + template.symbol;
+            this.attributes.imageSource = template.symbol;
             this.highlightAttributes.imageSource = this.attributes.imageSource;
             this.displayName = template.name;
         };

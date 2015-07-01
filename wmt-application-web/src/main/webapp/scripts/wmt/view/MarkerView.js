@@ -40,8 +40,8 @@ define([
     'wmt/view/symbols/IcsMarker',
     'wmt/util/Log',
     'wmt/menu/MarkerPalette',
-    'wmt/view/symbols/Pushpin',
     'wmt/util/Messenger',
+    'wmt/view/symbols/Pushpin',
     'wmt/Wmt',
     'worldwind'],
     function (
