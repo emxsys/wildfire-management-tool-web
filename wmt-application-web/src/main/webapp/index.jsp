@@ -721,6 +721,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <canvas id="canvasOne" tabindex='1' >
                             <h1>Your browser does not support HTML5 Canvas.</h1>
                         </canvas>
+                        <!--Prime UI Globe Context Menu--> 
+<!--                        <div>
+                            <ul id="globeContextMenu-popup" style="z-index: 2000;">
+                                <li><a data-icon="fa-edit">Open</a></li>
+                                <li><a data-icon="fa-minus">Delete</a></li>
+                                <li><a data-icon="fa-refresh">Refresh</a></li>
+                                <li><a data-icon="fa-gear">Configure</a></li>
+                            </ul>
+                        </div>-->
                         <!--DOM UI elements go here!-->                
                         <div class="container-full non-interactive" Style="position:absolute;top:5px">
                             <div class="row">
@@ -965,12 +974,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div> 
 
             </div>
+        </div>
+        <!--Load the and run WMTweb application-->
+        <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
 
-            <!--Load the and run WMTweb application-->
-            <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
-
-            <!--Google Analytics-->
-            <script>
+        <!--Google Analytics-->
+        <script>
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
@@ -985,6 +994,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             ga('create', 'UA-63788794-1', 'auto');
             ga('send', 'pageview');
-            </script>
+        </script>
+
     </body>
 </html>
