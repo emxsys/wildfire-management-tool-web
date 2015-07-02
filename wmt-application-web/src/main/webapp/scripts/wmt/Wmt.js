@@ -46,14 +46,15 @@ define([],
         var Wmt = {
             /**
              * The WMT version number.
-             * @default "0.0.0"
              * @constant
              */
-            VERSION: "0.0.0",
+            VERSION: "0.4.0",
+            
             BUTTON_TEXT_CANCEL: 'Cancel',
             BUTTON_TEXT_GOTO: 'Go To',
             BUTTON_TEXT_NO: 'No',
             BUTTON_TEXT_OK: 'OK',
+            BUTTON_TEXT_SAVE: 'Save',
             BUTTON_TEXT_YES: 'Yes',
             EVENT_FIRE_BEHAVIOR_CHANGED: "fireBehaviorChanged",
             EVENT_FIRE_LOOKOUT_ADDED: "fireLookoutAdded",

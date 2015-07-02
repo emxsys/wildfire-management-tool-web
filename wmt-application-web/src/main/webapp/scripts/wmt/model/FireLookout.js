@@ -31,40 +31,39 @@
 /*global define*/
 
 define([
-    'wmt/util/Openable',
+    'wmt/view/FireLookoutDialog',
     'wmt/util/Log',
     'wmt/util/Messenger',
-    'wmt/util/Movable',
-    'wmt/resource/PlaceResource',
-    'wmt/util/Removable',
-    'wmt/resource/WeatherResource',
     'wmt/model/WeatherScout',
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
-        openable,
+        dialog,
         log,
         messenger,
-        movable,
-        PlaceResource,
-        removable,
-        WeatherResource,
         WeatherScout,
         util,
         wmt) {
         "use strict";
 
         var FireLookout = function (name, latitude, longitude, id) {
-            
+
             // Inherit the weather forecasting capabilites of the WeatherScout
             WeatherScout.call(this, name, 24, null, latitude, longitude, id);
 
-             // Override the WeatherScout name set by the parent
+            // Override the WeatherScout name set by the parent
             this.name = name || 'Fire Lookout';
+
+            // Override the parent WeatherScout's Openable implementation
+            // with a FireLookoutDialog
+            var self = this;
+            this.openMe = function () {
+                dialog.show(self);
+            };
 
         };
         FireLookout.prototype = Object.create(WeatherScout.prototype);
-        
+
 
         /**
          * Updates the weather lookout's weather forecast and location. 
@@ -83,16 +82,16 @@ define([
             }
             var self = this;
 
-            // Get the weather forecast at this location
-            WeatherResource.pointForecast(
-                this.latitude,
-                this.longitude,
-                this.duration,
-                function (json) { // Callback to process JSON result
-                    self.processFireBehavior(json);
-                    self.fire(wmt.EVENT_WEATHER_CHANGED, self);
-                }
-            );
+//            // Get the weather forecast at this location
+//            WeatherResource.pointForecast(
+//                this.latitude,
+//                this.longitude,
+//                this.duration,
+//                function (json) { // Callback to process JSON result
+//                    self.processFireBehavior(json);
+//                    self.fire(wmt.EVENT_WEATHER_CHANGED, self);
+//                }
+//            );
         };
 
 

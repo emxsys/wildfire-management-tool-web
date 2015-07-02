@@ -55,7 +55,7 @@ define([
             // Create the weather map symbol components
             this.icsMarker = new IcsMarker(lookout.latitude, lookout.longitude, 'ics-fire-location');
 
-            // Add a reference to our wx model object to the principle renderables.
+            // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
             this.icsMarker.pickDelegate = lookout;
 
@@ -81,8 +81,8 @@ define([
 //                self.forecastTimeText.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
             };
             // Create an EVENT_FIRE_CHANGED handler that updates 
-            this.handleFireChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol","handleFireChangedEvent","Unhandled event.");
+            this.handleFireBehaviorChangedEvent = function (lookout) {
+                logger.warning("FireBehaviorSymbol","handleFireBehaviorChangedEvent","Unhandled event.");
             };
 
             // Create an EVENT_PLACE_CHANGED handler that updates the label
@@ -108,7 +108,7 @@ define([
             };
 
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
-            lookout.on(wmt.EVENT_FIRE_CHANGED, this.handleFireChangedEvent, this);
+            lookout.on(wmt.EVENT_FIRE_BEHAVIOR_CHANGED, this.handleFireBehaviorChangedEvent, this);
             lookout.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
             lookout.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             lookout.on(wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);

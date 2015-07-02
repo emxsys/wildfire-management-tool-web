@@ -32,12 +32,12 @@
 
 
 /**
- * The FireView module is responsible for rendering Fire Lookouts 
+ * The FireView module is responsible for rendering Fire Lookouts and Fire Incidents
  * on the globe and within lists in a panel.
  * 
- * @param {Controller} controller MVC.
- * @param {Log} log Error logger.
- * @param {FireLookout} FireLookout
+ * @param {Controller} controller MVC controller.
+ * @param {Log} logger Error logger.
+ * @param {FireLookout} FireLookout Fire behavior monitor.
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
  * @returns {FireView}
@@ -46,16 +46,18 @@
  */
 define([
     'wmt/controller/Controller',
+    'wmt/view/symbols/FireBehaviorSymbol',
+    'wmt/model/FireLookout',
     'wmt/util/Log',
     'wmt/util/Messenger',
-    'wmt/model/FireLookout',
     'wmt/Wmt',
     'worldwind'],
     function (
         controller,
-        log,
-        messenger,
+        FireBehaviorSymbol,
         FireLookout,
+        logger,
+        messenger,
         wmt,
         ww) {
         "use strict";
@@ -67,10 +69,10 @@ define([
                 this.manager.on(wmt.EVENT_FIRE_LOOKOUT_REMOVED, this.handleFireLookoutRemovedEvent, this);
 
                 // Get the RenderableLayer that we'll add the fires to.
-                this.fireLayer = controller.globe.findLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME);
-                if (!this.fireLayer) {
+                this.lookoutLayer = controller.globe.findLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME);
+                if (!this.lookoutLayer) {
                     throw new Error(
-                        log.error("FireView", "constructor",
+                        logger.error("FireView", "constructor",
                             "Could not find a Layer named " + wmt.FIRE_BEHAVIOR_LAYER_NAME));
                 }
 
@@ -100,7 +102,7 @@ define([
              * @param {FireLookout} lookout 
              */
             handleFireLookoutAddedEvent: function (lookout) {
-                if (!this.fireLayer) {
+                if (!this.lookoutLayer) {
                     return;
                 }
                 try {
@@ -110,7 +112,7 @@ define([
                     this.synchronizeFireList();
                 }
                 catch (e) {
-                    log.error("FireView", "handleFireAddedEvent", e.toString());
+                    logger.error("FireView", "handleFireAddedEvent", e.toString());
                 }
             },
             /**
@@ -120,22 +122,22 @@ define([
             handleFireLookoutRemovedEvent: function (lookout) {
                 var i, max, renderable;
 
-                if (!this.fireLayer) {
+                if (!this.lookoutLayer) {
                     // The model is initialized before this panel is initialized
                     return;
                 }
                 try {
-                    for (i = 0, max = this.fireLayer.renderables.length; i < max; i++) {
-                        renderable = this.fireLayer.renderables[i];
+                    for (i = 0, max = this.lookoutLayer.renderables.length; i < max; i++) {
+                        renderable = this.lookoutLayer.renderables[i];
                         if (renderable.lookout.id === lookout.id) {
-                            this.fireLayer.renderables.splice(i, 1);
+                            this.lookoutLayer.renderables.splice(i, 1);
                             break;
                         }
                     }
                     this.synchronizeFireList();
                 }
                 catch (e) {
-                    log.error("FireView", "handleFireRemovedEvent", e.toString());
+                    logger.error("FireView", "handleFireRemovedEvent", e.toString());
                 }
             },
             /**
@@ -144,7 +146,7 @@ define([
              */
             createRenderable: function (lookout) {
                 // Add the fire lookout symbol on the globe
-                this.fireLayer.addRenderable(new FireMapSymbol(lookout));
+                this.lookoutLayer.addRenderable(new FireBehaviorSymbol(lookout));
             },
             /**
              * Synchronize the fire list with the fire lookout model.
@@ -188,7 +190,7 @@ define([
                 var lookout = this.manager.findLookout(lookoutId);
 
                 if (!lookout) {
-                    messenger.notify(log.error("FireView", "onFireItemClick", "Could not find selected lookout with ID: " + lookoutId));
+                    messenger.notify(logger.error("FireView", "onFireItemClick", "Could not find selected lookout with ID: " + lookoutId));
                     return;
                 }
                 switch (action) {
@@ -202,7 +204,7 @@ define([
                         lookout.remove();
                         break;
                     default:
-                        log.error("FireView", "onFireItemClick", "Unhandled action: " + action);
+                        logger.error("FireView", "onFireItemClick", "Unhandled action: " + action);
                 }
             }
         };
