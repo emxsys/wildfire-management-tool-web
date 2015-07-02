@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenImage
- * @version $Id: ScreenImage.js 3206 2015-06-17 18:06:31Z tgaskins $
+ * @version $Id: ScreenImage.js 3293 2015-06-30 18:20:17Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -46,7 +46,7 @@ define([
          * @param {String|ImageSource} imageSource The source of the image to display.
          * May be either a string identifying the URL of the image, or an {@link ImageSource} object identifying a
          * dynamically created image.
-         * @throws {ArgumentError} If the specified screen point or image source is null or undefined.
+         * @throws {ArgumentError} If the specified screen offset or image source is null or undefined.
          */
         var ScreenImage = function (screenOffset, imageSource) {
             if (!screenOffset) {

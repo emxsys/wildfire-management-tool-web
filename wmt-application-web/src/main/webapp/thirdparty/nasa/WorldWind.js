@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WorldWind.js 3248 2015-06-24 19:49:10Z tgaskins $
+ * @version $Id: WorldWind.js 3291 2015-06-30 16:52:12Z tgaskins $
  */
 define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
         './error/AbstractError',
@@ -419,10 +419,22 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
             REDRAW_EVENT_TYPE: "WorldWindRedraw",
 
             /**
+             * Indicates that the related value is specified relative to the globe.
+             * @constant
+             */
+            RELATIVE_TO_GLOBE: "relativeToGlobe",
+
+            /**
              * Indicates an altitude mode relative to the terrain.
              * @constant
              */
             RELATIVE_TO_GROUND: "relativeToGround",
+
+            /**
+             * Indicates that the related value is specified relative to the plane of the screen.
+             * @constant
+             */
+            RELATIVE_TO_SCREEN: "relativeToScreen",
 
             /**
              * Indicates a rhumb path -- a path of constant bearing.

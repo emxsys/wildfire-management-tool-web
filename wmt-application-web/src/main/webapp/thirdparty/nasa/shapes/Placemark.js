@@ -4,7 +4,7 @@
  */
 /**
  * @exports Placemark
- * @version $Id: Placemark.js 3262 2015-06-25 16:50:39Z tgaskins $
+ * @version $Id: Placemark.js 3292 2015-06-30 17:09:42Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -175,7 +175,7 @@ define([
             /**
              * This shape's target visibility, a value between 0 and 1. During ordered rendering this shape modifies its
              * [current visibility]{@link Text#currentVisibility} towards its target visibility at the rate
-             * specified by the draw context's [fadeVelocity]{@link DrawContext#fadeVelocity} property. The target
+             * specified by the draw context's [fade time]{@link DrawContext#fadeTime} property. The target
              * visibility and current visibility are used to control the fading in and out of this shape.
              * @type {Number}
              * @default 1
@@ -185,7 +185,7 @@ define([
             /**
              * This shape's current visibility, a value between 0 and 1. This property scales the shape's effective
              * opacity. It is incremented or decremented each frame according to the draw context's
-             * [fade velocity]{@link DrawContext#fadeVelocity} property in order to achieve this shape's current
+             * [fade time]{@link DrawContext#fadeTime} property in order to achieve this shape's current
              * [target visibility]{@link Text#targetVisibility}. This current visibility and target visibility are
              * used to control the fading in and out of this shape.
              * @type {Number}
@@ -194,8 +194,45 @@ define([
              */
             this.currentVisibility = 1;
 
-            // Internal use only. Intentionally not documented.
-            this.enableBulkRendering = true;
+            /**
+             * The amount of rotation to apply to the image, measured in degrees clockwise and relative to this
+             * placemark's [imageRotationReference]{@link Placemark#imageRotationReference}.
+             * @type {Number}
+             * @default 0
+             */
+            this.imageRotation = 0;
+
+            /**
+             * The amount of tilt to apply to the image, measured in degrees away from the eye point and relative
+             * to this placemark's [imageTiltReference]{@link Placemark#imageTiltReference}. While any positive or
+             * negative number may be specified, values outside the range [0. 90] cause some or all of the image to
+             * be clipped.
+             * @type {Number}
+             * @default 0
+             */
+            this.imageTilt = 0;
+
+            /**
+             * Indicates whether to apply this placemark's image rotation relative to the screen or the globe.
+             * If WorldWind.RELATIVE_TO_SCREEN, this placemark's image is rotated in the plane of the screen and
+             * its orientation relative to the globe changes as the view changes.
+             * If WorldWind.RELATIVE_TO_GLOBE, this placemark's image is rotated in a plane tangent to the globe
+             * at this placemark's position and retains its orientation relative to the globe.
+             * @type {String}
+             * @default WorldWind.RELATIVE_TO_SCREEN
+             */
+            this.imageRotationReference = WorldWind.RELATIVE_TO_SCREEN;
+
+            /**
+             * Indicates whether to apply this placemark's image tilt relative to the screen or the globe.
+             * If WorldWind.RELATIVE_TO_SCREEN, this placemark's image is tilted inwards (for positive tilts)
+             * relative to the plane of the screen, and its orientation relative to the globe changes as the view
+             * changes. If WorldWind.RELATIVE_TO_GLOBE, this placemark's image is tilted towards the globe's surface,
+             * and retains its orientation relative to the surface.
+             * @type {string}
+             * @default WorldWind.RELATIVE_TO_SCREEN
+             */
+            this.imageTiltReference = WorldWind.RELATIVE_TO_SCREEN;
 
             // Internal use only. Intentionally not documented.
             this.activeAttributes = null;
@@ -269,6 +306,10 @@ define([
             this.depthOffset = that.depthOffset;
             this.targetVisibility = that.targetVisibility;
             this.currentVisibility = that.currentVisibility;
+            this.imageRotation = that.imageRotation;
+            this.imageTilt = that.imageTilt;
+            this.imageRotationReference = that.imageRotationReference;
+            this.imageTiltReference = that.imageTiltReference;
 
             return this;
         };
@@ -496,7 +537,7 @@ define([
 
             try {
                 this.doDrawOrderedPlacemark(dc);
-                if (!dc.pickingMode && this.enableBulkRendering) {
+                if (!dc.pickingMode) {
                     this.drawBatchOrderedPlacemarks(dc);
                 }
             } finally {
@@ -654,6 +695,19 @@ define([
             // Compute and specify the MVP matrix.
             Placemark.matrix.copy(dc.screenProjection);
             Placemark.matrix.multiplyMatrix(this.imageTransform);
+
+            var actualRotation = this.imageRotationReference === WorldWind.RELATIVE_TO_GLOBE ?
+                dc.navigatorState.heading - this.imageRotation : -this.imageRotation;
+            Placemark.matrix.multiplyByTranslation(0.5, 0.5, 0);
+            Placemark.matrix.multiplyByRotation(0, 0, 1, actualRotation);
+            Placemark.matrix.multiplyByTranslation(-0.5, -0.5, 0);
+
+            // Perform the tilt before applying the rotation so that the image tilts back from its base into
+            // the view volume.
+            var actualTilt = this.imageTiltReference === WorldWind.RELATIVE_TO_GLOBE ?
+            dc.navigatorState.tilt + this.imageTilt : this.imageTilt;
+            Placemark.matrix.multiplyByRotation(-1, 0, 0, actualTilt);
+
             program.loadModelviewProjection(gl, Placemark.matrix);
 
             // Enable texture for both normal display and for picking. If picking is enabled in the shader (set in
