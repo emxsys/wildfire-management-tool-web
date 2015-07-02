@@ -53,8 +53,8 @@ requirejs.config({
 //        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
         wmt: "../../scripts/wmt", // WMT path prefix
         worldwind: [
-            "http://worldwindserver.net/webworldwind/worldwindlib",
-            "WorldWind"
+            "WorldWind",
+            //"http://worldwindserver.net/webworldwind/worldwindlib"
         ]
     }
     // shim should not be used on AMD scripts
