@@ -169,7 +169,25 @@ define(['worldwind'],
                     angle += 360;
                 }
                 return angle.toFixed(decimals) + "\u00b0";
+            }, 
+            /**
+             * Format an altitude with a units suffix.
+             * @param {Number} altitude Meters.
+             * @param {String} units Optional. 
+             * @returns {String} Formatted string with units.
+             */
+            formatAltitude: function (altitude, units) {
+                // Convert from meters to the desired units format.
+                if (units === "km") {
+                    altitude /= 1e3;
+                }
+                // Round to the nearest integer and place a comma every three digits. See the following Stack Overflow thread
+                // for more information:
+                // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+                return altitude.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " " + units;
+
             }
+
         };
         return Formatter;
     }
