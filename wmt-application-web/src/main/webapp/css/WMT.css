@@ -3,6 +3,7 @@
     author: Bruce Schubert 
 */
 
+/*Obsolete. Candidate for removal*/
 #coordinateOverlay {
     //position: absolute;  /* inset the coordinate overlay's top right relative to the container's top left */
     //top: 50px;
@@ -146,6 +147,7 @@ img.icon {
     height: 100%;
 }
 
+/*Obsolete: Candidate(s) for removal*/
 #restSolarData {
     text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
     text-align: center;
@@ -160,7 +162,7 @@ img.icon {
     text-align: left;
 }
 
-
+/*Obsolete: Candidate(s) for removal*/
 #restTerrainData {
     text-shadow: 0px 0px 2px black; /* text attributes for both coordinate overlay columns */
     text-align: center;

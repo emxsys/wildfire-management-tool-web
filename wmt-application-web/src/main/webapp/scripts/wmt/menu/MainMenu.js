@@ -56,6 +56,7 @@ define([
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
+    'wmt/view/TimeView',
     'wmt/view/WeatherView'],
     function (
         aboutBox,
@@ -68,6 +69,7 @@ define([
         locationView,
         MarkerView,
         SearchBox,
+        timeView,
         weatherView) {
         "use strict";
         var MainMenu = {
@@ -149,17 +151,20 @@ define([
 
                     // Initialize the constituent UI elements.
                     this.searchBox = new SearchBox();
+                    
+                    // Panels
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();
-                    
                     fireView.initialize();
                     weatherView.initialize();
                     
-                    // Widgets
+                    // Screen Widgets
                     dateTimeControls.initialize();
                     locationView.initialize();
+                    timeView.initialize();
                     
+                    // Dialogs
                     aboutBox.initialize();
                     fireLookoutDialog.initialize();
                 });                

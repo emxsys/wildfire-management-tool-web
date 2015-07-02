@@ -813,62 +813,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <!--<div class='container-full'>-->  
                             <!--DateTime slider-->
                             <div id="timeControlSlider" class="col-xs-7 col-sm-7"></div>
-                            <!--Coordinates Overlay-->
-                            <div>
-                                <div id="coordinateOverlay" class="col-xs-4 col-sm-4 col-md-4 non-interactive">
-                                    <div class="row">
-                                        <span>Eye Alt: </span><span id="eyeAltitude"></span>
-                                    </div>
-                                </div>            
-                            </div>
-                            <!--REST information overlay-->
-                            <div id="RESTPanel" class="rest-panel-bottom non-interactive">
-                                <div class="row">            
-                                    <div id="restSolarData" class="col-xs-6 col-sm-4 col-md-4 pull-left non-interactive">
-                                        <table>
-                                            <tr>
-                                                <td>Time:</td>
-                                                <td><span id="apptime"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sunrise:</td>
-                                                <td><span id="sunrise"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sunset:</td>
-                                                <td><span id="sunset"></span></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div id="restWeatherData" class="visible-lg non-interactive">
-
-                                    </div>
-                                    <div id="restTerrainData" class="col-xs-6 col-sm-4 col-md-4 pull-right non-interactive">
-                                        <table>
-                                            <tr>
-                                                <td>Lat:</td>
-                                                <td><span id="targetLatitude"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Lon:</td>
-                                                <td><span id="targetLongitude"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Elevation:</td>
-                                                <td><span id="targetElevation"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Aspect:</td>
-                                                <td><span id="targetAspect"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Slope:</td>
-                                                <td><span id="targetSlope"></span></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div id="bottom"></div>
                         <!--/DOM UI elements-->

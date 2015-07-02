@@ -32,13 +32,11 @@
 
 /**
  * 
- * @param {type} CoordinatesView
  * @param {type} FuelModelManager
  * @param {type} LocationManager
  * @param {type} log
  * @param {type} messenger
  * @param {type} Model
- * @param {type} ReticuleView
  * @param {type} Settings
  * @param {type} SolarView
  * @param {type} TimeManager
@@ -48,29 +46,23 @@
  * @returns {Controller_L50.Controller}
  */
 define([
-    'wmt/view/CoordinatesView',
     'wmt/controller/FuelModelManager',
     'wmt/controller/LocationManager',
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/model/Model',
-    'wmt/view/ReticuleView',
     'wmt/util/Settings',
-    'wmt/view/SolarView',
     'wmt/controller/TimeManager',
     'wmt/controller/WeatherManager',
     'wmt/Wmt',
     'worldwind'],
     function (
-        CoordinatesView,
         FuelModelManager,
         LocationManager,
         log,
         messenger,
         Model,
-        ReticuleView,
         Settings,
-        SolarView,
         TimeManager,
         WeatherManager,
         Wmt,
@@ -97,18 +89,6 @@ define([
 
                 // Create the MVC Model on the primary globe
                 this.model = new Model(this.globe);
-
-                // Create MVC Views
-                this.coordinatesView = new CoordinatesView(this.wwd);
-                this.reticuleView = new ReticuleView(this.wwd);
-
-                // MVC: Assemble the associations between the model and views
-                this.model.on(Wmt.EVENT_MOUSE_MOVED, this.coordinatesView.handleMouseMoved, this.coordinatesView);
-                this.model.on(Wmt.EVENT_VIEWPOINT_CHANGED, this.reticuleView.handleViewpointChanged, this.reticuleView);
-                this.model.on(Wmt.EVENT_SUNLIGHT_CHANGED, SolarView.handleSunlightChanged, SolarView);
-                this.model.on(Wmt.EVENT_TIME_CHANGED, SolarView.handleTimeChanged, SolarView);
-                this.model.on(Wmt.EVENT_TIME_CHANGED, SolarView.handleTimeChanged, SolarView);
-
 
                 // Internal. Intentionally not documented.
                 this.updateTimeout = null;
