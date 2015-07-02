@@ -187,11 +187,12 @@ define([
                     this.isDragging = false;
                     break;
                 case 'click':
-                    // TODO: implement Selectable capabilities
                     // Remember the clicked item for dblclick processing
                     this.clickedItem = this.pickedItem;
-                    if (this.clickedItem.userObject.select) {
-                        this.clickedItem.userObject.select();
+                    if (this.clickedItem) {
+                        if (this.clickedItem.userObject.select) {
+                            this.clickedItem.userObject.select();
+                        }
                     }
                     // Release the picked item so mousemove doesn't act on it
                     this.pickedItem = null;
