@@ -744,7 +744,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!--Fire Settings-->
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="firesSettingsHeading">
@@ -783,14 +783,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <h1>Your browser does not support HTML5 Canvas.</h1>
                         </canvas>
                         <!--Prime UI Globe Context Menu--> 
-<!--                        <div>
-                            <ul id="globeContextMenu-popup" style="z-index: 2000;">
-                                <li><a data-icon="fa-edit">Open</a></li>
-                                <li><a data-icon="fa-minus">Delete</a></li>
-                                <li><a data-icon="fa-refresh">Refresh</a></li>
-                                <li><a data-icon="fa-gear">Configure</a></li>
-                            </ul>
-                        </div>-->
+                        <!--                        <div>
+                                                    <ul id="globeContextMenu-popup" style="z-index: 2000;">
+                                                        <li><a data-icon="fa-edit">Open</a></li>
+                                                        <li><a data-icon="fa-minus">Delete</a></li>
+                                                        <li><a data-icon="fa-refresh">Refresh</a></li>
+                                                        <li><a data-icon="fa-gear">Configure</a></li>
+                                                    </ul>
+                                                </div>-->
                         <!--DOM UI elements go here!-->                
                         <div class="container-full non-interactive" Style="position:absolute;top:5px">
                             <div class="row">
@@ -960,6 +960,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div id="markerGrid"></div>
                 </div>
 
+                <!--Prime UI Pushpin Dialog--> 
+                <div id="pushpin-dlg" title="Pushpin" style="display: none;">
+                    <form id="pushpin-form">
+
+                        <div class="form-control">
+                            <label class="required" >Name:</label>
+                            <input name="pushpinName" type="text" 
+                                   id="pushpinName" placeholder="Unique name" required>
+                        </div>
+                    </form>
+
+                </div>    
+
+                <!-- Remove confirmation dialog -->
+                <div id="remove-dlg" title="Remove...">
+                    <p>Do you really want to remove the selected item?</p>
+                    <div class="pui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button id="bt_remove_yes" type="button">Yes</button>
+                        <button id="bt_remove_no" type="button">No</button>
+                    </div>
+                </div>
+
                 <!--Prime-UI Pushpin Palette --> 
                 <div id="pushpinPalette" title="Select a Pushpin Style" style="display: none;">
                     <div id="markerGrid"></div>
@@ -976,6 +998,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <input type="text" name="timepicker" id="timepicker" >
                     </div>
                 </div>        
+
+                <!--Prime UI Fire Lookout Dialog--> 
+                <div id="fireLookout-dlg" title="Fire Lookout" style="display: none;">
+                    <div id="fireLookout-tabs">      
+                        <ul>
+                            <li><a href="#fire-general-tab">General</a></li>
+                            <li><a href="#fire-weather-tab">Weather</a></li>
+                            <li><a href="#fire-behavior-tab">Behavior</a></li>
+                            <li><a href="#fire-alerts-tab">Alerts</a></li>
+                        </ul>
+                        <div>
+                            <div id="fire-general-tab">
+                                <div class="form_entry">
+                                    <label for="lookoutName" class="required">Name:</label>
+                                    <input name="lookoutName" type="text" id="lookoutName" placeholder="Unique name" required>
+                                </div>
+                                <div class="form_entry">
+                                    <h5>Location</h5>
+                                    <input id="lookoutMovable" type="checkbox" />
+                                </div>
+                            </div>
+                            <div id="fire-weather-tab">
+                            </div>
+                            <div id="fire-behavior-tab">
+                            </div>
+                            <div id="fire-alerts-tab">
+                            </div>
+                        </div>                    
+                    </div>
+                </div>    
 
                 <!--Prime UI Fuel Model Dialog--> 
                 <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
