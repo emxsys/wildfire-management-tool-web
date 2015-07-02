@@ -53,6 +53,7 @@ define([
     'wmt/view/FireLookoutDialog',
     'wmt/view/FireView',
     'wmt/menu/LayerMenu',
+    'wmt/view/LocationView',
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
     'wmt/view/WeatherView'],
@@ -64,6 +65,7 @@ define([
         fireLookoutDialog,
         fireView,
         LayerMenu,
+        locationView,
         MarkerView,
         SearchBox,
         weatherView) {
@@ -146,17 +148,20 @@ define([
                     }
 
                     // Initialize the constituent UI elements.
+                    this.searchBox = new SearchBox();
                     this.controlPanel = new ControlPanel();
-                    fireView.initialize();
-                    fireLookoutDialog.initialize();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();
+                    
+                    fireView.initialize();
                     weatherView.initialize();
-                    this.searchBox = new SearchBox();
-
-                    // Initialize the Time Slider Control
+                    
+                    // Widgets
                     dateTimeControls.initialize();
+                    locationView.initialize();
+                    
                     aboutBox.initialize();
+                    fireLookoutDialog.initialize();
                 });                
             },
             /**

@@ -49,7 +49,7 @@ define([
             this.initialize();
             this.selectedFuelModel = null;
 
-            $("#fuelModel").on("click", function (event) {
+            $("#fuelModel-btn").on("click", function (event) {
                 self.showDialog(event);
             });
         };

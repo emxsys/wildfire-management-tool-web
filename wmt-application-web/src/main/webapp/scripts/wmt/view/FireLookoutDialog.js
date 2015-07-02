@@ -36,9 +36,11 @@
  *  * @author Bruce Schubert
  */
 define([
+    'wmt/util/Formatter',
     'wmt/Wmt',
     'worldwind'],
     function (
+        formatter,
         wmt,
         ww) {
         "use strict";
@@ -48,11 +50,13 @@ define([
          * @returns {FireLookoutDialog}
          */
         var FireLookoutDialog = {
-            show: function (lookout) {                
+            show: function (lookout) {
                 // Load the controls
                 $('#lookoutName').val(lookout.name);
+                $('#lookoutPlacename').text('Place: ' + lookout.placeName);
+                $('#lookoutLatitude').text('Latitude: ' + formatter.formatDecimalDegreesLat(lookout.latitude, 5));
+                $('#lookoutLongitude').text('Longitude: ' + formatter.formatDecimalDegreesLon(lookout.longitude, 5));
                 $('#lookoutMovable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
-                
                 // Save button callback
                 this.saveAction = function () {
                     lookout.name = $('#lookoutName').val();
@@ -68,8 +72,9 @@ define([
             initialize: function () {
                 var self = this,
                     $dlg = $('#fireLookout-dlg');
-
                 $dlg.puidialog({
+                    width: 'auto',
+                    height: 'auto',
                     showEffect: 'fade',
                     hideEffect: 'fade',
                     minimizable: true,
@@ -82,7 +87,6 @@ define([
                             click: function () {
                                 self.saveAction();
                                 $dlg.puidialog('hide');
-
                             }
                         },
                         {

@@ -79,8 +79,8 @@ define([
                 // Add button event handlers
                 $("#createFireLookout").on("click", function (event) {
                     controller.dropFireLookoutOnGlobe(new FireLookout());
-                });               
-                
+                });  
+                        
                 // Initially show the Lookouts tab
                 $('#fireLookoutsBody').collapse('show');
                 

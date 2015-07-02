@@ -60,6 +60,8 @@ define([
             this.openMe = function () {
                 dialog.show(self);
             };
+            
+            
 
         };
         FireLookout.prototype = Object.create(WeatherScout.prototype);

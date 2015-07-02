@@ -762,11 +762,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
                                  aria-labelledby="firesSettingsHeading">
                                 <div class="panel-body">
-                                    <ul>
-                                        <li>A...</li>
-                                        <li>B...</li>
-                                        <li>C...</li>
-                                    </ul>
+                                    <button id="fuelModel-btn" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Select fuel model.">
+                                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                        Fuel Model
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -963,18 +967,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <!--Prime UI Pushpin Dialog--> 
                 <div id="pushpin-dlg" title="Pushpin" style="display: none;">
                     <form id="pushpin-form">
-
-                        <div class="form-control">
-                            <label class="required" >Name:</label>
-                            <input name="pushpinName" type="text" 
-                                   id="pushpinName" placeholder="Unique name" required>
+                        <div class="form_entry">
+                            <label for="pushpinName" class="required">Name:</label>
+                            <input name="pushpinName" type="text" id="pushpinName" placeholder="Unique name" required>
+                        </div>
+                        <div class="form_entry">
+                            <h5>Location</h5>
+                            <p id="pushpinLatitude">Latitude:</p> 
+                            <p id="pushpinLongitude">Longitude:</p> 
+                            <input id="pushpinMovable" type="checkbox" />
                         </div>
                     </form>
 
                 </div>    
 
                 <!-- Remove confirmation dialog -->
-                <div id="remove-dlg" title="Remove...">
+                <div id="remove-dlg" title="Remove..." style="display: none;">
                     <p>Do you really want to remove the selected item?</p>
                     <div class="pui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                         <button id="bt_remove_yes" type="button">Yes</button>
@@ -1005,21 +1013,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <ul>
                             <li><a href="#fire-general-tab">General</a></li>
                             <li><a href="#fire-weather-tab">Weather</a></li>
+                            <li><a href="#fire-environment-tab">Environment</a></li>
                             <li><a href="#fire-behavior-tab">Behavior</a></li>
                             <li><a href="#fire-alerts-tab">Alerts</a></li>
                         </ul>
                         <div>
                             <div id="fire-general-tab">
                                 <div class="form_entry">
-                                    <label for="lookoutName" class="required">Name:</label>
+                                    <h4>Name</h4>
                                     <input name="lookoutName" type="text" id="lookoutName" placeholder="Unique name" required>
                                 </div>
                                 <div class="form_entry">
-                                    <h5>Location</h5>
+                                    <h4>Location</h4>
+                                    <p id="lookoutPlacename"></p> 
+                                    <p id="lookoutLatitude"></p> 
+                                    <p id="lookoutLongitude"></p> 
                                     <input id="lookoutMovable" type="checkbox" />
                                 </div>
                             </div>
                             <div id="fire-weather-tab">
+                            </div>
+                            <div id="fire-environment-tab">
                             </div>
                             <div id="fire-behavior-tab">
                             </div>

@@ -144,7 +144,8 @@ define([
                     {layer: new WorldWind.RenderableLayer(wmt.FIRE_PERIMETERS_LAYER_NAME), enabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME), enabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.WEATHER_LAYER_NAME), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.MARKERS_LAYER_NAME), enabled: true}
+                    {layer: new WorldWind.RenderableLayer(wmt.MARKERS_LAYER_NAME), enabled: true},
+                    {layer: new WorldWind.RenderableLayer("Widgets"), enabled: true}
                 ],
                 layer,
                 i, max;
@@ -208,6 +209,10 @@ define([
 
         };
 
+        Globe.prototype.addLayer = function (layer, hide) {
+            layer.hide = hide === undefined ? false : hide;
+            this.wwd.addLayer(layer);
+        }
 
         /**
          * Finds the World Wind Layer in the layer list with the given display name.
