@@ -64,12 +64,13 @@ define([
         var ReticuleLayer = function () {
             WorldWind.RenderableLayer.call(this, "Crosshairs");
 
-            this._compass = new Compass(Wmt.IMAGE_PATH);
+            // The compass has been superceded by the LocationWidget
+            //this._compass = new Compass(Wmt.IMAGE_PATH);
             this._reticule = new Crosshairs(Wmt.IMAGE_PATH);
 
             // Put crosshairs on top of the globe
-            this.addRenderable(this._compass);
             this.addRenderable(this._reticule);
+            //this.addRenderable(this._compass);
         };
 
         ReticuleLayer.prototype = Object.create(WorldWind.RenderableLayer.prototype);
@@ -93,18 +94,18 @@ define([
                     }
                 }
             },
-            compass: {
-                get: function () {
-                    return this._compass;
-                },
-                set: function (compass) {
-                    if (compass && compass instanceof Compass) {
-                        this.removeAllRenderables();
-                        this.addRenderable(compass);
-                        this._compass = compass;
-                    }
-                }
-            }
+//            compass: {
+//                get: function () {
+//                    return this._compass;
+//                },
+//                set: function (compass) {
+//                    if (compass && compass instanceof Compass) {
+//                        this.removeAllRenderables();
+//                        this.addRenderable(compass);
+//                        this._compass = compass;
+//                    }
+//                }
+//            }
         });
 
         return ReticuleLayer;
