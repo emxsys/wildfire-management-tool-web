@@ -31,10 +31,8 @@
 /*global define, $, WorldWind*/
 
 /*
- * The MarkerView provides a view of the marker model objects as Renderables on the globe 
- * and as items in the Marker List.
+ * The LocationView provides a view of the Modal's location and solar data.
  */
-
 define([
     'wmt/controller/Controller',
     'wmt/view/symbols/LocationWidget',

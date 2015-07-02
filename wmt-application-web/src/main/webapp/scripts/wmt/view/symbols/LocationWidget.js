@@ -31,17 +31,15 @@
 /*global define, $, WorldWind */
 
 /**
- * The WeatherMapSymbol module renders a composite WorldWind.Renderable representing a weather station.
- * @param {type} AirTemperature
- * @param {type} controller
- * @param {type} ForecastTime
- * @param {type} RelativeHumidity
- * @param {type} SkyCover
- * @param {type} WindBarb
- * @param {type} wmt
- * @param {type} ww
- * @returns {LocationWidget}
+ * The LocationWidget module renders a composite WorldWind.Renderable representing 
+ * location, orientation, terrain and solar data.
  * 
+ * @param {Controller} controller
+ * @param {Formatter} formatter
+ * @param {Viewpoint} Viewpoint
+ * @param {Wmt} wmt
+ * @param {WorldWind} ww
+ * @returns {LocationWidget}
  * @author Bruce Schubert
  */
 define([
@@ -69,8 +67,8 @@ define([
                 DIAL_HEIGHT = 95,
                 DIAL_RADIUS = DIAL_HEIGHT / 2,
                 DIAL_MARGIN = (BG_HEIGHT - DIAL_HEIGHT) / 2,
-                DIAL_ORIGIN_X = DIAL_RADIUS + RIGHT_MARGIN + 10,  
-                DIAL_ORIGIN_Y = DIAL_RADIUS + BOTTOM_MARGIN - 2,  
+                DIAL_ORIGIN_X = DIAL_RADIUS + RIGHT_MARGIN + 10,
+                DIAL_ORIGIN_Y = DIAL_RADIUS + BOTTOM_MARGIN - 2,
                 center = new WorldWind.Offset(
                     WorldWind.OFFSET_FRACTION, 0.5,
                     WorldWind.OFFSET_FRACTION, 0.5),
@@ -193,13 +191,14 @@ define([
             // HACK: Don't allow rotation values to go to zero 
             // else z-ording gets confused with non-rotated images
             // appearing on top of rotated images.
-            var heading = dc.navigatorState.heading || 0.001,
+            var RADIUS = 50,
+                heading = dc.navigatorState.heading || 0.001,
                 slope = this.viewpoint.target.slope || 0.001,
                 aspect = this.viewpoint.target.aspect || 0.001,
-                aspectPt = LocationWidget.rotatePoint(0, -52, 0, 0, heading-aspect), // rotate from 6 o'clock
+                aspectPt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - aspect), // rotate from 6 o'clock
                 azimuth = this.sunlight.azimuthAngle.value,
-                solarPt = LocationWidget.rotatePoint(0, -52, 0, 0, heading-azimuth); // rotate from 6 o'clock
-                
+                solarPt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - azimuth); // rotate from 6 o'clock
+
             // Translate icons around the dial
             this.aspectIcon.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_PIXELS, aspectPt.x,
@@ -209,7 +208,7 @@ define([
                 WorldWind.OFFSET_PIXELS, solarPt.y);
             // Rotate the aspect "diamond" icon
             // No need to rotate the solar icon - it's a circle
-            this.aspectIcon.imageRotation = heading-aspect;
+            this.aspectIcon.imageRotation = 180 + heading - aspect;
 
             // Rotate the dials
             //  Rotate the background as a hack to force it behind the other layers
