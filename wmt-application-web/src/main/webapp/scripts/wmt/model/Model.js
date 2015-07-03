@@ -31,7 +31,7 @@
 /*global define, $, WorldWind */
 
 /**
- * 
+ * @param {type} name description
  * @param {FuelMoistureResource} FuelMoistureResource
  * @param {Log} log
  * @param {MarkerManager} MarkerManager
@@ -47,9 +47,10 @@
  * @returns {Model_L50.Model}
  */
 define([
+    'wmt/model/FireLookoutManager',
+    'wmt/model/FuelModelCatalog',
     'wmt/resource/FuelMoistureResource',
     'wmt/util/Log',
-    'wmt/model/FireLookoutManager',
     'wmt/model/MarkerManager',
     'wmt/util/Publisher',
     'wmt/resource/SolarResource',
@@ -61,9 +62,10 @@ define([
     'wmt/Wmt',
     'worldwind'],
     function (
+        FireLookoutManager,
+        FuelModelCatalog,
         FuelMoistureResource,
         log,
-        FireLookoutManager,
         MarkerManager,
         publisher,
         SolarResource,
@@ -89,6 +91,7 @@ define([
             this.markerManager = new MarkerManager(this);
             this.weatherScoutManager = new WeatherScoutManager(this);
             this.fireLookoutManager = new FireLookoutManager(this);
+            this.fuelModelCatalog = new FuelModelCatalog();
 
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
