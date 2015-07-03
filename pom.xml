@@ -12,7 +12,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         
-        <brandingToken>webwmt</brandingToken>
+        <brandingToken>wmtweb</brandingToken>
         
         <project.build.sourceVersion>1.7</project.build.sourceVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -155,16 +155,16 @@
     
     <modules>
         <module>wmt-application-web</module>
-        <module>wmt-wildfire</module>
-        <module>wmt-weather</module>
-        <module>wmt-visad</module>
-        <module>wmt-utilities</module>
-        <module>wmt-solar</module>
-        <module>wmt-libraries</module>
-        <module>wmt-gis</module>
         <module>wmt-application-rest</module>
+        <module>wmt-gis</module>
         <module>wmt-time</module>
         <module>wmt-jfree</module>
+        <module>wmt-libraries</module>
+        <module>wmt-solar</module>
+        <module>wmt-utilities</module>
+        <module>wmt-visad</module>
+        <module>wmt-wildfire</module>
+        <module>wmt-weather</module>
         <module>wmt-weather-nws</module>
         <module>wmt-weather-mesowest</module>
     </modules>
