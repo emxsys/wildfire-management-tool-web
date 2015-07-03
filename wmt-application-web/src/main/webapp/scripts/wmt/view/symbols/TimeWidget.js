@@ -152,9 +152,6 @@ define([
             this.sunset.attributes = new WorldWind.TextAttributes(textAttr);
             this.sunset.attributes.offset = lowerLeft;
 
-            // Initial time
-            this.apptime = new Date();
-
             /**
              * Handles EVENT_TIME_CHANGED.
              */
@@ -171,21 +168,36 @@ define([
                 this.updateSunlightText();
                 controller.globe.redraw();
             };
+            
+            // Subscribe to changes in Model
             controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
             controller.model.on(wmt.EVENT_SUNLIGHT_CHANGED, this.handleSunlightChangedEvent, this);
+            
+            
+            // Load Initial values
+            this.handleTimeChangedEvent(controller.model.applicationTime);
+            this.handleSunlightChangedEvent(controller.model.sunlight);
+
         };
         // Inherit Renderable functions.
         TimeWidget.prototype = Object.create(WorldWind.Renderable.prototype);
 
 
+        /**
+         * Updates the date and time text with formatted strings.
+         */
         TimeWidget.prototype.updateDateTimeText = function () {
             var timeOptions = {hour: "2-digit", minute: "2-digit", timeZoneName: "short", hour12: false},
             dateOptions = {"month": "2-digit", "day": "2-digit"};
+        
             this.time.text = this.apptime.toLocaleTimeString('en', timeOptions);
             this.date.text = this.apptime.toLocaleDateString('en', dateOptions);
         };
 
 
+        /**
+         * Updates the sunrise and sunset text with formatted strings. 
+         */
         TimeWidget.prototype.updateSunlightText = function () {
             var shortTimeOptions = {hour: "2-digit", minute: "2-digit", hour12: false},
             isoDate = this.apptime.toISOString().substr(0, 11),
