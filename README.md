@@ -19,10 +19,32 @@ See Vision and Scope. (TODO: add link)
 See Software Architecture Document (TODO: add wiki link).
 
 * Summary of set up
+    * Install NetBeans IDE Enterprise Edition (includes web servers)
+        * Download: 
+    * Install Tomcat web server (may be included in NetBeans EE)
+        * Download: 
+    * Clone this repository
+    * Open and build the **wildfire-management-tool-web** project
+        * NetBeans: File > Open Project 
 * Configuration
+    * Optional: Add an Apache Tomcat server to NetBeans
+        * NetBeans: Tools > Servers > <Add Server...>
+    * Configure **WMT Application - REST Services** project to use your web server
+        * NetBeans: Projects tab > **WMT Application - REST Services** > Properties | Run
 * Dependencies
-* Database configuration
+    * Dependencies for the **WMT Application - REST Services** project are managed automatically by Maven 
+* Database configuration: none
 * How to run tests
+    * Unit tests: automatically performed by Maven
+    * Run time tests
+        * Run **WMT Application - REST Services**
+            * The web server should start automatically. If necessary: NetBeans: Services > Servers > <Server Name> | Start
+            * The REST Server page should be displayed in your web browser
+       * Run **WMT Application - Web** 
+            * The WMT web application should be displayed in your web browser
+            * Safari prerequisites: You must enable WebGL
+                * Safari > Preferences > Advanced | Show Develop menu [checked]
+                * Safari > Develop > Enable WebGL [checked]
 * Deployment instructions
     * Tomcat Deployment
         1. Open Tomcat Web Application Manager (TODO: add link http://emxsys.azurewebsites.net/manager/html)
