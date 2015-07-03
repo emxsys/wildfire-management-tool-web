@@ -7,6 +7,9 @@
         <version>4.0-WEB</version>
     </parent>
     <artifactId>wmt-weather-nws</artifactId>
+    <version>4.0-WEB</version>
+    <name>WMT Weather - NWS</name>
+    <description>The National Weather Service weather provider</description>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -95,7 +98,4 @@
             <version>2.6.2</version>
         </dependency>
     </dependencies>
-    <name>WMT Weather - NWS</name>
-    <description>The National Weather Service weather provider</description>
-    <version>4.0-web</version>
 </project>
