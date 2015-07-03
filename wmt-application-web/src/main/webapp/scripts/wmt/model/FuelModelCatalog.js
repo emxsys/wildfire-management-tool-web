@@ -31,8 +31,11 @@
 /*global define, $ */
 
 define([
-    'wmt/resource/FuelModelResource'],
-    function (fuelModelResource) {
+    'wmt/resource/FuelModelResource',
+    'wmt/util/Log'],
+    function (
+        webResource,
+        log) {
         "use strict";
         var FuelModelCatalog = function () {
             this.standard40 = [];
@@ -41,39 +44,51 @@ define([
              * Loads this catalog with the Original 13 and Standard 40 fuel model collections.
              */
             var self = this;
-            fuelModelResource.fuelModels("original", function (json) {
-                self.orginal13 = json;
+            webResource.fuelModels("original", function (json) {
+                self.original13 = json.fuelModel;
             });
-            fuelModelResource.fuelModels("standard", function (json) {
-                self.standard40 = json;
+            webResource.fuelModels("standard", function (json) {
+                self.standard40 = json.fuelModel;
             });
         };
         /**
          * Gets the fuel model for the given fuel model idenfifier
          * @param {Number} fuelModelNo
-         * @param {String} category "standard40", "original13" or "any". Default: "any".
+         * @param {String} group Model group: "standard40", "original13" or "any". Default: "any".
          * @returns {Object} A JSON FuelModel object.
          */
-        FuelModelCatalog.prototype.getFuelModel = function (fuelModelNo, category) {
-            var cat = category || 'any',
+        FuelModelCatalog.prototype.getFuelModel = function (fuelModelNo, group) {
+            var grp = group || 'any',
                 fuelModel = null;
-            
-            if (cat==='standard40' || cat==='any') {
-                fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.standard40);
-            } 
-            if (!fuelModel && (cat==='original13' || cat==='any')) {
-                fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.standard13);
-            }
+
             // TODO: Add custom fuel model processing
+            if (grp === 'standard40' || grp === 'any') {
+                fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.standard40);
+            }
+            if (!fuelModel && (grp === 'original13' || grp === 'any')) {
+                fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.original13);
+            }
+            if (!fuelModel) {
+                log.warning('FuelModelCatalog', 'getFuelModel', 'No fuel model found for #' + fuelModelNo);
+            }
             return fuelModel;
         };
-        
-        
+
+        /**
+         * Returns the fuel model item with the matching fuel model no.
+         * @param {type} fuelModelNo Unique model no.
+         * @param {type} array Fuel model array
+         * @returns {Object} JSON fuel model object.
+         */
         FuelModelCatalog.findFuelModel = function (fuelModelNo, array) {
             var i, max;
-            
+
+            if (!array || array.length === 0) {
+                log.error('FuelModelCatalog', 'findFuelModel', 'The array arg is null or empty.');
+                return null;
+            }
             for (i = 0, max = array.length; i < max; i++) {
-                if (array[i].modelNo===fuelModelNo.toString()) {
+                if (array[i].modelNo === fuelModelNo.toString()) {
                     return array[i];
                 }
             }

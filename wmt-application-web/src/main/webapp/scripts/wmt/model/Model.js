@@ -92,7 +92,9 @@ define([
             this.weatherScoutManager = new WeatherScoutManager(this);
             this.fireLookoutManager = new FireLookoutManager(this);
             this.fuelModelCatalog = new FuelModelCatalog();
-
+            // Test
+            console.log(this.fuelModelCatalog.getFuelModel(4));
+            
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
             this.terrainAtMouse = new Terrain(0, 0, 0, 0, 0);
