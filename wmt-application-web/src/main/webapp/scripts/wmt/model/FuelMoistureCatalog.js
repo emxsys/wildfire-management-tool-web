@@ -46,104 +46,107 @@ define([
         restService,
         log) {
         "use strict";
-        /**
-         * Creates a collection of named fuel moisture scenarios.  Note: The collection is populated asynchonously.
-         * @constructor
-         * @returns {FuelMoistureCatalog}
-         */
-        var FuelMoistureCatalog = function () {
-            this.scenarios = [];
-            /** 
-             * Loads this catalog with the scenario array.
+        var FuelMoistureCatalog = {
+            /**
+             * Creates collection of named fuel moisture scenarios.  
+             * Note: The collection is populated asynchonously.
              */
-            var self = this;
-            restService.fuelMoistureScenarios(function (json) {
-                self.scenarios = json.scenario;
-                // Test
-                console.log(self.getScenario(self.getScenarioNames()[0]));
-            });
-        };
-        /**
-         * Gets an array of the scenario names in this catalog.
-         * @returns {Array} An array of Strings.
-         */
-        FuelMoistureCatalog.prototype.getScenarioNames = function () {
-            var names = [],
-                i, len = this.scenarios.length;
+            initialize: function () {
+                /**
+                 * A collection of FuelMoisture objects
+                 */
+                this.scenarios = [];
+                /** 
+                 * Loads this catalog with the scenario array.
+                 */
+                var self = this;
+                restService.fuelMoistureScenarios(function (json) {
+                    self.scenarios = json.scenario;
+                    // Test
+                    console.log(self.getScenario(self.getScenarioNames()[0]));
+                }, false);  // async = false
+            },
+            /**
+             * Gets an array of the scenario names in this catalog.
+             * @returns {Array} An array of Strings.
+             */
+            getScenarioNames: function () {
+                var names = [],
+                    i, len = this.scenarios.length;
 
-            if (len === 0) {
-                // Probably not initialized yet. Async?
-                log.error('FuelMoistureCatalog', 'getScenarioNames', 'The scenarios array is empty.');
+                if (len === 0) {
+                    // Probably not initialized yet. Async?
+                    log.error('FuelMoistureCatalog', 'getScenarioNames', 'The scenarios array is empty.');
+                    return names;
+                }
+                for (i = 0; i < len; i++) {
+                    names.push(this.scenarios[i].name);
+                }
                 return names;
-            }
-            for (i = 0; i < len; i++) {
-                names.push(this.scenarios[i].name);
-            }
-            return names;
-        };
-        /**
-         * Gets the fuel moisture for the given scenario.
-         * @param {String} scenarioName
-         * @returns {Object} A JSON FuelModel object.
-         * * E.g.:
-         *{
-         *  "dead1HrFuelMoisture" : {
-         *    "type" : "fuel_moisture_1h:%",
-         *    "value" : "6.0",
-         *    "unit" : "%"
-         *  },
-         *  "dead10HrFuelMoisture" : {
-         *    "type" : "fuel_moisture_10h:%",
-         *    "value" : "7.0",
-         *    "unit" : "%"
-         *  },
-         *  "dead100HrFuelMoisture" : {
-         *    "type" : "fuel_moisture_100h:%",
-         *    "value" : "8.0",
-         *    "unit" : "%"
-         *  },
-         *  "liveHerbFuelMoisture" : {
-         *    "type" : "fuel_moisture_herb:%",
-         *    "value" : "70.0",
-         *    "unit" : "%"
-         *  },
-         *  "liveWoodyFuelMoisture" : {
-         *    "type" : "fuel_moisture_woody:%",
-         *    "value" : "70.0",
-         *    "unit" : "%"
-         *  }
-         *}
-         */
-        FuelMoistureCatalog.prototype.getScenario = function (scenarioName) {
-            var fuelMoisture = null;
+            },
+            /**
+             * Gets the fuel moisture for the given scenario.
+             * @param {String} scenarioName
+             * @returns {Object} A JSON FuelModel object.
+             * * E.g.:
+             *{
+             *  "dead1HrFuelMoisture" : {
+             *    "type" : "fuel_moisture_1h:%",
+             *    "value" : "6.0",
+             *    "unit" : "%"
+             *  },
+             *  "dead10HrFuelMoisture" : {
+             *    "type" : "fuel_moisture_10h:%",
+             *    "value" : "7.0",
+             *    "unit" : "%"
+             *  },
+             *  "dead100HrFuelMoisture" : {
+             *    "type" : "fuel_moisture_100h:%",
+             *    "value" : "8.0",
+             *    "unit" : "%"
+             *  },
+             *  "liveHerbFuelMoisture" : {
+             *    "type" : "fuel_moisture_herb:%",
+             *    "value" : "70.0",
+             *    "unit" : "%"
+             *  },
+             *  "liveWoodyFuelMoisture" : {
+             *    "type" : "fuel_moisture_woody:%",
+             *    "value" : "70.0",
+             *    "unit" : "%"
+             *  }
+             *}
+             */
+            getScenario: function (scenarioName) {
+                var fuelMoisture = null;
 
-            // TODO: Add custom fuel model processing
-            fuelMoisture = FuelMoistureCatalog.findScenario(scenarioName, this.scenarios);
-            if (!fuelMoisture) {
-                log.warning('FuelMoistureCatalog', 'getScenario', 'No fuel moisture scenario found for: ' + scenarioName);
-            }
-            return fuelMoisture;
-        };
+                // TODO: Add custom fuel model processing
+                fuelMoisture = FuelMoistureCatalog.findScenario(scenarioName, this.scenarios);
+                if (!fuelMoisture) {
+                    log.warning('FuelMoistureCatalog', 'getScenario', 'No fuel moisture scenario found for: ' + scenarioName);
+                }
+                return fuelMoisture;
+            },
+            /**
+             * Returns the fuel moisture item with the matching fuel moisture no.
+             * @param {String} scenarioName Unique moisture no.
+             * @param {Array} array Fuel moisture scenario array
+             * @returns {Object} JSON fuel moisture object.
+             */
+            findScenario: function (scenarioName, array) {
+                var i, max;
 
-        /**
-         * Returns the fuel moisture item with the matching fuel moisture no.
-         * @param {String} scenarioName Unique moisture no.
-         * @param {Array} array Fuel moisture scenario array
-         * @returns {Object} JSON fuel moisture object.
-         */
-        FuelMoistureCatalog.findScenario = function (scenarioName, array) {
-            var i, max;
-
-            if (!array || array.length === 0) {
-                log.error('FuelMoistureCatalog', 'findFuelMoisture', 'The array arg is null or empty.');
+                if (!array || array.length === 0) {
+                    log.error('FuelMoistureCatalog', 'findFuelMoisture', 'The array arg is null or empty.');
+                    return null;
+                }
+                for (i = 0, max = array.length; i < max; i++) {
+                    if (array[i].name === scenarioName) {
+                        return array[i].fuelMoisture;
+                    }
+                }
                 return null;
             }
-            for (i = 0, max = array.length; i < max; i++) {
-                if (array[i].name === scenarioName) {
-                    return array[i].fuelMoisture;
-                }
-            }
-            return null;
         };
         return FuelMoistureCatalog;
     });
