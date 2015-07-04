@@ -29,7 +29,13 @@
  */
 
 /*global define, $ */
-
+/**
+ * The FuelModelCatalog manages a collection of fuel model objects.
+ *
+ * @param {type} webResource
+ * @param {type} log
+ * @returns {FuelModelCatalog_L38.FuelModelCatalog}
+ */
 define([
     'wmt/resource/FuelModelResource',
     'wmt/util/Log'],
@@ -52,10 +58,73 @@ define([
             });
         };
         /**
-         * Gets the fuel model for the given fuel model idenfifier
+         * Gets the fuel model for the given fuel model idenfifier.
          * @param {Number} fuelModelNo
          * @param {String} group Model group: "standard40", "original13" or "any". Default: "any".
          * @returns {Object} A JSON FuelModel object.
+         * * E.g.:
+         * {
+         * "modelNo" : "6",
+         *  "modelCode" : "#6",
+         *  "modelName" : "Dormant brush, hardwood slash",
+         *  "modelGroup" : "Original 13",
+         *  "dynamic" : "false",
+         *  "dead1HrFuelLoad" : {
+         *    "type" : "fuel_load:kg/m2",
+         *    "value" : "0.33625400183829446"
+         *  },
+         *  "dead10HrFuelLoad" : {
+         *    "type" : "fuel_load:kg/m2",
+         *    "value" : "0.5604233363971574"
+         *  },
+         *  "dead100HrFuelLoad" : {
+         *    "type" : "fuel_load:kg/m2",
+         *    "value" : "0.4483386691177259"
+         *  },
+         *  "liveHerbFuelLoad" : {
+         *    "type" : "fuel_load:kg/m2",
+         *    "value" : "0.0"
+         *  },
+         *  "liveWoodyFuelLoad" : {
+         *    "type" : "fuel_load:kg/m2",
+         *    "value" : "0.0"
+         *  },
+         *  "dead1HrSAVRatio" : {
+         *    "type" : "surface_to_volume:m2/m3",
+         *    "value" : "5741.469816272966"
+         *  },
+         *  "dead10HrSAVRatio" : {
+         *    "type" : "surface_to_volume:m2/m3",
+         *    "value" : "357.6115485564305"
+         *  },
+         *  "dead100HrSAVRatio" : {
+         *    "type" : "surface_to_volume:m2/m3",
+         *    "value" : "98.4251968503937"
+         *  },
+         *  "liveHerbSAVRatio" : {
+         *    "type" : "surface_to_volume:m2/m3",
+         *    "value" : "0.0"
+         *  },
+         *  "liveWoodySAVRatio" : {
+         *    "type" : "surface_to_volume:m2/m3",
+         *    "value" : "0.0"
+         *  },
+         *  "fuelBedDepth" : {
+         *   "type" : "fuel_depth:m",
+         *    "value" : "0.7619999999999999",
+         *    "unit" : "m"
+         *  },
+         *  "moistureOfExtinction" : {
+         *    "type" : "moisture_of_extinction:%",
+         *    "value" : "25.0",
+         *    "unit" : "%"
+         *  },
+         *  "lowHeatContent" : {
+         *    "type" : "heat_content:kJ/kg",
+         *    "value" : "18608.0"
+         *  },
+         *  "burnable" : "true"
+         *}
          */
         FuelModelCatalog.prototype.getFuelModel = function (fuelModelNo, group) {
             var grp = group || 'any',

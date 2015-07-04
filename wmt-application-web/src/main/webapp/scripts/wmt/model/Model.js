@@ -49,6 +49,7 @@
 define([
     'wmt/model/FireLookoutManager',
     'wmt/model/FuelModelCatalog',
+    'wmt/model/FuelMoistureCatalog',
     'wmt/resource/FuelMoistureResource',
     'wmt/util/Log',
     'wmt/model/MarkerManager',
@@ -64,6 +65,7 @@ define([
     function (
         FireLookoutManager,
         FuelModelCatalog,
+        FuelMoistureCatalog,
         FuelMoistureResource,
         log,
         MarkerManager,
@@ -91,7 +93,9 @@ define([
             this.markerManager = new MarkerManager(this);
             this.weatherScoutManager = new WeatherScoutManager(this);
             this.fireLookoutManager = new FireLookoutManager(this);
+            
             this.fuelModelCatalog = new FuelModelCatalog();
+            this.fuelMoistureCatalog = new FuelMoistureCatalog();
             
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
