@@ -32,15 +32,27 @@
 
 define([
     'wmt/view/FireLookoutDialog',
+    'wmt/model/FuelModelCatalog',
+    'wmt/model/FuelMoistureCatalog',
     'wmt/util/Log',
     'wmt/util/Messenger',
+    'wmt/resource/SurfaceFireResource',
+    'wmt/resource/SurfaceFuelResource',
+    'wmt/resource/TerrainResource',
+    'wmt/resource/WeatherResource',
     'wmt/model/WeatherScout',
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
         dialog,
+        fuelModels,
+        fuelMoistureScenarios,
         log,
         messenger,
+        surfaceFireService,
+        surfaceFuelService,
+        terrainService,
+        weatherService,
         WeatherScout,
         util,
         wmt) {
@@ -54,14 +66,21 @@ define([
             // Override the WeatherScout name set by the parent
             this.name = name || 'Fire Lookout';
 
+            this.terrainTuple = terrainService.makeTuple(0, 0, 0);
+            this.fuelModel = fuelModels.getFuelModel(4);
+            this.fuelMoisture = fuelMoistureScenarios.getScenario('Very Low Dead, Fully Cured Herb');
+            this.terrainTuple = terrainService.makeTuple(0, 0, 0);
+            this.surfaceFuel = null;
+            this.requestFireBehavior();
+
             // Override the parent WeatherScout's Openable implementation
             // with a FireLookoutDialog
             var self = this;
             this.openMe = function () {
                 dialog.show(self);
             };
-            
-            
+
+
 
         };
         FireLookout.prototype = Object.create(WeatherScout.prototype);
@@ -71,29 +90,61 @@ define([
          * Updates the weather lookout's weather forecast and location. 
          */
         FireLookout.prototype.refresh = function () {
-            this.refreshForecast();
-            this.refreshPlace();
+            //this.refreshForecast();
+            //this.refreshPlace();
         };
 
         /**
          * Updates this object's weather attribute. 
          */
         FireLookout.prototype.requestFireBehavior = function () {
-            if (!this.latitude || !this.longitude || !this.duration) {
+            if (!this.fuelModel || !this.fuelMoisture) {
+                log.info('FireLookout', 'requestFireBehavior', 'fuelModel and/or fuelMoisture is null.');
                 return;
             }
-            var self = this;
+            var self = this,
+                d1 = $.Deferred(),
+                d2 = $.Deferred(),
+                d3 = $.Deferred();
 
-//            // Get the weather forecast at this location
-//            WeatherResource.pointForecast(
-//                this.latitude,
-//                this.longitude,
-//                this.duration,
+            $.when(d1, d2).done(function (v1, v2) {
+                log.info('FireLookout', 'surfaceFuel', JSON.stringify(v1));
+                log.info('FireLookout', 'weather', JSON.stringify(v2));
+                // Get the conditioned fuel at this location
+                
+                surfaceFireService.surfaceFire(
+                    self.surfaceFuel, self.weatherTuple, self.terrainTuple,
+                    function (json) { // Callback to process JSON result
+                        log.info('FireLookout', 'processSurfaceFire', JSON.stringify(json));
+                        self.surfaceFire = json;
+                    }
+                );
+
+            });
+
+            // Get the conditioned fuel at this location
+            surfaceFuelService.surfaceFuel(
+                this.fuelModel, this.fuelMoisture,
+                function (json) { // Callback to process JSON result
+                    log.info('FireLookout', 'processSurfaceFuel', JSON.stringify(json));
+                    self.surfaceFuel = json;
+                    d1.resolve(json);
+                });
+
+//            terrainService.terrainTuple(0, 0, 0,
 //                function (json) { // Callback to process JSON result
-//                    self.processFireBehavior(json);
-//                    self.fire(wmt.EVENT_WEATHER_CHANGED, self);
+//                    log.info('FireLookout', 'terrain', JSON.stringify(json));
+//                    self.terrainTuple = json;
 //                }
 //            );
+            weatherService.weatherTuple(65, 20, 15, 270, 10,
+                function (json) { // Callback to process JSON result
+                    log.info('FireLookout', 'weather', JSON.stringify(json));
+                    self.weatherTuple = json;
+                    d2.resolve(json);
+                }
+            );
+
         };
 
 
@@ -101,21 +152,9 @@ define([
          * 
          * @param {type} json
          */
-        FireLookout.prototype.processFireBehavior = function (json) {
-            //Log.info('WeatherScout', 'processForecast', JSON.stringify(json));
-
-            var isoTime, i, max;
-
-            this.wxForecast = json;
-            this.temporalWx = this.wxForecast.spatioTemporalWeather.spatialDomain.temporalDomain.temporalWeather;
-            this.range = this.wxForecast.spatioTemporalWeather.range;
-
-            // Add a Date object to each temporal entry
-            for (i = 0, max = this.temporalWx.length; i < max; i++) {
-                // .@time doesn't work because of the '@', so we use ['@time']
-                isoTime = this.temporalWx[i]['@time'];
-                this.temporalWx[i].time = new Date(isoTime);
-            }
+        FireLookout.prototype.processSurfaceFuel = function (json) {
+            log.info('FireLookout', 'processSurfaceFuel', JSON.stringify(json));
+            this.surfaceFuel = json;
         };
 
         return FireLookout;
