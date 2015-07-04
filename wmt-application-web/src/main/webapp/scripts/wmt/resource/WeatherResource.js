@@ -35,9 +35,9 @@ define([
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
-        Log,
-        WmtUtil,
-        Wmt) {
+        log,
+        util,
+        wmt) {
         "use strict";
         var WeatherResource = {
             /**
@@ -48,11 +48,19 @@ define([
              * @param {Number} windSpdKts Wind speed in knots.
              * @param {Number} windDir Wind direction in degrees
              * @param {Number} clouds Cloud/skey cover in percent
-             * @param {Function(WeatherTuple)} callback Receives a WeatherTuple JSON object.
+             * @param {Function(JSON)} callback Receives a WeatherTuple JSON object. 
+             * Example: 
+             *  {
+             *      "airTemperature":{"type":"air_temp:F","value":"65.0","unit":"fahrenheit"},
+             *      "relativeHumidity":{"type":"rel_humidity:%","value":"20.0","unit":"%"},
+             *      "windSpeed":{"type":"wind_speed:kts","value":"15.0","unit":"kt"},
+             *      "windDirection":{"type":"wind_dir:deg","value":"270.0","unit":"deg"},
+             *      "cloudCover":{"type":"cloud_cover:%","value":"10.0","unit":"%"}
+             *  }
              */
             weatherTuple: function (airTempF, relHum, windSpdKts, windDir, clouds, callback) {
                 // TODO: assert input values
-                var url = WmtUtil.currentDomain() + Wmt.WEATHER_REST_SERVICE,
+                var url = util.currentDomain() + wmt.WEATHER_REST_SERVICE,
                     query = "mime-type=application/json"
                     + "&airTemperature=" + airTempF
                     + "&relativeHumidity=" + relHum
@@ -71,7 +79,7 @@ define([
              */
             pointForecast: function (latitude, longitude, duration, callback) {
                 // TODO: assert input values
-                var url = WmtUtil.currentDomain() + Wmt.WEATHER_REST_SERVICE + '/pointforecast' ,
+                var url = util.currentDomain() + wmt.WEATHER_REST_SERVICE + '/pointforecast' ,
                     query = "mime-type=application/json"
                     + "&latitude=" + latitude
                     + "&longitude=" + longitude
