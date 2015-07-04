@@ -92,13 +92,11 @@ define([
             this.weatherScoutManager = new WeatherScoutManager(this);
             this.fireLookoutManager = new FireLookoutManager(this);
             this.fuelModelCatalog = new FuelModelCatalog();
-            // Test
-            console.log(this.fuelModelCatalog.getFuelModel(4));
             
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
             this.terrainAtMouse = new Terrain(0, 0, 0, 0, 0);
-            this.applicationTime = new Date();
+            this.applicationTime = new Date(0);
             this.sunlight = {};
             this.fuelModel = null;
             this.fuelMoisture = null;
@@ -111,6 +109,9 @@ define([
             this.lastSolarTime = new Date(0);
             this.SUNLIGHT_DISTANCE_THRESHOLD = 10000; // meters
             this.SUNLIGHT_TIME_THRESHOLD = 15; // minutes
+            
+            // Perform initial updates for time and sunlight
+            this.updateAppTime(new Date());
         };
 
 
