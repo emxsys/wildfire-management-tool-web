@@ -127,7 +127,7 @@ define([
                 }
             }
             // Not found!
-            throw new Error(log.error('IcsMarker', 'findTemplate', 'Invalid symbol type: ' + type));
+            throw new Error(log.warning('IcsMarker', 'findTemplate', 'Invalid symbol type: ' + type));
         };
 
         /**
