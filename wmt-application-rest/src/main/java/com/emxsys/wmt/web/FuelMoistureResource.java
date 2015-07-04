@@ -30,7 +30,9 @@
 package com.emxsys.wmt.web;
 
 import com.emxsys.wildfire.api.BasicFuelMoisture;
+import com.emxsys.wildfire.api.StdFuelMoistureScenario;
 import com.emxsys.wildfire.api.WeatherConditions;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -39,11 +41,14 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -109,10 +114,62 @@ public class FuelMoistureResource {
 
         }
         return Response.ok(
-            mediaType.equals(TEXT_PLAIN_TYPE) ? fuelMoisture.toString() : fuelMoisture,
+            mediaType.equals(TEXT_PLAIN_TYPE)
+                ? fuelMoisture.toString()
+                : fuelMoisture,
             mediaType).build();
-
     }
 
+    /**
+     * Sub-resource locator method for {modelNo}. Retrieves representation of a collection of
+     * com.emxsys.wmt.wildfire.BasicFuelMoisture objects.
+     *
+     * @return A representation of BasicFuelMoisture.
+     */
+    @GET
+    @Path("/scenarios")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response getFuelMoistureScenarios(
+        @DefaultValue("") @QueryParam("mime-type") String mimeType) {
+
+        // Populate an ArrayList with the standard fuel moisture scenarios
+        ArrayList<FuelMoistureScenario> scenarios = new ArrayList<>();
+        for (StdFuelMoistureScenario fm : StdFuelMoistureScenario.values()) {
+            scenarios.add(new FuelMoistureScenario(fm.getScenarioName(), fm.getFuelMoisture()));
+        }
+
+        // Set the MediaType based on mime-type or Accept header...
+        MediaType mediaType = getMediaType(mimeType);
+
+        if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
+            // Handle TEXT/PLAIN type here with a CSV representation
+            StringBuilder sb = new StringBuilder();
+            sb.append("ScenarioName,Dead1hr,Dead10hr,Dead100hr,LiveWoody,LiveHerbaceous\n");
+            for (FuelMoistureScenario scenario : scenarios) {
+                sb.append('\"').append(scenario.name).append('\"')
+                    .append(',').append('\"').append(scenario.fuelMoisture.getDead1HrFuelMoisture()).append('\"')
+                    .append(',').append('\"').append(scenario.fuelMoisture.getDead10HrFuelMoisture()).append('\"')
+                    .append(',').append('\"').append(scenario.fuelMoisture.getDead100HrFuelMoisture()).append('\"')
+                    .append(',').append('\"').append(scenario.fuelMoisture.getLiveWoodyFuelMoisture()).append('\"')
+                    .append(',').append('\"').append(scenario.fuelMoisture.getLiveHerbFuelMoisture()).append('\"')
+                    .append('\n');
+            }
+            return Response.ok(sb.toString(), mediaType).build();
+
+        } else {
+            // Otherwise, let JAXB/Jersey handle vai the message body writer for the
+            // given MediaType. We have to to wrap the collection in a GenericEntity
+            // object in order to preserve information on the parameterised type.
+            GenericEntity<List<FuelMoistureScenario>> entity = new GenericEntity<List<FuelMoistureScenario>>(scenarios) {
+            };
+            return Response.ok(entity, mediaType).build();
+        }
+    }
+
+    private MediaType getMediaType(String mimeType) {
+        final List<MediaType> permittedTypes
+            = Arrays.asList(APPLICATION_JSON_TYPE, APPLICATION_XML_TYPE, TEXT_PLAIN_TYPE);
+        return WebUtil.getPermittedMediaType(mimeType, permittedTypes, headers, TEXT_PLAIN_TYPE);
+    }
 
 }

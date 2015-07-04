@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+
 /**
  *
  * @author Bruce Schubert
@@ -54,11 +55,11 @@ public class FuelMoistureResourceTest extends JerseyTest {
         System.out.println("TESTING: getDefaults");
         BasicFuelMoisture expResult = BasicFuelMoisture.INVALID_FUEL_MOISTURE;
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .accept(MediaType.APPLICATION_XML)
-                .get(ClientResponse.class);
+            .accept(MediaType.APPLICATION_XML)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_XML + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_XML_TYPE));
+            response.getType().equals(MediaType.APPLICATION_XML_TYPE));
         //System.out.println(">>>> " + XmlUtil.format(response.getEntity(String.class)));
         BasicFuelMoisture result = response.getEntity(BasicFuelMoisture.class);
         System.out.println(result.toString());
@@ -75,16 +76,16 @@ public class FuelMoistureResourceTest extends JerseyTest {
         double woody = 5.0;
         BasicFuelMoisture expResult = BasicFuelMoisture.fromDoubles(dead1Hr, dead10Hr, dead100Hr, herb, woody);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("dead1Hr", Double.toString(dead1Hr))
-                .queryParam("dead10Hr", Double.toString(dead10Hr))
-                .queryParam("dead100Hr", Double.toString(dead100Hr))
-                .queryParam("herb", Double.toString(herb))
-                .queryParam("woody", Double.toString(woody))
-                .accept(MediaType.APPLICATION_XML)
-                .get(ClientResponse.class);
+            .queryParam("dead1Hr", Double.toString(dead1Hr))
+            .queryParam("dead10Hr", Double.toString(dead10Hr))
+            .queryParam("dead100Hr", Double.toString(dead100Hr))
+            .queryParam("herb", Double.toString(herb))
+            .queryParam("woody", Double.toString(woody))
+            .accept(MediaType.APPLICATION_XML)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_XML + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_XML_TYPE));
+            response.getType().equals(MediaType.APPLICATION_XML_TYPE));
         //System.out.println(">>>> " + XmlUtil.format(response.getEntity(String.class)));
         BasicFuelMoisture result = response.getEntity(BasicFuelMoisture.class);
         System.out.println(result.toString());
@@ -101,16 +102,16 @@ public class FuelMoistureResourceTest extends JerseyTest {
         double woody = 5.0;
         BasicFuelMoisture expResult = BasicFuelMoisture.fromDoubles(dead1Hr, dead10Hr, dead100Hr, herb, woody);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("dead1Hr", Double.toString(dead1Hr))
-                .queryParam("dead10Hr", Double.toString(dead10Hr))
-                .queryParam("dead100Hr", Double.toString(dead100Hr))
-                .queryParam("herb", Double.toString(herb))
-                .queryParam("woody", Double.toString(woody))
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
+            .queryParam("dead1Hr", Double.toString(dead1Hr))
+            .queryParam("dead10Hr", Double.toString(dead10Hr))
+            .queryParam("dead100Hr", Double.toString(dead100Hr))
+            .queryParam("herb", Double.toString(herb))
+            .queryParam("woody", Double.toString(woody))
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
         //System.out.println(">>>> " + JsonUtil.format(response.getEntity(String.class)));
         BasicFuelMoisture result = response.getEntity(BasicFuelMoisture.class);
         System.out.println(result.toString());
@@ -127,16 +128,16 @@ public class FuelMoistureResourceTest extends JerseyTest {
         double woody = 5.0;
         BasicFuelMoisture expResult = BasicFuelMoisture.fromDoubles(dead1Hr, dead10Hr, dead100Hr, herb, woody);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("dead1Hr", Double.toString(dead1Hr))
-                .queryParam("dead10Hr", Double.toString(dead10Hr))
-                .queryParam("dead100Hr", Double.toString(dead100Hr))
-                .queryParam("herb", Double.toString(herb))
-                .queryParam("woody", Double.toString(woody))
-                .accept(MediaType.TEXT_PLAIN)
-                .get(ClientResponse.class);
+            .queryParam("dead1Hr", Double.toString(dead1Hr))
+            .queryParam("dead10Hr", Double.toString(dead10Hr))
+            .queryParam("dead100Hr", Double.toString(dead100Hr))
+            .queryParam("herb", Double.toString(herb))
+            .queryParam("woody", Double.toString(woody))
+            .accept(MediaType.TEXT_PLAIN)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.TEXT_PLAIN + " but found: " + response.getType(),
-                response.getType().equals(MediaType.TEXT_PLAIN_TYPE));
+            response.getType().equals(MediaType.TEXT_PLAIN_TYPE));
         //System.out.println(">>>> " + response.getEntity(String.class));
         assertTrue(response.getEntity(String.class).equals(expResult.toString()));
     }
@@ -146,13 +147,13 @@ public class FuelMoistureResourceTest extends JerseyTest {
         System.out.println("TESTING: Hot and Dry");
         BasicFuelMoisture expResult = BasicFuelMoisture.fromWeatherConditions(WeatherConditions.HOT_AND_DRY);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("conditions", "hot_and_dry")
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
+            .queryParam("conditions", "hot_and_dry")
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
-        //System.out.println(">>>> " + response.getEntity(BasicFuelMoisture.class).toString());
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+        //System.out.println(">>>> JSON Output:\n" + JsonUtil.format(response.getEntity(String.class)));
         assertTrue(response.getEntity(BasicFuelMoisture.class).equals(expResult));
     }
 
@@ -161,12 +162,12 @@ public class FuelMoistureResourceTest extends JerseyTest {
         System.out.println("TESTING: Cool and Wet");
         BasicFuelMoisture expResult = BasicFuelMoisture.fromWeatherConditions(WeatherConditions.COOL_AND_WET);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("conditions", "cool_and_wet")
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
+            .queryParam("conditions", "cool_and_wet")
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
         //System.out.println(">>>> " + response.getEntity(String.class));
         assertTrue(response.getEntity(BasicFuelMoisture.class).equals(expResult));
     }
@@ -176,14 +177,46 @@ public class FuelMoistureResourceTest extends JerseyTest {
         System.out.println("TESTING: Between Hot and Cool");
         BasicFuelMoisture expResult = BasicFuelMoisture.fromWeatherConditions(WeatherConditions.BETWEEN_HOTDRY_AND_COOLWET);
         ClientResponse response = super.webResource.path("fuelmoisture")
-                .queryParam("conditions", "between_hot_and_cool")
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
+            .queryParam("conditions", "between_hot_and_cool")
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
         assertTrue(response.getStatus() == 200);
         assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
-                response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
         //System.out.println(">>>> " + response.getEntity(String.class));
         assertTrue(response.getEntity(BasicFuelMoisture.class).equals(expResult));
+    }
+
+    @Test
+    public void testScenarios() {
+        //////////////////////////////////////////////////////////////////////////////
+        System.out.println("TESTING: getScenarios>>> Get All Fuel Moisture Scenarios");
+        //////////////////////////////////////////////////////////////////////////////
+
+        FuelModelsResource instance = new FuelModelsResource();
+        ClientResponse response;
+
+        // Test CSV
+        response = super.webResource.path("fuelmoisture/scenarios").accept(MediaType.TEXT_PLAIN).get(ClientResponse.class);
+        assertTrue("Status: expected 200 but got " + response.getStatus(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.TEXT_PLAIN + " but found: " + response.getType(),
+            response.getType().equals(MediaType.TEXT_PLAIN_TYPE));
+        System.out.println(">>>> TEXT Output:\n" + response.getEntity(String.class));
+        
+        // Test XML
+        response = super.webResource.path("fuelmoisture/scenarios").accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        assertTrue("Status: expected 200 but got " + response.getStatus(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.APPLICATION_XML + " but found: " + response.getType(),
+            response.getType().equals(MediaType.APPLICATION_XML_TYPE));
+        System.out.println(">>>> XML Output: \n" + XmlUtil.format(response.getEntity(String.class)));
+
+        // Test JSON
+        response = super.webResource.path("fuelmoisture/scenarios").accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        assertTrue("Status: expected 200 but got " + response.getStatus(), response.getStatus() == 200);
+        assertTrue("Expecting: " + MediaType.APPLICATION_JSON + " but found: " + response.getType(),
+            response.getType().equals(MediaType.APPLICATION_JSON_TYPE));
+        System.out.println(">>>> JSON Output:\n" + JsonUtil.format(response.getEntity(String.class)));
+
     }
 
 }

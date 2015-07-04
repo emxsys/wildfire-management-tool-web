@@ -22,6 +22,9 @@
         <h3>Example: <a href="rs/fuelmodels/6?mime-type=application/json">Single Fuel Model [6] (JSON)</a></h3>
         <h3>Example: <a href="rs/fuelmodels/6?mime-type=application/xml">Single Fuel Model [6] (XML)</a></h3>
         <h3>Example: <a href="rs/fuelmodels/6?mime-type=text/plain">Single Fuel Model [6] (Text)</a></h3>
+        <h3>Example: <a href="rs/fuelmoisture/scenarios?mime-type=text/plain">All Fuel Moisture Scenarios (Text)</a></h3>
+        <h3>Example: <a href="rs/fuelmoisture/scenarios?mime-type=application/json">All Fuel Moisture Scenarios (JSON)</a></h3>
+        <h3>Example: <a href="rs/fuelmoisture/scenarios?mime-type=application/xml">All Fuel Moisture Scenarios (XML)</a></h3>
         <h3>Example: <a href="rs/sunlight?mime-type=application/json&time=<%= ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) %>&latitude=34.2&longitude=-119.2">Sunlight at KOXR (JSON)</a></h2>
         <h3>Example: <a href="rs/sunlight?mime-type=application/xml&time=<%= ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) %>&latitude=34.2&longitude=-119.2">Sunlight at KOXR (XML)</a></h2>
         <h3>Example: <a href="rs/sunlight?mime-type=text/plain&time=<%= ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) %>&latitude=34.2&longitude=-119.2">Sunlight at KOXR (PLAIN)</a></h2>
