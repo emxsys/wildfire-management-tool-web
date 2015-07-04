@@ -39,7 +39,7 @@ See Software Architecture Document (TODO: add wiki link).
         * Run **WMT Application - REST Services**
             * The web server should start automatically. If necessary: NetBeans: Services > Servers > <Server Name> | Start
             * The REST Server page should be displayed in your web browser
-       * Run **WMT Application - Web** project
+        * Run **WMT Application - Web** project
             * The WMT web application should be displayed in your web browser
             * Safari prerequisites: You must enable WebGL
                 * Safari > Preferences > Advanced | Show Develop menu [checked]
@@ -67,3 +67,7 @@ See Software Development Plan (TODO: add wiki link).
 
 * Repo owner or admin
 * Other community or team contact
+
+## Project metrics
+
+* [WMTweb on OpenHub](https://www.openhub.net/p/wildfire-management-tool-web)
