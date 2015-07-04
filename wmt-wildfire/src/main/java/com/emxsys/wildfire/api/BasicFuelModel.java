@@ -128,9 +128,9 @@ public class BasicFuelModel implements FuelModel {
      * @param fuelModelNoOrCode A model no (int) or model code (String).
      * @return A BasicFuelModel corresponding to the model no or model code; may return null.
      */
-    public static BasicFuelModel fromString(String fuelModelNoOrCode) {
-        return from(Integer.parseInt(fuelModelNoOrCode));
-    }
+//    public static BasicFuelModel fromString(String fuelModelNoOrCode) {
+//        return from(Integer.parseInt(fuelModelNoOrCode));
+//    }
 
     public static BasicFuelModel from(StdFuelModelParams13 params) {
         // First, look for an existing fuel model instance...
