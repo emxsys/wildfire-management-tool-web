@@ -60,7 +60,7 @@ public enum StdFuelMoistureScenario {
         return scenarioName;
     }
 
-    public FuelMoisture getFuelMoisture() {
+    public BasicFuelMoisture getFuelMoisture() {
         return fuelMoisture;
     }
 
