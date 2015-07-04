@@ -144,12 +144,8 @@ define([
             this.slope.attributes = new WorldWind.TextAttributes(textAttr);
             this.slope.attributes.offset = lowerLeft;
 
-            // Initial viewpoint
-            this.viewpoint = Viewpoint.ZERO;
-
             /**
              * Handles EVENT_VIEWPOINT_CHANGED.
-             * @param {Viewpoint} 
              */
             this.handleViewpointChangedEvent = function (viewpoint) {
                 this.viewpoint = viewpoint;
@@ -158,28 +154,30 @@ define([
             };
             /**
              * Handles EVENT_SUNLIGHT_CHANGED.
-             * @param {Sunlight} 
              */
             this.handleSunlightChangedEvent = function (sunlight) {
                 this.sunlight = sunlight;
-                this.updateSunlightText();
                 controller.globe.redraw();
             };
+            
+            // Subscribe to changes
             controller.model.on(wmt.EVENT_VIEWPOINT_CHANGED, this.handleViewpointChangedEvent, this);
             controller.model.on(wmt.EVENT_SUNLIGHT_CHANGED, this.handleSunlightChangedEvent, this);
+            
+            // Load Initial values
+            this.handleViewpointChangedEvent(controller.model.viewpoint);
+            this.handleSunlightChangedEvent(controller.model.sunlight);
+            
         };
         // Inherit Renderable functions.
         LocationWidget.prototype = Object.create(WorldWind.Renderable.prototype);
 
+        // Updates the text components
         LocationWidget.prototype.updateLocationText = function () {
             this.latitude.text = formatter.formatDecimalDegreesLat(this.viewpoint.target.latitude, 3);
             this.longitude.text = formatter.formatDecimalDegreesLon(this.viewpoint.target.longitude, 3);
-            this.elevation.text = Math.round(this.viewpoint.target.elevation).toString() + ' m';
+            this.elevation.text = formatter.formatAltitude(this.viewpoint.target.elevation, 'm');
             this.slope.text = formatter.formatAngle360(this.viewpoint.target.slope, 0);
-        };
-        LocationWidget.prototype.updateSunlightText = function () {
-//            this.sunrise.text = formatter.formatDecimalDegreesLat(this.viewpoint.target.latitude, 3);
-//            this.sunset.text = formatter.formatDecimalDegreesLon(this.viewpoint.target.longitude, 3);
         };
 
         /**
@@ -196,7 +194,7 @@ define([
                 slope = this.viewpoint.target.slope || 0.001,
                 aspect = this.viewpoint.target.aspect || 0.001,
                 aspectPt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - aspect), // rotate from 6 o'clock
-                azimuth = this.sunlight.azimuthAngle.value,
+                azimuth = this.sunlight.azimuthAngle ? this.sunlight.azimuthAngle.value : 0,
                 solarPt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - azimuth); // rotate from 6 o'clock
 
             // Translate icons around the dial
