@@ -35,7 +35,7 @@
  */
 define([
     'wmt/controller/Controller',
-    'wmt/view/symbols/TimeWidget',
+    'wmt/view/widgets/TimeWidget',
     'worldwind'],
     function (
         controller,

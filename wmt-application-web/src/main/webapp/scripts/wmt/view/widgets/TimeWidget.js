@@ -208,7 +208,7 @@ define([
         };
 
         /**
-         * Render this LocationWidget. 
+         * Render this TimeWidget. 
          * @param {DrawContext} dc The current draw context.
          */
         TimeWidget.prototype.render = function (dc) {
@@ -216,9 +216,9 @@ define([
             // HACK: Don't allow rotation values to go to zero 
             // else z-ording gets confused with non-rotated images
             // appearing on top of rotated images.
-            var localHour = this.sunlight.localHourAngle.value,
-                sunriseHour = this.sunlight.sunriseHourAngle.value,
-                sunsetHour = this.sunlight.sunsetHourAngle.value,
+            var localHour =  this.sunlight.localHourAngle ? this.sunlight.localHourAngle.value : 0,
+                sunriseHour = this.sunlight.sunriseHourAngle ? this.sunlight.sunriseHourAngle.value : 0,
+                sunsetHour = this.sunlight.sunsetHourAngle.value ? this.sunlight.sunsetHourAngle.value : 0,
                 RADIUS = 50,
                 solarPt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -localHour); // rotate from 6 o'clock
 //                Pt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - aspect), // rotate from 6 o'clock
