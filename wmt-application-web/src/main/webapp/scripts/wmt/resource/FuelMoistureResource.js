@@ -99,14 +99,24 @@ define([
              *  ...
              *  } ]
              *}
-             */            
-            fuelMoistureScenarios: function (
-                callback) {
+             */
+            fuelMoistureScenarios: function (callback, async) {
                 // TODO: Assert conditions are valid
                 var url = util.currentDomain() + wmt.FUELMOISTURE_REST_SERVICE + "/scenarios",
                     query = "mime-type=application/json";
+                
                 console.log(url + '?' + query);
-                $.get(url, query, callback);
+                if (async === undefined || async) {
+                    $.get(url, query, callback);
+                }
+                else {
+                    $.ajax({
+                        url: url,
+                        data: query,
+                        success: callback,
+                        async: false
+                    });
+                }
             }
         };
         return FuelMoistureResource;

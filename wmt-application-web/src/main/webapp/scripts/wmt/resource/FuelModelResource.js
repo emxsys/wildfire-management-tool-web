@@ -50,14 +50,26 @@ define([
              * 
              * @param {String} category Fuel model category: either "all", "standard" or "original".
              * @param {Function(FuelModel JSON)} callback Receives an array of fuel model JSON objects.
+             * @param {Boolean} async If true, performs asynchronous request.
              */
-            fuelModels: function (category, callback) {
+            fuelModels: function (category, callback, async) {
 
                 var url = WmtUtil.currentDomain() + Wmt.FUELMODELS_REST_SERVICE,
                     query = "mime-type=application/json"
                     + "&category=" + category;
                 console.log(url + '?' + query);
-                $.get(url, query, callback);
+
+                if (async === undefined || async) {
+                    $.get(url, query, callback);
+                }
+                else {
+                    $.ajax({
+                        url: url,
+                        data: query,
+                        success: callback,
+                        async: false
+                    });
+                }
             },
             /**
              * Gets a fuel model JSON object for the given fuel model identifier.
@@ -89,7 +101,11 @@ define([
                 var url = WmtUtil.currentDomain() + Wmt.FUELMODELS_REST_SERVICE + "/" + modelNo,
                     query = "mime-type=application/json";
                 console.log(url + '?' + query);
-                $.get(url, query, callback);
+                // Deferred callback - synchronous
+                $.when($.get(url, query)).then(function (data, textStatus, jqXHR) {
+                    // when all AJAX requests are complete
+                    callback(data);
+                });
             }
         };
         return FuelModelResource;
