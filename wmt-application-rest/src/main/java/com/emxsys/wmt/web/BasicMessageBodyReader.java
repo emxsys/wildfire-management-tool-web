@@ -49,15 +49,15 @@ import javax.xml.bind.JAXBException;
  * @author Bruce Schubert
  * @param <T>
  */
-public class BasicMessageBodyReader<T> implements MessageBodyReader<T> {
+public abstract class BasicMessageBodyReader<T> implements MessageBodyReader<T> {
 
     Exception lastError = null;
 
-    @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
-                              MediaType mediaType) {
-        return type == SurfaceFuel.class;
-    }
+//    @Override
+//    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
+//                              MediaType mediaType) {
+//        return true
+//    }
 
     @Override
     public T readFrom(

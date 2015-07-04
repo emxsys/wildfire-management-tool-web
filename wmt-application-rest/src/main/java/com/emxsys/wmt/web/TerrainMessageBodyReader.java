@@ -30,6 +30,10 @@
 package com.emxsys.wmt.web;
 
 import com.emxsys.gis.api.BasicTerrain;
+import com.emxsys.wildfire.behavior.SurfaceFuel;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 
@@ -41,5 +45,11 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class TerrainMessageBodyReader extends BasicMessageBodyReader<BasicTerrain> {
+
+    @Override
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
+                              MediaType mediaType) {
+        return type == BasicTerrain.class;
+    }
 
 }

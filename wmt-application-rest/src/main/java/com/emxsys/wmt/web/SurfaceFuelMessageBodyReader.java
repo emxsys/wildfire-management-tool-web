@@ -30,6 +30,9 @@
 package com.emxsys.wmt.web;
 
 import com.emxsys.wildfire.behavior.SurfaceFuel;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 
@@ -41,5 +44,11 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class SurfaceFuelMessageBodyReader extends BasicMessageBodyReader<SurfaceFuel> {
+    
+    @Override
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
+                              MediaType mediaType) {
+        return type == SurfaceFuel.class;
+    }
 
 }

@@ -30,6 +30,9 @@
 package com.emxsys.wmt.web;
 
 import com.emxsys.wildfire.api.BasicFuelModel;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 
@@ -41,5 +44,11 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class FuelModelMessageBodyReader extends BasicMessageBodyReader<BasicFuelModel> {
+    
+    @Override
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
+                              MediaType mediaType) {
+        return type == BasicFuelModel.class;
+    }
 
 }
