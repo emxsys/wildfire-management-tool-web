@@ -218,12 +218,105 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-                            <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>
+                    <div class="col-xs-11 col-sm-11">
+                        <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
+                            <!--Location Panel-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     id="controlPanelLocationHeading"
+                                     role="tab" 
+                                     data-toggle="collapse" 
+                                     data-parent="#controlPanelAccordion" 
+                                     href="#controlPanelLocationBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="controlPanelLocationBody">                           
+                                    <h4 class="panel-title">
+                                        Location
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="controlPanelLocationHeading"
+                                     id="controlPanelLocationBody" >
+                                    <div class="panel-body">
+                                        <div class="btn-group btn-block" role="group">
+                                            <button id="findMe" 
+                                                    class="btn btn-default" 
+                                                    type="button"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="Centers the globe on your location.">
+                                                Find Me
+                                            </button>
+                                            <button id="followMe" 
+                                                    class="btn btn-default" 
+                                                    type="button"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="Keeps the globe centered on your location.">
+                                                Follow Me
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <!--Settings-->
+                            <div class="panel panel-default">
+                                <div id="controlPanelSettingsHeading"
+                                     class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#controlPanelAccordion" 
+                                     href="#controlPanelSettingsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="controlPanelSettingsBody" 
+                                     role="tab">
+                                    <h4 class="panel-title">
+                                        Settings
+                                    </h4>
+                                </div>
+                                <div id="controlPanelSettingsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="conntrolPanelSettingsHeading">
+                                    <div class="panel-body">
+                                        <ul>
+                                            <li>A...</li>
+                                            <li>B...</li>
+                                            <li>C...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Options-->
+                            <div class="panel panel-default">
+                                <div id="controlPanelOptionsHeading"
+                                     class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#controlPanelAccordion" 
+                                     href="#controlPanelOptionsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="controlPanelOptionsBody"
+                                     role="tab" >
+                                    <h4 class="panel-title">
+                                        Options
+                                    </h4>
+                                </div>
+                                <div id="controlPanelOptionsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="controlPanelOptionsHeading">
+                                    <div class="panel-body">
+                                        <li> 
+                                        </li>  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="c-menu__items">
+                            <!--                            <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>-->
                             <li class="c-menu__item"><a id="ctrlPanelGlobe" href="#" class="c-menu__link panel panel-default">Globe</a></li>
-                            <li class="c-menu__item"><a id="ctrlPanelSettings" href="#" class="c-menu__link panel panel-default">Settings</a></li>
-                            <li class="c-menu__item"><a id="ctrlPanelOptions" href="#" class="c-menu__link panel panel-default">Options</a></li>            
+                            <!--                            <li class="c-menu__item"><a id="ctrlPanelSettings" href="#" class="c-menu__link panel panel-default">Settings</a></li>
+                                                        <li class="c-menu__item"><a id="ctrlPanelOptions" href="#" class="c-menu__link panel panel-default">Options</a></li>            -->
                         </ul>
                     </div>
                 </div>
@@ -283,7 +376,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>
                 <div class="row" style="padding-top: 0px">
-                                        
+
                 </div>
             </div>
         </nav>        
@@ -1209,14 +1302,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!--Google Analytics-->
         <script>
-                (function (i, s, o, g, r, a, m) {
-                    i['GoogleAnalyticsObject'] = r;
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-                    }, i[r].l = 1 * new Date();
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
                 a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];                 a.async = 1;
-            a.src = g;
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
                 m.parentNode.insertBefore(a, m)
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 

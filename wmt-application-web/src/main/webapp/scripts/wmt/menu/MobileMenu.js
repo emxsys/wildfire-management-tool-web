@@ -81,7 +81,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelLocation','#ctrlPanelGlobe','#ctrlPanelSettings','#ctrlPanelOptions'),
+                    Array('#ctrlPanelGlobe'),
                     '50',
                     '100%',
                     '85%'
