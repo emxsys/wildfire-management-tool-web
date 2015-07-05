@@ -152,28 +152,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </li>
                     </ul>
                     <!--Navbar Search-->
-<!--                    <div class="navbar-form navbar-right"
-                         style="padding-right: 0; padding-left: 0"
-                         id="searchBox">
-                        <div class="form-group">
-                            <input type="text" 
-                                   class="form-control"
-                                   style="width: 150px"
-                                   placeholder="Go To..."
-                                   id="searchText">
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" 
-                                    class="btn btn-default glyphicon glyphicon-circle-arrow-left"
-                                    id="searchUndo">
-                            </button>
-                            <button type="button" 
-                                    class="btn btn-default glyphicon glyphicon-circle-arrow-right"
-                                    id="searchRedo">
-                                </span>  
-                            </button>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="navbar-form navbar-right"
+                                             style="padding-right: 0; padding-left: 0"
+                                             id="searchBox">
+                                            <div class="form-group">
+                                                <input type="text" 
+                                                       class="form-control"
+                                                       style="width: 150px"
+                                                       placeholder="Go To..."
+                                                       id="searchText">
+                                            </div>
+                                            <div class="btn-group">
+                                                <button type="button" 
+                                                        class="btn btn-default glyphicon glyphicon-circle-arrow-left"
+                                                        id="searchUndo">
+                                                </button>
+                                                <button type="button" 
+                                                        class="btn btn-default glyphicon glyphicon-circle-arrow-right"
+                                                        id="searchRedo">
+                                                    </span>  
+                                                </button>
+                                            </div>
+                                        </div>-->
                     <!--Help button - hidden until we make room by adjusting button margins-->
                     <!-- <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -232,19 +232,61 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <div id="c-maskCtrlPanel" class="c-mask"></div>
 
-        <nav id="mobileLocation" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
+        <nav id="mobileGlobe" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:5%">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="globeCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                    <div class="col-xs-3 col-sm-3" style="float:right;padding-top:0px;">
+                        <h5>Reset</h5>                        
+                        <button id="resetHeading" 
+                                class="btn btn-default" 
+                                type="button"
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Reset to north up">
+                            Heading
+                        </button>
+                        <button id="resetView" 
+                                class="btn btn-default"
+                                style="margin-top:3px;"
+                                type="button"
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Reset to north up and look down">
+                            View
+                        </button>
+                        <button id="resetGlobe" 
+                                class="btn btn-default" 
+                                style="margin-top:3px;"
+                                type="button"
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Reset view to factory defaults">
+                            Globe
+                        </button>                        
+                    </div>
+                    <div class="col-xs-9 col-sm-9" >
+                        <div id="controlPanelGlobeBody" >
+                            <div class="panel-body">
+                                <h5>Projection</h5>
+                                <div class="dropdown" 
+                                     id="projectionDropdown">
+                                    <h6>Initializing...</h6>
+                                </div>                                
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="row" style="padding-top: 0px">
+                                        
+                </div>
             </div>
-        </nav>
-
-        <div id="c-maskLocation" class="c-mask"></div>
+        </nav>        
 
         <!--        <nav id="" class="hidden-md hidden-lg c-menu">
                     <div class="container-fluid" style="margin-top:37px">
@@ -883,7 +925,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                     </ul>
                                                 </div>-->
                         <!--DOM UI elements go here!-->                
-                        <div class="container-full non-interactive" Style="position:absolute;top:5px">
+                        <div class="container-full non-interactive" Style="position:absolute;top:5px"> 
                             <div class="row">
                                 <!--Control Panel Button-->
                                 <div class="col-xs-2 col-sm-1 hidden-md hidden-lg">
@@ -1167,15 +1209,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!--Google Analytics-->
         <script>
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
+                (function (i, s, o, g, r, a, m) {
+                    i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
+                (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
                 a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
+                m = s.getElementsByTagName(o)[0];                 a.async = 1;
+            a.src = g;
                 m.parentNode.insertBefore(a, m)
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
