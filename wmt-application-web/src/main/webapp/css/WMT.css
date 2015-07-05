@@ -27,11 +27,9 @@
 }
 
 #timeControlSlider {
-    //position: absolute;  /* "Lifts" the element to actually overlay the globe canvas */
-    float:left; /* Push to the left side of the globe */
-    height:25px;
-    //top:5px;
-    //left:5px;
+    position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
+    bottom: 5%;   
+    left: 29%;
 }
 
 #timeControlSlider .ui-slider-handle {

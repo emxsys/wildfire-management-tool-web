@@ -1122,7 +1122,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                             <div class="row" style="padding-top: 5px;padding-left: 5px;">
                                 <!--DateTime slider-->
-                                <div id="timeControlSlider" class="col-xs-7 col-sm-7 interactive"></div>
+                                <div id="timeControlSlider" class="col-xs-5 col-sm-5 interactive"></div>
                             </div>
 
                         </div>
