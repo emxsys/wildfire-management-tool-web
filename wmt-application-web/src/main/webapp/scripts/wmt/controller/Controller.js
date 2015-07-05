@@ -94,8 +94,10 @@ define([
                 this.updateTimeout = null;
                 this.updateInterval = 50;
 
-                // Counter used to display conditional messages
+                // Counters used to display conditional messages
+                this.lookoutDnDCount = 0;
                 this.markerDnDCount = 0;
+                this.scoutDnDCount = 0;
 
                 // Setup to update each time the World Window is repainted.
                 var self = this;
@@ -122,12 +124,18 @@ define([
              */
             dropFireLookoutOnGlobe: function (fireLookout) {
                 var self = this,
-                    onDropCallback = function (fireLookout) {
-                        // This callback function is invoked when the DnD drop is completed.
-                        // The DnD controller will add/update the scout object lat/lon properties
-                        // at the drop point prior to invoking this function.
-                        self.model.fireLookoutManager.addLookout(fireLookout);
-                    };
+                    onDropCallback;
+
+                if (this.lookoutDnDCount < 2) {
+                    this.lookoutDnDCount++;
+                    messenger.infoGrowl("Click on the globe to place the fire lookout.", "Instructions");
+                }
+                onDropCallback = function (fireLookout) {
+                    // This callback function is invoked when the DnD drop is completed.
+                    // The DnD controller will add/update the scout object lat/lon properties
+                    // at the drop point prior to invoking this function.
+                    self.model.fireLookoutManager.addLookout(fireLookout);
+                };
                 // Start the DnD for the lookout
                 this.globe.dndController.armDrop(fireLookout, onDropCallback);
             },
@@ -156,12 +164,18 @@ define([
              */
             dropWeatherScoutOnGlobe: function (wxScout) {
                 var self = this,
-                    onDropCallback = function (wxScout) {
-                        // This callback function is invoked when the DnD drop is completed.
-                        // The DnD controller will add/update the scout object lat/lon properties
-                        // at the drop point prior to invoking this function.
-                        self.model.weatherScoutManager.addScout(wxScout);
-                    };
+                    onDropCallback;
+
+                if (this.scoutDnDCount < 2) {
+                    this.scoutDnDCount++;
+                    messenger.infoGrowl("Click on the globe to place the weather scout.", "Instructions");
+                }
+                onDropCallback = function (wxScout) {
+                    // This callback function is invoked when the DnD drop is completed.
+                    // The DnD controller will add/update the scout object lat/lon properties
+                    // at the drop point prior to invoking this function.
+                    self.model.weatherScoutManager.addScout(wxScout);
+                };
                 // Start the DnD for the scout
                 this.globe.dndController.armDrop(wxScout, onDropCallback);
             },
