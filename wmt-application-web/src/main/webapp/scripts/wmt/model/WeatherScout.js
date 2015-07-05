@@ -188,7 +188,7 @@ define([
         /**
          * Updates this object's weather attribute. 
          */
-        WeatherScout.prototype.refreshForecast = function () {
+        WeatherScout.prototype.refreshForecast = function (deferred) {
             if (!this.latitude || !this.longitude || !this.duration) {
                 return;
             }
@@ -202,6 +202,9 @@ define([
                 function (json) { // Callback to process JSON result
                     self.processForecast(json);
                     self.fire(wmt.EVENT_WEATHER_CHANGED, self);
+                    if (deferred) {
+                        deferred.resolve(self);
+                    }
                 }
             );
         };

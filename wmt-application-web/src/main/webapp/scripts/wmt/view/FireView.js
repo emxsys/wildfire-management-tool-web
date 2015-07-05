@@ -76,7 +76,7 @@ define([
                             "Could not find a Layer named " + wmt.FIRE_BEHAVIOR_LAYER_NAME));
                 }
 
-                // Add button event handlers
+                // Event handler for new FireLookouts
                 $("#createFireLookout").on("click", function (event) {
                     controller.dropFireLookoutOnGlobe(new FireLookout());
                 });  
