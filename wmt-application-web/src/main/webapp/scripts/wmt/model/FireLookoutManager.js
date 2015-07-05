@@ -60,10 +60,14 @@ define([
             // Subscribe to removal notifications
             lookout.on(wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
 
-            // Manage this object
+            // Place the lookout under the management of this module
             this.lookouts.push(lookout);
 
+            // Notify views that we have a new lookout
             this.fire(wmt.EVENT_FIRE_LOOKOUT_ADDED, lookout);
+            
+            // Now that views are attached, invoke a refresh which will notify the view of any updates as they occur.
+            lookout.refresh();
         };
 
         /**
