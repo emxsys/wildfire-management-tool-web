@@ -80,7 +80,9 @@ define([
             // Create Click/Drop (DnD) palettes 
             this.markerPalette = new MarkerPalette('#icsMarkerPalette', IcsMarker.templates);
             this.pushpinPalette = new MarkerPalette('#pushpinPalette', Pushpin.templates);
-
+            //this.mobileMarkerPalette = new MarkerPalette('#mobileIcsMarkerPalette', IcsMarker.templates);
+            //this.mobilePushpinPalette = new MarkerPalette('#mobilePushpinPalette', Pushpin.templates);
+            
             // Add button event handlers
             $("#createMarker").on("click", function (event) {
                 // Show the ICS Marker palette, and then call the createMarkerCallback function
