@@ -221,9 +221,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="col-xs-9 col-sm-9"
                          <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="ctrlPanelLocation" href="#" class="c-menu__link panel panel-default">Location</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Globe</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Settings</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default">Options</a></li>            
+                            <li class="c-menu__item"><a id="ctrlPanelGlobe" href="#" class="c-menu__link panel panel-default">Globe</a></li>
+                            <li class="c-menu__item"><a id="ctrlPanelSettings" href="#" class="c-menu__link panel panel-default">Settings</a></li>
+                            <li class="c-menu__item"><a id="ctrlPanelOptions" href="#" class="c-menu__link panel panel-default">Options</a></li>            
                         </ul>
                     </div>
                 </div>
@@ -245,6 +245,91 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>
 
         <div id="c-maskLocation" class="c-mask"></div>
+        
+<!--        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        
+        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        
+        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        
+        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        
+        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        
+        <nav id="" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-9 col-sm-9"
+                         <ul class="c-menu__items">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-mask" class="c-mask"></div>
+        -->
 
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
@@ -814,7 +899,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                             <!--<div class='container-full'>-->  
                             <!--DateTime slider-->
-                            <div id="timeControlSlider" class="col-xs-7 col-sm-7"></div>
+                            <div id="timeControlSlider" class="col-xs-7 col-sm-7 "></div>
                         </div>
                         <div id="bottom"></div>
                         <!--/DOM UI elements-->
