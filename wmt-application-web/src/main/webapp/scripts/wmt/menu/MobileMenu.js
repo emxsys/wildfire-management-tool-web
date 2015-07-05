@@ -54,7 +54,7 @@ define([],
                 (function () {
                     var toggles = $("#mobileMenuButton"),
                         i;
-                        
+
                     for (i = toggles.length - 1; i >= 0; i--) {
                         var toggle = toggles[i];
                         toggleHandler(toggle);
@@ -76,8 +76,8 @@ define([],
                     '#mobileMenu',
                     'slide-left',
                     '#c-maskMain',
-                    '',
-                    '',
+                    Array(''),
+                    Array('#ctrlPanelLocation','#ctrlPanelGlobe','#ctrlPanelSettings','#ctrlPanelOptions'),
                     '50',
                     '100%',
                     '85%'
@@ -98,8 +98,8 @@ define([],
                 menuId, //the menu ID                        
                 type, // The menu type
                 maskId, // The ID of the mask
-                openBtnId, // The ID of the button that opens the menu
-                closeBtnId, // The ID of the button that closes the menu    
+                openBtnIds, // The ID of the button that opens the menu
+                closeBtnIds, // Array of IDs of buttons that closes the menu    
                 zIndex,
                 height,
                 width
@@ -117,9 +117,19 @@ define([],
                 //Initialize class variables
                 this.body = document.body;
                 this.mask = $(maskId);
-                this.menu = $(menuId);
-                this.openBtn = $(openBtnId);
-                this.closeBtn = $(closeBtnId);
+                this.menu = $(menuId);                
+                this.openBtns = new Array();                
+                this.closeBtns = new Array();
+                
+                //build array of opening button objects
+                for (var i=0; i < openBtnIds.length; i++){
+                  this.openBtns.push($(openBtnIds[i])); 
+                };
+                
+                //build array of closing button objects
+                for (var i=0; i < closeBtnIds.length; i++){
+                  this.closeBtns.push($(closeBtnIds[i])); 
+                };
 
                 /**
                  * Menu Options.
@@ -128,8 +138,8 @@ define([],
                     menuId: '', //the menu ID                        
                     type: '', // The menu type
                     maskId: '', // The ID of the mask
-                    openBtnId: '', // The ID of the button that opens the menu
-                    closeBtnId: '', // The ID of the button that closes the menu    
+                    openBtnIds: new Array(''), // The ID of the button that opens the menu
+                    closeBtnIds: new Array(''), // The ID of the button that closes the menu    
                     zIndex: '',
                     height: '',
                     width: ''            // The ID of the mask
@@ -139,8 +149,8 @@ define([],
                     menuId: menuId, //the menu ID                        
                     type: type, // The menu type
                     maskId: maskId, // The ID of the mask
-                    openBtnId: openBtnId, // The ID of the button that opens the menu
-                    closeBtnId: closeBtnId, // The ID of the button that closes the menu    
+                    openBtnIds: openBtnIds, // The ID of the button that opens the menu
+                    closeBtnIds: closeBtnIds, // The ID of the button that closes the menu    
                     zIndex: zIndex,
                     height: height,
                     width: width
@@ -182,20 +192,25 @@ define([],
 
                 //Initialize Event Handlers.                 
                 this._initEvents = function () {
+                    var Menu = this;
                     // Event for clicks on the mask.
-                    this.mask.click({Menu: this}, function (e) {
+                    this.mask.click(function (e) {
                         e.preventDefault();
-                        e.data.Menu.close();
+                        Menu.close();
                     });
                     //Event for the button that opens the menu
-                    this.openBtn.click({Menu: this}, function (e) {
-                        e.preventDefault();
-                        e.data.Menu.open();
+                    this.openBtns.forEach(function (element,index,array) {
+                        element.click(function (e) {
+                            e.preventDefault();
+                            Menu.open();
+                        });
                     });
                     //Event for the button that closes the menu
-                    this.closeBtn.click({Menu: this}, function (e) {
-                        e.prevenDefault();
-                        e.data.Menu.close();
+                    this.closeBtns.forEach(function (element,index,array) {
+                        element.click(function (e) {
+                            e.preventDefault();
+                            Menu.close();
+                        });
                     });
                 };
 

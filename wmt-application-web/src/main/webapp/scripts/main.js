@@ -53,7 +53,7 @@ requirejs.config({
 //        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
         wmt: "../../scripts/wmt", // WMT path prefix
         worldwind: [
-            "WorldWind",
+            "WorldWind"//,
             //"http://worldwindserver.net/webworldwind/worldwindlib"
         ]
     }
@@ -68,14 +68,14 @@ requirejs.config({
 //    }
 });
 
-requirejs(['wmt/Wmt', 'wmt/WmtClient'],
+requirejs(['wmt/Wmt', 'wmt/WmtClient', '../nasa/WorldWind'],
     function (Wmt, WmtClient, worldwind) {
         "use strict";
 
         // Specify the where the World Wind resources are located.
-        WorldWind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
+        worldwind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
         // Set the logging level for the World Wind library
-        WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+        worldwind.Logger.setLoggingLevel(worldwind.Logger.LEVEL_WARNING);
 
         // Create the WMT app and make it accessable via a global variable.
         // This is the only global variable created by the WMT.
