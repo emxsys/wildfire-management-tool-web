@@ -201,9 +201,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="col-xs-9 col-sm-9"
                          <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
-                            <li class="c-menu__item"><a id="" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
+                            <li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                            <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
+                            <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
                         </ul>
                     </div>
                 </div>
@@ -381,89 +381,150 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>        
 
-        <!--        <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
+        <nav id="mobileLayers" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-11 col-sm-11">
+                        <!--Settings-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading collapsed" 
+                                 data-toggle="collapse" 
+                                 data-parent="#layersAccordion" 
+                                 href="#layerSettingsBody" 
+                                 aria-expanded="false" 
+                                 aria-controls="layerSettingsBody"
+                                 role="tab" 
+                                 id="labelSettingsHeading">
+                                <h4 class="panel-title">
+                                    Settings
+                                </h4>
+                            </div>
+                            <div id="layerSettingsBody" 
+                                 class="panel-collapse collapse" 
+                                 role="tabpanel" 
+                                 aria-labelledby="layerSettingsHeading">
+                                <div class="panel-body">
+                                    <ul>
+                                        <li>A...</li>
+                                        <li>B...</li>
+                                        <li>C...</li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="c-menu__items">
+                            <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default">Layers List</a></li>            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskMobileLayers" class="c-mask"></div>
+
+        <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:5%;">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="layersListCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-xs-12 col-sm-12">
+                         <!--Layer List-->
+                         <div class="panel panel-default">
+                            <!--Show this panel at startup via "collapsed.in"-->
+                            <div class="panel-heading collapsed" 
+                                 data-toggle="collapse" 
+                                 data-parent="#layersAccordion" 
+                                 href="#layerListBody" 
+                                 aria-expanded="false" 
+                                 aria-controls="layerListBody"
+                                 role="tab" 
+                                 id="layerListHeading">
+                                <h4 class="panel-title">
+                                    Layer List
+                                </h4>
+                            </div>
+                            <div class="panel-collapse collapse in" 
+                                 role="tabpanel" 
+                                 aria-labelledby="layerListHeading"
+                                 id="layerListBody" >
+                                <div class="panel-body">
+                                    <ul class="list-group"
+                                        style="max-height:150px;overflow-y: scroll;"
+                                        id="layerList">
+                                    </ul>                              
+                                </div>
                             </div>
                         </div>
                     </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
-                
-                <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
-                
-                <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
-                
-                <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
-                
-                <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
-                
-                <nav id="" class="hidden-md hidden-lg c-menu">
-                    <div class="container-fluid" style="margin-top:37px">
-                        <div class="row" style="padding-top: 10px">
-                            <div class="col-xs-9 col-sm-9"
-                                 <ul class="c-menu__items">
-        
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-        
-                <div id="c-mask" class="c-mask"></div>
+                </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskLayersList" class="c-mask"></div>
+
+        <!--         <nav id="" class="hidden-md hidden-lg c-menu">
+                     <div class="container-fluid" style="margin-top:37px">
+                         <div class="row" style="padding-top: 10px">
+                             <div class="col-xs-9 col-sm-9"
+                                  <ul class="c-menu__items">
+         
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </nav>
+         
+                 <div id="c-mask" class="c-mask"></div>
+                 
+                 <nav id="" class="hidden-md hidden-lg c-menu">
+                     <div class="container-fluid" style="margin-top:37px">
+                         <div class="row" style="padding-top: 10px">
+                             <div class="col-xs-9 col-sm-9"
+                                  <ul class="c-menu__items">
+         
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </nav>
+         
+                 <div id="c-mask" class="c-mask"></div>
+                 
+                 <nav id="" class="hidden-md hidden-lg c-menu">
+                     <div class="container-fluid" style="margin-top:37px">
+                         <div class="row" style="padding-top: 10px">
+                             <div class="col-xs-9 col-sm-9"
+                                  <ul class="c-menu__items">
+         
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </nav>
+         
+                 <div id="c-mask" class="c-mask"></div>
+                 
+                 <nav id="" class="hidden-md hidden-lg c-menu">
+                     <div class="container-fluid" style="margin-top:37px">
+                         <div class="row" style="padding-top: 10px">
+                             <div class="col-xs-9 col-sm-9"
+                                  <ul class="c-menu__items">
+         
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </nav>
+         
+                 <div id="c-mask" class="c-mask"></div>
         -->
 
         <!--WMTweb: Globe and Sidebars--> 

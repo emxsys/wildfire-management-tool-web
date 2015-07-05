@@ -84,12 +84,31 @@ define([
                 'slide-top',
                 '', 
                 Array('#ctrlPanelGlobe'),
-                Array('#globeCancel','#globeCheck'),
+                Array('#globeCheck'),
                 '110',
                 '27%',
                 '100%'
                 );
-
+            var mobileLayers = new mobileMenu.Menu(
+                '#mobileLayers',
+                'slide-right',
+                '#c-maskMobileLayers',
+                Array('#mobileLayersButton'),
+                Array('#layersListButton'),
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileLayersList = new mobileMenu.Menu(
+                '#mobileLayersList',
+                'slide-top',
+                '', 
+                Array('#layersListButton'),
+                Array('#layersListCheck'),
+                '110',
+                '47%',
+                '100%'
+                );
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {

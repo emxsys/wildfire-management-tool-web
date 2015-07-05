@@ -77,6 +77,10 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#layersListButton').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
 
                 })();
@@ -85,7 +89,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe','#findMe'),
+                    Array('#ctrlPanelGlobe','#findMe','#layersListButton'),
                     '50',
                     '100%',
                     '85%'
