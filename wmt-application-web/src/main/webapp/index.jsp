@@ -1071,7 +1071,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <!--Prime UI Notify Widget--> 
                     <div id="notify"></div>
                     <!--Prime UI Growl Widget--> 
-                    <div id="growl"></div>  
+                    <div id="growl" style="z-index:1000;"></div>  
                 </div>
 
                 <!--Prime UI About Box Dialog--> 
