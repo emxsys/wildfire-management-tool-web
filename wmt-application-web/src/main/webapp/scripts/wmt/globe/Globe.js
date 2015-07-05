@@ -106,24 +106,18 @@ define([
         var Globe = function (canvasName, options, layers) {
             // Create the World Window
             this.wwd = new WorldWind.WorldWindow(canvasName);
-
             // Override the default TextSupport with our custom verion that draws outline text
             this.wwd.drawContext.textSupport = new EnhancedTextSupport();
-
             this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
             this.isAnimating = false;
-
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
             this.selectController = new SelectController(this.wwd);
             this.dndController = new DnDController(this.wwd);
             this.keyboardControls = new KeyboardControls(this);
-
             // Add the custom navigator after the select controller so the select controller can
             // consume the mouse events and preempt the pan/drag operation during object move operations.
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
-
-            this.terrainProvider = new TerrainProvider(this.wwd);
-
+            this.terrainProvider = new TerrainProvider(this);
             // Create the default layers
             var self = this,
                 showBackground = options ? options.showBackground : true,
@@ -145,11 +139,10 @@ define([
                     {layer: new WorldWind.RenderableLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME), enabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.WEATHER_LAYER_NAME), enabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.MARKERS_LAYER_NAME), enabled: true},
-                    {layer: new WorldWind.RenderableLayer("Widgets"), enabled: true}
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WIDGETS), enabled: true, hide: true}
                 ],
                 layer,
                 i, max;
-
             // Add optional background layer
             if (showBackground || showBackground === undefined) {
                 layer = new SkyBackgroundLayer(this.wwd);
@@ -190,7 +183,6 @@ define([
                 layer.showZoomControl = (includeZoomControls === undefined) ? true : includeZoomControls;
                 layer.showExaggerationControl = (includeExaggerationControls === undefined) ? wmt.configuration.showExaggerationControl : includeExaggerationControls;
                 layer.showFieldOfViewControl = (includeFieldOfViewControls === undefined) ? wmt.configuration.showFieldOfViewControl : includeFieldOfViewControls;
-
                 layer.hide = true; // hidden in layer list
                 this.wwd.addLayer(layer);
             }
@@ -202,17 +194,19 @@ define([
             this.wwd.addEventListener("click", function (event) {
                 self.setFocus();
             });
-
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
             this.lastViewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
-
         };
-
+        /**
+         * Adds the given layer to the globe
+         * @param {WorldWind.Layer} layer Layer to add.
+         * @param {Boolean} hide Hides the layer from layer list if true.
+         */
         Globe.prototype.addLayer = function (layer, hide) {
             layer.hide = hide === undefined ? false : hide;
             this.wwd.addLayer(layer);
-        }
+        };
 
         /**
          * Finds the World Wind Layer in the layer list with the given display name.
@@ -222,7 +216,6 @@ define([
         Globe.prototype.findLayer = function (name) {
             var layer,
                 i, len;
-
             // Find the Markers layer in the World Window's layer list.
             for (i = 0, len = this.wwd.layers.length; i < len; i++) {
                 layer = this.wwd.layers[i];
@@ -231,7 +224,15 @@ define([
                 }
             }
         };
-
+        /**
+         * Gets terrain at the given latitude and longitude.
+         * @param {Number} latitude.
+         * @param {Number} longitude.
+         * @return {Terrain} A WMT Terrain object at the given lat/lon.
+         */
+        Globe.prototype.getTerrainAtLatLon = function (latitude, longitude) {
+            return this.terrainProvider.terrainAtLatLon(latitude, longitude);
+        };
         /**
          * Gets terrain at the screen point.
          * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
@@ -240,7 +241,6 @@ define([
         Globe.prototype.getTerrainAtScreenPoint = function (screenPoint) {
             var terrainObject,
                 terrain;
-
             // Get the WW terrain at the screen point, it supplies the lat/lon
             terrainObject = this.wwd.pickTerrain(screenPoint).terrainObject();
             if (terrainObject) {
@@ -255,7 +255,6 @@ define([
             }
             return terrain;
         };
-
         /**
          * Gets the current viewpoint at the center of the viewport.
          * @@returns {Viewpoint} A Viewpoint representing the the eye position and the target position.
@@ -268,30 +267,24 @@ define([
                     eyePoint = navigatorState.eyePoint,
                     eyePos = new WorldWind.Position(),
                     target, viewpoint;
-
                 // Avoid costly computations if nothing changed
                 if (eyePoint.equals(this.lastEyePoint)) {
                     return this.lastViewpoint;
                 }
                 this.lastEyePoint.copy(eyePoint);
-
                 // Get the current eye position 
                 wwd.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], eyePos);
-
                 // Get the target (the point under the reticule)
                 target = this.getTerrainAtScreenPoint(centerPoint);
-                
                 // Return the viewpoint
                 viewpoint = new Viewpoint(eyePos, target);
                 this.lastViewpoint.copy(viewpoint);
                 return viewpoint;
-                
             } catch (e) {
                 log.error("Globe", "getViewpoint", e.toString());
                 return Viewpoint.INVALID;
             }
         };
-
         /**
          * Updates the globe via animation.
          * @param {Number} latitude Reqd.
@@ -305,7 +298,6 @@ define([
                 return;
             }
             var self = this;
-
             if (this.isAnimating) {
                 this.goToAnimator.cancel();
             }
@@ -317,7 +309,6 @@ define([
                 }
             });
         };
-
         /**
          * Updates the globe withoug animation.
          * @param {Number} latitude Reqd.
@@ -336,15 +327,12 @@ define([
             }
             this.wwd.redraw();
         };
-
         /** 
          * Redraws the globe.
          */
         Globe.prototype.redraw = function () {
             this.wwd.redraw();
         };
-
-
         /**
          * Resets the viewpoint to the startup configuration settings.
          */
@@ -357,8 +345,6 @@ define([
             this.wwd.navigator.roll = Number(wmt.configuration.startupRoll);
             this.wwd.redraw();
         };
-
-
         /**
          * Resets the viewpoint to north up.
          */
@@ -366,7 +352,6 @@ define([
             this.wwd.navigator.heading = Number(0);
             this.wwd.redraw();
         };
-
         /**
          * Resets the viewpoint to north up and nadir.
          */
@@ -377,18 +362,15 @@ define([
             var viewpoint = this.getViewpoint(),
                 lat = viewpoint.target.latitude,
                 lon = viewpoint.target.longitude;
-
             this.wwd.navigator.heading = 0;
             this.wwd.navigator.tilt = 0;
             this.wwd.redraw(); // calls applyLimits which changes the location
 
             this.lookAt(lat, lon);
         };
-        
-        Globe.prototype.setFocus = function() {
+        Globe.prototype.setFocus = function () {
             this.wwd.canvas.focus();
         };
-
         /**
          * Establishes the projection for this globe.
          * @param {String} projectionName A PROJECTION_NAME_* constant.
@@ -427,7 +409,6 @@ define([
             }
             this.wwd.redraw();
         };
-
         return Globe;
     }
 );
