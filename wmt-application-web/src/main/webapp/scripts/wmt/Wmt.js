@@ -127,6 +127,7 @@ define([],
             LAYER_NAME_RETICLE: "Crosshairs",
             LAYER_NAME_SKY: "Sky",
             LAYER_NAME_VIEW_CONTROLS: "Controls",
+            LAYER_NAME_WIDGETS: "Widgets",
             MARKERS_LAYER_NAME: "Markers",
             /**
              * The maximum range that the globe can be zoomed out to.
