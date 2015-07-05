@@ -87,7 +87,7 @@ define([
             this.relHumidity.pickDelegate = wxModel;
             this.forecastTime.pickDelegate = wxModel;
             
-            // Create an EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
+            // EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
             var self = this;
             this.handleObjectMovedEvent = function (wxModel) {
                 self.skyCover.position.latitude = wxModel.latitude;
@@ -101,10 +101,8 @@ define([
                 self.forecastTime.position.latitude = wxModel.latitude;
                 self.forecastTime.position.longitude = wxModel.longitude;
             };
-            
-            // Create an EVENT_WEATHER_CHANGED handler that updates the symbology
+            // EVENT_WEATHER_CHANGED handler that updates the symbology
             this.handleWeatherChangedEvent = function (wxModel) {
-                
                 var wx = wxModel.getFirstForecast(),
                     timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
 
@@ -115,8 +113,7 @@ define([
                 self.relHumidity.text = wx.relaltiveHumidityPct + '%';
                 self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
             };
-
-            // Create an EVENT_PLACE_CHANGED handler that updates the label
+            // EVENT_PLACE_CHANGED handler that updates the label
             this.handlePlaceChangedEvent = function (wxModel) {
                 // Display the place name
                 if (wxModel.place) {
@@ -129,8 +126,7 @@ define([
                     }
                 }
             };
-
-            // Create an EVENT_PLACE_CHANGED handler that updates the label
+            //EVENT_TIME_CHANGED handler that updates the label
             this.handleTimeChangedEvent = function (time) {
                 var wx = this.wxModel.getForecastAt(time),
                     timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};

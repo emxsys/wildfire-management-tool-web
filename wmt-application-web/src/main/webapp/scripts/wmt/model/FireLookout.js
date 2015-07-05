@@ -64,6 +64,15 @@ define(["require",
         "use strict";
 
 
+        /**
+         * Creates a FireLookout.
+         * @constructor
+         * @param {String} name
+         * @param {String} latitude
+         * @param {String} longitude
+         * @param {String} id
+         * @returns {FireLookout}
+         */
         var FireLookout = function (name, latitude, longitude, id) {
 
             // Inherit the weather forecasting capabilites of the WeatherScout
@@ -87,6 +96,10 @@ define(["require",
             this.fuelModel = fuelModels.getFuelModel(4);
             this.fuelMoisture = fuelMoistureScenarios.getScenario('Very Low Dead, Fully Cured Herb');
             this.surfaceFuel = null;
+            
+            
+            this.refreshInProgress = false;
+            this.refreshPending = false;
 
         };
         FireLookout.prototype = Object.create(WeatherScout.prototype);
@@ -97,17 +110,26 @@ define(["require",
          * Then updates this derived object's fire behavior.
          */
         FireLookout.prototype.refresh = function () {
-            // Note: using require() to get around circular dependency with Controller.
-            var self = this,
-                globe = require("wmt/controller/Controller").globe,
-                d1 = $.Deferred(),
-                d2 = $.Deferred();
-
             if (!this.fuelModel || !this.fuelMoisture) {
                 log.info('FireLookout', 'refresh', 'fuelModel and/or fuelMoisture is null.');
                 return;
             }
+            // Don't queue multiple requests. If a request comes in then 
+            // just fire an immediate refresh after the current one finishes.
+            if (this.refreshInProgress) {
+                this.refreshPending = true;
+                return;
+            }
+            this.refreshInProgress = true;
             
+            // Note: using require() to get around circular dependency with Controller.
+            var self = this,
+                model = require("wmt/controller/Controller").model,
+                globe = model.globe,
+                d1 = $.Deferred(),
+                d2 = $.Deferred(),
+                weatherTuple;
+
             // Refresh Terrain
             this.terrain = globe.getTerrainAtLatLon(this.latitude, this.longitude);
             this.terrainTuple = terrainService.makeTuple(this.terrain.aspect, this.terrain.slope, this.terrain.elevation);
@@ -115,19 +137,31 @@ define(["require",
             // Wait for async fuel and weather updates to finish before computing fire behavior
             // Note: the when and done arguments are position senstive (thus the numbering)
             $.when(d1, d2).done(function (v1, v2) {
+                // Create a weather tuple for the current applciation time
+                weatherTuple = weatherService.makeTuple(self.getForecastAt(model.applicationTime));
+                
                 // Compute fire behavior
                 surfaceFireService.surfaceFire(
-                    self.surfaceFuel, self.weatherTuple, self.terrainTuple,
+                    self.surfaceFuel, weatherTuple, self.terrainTuple,
                     function (json) { // Callback to process JSON result
                         log.info('FireLookout', 'refresh-deferred', JSON.stringify(json));
                         self.surfaceFire = json;
+                        self.fire(wmt.EVENT_FIRE_BEHAVIOR_CHANGED, self);
+                        
+                        // Fire off another refresh if a request was queued while
+                        // this request was being fullfilled.
+                        self.refreshInProgress = false;
+                        if (self.refreshPending) {
+                            self.refreshPending = false;
+                            setTimeout(self.refresh(),0);
+                        }
                     }
                 );
             });
             // Coordinated refresh of wx and fuel
             this.refreshForecast(d1);
             this.refreshSurfaceFuel(d2);
-            
+
             // Uncoordinated 
             this.refreshPlace();
         };

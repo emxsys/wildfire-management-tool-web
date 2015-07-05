@@ -32,12 +32,14 @@
 
 define([
     'wmt/controller/Controller',
+    'wmt/view/symbols/FlameLengthHead',
     'wmt/view/symbols/WildfireDiamond',
     'wmt/util/Log',
     'wmt/Wmt',
     'worldwind'],
     function (
         controller,
+        FlameLengthHead,
         WildfireDiamond,
         logger,
         wmt,
@@ -52,61 +54,54 @@ define([
             // Maintain a reference to the weather object this symbol represents
             this.lookout = lookout;
 
-            var self = this;
+            var self = this,
+                surfaceFire = lookout.surfaceFire,
+                head = surfaceFire ? lookout.surfaceFire.flameLength.value : null;
+                //flank = lookout.surfaceFire.flameLength.value,
+                //head = lookout.surfaceFire.flameLength.value,
 
 
             // Create the weather map symbol components
-            this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude);
+            this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, head, 0, 0, 0);
+            this.flameLengthHead = new FlameLengthHead(lookout.latitude, lookout.longitude, head || '-');
 
             // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
             this.diamond.pickDelegate = lookout;
+            this.flameLengthHead.pickDelegate = lookout;
 
-            // Create an EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
+            // EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
             this.handleObjectMovedEvent = function (lookout) {
                 self.diamond.position.latitude = lookout.latitude;
                 self.diamond.position.longitude = lookout.longitude;
+                self.flameLengthHead.position.latitude = lookout.latitude;
+                self.flameLengthHead.position.longitude = lookout.longitude;
             };
-
-            // Create an EVENT_WEATHER_CHANGED handler that updates 
-            this.handleWeatherChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol","handleWeatherChangedEvent","Unhandled event.");
-
-//                var wx = lookout.getFirstForecast(),
-//                    timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
-//
-//                // Update the values
-//                self.skyCoverPlacemark.updateSkyCoverImage(wx.skyCoverPct);
-//                self.windBarbPlacemark.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
-//                self.airTemperatureText.text = wx.airTemperatureF + 'F';
-//                self.relHumidityText.text = wx.relaltiveHumidityPct + '%';
-//                self.forecastTimeText.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
-            };
-            // Create an EVENT_FIRE_CHANGED handler that updates 
+            // EVENT_FIRE_BEHAVIOR_CHANGED handler 
             this.handleFireBehaviorChangedEvent = function (lookout) {
                 logger.warning("FireBehaviorSymbol","handleFireBehaviorChangedEvent","Unhandled event.");
-            };
+                var head = lookout.surfaceFire.flameLength.value;
+                //flank = lookout.surfaceFire.flameLength.value,
+                //head = lookout.surfaceFire.flameLength.value,
 
-            // Create an EVENT_PLACE_CHANGED handler that updates the label
+                this.diamond.updateWildfireDiamondImage(Math.round(head), 3, 3, 1);
+                this.flameLengthHead.text = Math.round(head) + "'";
+            };
+            // EVENT_WEATHER_CHANGED handler
+            this.handleWeatherChangedEvent = function (lookout) {
+                logger.warning("FireBehaviorSymbol","handleWeatherChangedEvent","Unhandled event.");
+            };
+            // EVENT_PLACE_CHANGED handler
             this.handlePlaceChangedEvent = function (lookout) {
                 // Display the place name
                 if (lookout.placeName) {
                     self.diamond.label = lookout.placeName;
                 }
             };
-
-            // Create an EVENT_TIME_CHANGED handler that updates the label
+            // EVENT_TIME_CHANGED handler
             this.handleTimeChangedEvent = function (time) {
                 logger.warning("FireBehaviorSymbol","handleTimeChangedEvent","Unhandled event.");
-//                var wx = this.lookout.getForecastAt(time),
-//                    timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
-//
-//                // Update the values
-//                self.skyCoverPlacemark.updateSkyCoverImage(wx.skyCoverPct);
-//                self.windBarbPlacemark.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
-//                self.airTemperatureText.text = wx.airTemperatureF + 'F';
-//                self.relHumidityText.text = wx.relaltiveHumidityPct + '%';
-//                self.forecastTimeText.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
+                lookout.refresh();
             };
 
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
@@ -128,6 +123,7 @@ define([
         FireBehaviorSymbol.prototype.render = function (dc) {
 
             this.diamond.render(dc);
+            this.flameLengthHead.render(dc);
         };
 
         return FireBehaviorSymbol;

@@ -41,13 +41,35 @@ define([
         "use strict";
         var WeatherResource = {
             /**
+             * Creates a weather tuple that is compatible with the SurfaceFireResource.
+             * 
+             * @param {Object} wx A weather object from the WeatherScout
+             * @return {JSON} Example: 
+             *  {
+             *      "airTemperature":{"type":"air_temp:F","value":"65.0","unit":"fahrenheit"},
+             *      "relativeHumidity":{"type":"rel_humidity:%","value":"20.0","unit":"%"},
+             *      "windSpeed":{"type":"wind_speed:kts","value":"15.0","unit":"kt"},
+             *      "windDirection":{"type":"wind_dir:deg","value":"270.0","unit":"deg"},
+             *      "cloudCover":{"type":"cloud_cover:%","value":"10.0","unit":"%"}
+             *  }
+             */
+            makeTuple: function (wx) {
+                return JSON.parse('{' +
+                    '"airTemperature":{"type":"air_temp:F","value":"' + wx.airTemperatureF + '","unit":"fahrenheit"},' +
+                    '"relativeHumidity":{"type":"rel_humidity:%","value":"' + wx.relaltiveHumidityPct + '","unit":"%"},' +
+                    '"windSpeed":{"type":"wind_speed:kts","value":"' + wx.windSpeedKts + '","unit":"kt"},' +
+                    '"windDirection":{"type":"wind_dir:deg","value":"' + wx.windDirectionDeg + '","unit":"deg"},' +
+                    '"cloudCover":{"type":"cloud_cover:%","value":"' + wx.skyCoverPct + '","unit":"%"}' +
+                    '}');
+            },
+            /**
              * Gets a weather tuple that is compatible with the SurfaceFireResource.
              * 
              * @param {Number} airTempF Air temperature in Fahrenheit.
              * @param {Number} relHum Relative Humidity in percent.
              * @param {Number} windSpdKts Wind speed in knots.
              * @param {Number} windDir Wind direction in degrees
-             * @param {Number} clouds Cloud/skey cover in percent
+             * @param {Number} clouds Cloud/sky cover in percent
              * @param {Function(JSON)} callback Receives a WeatherTuple JSON object. 
              * Example: 
              *  {
@@ -79,7 +101,7 @@ define([
              */
             pointForecast: function (latitude, longitude, duration, callback) {
                 // TODO: assert input values
-                var url = util.currentDomain() + wmt.WEATHER_REST_SERVICE + '/pointforecast' ,
+                var url = util.currentDomain() + wmt.WEATHER_REST_SERVICE + '/pointforecast',
                     query = "mime-type=application/json"
                     + "&latitude=" + latitude
                     + "&longitude=" + longitude

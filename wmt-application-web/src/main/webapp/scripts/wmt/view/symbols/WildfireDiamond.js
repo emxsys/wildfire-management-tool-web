@@ -38,14 +38,14 @@ define([
         ww) {
         "use strict";
 
-        var SkyCoverPlacemark = function (latitude, longitude, head, left, right, heal, eyeDistanceScaling) {
+        var WildfireDiamond = function (latitude, longitude, head, left, right, heal, eyeDistanceScaling) {
             WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, wmt.MAP_SYMBOL_ALTITUDE_WILDFIRE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
             this.attributes = new WorldWind.PlacemarkAttributes(null);
             this.attributes.depthTest = false;
-            this.attributes.imageScale = 0.25;
+            this.attributes.imageScale = 0.3;
             this.attributes.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
                 WorldWind.OFFSET_FRACTION, 0.5);
@@ -65,22 +65,40 @@ define([
 
         };
         // Inherit Placemark parent methods
-        SkyCoverPlacemark.prototype = Object.create(WorldWind.Placemark.prototype);
+        WildfireDiamond.prototype = Object.create(WorldWind.Placemark.prototype);
 
 
-        SkyCoverPlacemark.prototype.updateWildfireDiamondImage = function (head, left, right, heal) {
-            var img = new Image(),
-                imgName;
+        WildfireDiamond.prototype.updateWildfireDiamondImage = function (head, left, right, heal) {
+            var imgName = 'unkn';
 
-            if (!head || !left || !right || !heal) {
-                imgName = 'unkn';
+            if (head && left && right && heal) {
+                imgName = WildfireDiamond.getColorCode(head)
+                    + WildfireDiamond.getColorCode(left)
+                    + WildfireDiamond.getColorCode(right)
+                    + WildfireDiamond.getColorCode(heal);
             }
-            imgName = 'unkn';
+
             this.attributes.imageSource = wmt.IMAGE_PATH + 'fire/' + imgName + '.png';
             this.highlightAttributes.imageSource = this.attributes.imageSource;
         };
 
-        return SkyCoverPlacemark;
+        WildfireDiamond.getColorCode = function (flameLen) {
+            if (flameLen >= 15) {
+                return 'f';
+            }
+            if (flameLen >= 7) {
+                return '7';
+            }
+            if (flameLen >= 3) {
+                return '3';
+            }
+            if (flameLen >= 1) {
+                return '1';
+            }
+            return '0';
+        };
+
+        return WildfireDiamond;
     }
 );
 

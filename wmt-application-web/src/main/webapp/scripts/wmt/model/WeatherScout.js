@@ -118,7 +118,7 @@ define([
         /**
          * Returns the forecast nearest the given time.
          * @param {Date} time The date/time used to select the forecast. If null, the first forecast is returned.
-         * @returns {Object} The 
+         * @returns {Object} Example:
          *   {
          *       forecastTime: Date,
          *       airTempF: Number,
