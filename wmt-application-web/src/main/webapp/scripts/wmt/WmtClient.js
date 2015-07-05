@@ -74,7 +74,7 @@ define([
                 'slide-right',
                 '#c-maskCtrlPanel',
                 Array('#mobileControlPanelButton'),
-                Array('#ctrlPanelLocation','#ctrlPanelGlobe','#ctrlPanelSettings','#ctrlPanelOptions'),
+                Array('#ctrlPanelGlobe','#findMe'),
                 '100',
                 '100%',
                 '85%'
