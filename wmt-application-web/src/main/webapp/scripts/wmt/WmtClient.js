@@ -74,19 +74,19 @@ define([
                 'slide-right',
                 '#c-maskCtrlPanel',
                 Array('#mobileControlPanelButton'),
-                Array('#ctrlPanelLocation','#ctrlPanelGlobe','#ctrlPanelSettings','#ctrlPanelOptions'),
+                Array('#ctrlPanelGlobe','#findMe'),
                 '100',
                 '100%',
                 '85%'
                 );
-            var mobileLocationMenu = new mobileMenu.Menu(
-                '#mobileLocation',
+            var mobileGlobeMenu = new mobileMenu.Menu(
+                '#mobileGlobe',
                 'slide-top',
-                '#c-maskLocation',
-                Array('#ctrlPanelLocation'),
-                '',
+                '', 
+                Array('#ctrlPanelGlobe'),
+                Array('#globeCancel','#globeCheck'),
                 '110',
-                '85%',
+                '27%',
                 '100%'
                 );
 

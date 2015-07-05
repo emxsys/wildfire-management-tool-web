@@ -93,8 +93,8 @@ define(["require",
 
             this.terrain = Terrain.ZERO;
             this.terrainTuple = terrainService.makeTuple(0, 0, 0);
-            this.fuelModel = fuelModels.getFuelModel(4);
-            this.fuelMoisture = fuelMoistureScenarios.getScenario('Very Low Dead, Fully Cured Herb');
+            this.fuelModel = fuelModels.getFuelModel(wmt.configuration.defaultFuelModel);
+            this.fuelMoisture = fuelMoistureScenarios.getScenario(wmt.configuration.defaultFuelMoistureScenario);
             this.surfaceFuel = null;
             
             

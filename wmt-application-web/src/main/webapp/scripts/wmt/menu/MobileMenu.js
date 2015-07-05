@@ -69,6 +69,14 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#ctrlPanelGlobe').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
+                        $('#findMe').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
 
                 })();
@@ -77,7 +85,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelLocation','#ctrlPanelGlobe','#ctrlPanelSettings','#ctrlPanelOptions'),
+                    Array('#ctrlPanelGlobe','#findMe'),
                     '50',
                     '100%',
                     '85%'
