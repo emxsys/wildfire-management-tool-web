@@ -32,6 +32,7 @@
 
 define([
     'wmt/controller/Controller',
+    'wmt/view/symbols/DirOfSpread',
     'wmt/view/symbols/FlameLengthHead',
     'wmt/view/symbols/WildfireDiamond',
     'wmt/util/Log',
@@ -39,6 +40,7 @@ define([
     'worldwind'],
     function (
         controller,
+        DirOfSpread,
         FlameLengthHead,
         WildfireDiamond,
         logger,
@@ -58,21 +60,27 @@ define([
                 surfaceFire = lookout.surfaceFire,
                 head = surfaceFire ? lookout.surfaceFire.flameLength.value : null,
                 flanks = surfaceFire ? lookout.surfaceFire.flameLengthFlanking.value : null,
-                heal = surfaceFire ? lookout.surfaceFire.flameLengthBacking.value : null;
+                heal = surfaceFire ? lookout.surfaceFire.flameLengthBacking.value : null,
+                dir = surfaceFire ? lookout.surfaceFire.directionMaxSpread.value : null,
+                ros = surfaceFire ? lookout.surfaceFire.rateOfSpreadMax.value : null;
 
             // Create the weather map symbol components
             this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, Math.round(head), Math.round(flanks), Math.round(heal));
+            this.dirOfSpread = new DirOfSpread(lookout.latitude, lookout.longitude, Math.round(dir));
             this.flameLengthHead = new FlameLengthHead(lookout.latitude, lookout.longitude, head || '-');
 
             // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
             this.diamond.pickDelegate = lookout;
+            this.dirOfSpread.pickDelegate = lookout;
             this.flameLengthHead.pickDelegate = lookout;
 
             // EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
             this.handleObjectMovedEvent = function (lookout) {
                 self.diamond.position.latitude = lookout.latitude;
                 self.diamond.position.longitude = lookout.longitude;
+                self.dirOfSpread.position.latitude = lookout.latitude;
+                self.dirOfSpread.position.longitude = lookout.longitude;
                 self.flameLengthHead.position.latitude = lookout.latitude;
                 self.flameLengthHead.position.longitude = lookout.longitude;
             };
@@ -81,9 +89,13 @@ define([
                 logger.warning("FireBehaviorSymbol", "handleFireBehaviorChangedEvent", "Unhandled event.");
                 var head = lookout.surfaceFire.flameLength.value,
                     flanks = lookout.surfaceFire.flameLengthFlanking.value,
-                    heal = lookout.surfaceFire.flameLengthBacking.value;
+                    heal = lookout.surfaceFire.flameLengthBacking.value,
+                    dir = lookout.surfaceFire.directionMaxSpread.value,
+                    ros = lookout.surfaceFire.rateOfSpreadMax.value;
+
 
                 this.diamond.updateWildfireDiamondImage(Math.round(head), Math.round(flanks), Math.round(heal));
+                this.dirOfSpread.updateDirOfSpreadImage(Math.round(dir));
                 this.flameLengthHead.text = Math.round(head) + "'";
             };
             // EVENT_WEATHER_CHANGED handler
@@ -121,7 +133,11 @@ define([
          */
         FireBehaviorSymbol.prototype.render = function (dc) {
 
+            // Rotate and dir of spread arrot to match the view
+            this.dirOfSpread.imageRotation = dc.navigatorState.heading;
+            
             this.diamond.render(dc);
+            this.dirOfSpread.render(dc);
             this.flameLengthHead.render(dc);
         };
 
