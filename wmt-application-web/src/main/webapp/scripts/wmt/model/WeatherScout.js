@@ -109,8 +109,6 @@ define([
             // when the move is finished. We don't want to update during the move itself.
             this.on(wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
 
-            // Perform initial update
-            this.refresh();
         };
 
         WeatherScout.prototype.getFirstForecast = function () {

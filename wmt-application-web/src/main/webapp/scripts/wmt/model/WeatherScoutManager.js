@@ -61,7 +61,11 @@ define([
             // Manage this object
             this.scouts.push(scout);
 
+            // Notify views of the new wx scount
             this.fire(wmt.EVENT_WEATHER_SCOUT_ADDED, scout);
+            
+            // Do a refresh now that view are attached, so they can get the notifications as they occur
+            scout.refresh();
         };
 
         /**
