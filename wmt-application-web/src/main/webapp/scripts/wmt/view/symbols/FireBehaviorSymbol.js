@@ -56,13 +56,12 @@ define([
 
             var self = this,
                 surfaceFire = lookout.surfaceFire,
-                head = surfaceFire ? lookout.surfaceFire.flameLength.value : null;
-                //flank = lookout.surfaceFire.flameLength.value,
-                //head = lookout.surfaceFire.flameLength.value,
-
+                head = surfaceFire ? lookout.surfaceFire.flameLength.value : null,
+                flanks = surfaceFire ? lookout.surfaceFire.flameLengthFlanking.value : null,
+                heal = surfaceFire ? lookout.surfaceFire.flameLengthBacking.value : null;
 
             // Create the weather map symbol components
-            this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, head, 0, 0, 0);
+            this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, Math.round(head), Math.round(flanks), Math.round(heal));
             this.flameLengthHead = new FlameLengthHead(lookout.latitude, lookout.longitude, head || '-');
 
             // Add a reference to our lookout object to the principle renderables.
@@ -79,17 +78,17 @@ define([
             };
             // EVENT_FIRE_BEHAVIOR_CHANGED handler 
             this.handleFireBehaviorChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol","handleFireBehaviorChangedEvent","Unhandled event.");
-                var head = lookout.surfaceFire.flameLength.value;
-                //flank = lookout.surfaceFire.flameLength.value,
-                //head = lookout.surfaceFire.flameLength.value,
+                logger.warning("FireBehaviorSymbol", "handleFireBehaviorChangedEvent", "Unhandled event.");
+                var head = lookout.surfaceFire.flameLength.value,
+                    flanks = lookout.surfaceFire.flameLengthFlanking.value,
+                    heal = lookout.surfaceFire.flameLengthBacking.value;
 
-                this.diamond.updateWildfireDiamondImage(Math.round(head), 3, 3, 1);
+                this.diamond.updateWildfireDiamondImage(Math.round(head), Math.round(flanks), Math.round(heal));
                 this.flameLengthHead.text = Math.round(head) + "'";
             };
             // EVENT_WEATHER_CHANGED handler
             this.handleWeatherChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol","handleWeatherChangedEvent","Unhandled event.");
+                logger.warning("FireBehaviorSymbol", "handleWeatherChangedEvent", "Unhandled event.");
             };
             // EVENT_PLACE_CHANGED handler
             this.handlePlaceChangedEvent = function (lookout) {
@@ -100,7 +99,7 @@ define([
             };
             // EVENT_TIME_CHANGED handler
             this.handleTimeChangedEvent = function (time) {
-                logger.warning("FireBehaviorSymbol","handleTimeChangedEvent","Unhandled event.");
+                logger.warning("FireBehaviorSymbol", "handleTimeChangedEvent", "Unhandled event.");
                 lookout.refresh();
             };
 

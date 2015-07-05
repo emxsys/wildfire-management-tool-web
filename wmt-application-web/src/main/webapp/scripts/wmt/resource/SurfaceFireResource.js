@@ -56,6 +56,8 @@ define([
              *    "effectiveWindSpeed":{"type":"wind_speed:mph","value":"9.438677451444649"},
              *    "firelineIntensity":{"type":"fire_line_intensity:Btu/ft/s","value":"17611.45862983202"},
              *    "flameLength":{"type":"flame_length:ft","value":"40.39041953091098","unit":"international foot"},
+             *    "flameLengthBacking":{"type":"flame_length:ft","value":"5.754735269314471","unit":"international foot"},
+             *    "flameLengthFlanking":{"type":"flame_length:ft","value":"6.94185398508367","unit":"international foot"},
              *    "fuelBed":{"fuelModel":{
              *            "modelNo":"4",
              *            "modelCode":"#4",

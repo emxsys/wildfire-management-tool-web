@@ -38,7 +38,7 @@ define([
         ww) {
         "use strict";
 
-        var WildfireDiamond = function (latitude, longitude, head, left, right, heal, eyeDistanceScaling) {
+        var WildfireDiamond = function (latitude, longitude, head, flanks, heal, eyeDistanceScaling) {
             WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, wmt.MAP_SYMBOL_ALTITUDE_WILDFIRE), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
@@ -61,20 +61,20 @@ define([
             //this.highlightAttributes.imageScale = placemarkAttr.imageScale * 1.2;
             //this.eyeDistanceScalingThreshold = 2500000;
 
-            this.updateWildfireDiamondImage(head, left, right, heal);
+            this.updateWildfireDiamondImage(head, flanks, heal);
 
         };
         // Inherit Placemark parent methods
         WildfireDiamond.prototype = Object.create(WorldWind.Placemark.prototype);
 
 
-        WildfireDiamond.prototype.updateWildfireDiamondImage = function (head, left, right, heal) {
+        WildfireDiamond.prototype.updateWildfireDiamondImage = function (head, flanks, heal) {
             var imgName = 'unkn';
 
-            if (head && left && right && heal) {
+            if (head && flanks  && heal) {
                 imgName = WildfireDiamond.getColorCode(head)
-                    + WildfireDiamond.getColorCode(left)
-                    + WildfireDiamond.getColorCode(right)
+                    + WildfireDiamond.getColorCode(flanks)
+                    + WildfireDiamond.getColorCode(flanks)
                     + WildfireDiamond.getColorCode(heal);
             }
 
