@@ -439,6 +439,55 @@ public class SurfaceFire implements FireBehavior {
             return this.flameLength;
         }
     }
+    /**
+     * Gets the flame length of the flanking fire (90 degrees from direction of max spread).
+     * 
+     * @return [ft]
+     */
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
+    public Real getFlameLengthFlanking() {
+        synchronized (initializing) {
+            if (isInitialized()) {
+                double fl = 0;
+                if (this.fuelBed.isBurnable()) {
+                    // ROS is proportional to FLI, so we scale the FLI to the adjusted ROS 
+                    // and compute an adjusted FL from the FLI.
+                    double maxRos = getRateOfSpreadMax().getValue();
+                    double flkRos = getRateOfSpreadFlanking().getValue();
+                    double flkFli = getFirelineIntensity().getValue() * (flkRos / maxRos);
+                    fl = Rothermel.flameLength(flkFli);
+                }
+                return new Real(FLAME_LENGTH_US, fl);
+            } else {
+                return new Real(FLAME_LENGTH_US);
+            }
+        }
+    }
+    /**
+     * Gets the flame length at the heal of the fire (180 degrees from direction of max spread)
+     * @return [ft]
+     */
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
+    public Real getFlameLengthBacking() {
+        synchronized (initializing) {
+            if (isInitialized()) {
+                double fl = 0;
+                if (this.fuelBed.isBurnable()) {
+                    // ROS is proportional to FLI, so we scale the FLI to the adjusted ROS 
+                    // and compute an adjusted FL from the FLI.
+                    double maxRos = getRateOfSpreadMax().getValue();
+                    double bakRos = getRateOfSpreadBacking().getValue();
+                    double bakFli = getFirelineIntensity().getValue() * (bakRos / maxRos);
+                    fl = Rothermel.flameLength(bakFli);
+                }
+                return new Real(FLAME_LENGTH_US, fl);
+            } else {
+                return new Real(FLAME_LENGTH_US);
+            }
+        }
+    }
 
     /**
      * Gets the eccentricity of the elliptical fire shape caused by wind and slope effects.
