@@ -32,13 +32,13 @@
 
 define([
     'wmt/controller/Controller',
-    'wmt/view/symbols/IcsMarker',
+    'wmt/view/symbols/WildfireDiamond',
     'wmt/util/Log',
     'wmt/Wmt',
     'worldwind'],
     function (
         controller,
-        IcsMarker,
+        WildfireDiamond,
         logger,
         wmt,
         ww) {
@@ -52,18 +52,20 @@ define([
             // Maintain a reference to the weather object this symbol represents
             this.lookout = lookout;
 
+            var self = this;
+
+
             // Create the weather map symbol components
-            this.icsMarker = new IcsMarker(lookout.latitude, lookout.longitude, 'ics-fire-location');
+            this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude);
 
             // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
-            this.icsMarker.pickDelegate = lookout;
+            this.diamond.pickDelegate = lookout;
 
             // Create an EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
-            var self = this;
             this.handleObjectMovedEvent = function (lookout) {
-                self.icsMarker.position.latitude = lookout.latitude;
-                self.icsMarker.position.longitude = lookout.longitude;
+                self.diamond.position.latitude = lookout.latitude;
+                self.diamond.position.longitude = lookout.longitude;
             };
 
             // Create an EVENT_WEATHER_CHANGED handler that updates 
@@ -89,7 +91,7 @@ define([
             this.handlePlaceChangedEvent = function (lookout) {
                 // Display the place name
                 if (lookout.placeName) {
-                    self.icsMarker.label = lookout.placeName;
+                    self.diamond.label = lookout.placeName;
                 }
             };
 
@@ -125,7 +127,7 @@ define([
          */
         FireBehaviorSymbol.prototype.render = function (dc) {
 
-            this.icsMarker.render(dc);
+            this.diamond.render(dc);
         };
 
         return FireBehaviorSymbol;

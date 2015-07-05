@@ -49,7 +49,6 @@ define([],
              * @constant
              */
             VERSION: "0.4.0",
-            
             BUTTON_TEXT_CANCEL: 'Cancel',
             BUTTON_TEXT_GOTO: 'Go To',
             BUTTON_TEXT_NO: 'No',
@@ -129,6 +128,8 @@ define([],
             LAYER_NAME_VIEW_CONTROLS: "Controls",
             LAYER_NAME_WIDGETS: "Widgets",
             MARKERS_LAYER_NAME: "Markers",
+            MAP_SYMBOL_ALTITUDE_WEATHER: 500,
+            MAP_SYMBOL_ALTITUDE_WILDFIRE: 250,
             /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
@@ -177,7 +178,6 @@ define([],
              * The URL for the weather REST service.
              */
             WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
-            WEATHER_MAP_SYMBOL_ALTITUDE: 500,
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
