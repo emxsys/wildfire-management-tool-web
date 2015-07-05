@@ -39,6 +39,19 @@
     top:3px;
 }
 
+  #sidebar-left.affix-top {
+    position: static;
+    margin-top:30px;
+    width:100px;
+  }
+
+  #sidebar-left.affix {
+    position: fixed;
+    top:70px;
+    width:228px;
+  }
+  
+
 .ui-slider-horizontal {
     background:#272b30;
     border:#272b30;

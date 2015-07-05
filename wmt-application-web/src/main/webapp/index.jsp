@@ -584,6 +584,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                     </div>            
                 </div>
+                
                 <!--Weather Sidebar-->
                 <div id="weatherPanel" 
                      class="col-sm-4 col-lg-3 sidebar noselect" 
@@ -676,6 +677,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                     </div>            
                 </div>
+                
                 <!--Fires Sidebar-->
                 <div id="firesPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
