@@ -152,7 +152,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </li>
                     </ul>
                     <!--Navbar Search-->
-                    <div class="navbar-form navbar-right"
+<!--                    <div class="navbar-form navbar-right"
                          style="padding-right: 0; padding-left: 0"
                          id="searchBox">
                         <div class="form-group">
@@ -173,7 +173,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </span>  
                             </button>
                         </div>
-                    </div>
+                    </div>-->
                     <!--Help button - hidden until we make room by adjusting button margins-->
                     <!-- <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -245,90 +245,90 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>
 
         <div id="c-maskLocation" class="c-mask"></div>
+
+        <!--        <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
         
-<!--        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                </nav>
         
-        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                <div id="c-mask" class="c-mask"></div>
+                
+                <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
         
-        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                </nav>
         
-        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                <div id="c-mask" class="c-mask"></div>
+                
+                <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
         
-        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                </nav>
         
-        <nav id="" class="hidden-md hidden-lg c-menu">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-9 col-sm-9"
-                         <ul class="c-menu__items">
-
-                        </ul>
+                <div id="c-mask" class="c-mask"></div>
+                
+                <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
+        
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-mask" class="c-mask"></div>
+                </nav>
+        
+                <div id="c-mask" class="c-mask"></div>
+                
+                <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
+        
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+        
+                <div id="c-mask" class="c-mask"></div>
+                
+                <nav id="" class="hidden-md hidden-lg c-menu">
+                    <div class="container-fluid" style="margin-top:37px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-xs-9 col-sm-9"
+                                 <ul class="c-menu__items">
+        
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+        
+                <div id="c-mask" class="c-mask"></div>
         -->
 
         <!--WMTweb: Globe and Sidebars--> 
@@ -669,7 +669,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                     </div>            
                 </div>
-                
+
                 <!--Weather Sidebar-->
                 <div id="weatherPanel" 
                      class="col-sm-4 col-lg-3 sidebar noselect" 
@@ -762,7 +762,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                     </div>            
                 </div>
-                
+
                 <!--Fires Sidebar-->
                 <div id="firesPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
@@ -886,20 +886,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div class="container-full non-interactive" Style="position:absolute;top:5px">
                             <div class="row">
                                 <!--Control Panel Button-->
-                                <div class="col-xs-2 col-sm-2 hidden-md hidden-lg">
+                                <div class="col-xs-2 col-sm-1 hidden-md hidden-lg">
                                     <button id="mobileMenuButton" class="c-hamburger c-hamburger--htla interactive">
                                         <span>toggle menu</span>
                                     </button>
                                 </div>
-                                <!--DateTime slider-->
-                                <div id="timeControlSlider" class="col-xs-7 col-sm-7 interactive"></div>
-                                <a class="col-xs-3 col-sm-3 interactive" href="#" style="float:right;">
+                                <!--Search Bar-->
+                                <div class=" col-xs-7 col-sm-8"
+                                     style="padding-right: 0; padding-left: 0; height:32px"
+                                     id="searchBox">
+                                    <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px">
+                                        <button type="button" 
+                                                class="btn btn-default interactive"
+                                                style="height:32px;"
+                                                id="searchUndo">
+                                            <span class="glyphicon glyphicon-circle-arrow-left" style=""/>
+                                        </button>
+                                    </div>
+                                    <div class="form-group col-xs-6 col-sm-8" style="height:32px;padding:0px;">
+                                        <input type="text" 
+                                               class="form-control interactive"
+                                               style="height:32px;"
+                                               placeholder="Go To..."
+                                               id="searchText" />
+                                    </div>
+                                    <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px">
+                                        <button type="button" 
+                                                class="btn btn-default interactive"
+                                                style="height:32px;"
+                                                id="searchRedo"> 
+                                            <span class="glyphicon glyphicon-circle-arrow-right" style=""/>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <a class="col-xs-3 col-sm-2 interactive" href="#" style="float:right;">
                                     <img alt="WMT" src="./images/wmt-web-white-53x24.png" style='float:right;'>
                                 </a>
                             </div>
-                            <!--<div class='container-full'>-->  
-                            <!--DateTime slider-->
-                            <div id="timeControlSlider" class="col-xs-7 col-sm-7 "></div>
+                            <div class="row" style="padding-top: 5px;padding-left: 5px;">
+                                <!--DateTime slider-->
+                                <div id="timeControlSlider" class="col-xs-7 col-sm-7 interactive"></div>
+                            </div>
+
                         </div>
                         <div id="bottom"></div>
                         <!--/DOM UI elements-->
