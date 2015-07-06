@@ -221,7 +221,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <button type="button"                                    
                                     class="btn btn-default"
                                     id="pushpinMarkersToggle">
-                                <span class="glyphicon glyphicon-pushpin"</span> Pushpins
+                                <span class="glyphicon glyphicon-pushpin"></span> Pushpins
                             </button>
                         </div>
                     </div>
@@ -1143,11 +1143,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div class="row">
                             <!--Prime-UI ICS Marker Palette --> 
                             <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive" >
-                                <div id="markerList" style="max-height: calc(66vh); max-width: 60px; overflow-y: scroll;"></div>
+                                <div id="markerList" ></div>
                             </div>
                             <!--Prime-UI Pushpin Palette --> 
                             <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive">
-                                <div id="markerList" style="max-height: calc(66vh); max-width: 60px; overflow-y: scroll;"></div>
+                                <div id="markerList"></div>
                             </div>
                         </div>
                     </div>

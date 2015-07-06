@@ -37,18 +37,18 @@
     top:3px;
 }
 
-  #sidebar-left.affix-top {
+#sidebar-left.affix-top {
     position: static;
     margin-top:30px;
     width:100px;
-  }
+}
 
-  #sidebar-left.affix {
+#sidebar-left.affix {
     position: fixed;
     top:70px;
     width:228px;
-  }
-  
+}
+
 
 .ui-slider-horizontal {
     background:#272b30;
@@ -129,7 +129,7 @@ img.icon {
 }
 
 .panel-heading:hover {
-  background-color: rgba(0,0,0,0) !important;
+    background-color: rgba(0,0,0,0) !important;
 }
 
 /*Override PrimeUI Growl position to be below Bootstrap Navbar*/
@@ -210,4 +210,15 @@ img.icon {
     height: 200px;
     padding-left: 0;
     padding-right: 0
+}
+
+#markerList {
+    max-height: calc(66vh); 
+    max-width: calc(10vh);
+    overflow-y: scroll;
+    border-radius: 6px; 
+    border: 2px #000000 solid;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    display: inline-block;
 }

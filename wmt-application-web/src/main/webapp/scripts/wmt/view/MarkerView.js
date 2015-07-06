@@ -87,7 +87,7 @@ define([
             this.mobilePushpinPalette = new MobileMarkerPalette('#mobilePushpinPalette', Pushpin.templates, self.createMarkerCallback, self);
             // Hide the mobile pushpin palette after it has been built.
             self.mobilePushpinPalette.hidePalette();
-            
+
             // Add button event handlers
             $("#createMarker").on("click", function (event) {
                 // Show the ICS Marker palette, and then call the createMarkerCallback function
@@ -102,19 +102,32 @@ define([
                 self.onMarkerItemClick($(this));
             });
             // Add event handlers for the mobile menu's toggle swich
-            $('#icsMarkersToggle').on('click', function(event) {
-               self.mobilePushpinPalette.hidePalette();
-               self.mobileMarkerPalette.showPalette(self.createMarkerCallback, self);
-               $(this).addClass('active');
-               $('#pushpinMarkersToggle').removeClass('active');
+            $('#icsMarkersToggle').on('click', function (event) {
+                if ($(this).hasClass('active'))
+                {
+                    self.mobileMarkerPalette.hidePalette();
+                    $(this).removeClass('active');
+                }
+                else {
+                    self.mobilePushpinPalette.hidePalette();
+                    self.mobileMarkerPalette.showPalette(self.createMarkerCallback, self);
+                    $(this).addClass('active');
+                    $('#pushpinMarkersToggle').removeClass('active');
+                }
             });
-            $('#pushpinMarkersToggle').on('click', function(event) {
-               self.mobileMarkerPalette.hidePalette();
-               self.mobilePushpinPalette.showPalette(self.createMarkerCallback, self);
-               $(this).addClass('active');
-               $('#icsMarkersToggle').removeClass('active');
+            $('#pushpinMarkersToggle').on('click', function (event) {
+                if ($(this).hasClass('active'))
+                {
+                    self.mobilePushpinPalette.hidePalette();
+                    $(this).removeClass('active');
+                }
+                else {
+                    self.mobileMarkerPalette.hidePalette();
+                    self.mobilePushpinPalette.showPalette(self.createMarkerCallback, self);
+                    $(this).addClass('active');
+                    $('#icsMarkersToggle').removeClass('active');
+                }
             });
-
             this.loadExistingMarkers();
 
             // Initially show the Create tab
@@ -300,7 +313,7 @@ define([
                 placemark.position.longitude = node.longitude;
             };
             node.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
-            
+
 
             // Render the marker on the globe
             this.markerLayer.addRenderable(placemark);
