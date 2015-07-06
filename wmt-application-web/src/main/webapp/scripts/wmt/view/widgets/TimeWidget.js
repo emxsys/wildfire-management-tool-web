@@ -218,7 +218,7 @@ define([
             // appearing on top of rotated images.
             var localHour =  this.sunlight.localHourAngle ? this.sunlight.localHourAngle.value : 0,
                 sunriseHour = this.sunlight.sunriseHourAngle ? this.sunlight.sunriseHourAngle.value : 0,
-                sunsetHour = this.sunlight.sunsetHourAngle.value ? this.sunlight.sunsetHourAngle.value : 0,
+                sunsetHour = this.sunlight.sunsetHourAngle ? this.sunlight.sunsetHourAngle.value : 0,
                 RADIUS = 50,
                 solarPt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -localHour); // rotate from 6 o'clock
 //                Pt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - aspect), // rotate from 6 o'clock
