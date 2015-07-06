@@ -589,6 +589,121 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>    
         <!-- /Mobile Weather Scouts Menu -->
+
+        <!-- Mobile Fires Menu -->
+        <nav id="mobileFires" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">                
+                <div class="row" style="margin-top:10px;">            
+                    <div class="col-xs-11 col-sm-11">
+                        <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">                                   
+                            <!--Fire Incidents-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#fireAccordion" 
+                                     href="#fireIncidentsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="fireIncidentsBody"
+                                     role="tab" 
+                                     id="fireIncidentsHeading">
+                                    <h4 class="panel-title">
+                                        Incidents
+                                    </h4>
+                                </div>
+                                <div id="fireIncidentsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="fireIncidentsHeading">
+                                    <div class="panel-body">
+                                        <ul class="list-group pre-scrollable" 
+                                            id="fireIncidentList">
+                                        </ul>                              
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Fire Settings-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="firesSettingsHeading">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" 
+                                           data-toggle="collapse" 
+                                           data-parent="#firesAccordion" 
+                                           href="#firesSettingsBody" 
+                                           aria-expanded="false" 
+                                           aria-controls="firesSettingsBody">
+                                            Settings
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                                     aria-labelledby="firesSettingsHeading">
+                                    <div class="panel-body">
+                                        <button id="fuelModel-btn" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Select fuel model.">
+                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            Fuel Model
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="c-menu__items">
+                            <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default">Fire Lookouts</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskMobileFires" class="c-mask"></div>
+        <!-- /Mobile Weather Menu -->
+
+        <!-- Mobile Weather Scouts Menu -->
+        <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:5%">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="fireLookoutsCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 5px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel panel-default">                            
+                            <div id="fireLookoutsBody" 
+                                 class="panel-collapse collapse" 
+                                 role="tabpanel" 
+                                 aria-labelledby="fireLookoutsHeading">
+                                <div class="panel-body">
+                                    <button id="createFireLookout" 
+                                            type="button"
+                                            class="btn btn-default" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a fire lookout to the globe.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add
+                                    </button>
+                                    <ul class="list-group pre-scrollable"
+                                        style="margin-top: 5px;max-height: calc(15vh);"
+                                        id="fireLookoutList">
+                                    </ul>                              
+                                </div>
+                            </div>
+                        </div>       
+                    </div>
+                </div>
+            </div>
+        </nav>    
+        <!-- /Mobile Weather Scouts Menu -->
+
         <!--     <nav id="" class="hidden-md hidden-lg c-menu">
                  <div class="container-fluid" style="margin-top:37px">
                      <div class="row" style="padding-top: 10px">
@@ -1225,14 +1340,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-<!--                                    <div class="col-xs-2 right" style="float: right;">
-                                        <button type="button"                                    
-                                                class="btn btn-default interactive"
-                                                id="globeWeatherScoutsButton">
-                                            <span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-cloud"></span>
+<!--                                    <div id="globe" class="col-xs-2" style='float: right;'>
+                                        <button id="createWeatherScout" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Add a weather scout to the globe.">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
-                                    </div>                                    -->
+                                        <button id="createFireLookout" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Add a fire lookout to the globe.">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                                        </button>
+                                    </div>                 -->
                                 </div>
+
                             </div>
                         </div>
                         <div id="bottom"></div>

@@ -89,6 +89,14 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#weatherWeatherScoutsButton').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
+                        $('#firesFireLookoutsButton').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
 
                 })();
@@ -97,7 +105,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle','#weatherWeatherScoutsButton'),
+                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle','#weatherWeatherScoutsButton', '#firesFireLookoutsButton'),
                     '50',
                     '100%',
                     '85%'

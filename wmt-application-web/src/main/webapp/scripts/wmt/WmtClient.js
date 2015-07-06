@@ -129,6 +129,26 @@ define([
                 '39%',
                 '100%'
                 );
+            var mobileFires = new mobileMenu.Menu(
+                '#mobileFires',
+                'slide-right',
+                '#c-maskMobileFires',
+                Array('#mobileFiresButton'),
+                Array('#firesFireLookoutsButton'),
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileWeatherScouts = new mobileMenu.Menu(
+                '#mobileFireLookouts',
+                'slide-top',
+                '', 
+                Array('#firesFireLookoutsButton','#globeFireLookoutsButton'),
+                Array('#fireLookoutsCheck'),
+                '110',
+                '39%',
+                '100%'
+                );
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
