@@ -81,6 +81,14 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#pushpinMarkersToggle').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
+                        $('#icsMarkersToggle').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
 
                 })();
@@ -89,7 +97,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe','#findMe','#layersListButton'),
+                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle'),
                     '50',
                     '100%',
                     '85%'

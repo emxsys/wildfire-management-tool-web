@@ -41,6 +41,7 @@ define([
     'wmt/util/Log',
     'wmt/model/MarkerNode',
     'wmt/menu/MarkerPalette',
+    'wmt/menu/MobileMarkerPalette',
     'wmt/util/Messenger',
     'wmt/view/symbols/Pushpin',
     'wmt/Wmt',
@@ -51,6 +52,7 @@ define([
         log,
         MarkerNode,
         MarkerPalette,
+        MobileMarkerPalette,
         messenger,
         Pushpin,
         wmt,
@@ -80,8 +82,11 @@ define([
             // Create Click/Drop (DnD) palettes 
             this.markerPalette = new MarkerPalette('#icsMarkerPalette', IcsMarker.templates);
             this.pushpinPalette = new MarkerPalette('#pushpinPalette', Pushpin.templates);
-            //this.mobileMarkerPalette = new MarkerPalette('#mobileIcsMarkerPalette', IcsMarker.templates);
-            //this.mobilePushpinPalette = new MarkerPalette('#mobilePushpinPalette', Pushpin.templates);
+            // Create mobile marker palettes
+            this.mobileMarkerPalette = new MobileMarkerPalette('#mobileIcsMarkerPalette', IcsMarker.templates, self.createMarkerCallback, self);
+            this.mobilePushpinPalette = new MobileMarkerPalette('#mobilePushpinPalette', Pushpin.templates, self.createMarkerCallback, self);
+            // Hide the mobile pushpin palette after it has been built.
+            self.mobilePushpinPalette.hidePalette();
             
             // Add button event handlers
             $("#createMarker").on("click", function (event) {
@@ -95,6 +100,19 @@ define([
             // Attach a click handler to the markers in the marker list
             $('#markerList').find('li').on('click', function (event) {
                 self.onMarkerItemClick($(this));
+            });
+            // Add event handlers for the mobile menu's toggle swich
+            $('#icsMarkersToggle').on('click', function(event) {
+               self.mobilePushpinPalette.hidePalette();
+               self.mobileMarkerPalette.showPalette(self.createMarkerCallback, self);
+               $(this).addClass('active');
+               $('#pushpinMarkersToggle').removeClass('active');
+            });
+            $('#pushpinMarkersToggle').on('click', function(event) {
+               self.mobileMarkerPalette.hidePalette();
+               self.mobilePushpinPalette.showPalette(self.createMarkerCallback, self);
+               $(this).addClass('active');
+               $('#icsMarkersToggle').removeClass('active');
             });
 
             this.loadExistingMarkers();

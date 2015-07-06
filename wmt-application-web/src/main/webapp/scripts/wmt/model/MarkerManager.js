@@ -97,13 +97,16 @@ define([
 
             // Convert JSON array to array of WeatherScout objects
             array = JSON.parse(string);
-            for (i = 0, max = array.length; i < max; i++) {
-                this.addMarker(new MarkerNode(
-                    array[i].name,
-                    array[i].type,
-                    array[i].latitude,
-                    array[i].longitude,
-                    array[i].id));
+            if (array.length !== 0)
+            {
+                for (i = 0, max = array.length; i < max; i++) {
+                    this.addMarker(new MarkerNode(
+                        array[i].name,
+                        array[i].type,
+                        array[i].latitude,
+                        array[i].longitude,
+                        array[i].id));
+                }
             }
 
         };

@@ -205,10 +205,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                             <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
                         </ul>
-                    </div>
+                    </div>                    
                 </div>
-                <div class="row-full">
-                    <span style="float:right;">||</span>
+                <!--                <div class="row-full">
+                                                        <span style="float:right;">||</span>
+                                </div>-->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="btn-group">
+                            <button type="button"                                    
+                                    class="btn btn-default active"
+                                    id="icsMarkersToggle">
+                                <span class="glyphicon glyphicon-alert"></span> ICS Markers
+                            </button>
+                            <button type="button"                                    
+                                    class="btn btn-default"
+                                    id="pushpinMarkersToggle">
+                                <span class="glyphicon glyphicon-pushpin"</span> Pushpins
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -218,7 +234,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-11 col-sm-11">
+                    <div class="col-xs-12 col-sm-12">
                         <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
                             <!--Location Panel-->
                             <div class="panel panel-default">
@@ -1091,7 +1107,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div class=" col-xs-7 col-sm-8"
                                  style="padding-right: 0; padding-left: 0; height:32px"
                                  id="searchBox">
-                                <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px">
+                                <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px; max-width: 40px">
                                     <button type="button" 
                                             class="btn btn-default interactive"
                                             style="height:32px;"
@@ -1106,7 +1122,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                            placeholder="Go To..."
                                            id="searchText" />
                                 </div>
-                                <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px">
+                                <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px; max-width: 40px">
                                     <button type="button" 
                                             class="btn btn-default interactive"
                                             style="height:32px;"
@@ -1126,12 +1142,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                         <div class="row">
                             <!--Prime-UI ICS Marker Palette --> 
-                            <div id="mobileIcsMarkerPalette" class="col-xs-2 col-sm-2 " >
-                                <div id="markerGrid" style="max-height: 250px; max-width: 60px; overflow-y: scroll;"></div>
+                            <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive" >
+                                <div id="markerList" style="max-height: calc(66vh); max-width: 60px; overflow-y: scroll;"></div>
                             </div>
                             <!--Prime-UI Pushpin Palette --> 
-                            <div id="mobilePushpinPalette" class="col-xs-2 col-sm-2 hidden">
-                                <div id="markerGrid" style="max-height: 250px; max-width: 60px; overflow-y: scroll;"></div>
+                            <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive">
+                                <div id="markerList" style="max-height: calc(66vh); max-width: 60px; overflow-y: scroll;"></div>
                             </div>
                         </div>
                     </div>
