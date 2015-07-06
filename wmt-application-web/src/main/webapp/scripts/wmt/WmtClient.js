@@ -109,6 +109,26 @@ define([
                 '47%',
                 '100%'
                 );
+            var mobileWeather = new mobileMenu.Menu(
+                '#mobileWeather',
+                'slide-right',
+                '#c-maskMobileWeather',
+                Array('#mobileWeatherButton'),
+                Array('#weatherWeatherScoutsButton'),
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileWeatherScouts = new mobileMenu.Menu(
+                '#mobileWeatherScouts',
+                'slide-top',
+                '', 
+                Array('#weatherWeatherScoutsButton','#globeWeatherScoutsButton'),
+                Array('#weatherScoutsCheck'),
+                '110',
+                '39%',
+                '100%'
+                );
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {

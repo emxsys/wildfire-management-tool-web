@@ -97,7 +97,7 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle'),
+                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle','#weatherWeatherScoutsButton'),
                     '50',
                     '100%',
                     '85%'
