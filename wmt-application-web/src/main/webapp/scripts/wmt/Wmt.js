@@ -212,7 +212,7 @@ define([],
             startupTilt: 0,
             startupRoll: 0,
             viewControlOrientation: "vertical",
-            showPanControl: true,
+            showPanControl: false,
             showExaggerationControl: false,
             showFieldOfViewControl: false,
             wxForecastDurationHours: 48
