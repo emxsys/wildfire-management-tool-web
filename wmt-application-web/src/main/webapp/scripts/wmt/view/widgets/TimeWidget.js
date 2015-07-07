@@ -58,7 +58,7 @@ define([
                 DIAL_HEIGHT = 95,
                 DIAL_RADIUS = DIAL_HEIGHT / 2,
                 DIAL_MARGIN = (BG_HEIGHT - DIAL_HEIGHT) / 2,
-                DIAL_ORIGIN_X = DIAL_RADIUS + LEFT_MARGIN ,
+                DIAL_ORIGIN_X = DIAL_RADIUS + LEFT_MARGIN,
                 DIAL_ORIGIN_Y = DIAL_RADIUS + BOTTOM_MARGIN - 2,
                 center = new WorldWind.Offset(
                     WorldWind.OFFSET_FRACTION, 0.5,
@@ -72,6 +72,9 @@ define([
                 backgroundOffset = new WorldWind.Offset(
                     WorldWind.OFFSET_PIXELS, -LEFT_MARGIN,
                     WorldWind.OFFSET_PIXELS, -BOTTOM_MARGIN),
+                resetOffset = new WorldWind.Offset(
+                    WorldWind.OFFSET_PIXELS, -LEFT_MARGIN,
+                    WorldWind.OFFSET_PIXELS, -BOTTOM_MARGIN - 100),
                 dialOffset = new WorldWind.Offset(
                     WorldWind.OFFSET_PIXELS, -LEFT_MARGIN - DIAL_MARGIN,
                     WorldWind.OFFSET_PIXELS, -BOTTOM_MARGIN - DIAL_MARGIN),
@@ -101,6 +104,10 @@ define([
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN - 45),
                 textAttr = new WorldWind.TextAttributes(null);
             // Graphics
+            
+            this.reset = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "reset-button.png");
+            this.reset.imageOffset = resetOffset;
+            
             this.background = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "widget-circle-bg.png");
             this.background.imageOffset = backgroundOffset;
 
@@ -115,6 +122,9 @@ define([
 
             this.sunIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-icon.png");
             this.sunIcon.imageOffset = center;
+
+            this.eclipseIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-eclipsed-icon.png");
+            this.eclipseIcon.imageOffset = center;
 
             this.sunriseMarker = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "time-widget_sunrise-marker.png");
             this.sunriseMarker.imageOffset = center;
@@ -168,15 +178,17 @@ define([
                 this.updateSunlightText();
                 controller.globe.redraw();
             };
-            
+
             // Subscribe to changes in Model
             controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
             controller.model.on(wmt.EVENT_SUNLIGHT_CHANGED, this.handleSunlightChangedEvent, this);
-            
-            
+
+
             // Load Initial values
             this.handleTimeChangedEvent(controller.model.applicationTime);
             this.handleSunlightChangedEvent(controller.model.sunlight);
+            
+            
 
         };
         // Inherit Renderable functions.
@@ -189,7 +201,7 @@ define([
         TimeWidget.prototype.updateDateTimeText = function () {
             var timeOptions = {hour: "2-digit", minute: "2-digit", timeZoneName: "short", hour12: false},
             dateOptions = {"month": "2-digit", "day": "2-digit"};
-        
+
             this.time.text = this.apptime.toLocaleTimeString('en', timeOptions);
             this.date.text = this.apptime.toLocaleDateString('en', dateOptions);
         };
@@ -216,41 +228,58 @@ define([
             // HACK: Don't allow rotation values to go to zero 
             // else z-ording gets confused with non-rotated images
             // appearing on top of rotated images.
-            var localHour =  this.sunlight.localHourAngle ? this.sunlight.localHourAngle.value : 0,
-                sunriseHour = this.sunlight.sunriseHourAngle ? this.sunlight.sunriseHourAngle.value : 0,
-                sunsetHour = this.sunlight.sunsetHourAngle ? this.sunlight.sunsetHourAngle.value : 0,
+            var localHour = WorldWind.Angle.normalizedDegrees(this.sunlight.localHourAngle ? parseFloat(this.sunlight.localHourAngle.value) : 0),
+                riseHourAngle = this.sunlight.sunriseHourAngle ? parseFloat(this.sunlight.sunriseHourAngle.value) : 0,
+                setsHourAngle = this.sunlight.sunsetHourAngle ? parseFloat(this.sunlight.sunsetHourAngle.value) : 0,
                 RADIUS = 50,
-                solarPt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -localHour); // rotate from 6 o'clock
-//                Pt = LocationWidget.rotatePoint(0, -RADIUS, 0, 0, heading - aspect), // rotate from 6 o'clock
-//                azimuth = this.sunlight.azimuthAngle.value,
-//
-//            // Translate icons around the dial
-//            this.sunriseMarker.imageOffset = new WorldWind.Offset(
-//                WorldWind.OFFSET_PIXELS, aspectPt.x,
-//                WorldWind.OFFSET_PIXELS, aspectPt.y);
-//            // Rotate the aspect "diamond" icon
-//            // No need to rotate the solar icon - it's a circle
-//            this.sunriseMarker.imageRotation = 180 + heading - aspect;
+                solarPt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -localHour), // rotate from 6 o'clock
+                risePt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -riseHourAngle), // rotate from 6 o'clock
+                setsPt = TimeWidget.rotatePoint(0, -RADIUS, 0, 0, -setsHourAngle); // rotate from 6 o'clock
+
+
+            // Translate icons around the dial
+            this.sunriseMarker.imageOffset = new WorldWind.Offset(
+                WorldWind.OFFSET_PIXELS, risePt.x,
+                WorldWind.OFFSET_PIXELS, risePt.y);
+            this.sunsetMarker.imageOffset = new WorldWind.Offset(
+                WorldWind.OFFSET_PIXELS, setsPt.x,
+                WorldWind.OFFSET_PIXELS, setsPt.y);
             this.sunIcon.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_PIXELS, solarPt.x,
                 WorldWind.OFFSET_PIXELS, solarPt.y);
+            this.eclipseIcon.imageOffset = new WorldWind.Offset(
+                WorldWind.OFFSET_PIXELS, solarPt.x,
+                WorldWind.OFFSET_PIXELS, solarPt.y);
 
-//            // Rotate the dials
-//            //  Rotate the these static images as a hack to force it behind the other rotated images
+            // Rotate the marker arrow icons
+            this.sunriseMarker.imageRotation = riseHourAngle+90;
+            this.sunsetMarker.imageRotation = setsHourAngle-90;
+
+            // Rotate the dials
+            //  Rotate the these static images as a hack to force it behind the other rotated images
             this.background.imageRotation = 0.0001; // HACK
             this.clockface.imageRotation = 0.0001;
             this.daytime.imageRotation = 0.0001;
 
+            // Graphics
             this.background.render(dc);
             this.daytime.render(dc);
             //this.night.render(dc);
             this.clockface.render(dc);
             this.sunriseMarker.render(dc);
             this.sunsetMarker.render(dc);
-            this.sunIcon.render(dc);
+            if (localHour > riseHourAngle && localHour < setsHourAngle) {
+                this.sunIcon.render(dc);
+            } else {
+                this.eclipseIcon.render(dc);
+            }
             this.sunriseIcon.render(dc);
             this.sunsetIcon.render(dc);
+            
+            this.reset.render(dc);
+            
 
+            // Text
             this.date.render(dc);
             this.time.render(dc);
             this.sunrise.render(dc);
