@@ -77,7 +77,7 @@ define([
                 }
 
                 // Event handler for new FireLookouts
-                $("#createFireLookout").on("click", function (event) {
+                $(".createFireLookoutButton").on("click", function (event) {
                     controller.dropFireLookoutOnGlobe(new FireLookout());
                 });  
                         

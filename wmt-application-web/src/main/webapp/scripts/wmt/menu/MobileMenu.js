@@ -89,15 +89,26 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#weatherWeatherScoutsButton').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
+                        $('#firesFireLookoutsButton').on('click', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
+                        $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
-
                 })();
                 var mobileMenu = new MobileMenu.Menu(
                     '#mobileMenu',
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe','#findMe','#layersListButton','#icsMarkersToggle','#pushpinMarkersToggle','#weatherWeatherScoutsButton'),
+                    Array('#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton'),
                     '50',
                     '100%',
                     '85%'
@@ -112,6 +123,10 @@ define([],
                         mobileMenu.close();
                     }
 
+                });
+
+                $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {                    
+                    mobileMenu.close();
                 });
             },
             Menu: function (
@@ -137,19 +152,21 @@ define([],
                 //Initialize class variables
                 this.body = document.body;
                 this.mask = $(maskId);
-                this.menu = $(menuId);                
-                this.openBtns = new Array();                
+                this.menu = $(menuId);
+                this.openBtns = new Array();
                 this.closeBtns = new Array();
-                
+
                 //build array of opening button objects
-                for (var i=0; i < openBtnIds.length; i++){
-                  this.openBtns.push($(openBtnIds[i])); 
-                };
-                
+                for (var i = 0; i < openBtnIds.length; i++) {
+                    this.openBtns.push($(openBtnIds[i]));
+                }
+                ;
+
                 //build array of closing button objects
-                for (var i=0; i < closeBtnIds.length; i++){
-                  this.closeBtns.push($(closeBtnIds[i])); 
-                };
+                for (var i = 0; i < closeBtnIds.length; i++) {
+                    this.closeBtns.push($(closeBtnIds[i]));
+                }
+                ;
 
                 /**
                  * Menu Options.
@@ -214,20 +231,20 @@ define([],
                 this._initEvents = function () {
                     var Menu = this;
                     // Event for clicks on the mask.
-                    this.mask.click(function (e) {
+                    this.mask.on('click', function (e) {
                         e.preventDefault();
                         Menu.close();
                     });
                     //Event for the button that opens the menu
-                    this.openBtns.forEach(function (element,index,array) {
-                        element.click(function (e) {
+                    this.openBtns.forEach(function (element, index, array) {
+                        element.on('click', function (e) {
                             e.preventDefault();
                             Menu.open();
                         });
                     });
                     //Event for the button that closes the menu
-                    this.closeBtns.forEach(function (element,index,array) {
-                        element.click(function (e) {
+                    this.closeBtns.forEach(function (element, index, array) {
+                        element.on('click', function (e) {
                             e.preventDefault();
                             Menu.close();
                         });

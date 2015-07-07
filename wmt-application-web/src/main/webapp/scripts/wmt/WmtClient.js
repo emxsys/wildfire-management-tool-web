@@ -74,7 +74,7 @@ define([
                 'slide-right',
                 '#c-maskCtrlPanel',
                 Array('#mobileControlPanelButton'),
-                Array('#ctrlPanelGlobe','#findMe'),
+                Array('#ctrlPanelGlobe', '#findMe'),
                 '100',
                 '100%',
                 '85%'
@@ -82,11 +82,11 @@ define([
             var mobileGlobeMenu = new mobileMenu.Menu(
                 '#mobileGlobe',
                 'slide-top',
-                '', 
+                '',
                 Array('#ctrlPanelGlobe'),
                 Array('#globeCheck'),
                 '110',
-                '27%',
+                'calc(5vh + 180px)',
                 '100%'
                 );
             var mobileLayers = new mobileMenu.Menu(
@@ -102,12 +102,22 @@ define([
             var mobileLayersList = new mobileMenu.Menu(
                 '#mobileLayersList',
                 'slide-top',
-                '', 
+                '',
                 Array('#layersListButton'),
                 Array('#layersListCheck'),
                 '110',
-                '47%',
+                'calc(30vh + 100px)',
                 '100%'
+                );
+            var mobileMarkers = new mobileMenu.Menu(
+                '#mobileMarkers',
+                'slide-right',
+                '#c-maskMarkers',
+                Array('#mobileMarkersButton'),
+                Array(''),
+                '100',
+                '100%',
+                '85%'
                 );
             var mobileWeather = new mobileMenu.Menu(
                 '#mobileWeather',
@@ -122,14 +132,48 @@ define([
             var mobileWeatherScouts = new mobileMenu.Menu(
                 '#mobileWeatherScouts',
                 'slide-top',
-                '', 
-                Array('#weatherWeatherScoutsButton','#globeWeatherScoutsButton'),
+                '',
+                Array('#weatherWeatherScoutsButton', '#globeWeatherScoutsButton'),
                 Array('#weatherScoutsCheck'),
                 '110',
-                '39%',
+                'calc(39vh + 50px)',
+                '100%'
+                );
+            var mobileFires = new mobileMenu.Menu(
+                '#mobileFires',
+                'slide-right',
+                '#c-maskMobileFires',
+                Array('#mobileFiresButton'),
+                Array('#firesFireLookoutsButton'),
+                '100',
+                '100%',
+                '85%'
+                );
+            var mobileFireLookouts = new mobileMenu.Menu(
+                '#mobileFireLookouts',
+                'slide-top',
+                '',
+                Array('#firesFireLookoutsButton', '#globeFireLookoutsButton'),
+                Array('#fireLookoutsCheck'),
+                '110',
+                'calc(39vh + 50px)',
                 '100%'
                 );
 
+
+            //initialize the hold events for the globe scout and lookout buttons
+            $('#globeCreateFireLookout').on('taphold', function () {
+                mobileFireLookouts.open();              
+            });
+            $('#globeCreateWeatherScout').on('taphold', function () {
+                mobileWeatherScouts.open();
+            });
+            
+            // needed delegate event handling for these buttons
+            $('#allMarkersList').on('click','button.mkr-goto', function(){
+                mobileMarkers.close();                
+            });
+            
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();

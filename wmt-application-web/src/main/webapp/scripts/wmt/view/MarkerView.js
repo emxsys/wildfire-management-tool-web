@@ -98,7 +98,7 @@ define([
                 self.pushpinPalette.showModalPalette(self.createMarkerCallback, self);
             });
             // Attach a click handler to the markers in the marker list
-            $('#markerList').find('li').on('click', function (event) {
+            $('#allMarkersList').find('li').on('click', function (event) {
                 self.onMarkerItemClick($(this));
             });
             // Add event handlers for the mobile menu's toggle swich
@@ -326,7 +326,7 @@ define([
         MarkerView.prototype.synchronizeMarkerList = function () {
             var self = this,
                 markers = this.manager.markers,
-                markerList = $("#markerList"),
+                markerList = $("#allMarkersList"),
                 markerItem,
                 markerNode,
                 i, len;

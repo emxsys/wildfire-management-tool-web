@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"> <!-- Not sure "height=device-height" is needed, but It's an option. -->
         <!-- Bootstrap: The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         <title>Wildfire Management Tool (WMT)</title>
@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--During development, using local copies, and sometimes development versions of libraries. -->
         <!--Note: font-awesome and jquery-ui are required by prime-ui. -->
         <!--Style note: prime-ui themes compatible with bootstrap-slate include afterdark and afterwork (alt. cruze and ui-darkness). -->
-        <link rel="stylesheet" type="text/css" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
+        <link rel="stylesheet" type="text/css" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />         
         <link rel="stylesheet" type="text/css" href="./thirdparty/font-awesome-4.3.0/css/font-awesome.min.css"  />
         <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/themes/afterdark/theme.css" />   
         <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/production/primeui-2.0-min.css" />   
@@ -64,16 +64,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
         <script type="text/javascript" src="./thirdparty/pace/pace.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-2.1.4.min.js" ></script>
+        <script type="text/javascript">$(document).bind("mobileinit", function () {
+                $.extend($.mobile, {autoInitializePage: false});
+            });</script>
+        <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>
+        <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
         <script type="text/javascript" src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js"></script>
         <script type="text/javascript" src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js"></script>
-        <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
 
 
         <!--For production, use content delivery network (CDN) libraries-->
         <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
+        <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css">-->
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>-->
+        <!--<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>-->
         <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
         <!--<script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
     </head>
@@ -82,7 +88,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <body style="padding-top: 50px;"> 
 
         <!--Main Menu-->
-        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs">
+        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs hidden-sm">
             <div class="container-fluid">
                 <!--Navbar: Collapsed Menu-->
                 <div class="navbar-header">
@@ -202,6 +208,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                          <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             <li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                            <li class="c-menu__item"><a id="mobileMarkersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                             <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                             <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
                         </ul>
@@ -471,13 +478,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     Layer List
                                 </h4>
                             </div>
-                            <div class="panel-collapse collapse in" 
+                            <div class="panel-collapse collapse in"
+                                 style='max-height: calc(27vh)'
                                  role="tabpanel" 
                                  aria-labelledby="layerListHeading"
                                  id="layerListBody" >
                                 <div class="panel-body">
                                     <ul class="list-group"
-                                        style="max-height:150px;overflow-y: scroll;"
+                                        style="max-height:calc(23vh);overflow-y: scroll;"
                                         id="layerList">
                                     </ul>                              
                                 </div>
@@ -488,6 +496,97 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>
         <!-- /Mobile Layers List Menu -->
+
+        <!-- Mobile Markers Menu -->
+        <nav id="mobileMarkers" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
+                            <!--Marker List-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#markersAccordion" 
+                                     href="#markersListBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="markersListBody"
+                                     role="tab" 
+                                     id="markersListHeading">
+                                    <h4 class="panel-title">
+                                        Marker List
+                                    </h4>
+                                </div>
+                                <div id="markersListBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="markersListHeading">
+                                    <div class="panel-body">                                        
+                                        <ul class="list-group pre-scrollable"
+                                            style='max-height: calc(70vh)'
+                                            id="allMarkersList">
+                                        </ul>                              
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Marker Settings-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#markersAccordion" 
+                                     href="#markersSettingsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="markersSettingsBody" 
+                                     role="tab" 
+                                     id="markersSettingsHeading">
+                                    <h4 class="panel-title">
+                                        Settings
+                                    </h4>
+                                </div>
+                                <div id="markersSettingsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="markersSettingsHeading">
+                                    <div class="panel-body">
+                                        <div class="btn-group btn-block btn-group-sm"  role="group">
+                                            <button type="button" class="col-sm-8  btn btn-default">
+                                                Action
+                                            </button>
+                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-pencil"></button>
+                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-trash"></button>
+                                        </div>
+                                        <div class="btn-group btn-block "  role="group">
+                                            <button type="button" class="col-sm-8  btn btn-danger">
+                                                Action
+                                            </button>
+                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-pencil"></button>
+                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-trash"></button>
+                                        </div>
+                                        <div class="btn-group btn-block">
+                                            <button type="button" class="col-sm-10 col-md-11 btn btn-danger ">Action</button>
+                                            <button type="button" class="col-sm-2 col-md-1 btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">Action</a></li>
+                                                <li><a href="#">Another action</a></li>
+                                                <li><a href="#">Something else here</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#">Separated link</a></li>
+                                            </ul>        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskMarkers" class="c-mask"></div>
+        <!-- /Mobile Markers Menu -->
 
         <!-- Mobile Weather Menu -->
         <nav id="mobileWeather" class="hidden-md hidden-lg c-menu">
@@ -571,7 +670,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div class="panel-body">
                                 <button id="createWeatherScout" 
                                         type="button"
-                                        class="btn btn-default" 
+                                        class="btn btn-default createWeatherScoutButton" 
                                         data-toggle="tooltip" 
                                         data-placement="top" 
                                         title="Add a weather scout to the globe.">
@@ -589,34 +688,120 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>    
         <!-- /Mobile Weather Scouts Menu -->
-        <!--     <nav id="" class="hidden-md hidden-lg c-menu">
-                 <div class="container-fluid" style="margin-top:37px">
-                     <div class="row" style="padding-top: 10px">
-                         <div class="col-xs-9 col-sm-9"
-                              <ul class="c-menu__items">
-     
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-             </nav>
-     
-             <div id="c-mask" class="c-mask"></div>
-             
-             <nav id="" class="hidden-md hidden-lg c-menu">
-                 <div class="container-fluid" style="margin-top:37px">
-                     <div class="row" style="padding-top: 10px">
-                         <div class="col-xs-9 col-sm-9"
-                              <ul class="c-menu__items">
-     
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-             </nav>
-     
-             <div id="c-mask" class="c-mask"></div>
-        -->
+
+        <!-- Mobile Fires Menu -->
+        <nav id="mobileFires" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">                
+                <div class="row" style="margin-top:10px;">            
+                    <div class="col-xs-11 col-sm-11">
+                        <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">                                   
+                            <!--Fire Incidents-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#fireAccordion" 
+                                     href="#fireIncidentsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="fireIncidentsBody"
+                                     role="tab" 
+                                     id="fireIncidentsHeading">
+                                    <h4 class="panel-title">
+                                        Incidents
+                                    </h4>
+                                </div>
+                                <div id="fireIncidentsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="fireIncidentsHeading">
+                                    <div class="panel-body">
+                                        <ul class="list-group pre-scrollable" 
+                                            id="fireIncidentList">
+                                        </ul>                              
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Fire Settings-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="firesSettingsHeading">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" 
+                                           data-toggle="collapse" 
+                                           data-parent="#firesAccordion" 
+                                           href="#firesSettingsBody" 
+                                           aria-expanded="false" 
+                                           aria-controls="firesSettingsBody">
+                                            Settings
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                                     aria-labelledby="firesSettingsHeading">
+                                    <div class="panel-body">
+                                        <button id="fuelModel-btn" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Select fuel model.">
+                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            Fuel Model
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="c-menu__items">
+                            <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default">Fire Lookouts</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskMobileFires" class="c-mask"></div>
+        <!-- /Mobile Fires Menu -->
+
+        <!-- Mobile Fire Lookouts Menu -->
+        <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:5%">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="fireLookoutsCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 5px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel panel-default">                            
+                            <div id="fireLookoutsBody" 
+                                 class="panel-collapse collapse" 
+                                 role="tabpanel" 
+                                 aria-labelledby="fireLookoutsHeading">
+                                <div class="panel-body">
+                                    <button id="createFireLookout" 
+                                            type="button"
+                                            class="btn btn-default createFireLookoutButton" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Add a fire lookout to the globe.">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add
+                                    </button>
+                                    <ul class="list-group pre-scrollable"
+                                        style="margin-top: 5px;max-height: calc(15vh);"
+                                        id="fireLookoutList">
+                                    </ul>                              
+                                </div>
+                            </div>
+                        </div>       
+                    </div>
+                </div>
+            </div>
+        </nav>    
+        <!-- /Mobile Fire Lookouts Menu -->        
 
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
@@ -899,7 +1084,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         </button>
                                     </div>
                                     <ul class="list-group pre-scrollable" 
-                                        id="markerList">
+                                        id="allMarkersList">
                                     </ul>                              
                                 </div>
                             </div>
@@ -987,7 +1172,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div class="panel-body">
                                     <button id="createWeatherScout" 
                                             type="button"
-                                            class="btn btn-default" 
+                                            class="btn btn-default createWeatherScoutButton" 
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Add a weather scout to the globe.">
@@ -1080,7 +1265,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div class="panel-body">
                                     <button id="createFireLookout" 
                                             type="button"
-                                            class="btn btn-default" 
+                                            class="btn btn-default createFireLookoutButton" 
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Add a fire lookout to the globe.">
@@ -1225,14 +1410,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-<!--                                    <div class="col-xs-2 right" style="float: right;">
-                                        <button type="button"                                    
-                                                class="btn btn-default interactive"
-                                                id="globeWeatherScoutsButton">
-                                            <span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-cloud"></span>
+                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px; max-width: 58px'>
+                                        <button id="globeCreateWeatherScout" 
+                                                type="button"
+                                                class="btn btn-default createWeatherScoutButton" 
+                                                style="float:right"
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Add a weather scout to the globe.">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
-                                    </div>                                    -->
+                                        <button id="globeCreateFireLookout" 
+                                                type="button"
+                                                class="btn btn-default createFireLookoutButton" 
+                                                style="float: right; margin-top: 5px"
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Add a fire lookout to the globe.">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                                        </button>
+                                    </div>                 
                                 </div>
+
                             </div>
                         </div>
                         <div id="bottom"></div>
