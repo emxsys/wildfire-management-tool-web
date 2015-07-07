@@ -44,7 +44,6 @@ define([
          */
         var SelectController = function (worldWindow) {
             this.wwd = worldWindow;
-
             // When dragging, the mouse event is consumed, i.e., not propagated.
             this.isDragging = false;
             // The list of selected items under the mouse cursor
@@ -55,8 +54,8 @@ define([
             this.clickedItem = null;
 
             var self = this,
-                tapRecognizer;
-
+                tapRecognizer,
+                clickRecognizer;
 //            $('#globeContextMenu-popup').puimenu();
 
             // Listen for mouse down to select an item
@@ -71,10 +70,13 @@ define([
             this.wwd.addEventListener("mouseup", function (event) {
                 self.handlePick(event);
             });
-            // Listen for single clicks to select an item
-            this.wwd.addEventListener("click", function (event) {
+            this.wwd.addEventListener("mouseout", function (event) {
                 self.handlePick(event);
             });
+//            // Listen for single clicks to select an item
+//            this.wwd.addEventListener("click", function (event) {
+//                self.handlePick(event);
+//            });
             // Listen for double clicks to open an item
             this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
@@ -84,14 +86,26 @@ define([
                 self.handlePick(event);
             });
 
-            // Listen for tap gestures on mobile devices
-//            tapRecognizer = new WorldWind.TapRecognizer(this.wwd);
-//            tapRecognizer.addGestureListener(function (event) {
+            // Listen for touch
+            this.wwd.addEventListener("touchstart", function (event) {
+                self.handlePick(event);
+            });
+            this.wwd.addEventListener("touchmove", function (event) {
+                self.handlePick(event);
+            });
+            this.wwd.addEventListener("touchend", function (event) {
+                self.handlePick(event);
+            });
+
+//            // Listen for tap gestures on mobile devices
+//            tapRecognizer = new WorldWind.TapRecognizer(this.wwd, function (event) {
 //                self.handlePick(event);
 //            });
-
+            // Listen for tap gestures on mobile devices
+            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd, function (event) {
+                self.handlePick(event);
+            });
         };
-
         /**
          * Performs the pick apply the appropriate action on the selected item.
          * @param {Event or TapRecognizer} o The input argument is either an Event or a TapRecognizer. Both have the 
@@ -101,44 +115,58 @@ define([
             // The input argument is either an Event or a TapRecognizer. Both have the same properties for determining
             // the mouse or tap location.
             var type = o.type,
-                x = o.clientX,
-                y = o.clientY,
+                x, y,
                 button = o.button,
                 redrawRequired,
                 pickList,
-                terrainObject;
+                terrainObject,
+                isTouchDevice = false;
 
+            if (type.substring(0, 5) === 'touch') {
+                isTouchDevice = true;
+                // x, y remain undefined for touchend
+                if (o.touches.length > 0) {
+                    x = o.touches[0].clientX;
+                    y = o.touches[0].clientY;
+                }
+            } else {
+                // Prevent handling of simulated mouse events on touch devices.
+                if (isTouchDevice) {
+                    return;
+                }
+                x = o.clientX;
+                y = o.clientY;
+            }
             redrawRequired = false;
-
             // Perform the pick. Must first convert from window coordinates to canvas coordinates, which are
             // relative to the upper left corner of the canvas rather than the upper left corner of the page.
             pickList = this.wwd.pick(this.wwd.canvasCoordinates(x, y));
-
             switch (type) {
+                case 'touchstart':
                 case 'mousedown':
                     // Handles right and left-clicks 
                     if (pickList.hasNonTerrainObjects()) {
 
                         // Establish the picked item - may be used by mousemove, click, dblclick and contextmenu handlers
                         this.pickedItem = pickList.topPickedObject();
-
                         if (this.pickedItem) {
                             // Capture the initial mouse down points for comparison in mousemove
                             // to detemine if whether to initiate dragging of the picked item.
-                            this.mouseDownX = x;
-                            this.mouseDownY = y;
+                            this.startX = x;
+                            this.startY = y;
                         }
                     } else {
                         this.pickedItem = null;
                     }
                     break;
+                case 'touchmove':
                 case 'mousemove':
                     if (this.pickedItem) {
                         // Handle left-click drag/move
-                        if (button === 0) {
+                        if (button === 0 || type === 'touchmove') {
                             // Initiate dragging only if the mouse has moved a few pixels.
                             if (!this.isDragging &&
-                                (Math.abs(this.mouseDownX - x) > 2 || Math.abs(this.mouseDownY - y) > 2)) {
+                                (Math.abs(this.startX - x) > 2 || Math.abs(this.startY - y) > 2)) {
                                 this.isDragging = true;
                                 // "Start" the move if the object has a "Movable" capability
                                 if (this.pickedItem.userObject.moveStarted) {
@@ -173,14 +201,27 @@ define([
                         }
                     }
                     break;
+                case 'touchcancel':
+                case 'touchend':
                 case 'mouseup':
+                case 'mouseout':
                     if (this.pickedItem) {
-                        // Finish the move if the object a "Movable" capability    
                         if (this.isDragging) {
+                        // Finish the move if the object has a "Movable" capability    
                             if (this.pickedItem.userObject.moveFinished) {
                                 // Fires EVENT_OBJECT_MOVE_FINISHED
                                 this.pickedItem.userObject.moveFinished();
                             }
+                            this.pickedItem = null;
+                        } else if (type === 'touchend') {
+                            // If we're not moving the object, then select the object
+                            this.clickedItem = this.pickedItem;
+                            if (this.clickedItem) {
+                                if (this.clickedItem.userObject.select) {
+                                    this.clickedItem.userObject.select();
+                                }
+                            }
+                            // Release the picked item 
                             this.pickedItem = null;
                         }
                     }
@@ -223,6 +264,8 @@ define([
             }
             // Prevent pan/drag operations on the globe when we're dragging an object.
             if (this.isDragging) {
+                o.stopImmediatePropagation();   // Try and prevent WW PanRecognizer TouchEvent from processing event
+                o.stopPropagation();
                 o.preventDefault();
             }
             // Update the window if we changed anything.
@@ -231,7 +274,6 @@ define([
             }
         }
         ;
-
         return SelectController;
     }
 );
