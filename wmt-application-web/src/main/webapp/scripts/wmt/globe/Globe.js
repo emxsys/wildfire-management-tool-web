@@ -106,18 +106,26 @@ define([
         var Globe = function (canvasName, options, layers) {
             // Create the World Window
             this.wwd = new WorldWind.WorldWindow(canvasName);
+            
             // Override the default TextSupport with our custom verion that draws outline text
             this.wwd.drawContext.textSupport = new EnhancedTextSupport();
+            
             this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
             this.isAnimating = false;
+            
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
             this.selectController = new SelectController(this.wwd);
             this.dndController = new DnDController(this.wwd);
             this.keyboardControls = new KeyboardControls(this);
-            // Add the custom navigator after the select controller so the select controller can
-            // consume the mouse events and preempt the pan/drag operation during object move operations.
+            
+            // Add the custom navigator *after* the select controller 
+            // so the select controller can consume the mouse events 
+            // and preempt the pan/drag operations when moving objects.
             this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
+
+            // Add terrain services (aspect, slope) to the globe
             this.terrainProvider = new TerrainProvider(this);
+            
             // Create the default layers
             var self = this,
                 showBackground = options ? options.showBackground : true,
@@ -149,15 +157,15 @@ define([
                 layer.hide = true; // hidden in layer list
                 this.wwd.addLayer(layer);
             }
-            // Add imagery layers to WorldWindow
+            // If the globe constructor was supplied with layers
+            // then we add them here...
             if (layers && layers.length > 0) {
-                // User layers
                 for (i = 0, max = layers.length; i < max; i++) {
                     this.wwd.addLayer(layers[i]);
                 }
             }
             else {
-                // Default layers
+                // ... otherwise, we use the default layers
                 for (i = 0, max = defaultLayers.length; i < max; i++) {
                     // Propagate enabled option to the layer object
                     defaultLayers[i].layer.enabled = defaultLayers[i].enabled;
@@ -186,11 +194,13 @@ define([
                 layer.hide = true; // hidden in layer list
                 this.wwd.addLayer(layer);
             }
-            // Add event handler to redraw the WorldWindow during resize events
+            // Redraw the WorldWindow during resize events
             // to prevent the canvas from looking distorted
             window.onresize = function () {
                 self.wwd.redraw();
             };
+            // Ensure keyboard controls are operational by 
+            // setting focus to the globe 
             this.wwd.addEventListener("click", function (event) {
                 self.setFocus();
             });
@@ -201,7 +211,7 @@ define([
         /**
          * Adds the given layer to the globe
          * @param {WorldWind.Layer} layer Layer to add.
-         * @param {Boolean} hide Hides the layer from layer list if true.
+         * @param {Boolean} hide Hides the layer from layer list if true. Default: false.
          */
         Globe.prototype.addLayer = function (layer, hide) {
             layer.hide = hide === undefined ? false : hide;
@@ -226,8 +236,8 @@ define([
         };
         /**
          * Gets terrain at the given latitude and longitude.
-         * @param {Number} latitude.
-         * @param {Number} longitude.
+         * @param {Number} latitude
+         * @param {Number} longitude
          * @return {Terrain} A WMT Terrain object at the given lat/lon.
          */
         Globe.prototype.getTerrainAtLatLon = function (latitude, longitude) {
