@@ -35,10 +35,12 @@
  */
 define([
     'wmt/controller/Controller',
+    'wmt/util/Selectable',
     'wmt/view/widgets/TimeWidget',
     'worldwind'],
     function (
         controller,
+        selectable,
         TimeWidget,
         ww) {
         "use strict";
@@ -49,6 +51,11 @@ define([
                 this.widget = new TimeWidget();
                 this.layer.addRenderable(this.widget);
                 controller.globe.addLayer(this.layer, false); // False: hide in layer list
+                
+                // Listen for mouse clicks.
+                selectable.makeSelectable(this.widget.reset, function () {
+                    controller.model.updateAppTime(new Date());
+                });
             }
         };
         return TimeView;

@@ -109,6 +109,16 @@ define([
                 '47%',
                 '100%'
                 );
+            var mobileMarkers = new mobileMenu.Menu(
+                '#mobileMarkers',
+                'slide-right',
+                '#c-maskMarkers',
+                Array('#mobileMarkersButton'),
+                Array(''),
+                '100',
+                '100%',
+                '85%'
+                );
             var mobileWeather = new mobileMenu.Menu(
                 '#mobileWeather',
                 'slide-right',
@@ -158,7 +168,12 @@ define([
             $('#globeCreateWeatherScout').on('taphold', function () {
                 mobileWeatherScouts.open();
             });
-
+            
+            // needed delegate event handling for these buttons
+            $('#allMarkersList').on('click','button.mkr-goto', function(){
+                mobileMarkers.close();                
+            });
+            
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();

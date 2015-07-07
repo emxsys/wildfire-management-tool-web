@@ -97,23 +97,18 @@ define([],
                             e.preventDefault();
                             toggle.classList.remove("is-active");
                         });
+                        $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
+                            e.preventDefault();
+                            toggle.classList.remove("is-active");
+                        });
                     }
-
-                    // Prevents bootstrap buttons from staying 'depressed'.
-//                    $(".btn-default").on('mouseup',function () {
-//                        $(this).removeClass('active');
-//                        $(this).removeClass('hover');
-//                        $(this).blur();
-//                    });
-                    
-
                 })();
                 var mobileMenu = new MobileMenu.Menu(
                     '#mobileMenu',
                     'slide-left',
                     '#c-maskMain',
                     Array(''),
-                    Array('#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton', '#firesFireLookoutsButton'),
+                    Array('#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton', '#firesFireLookoutsButton', '.mkr-goto'),
                     '50',
                     '100%',
                     '85%'
@@ -128,6 +123,10 @@ define([],
                         mobileMenu.close();
                     }
 
+                });
+
+                $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {                    
+                    mobileMenu.close();
                 });
             },
             Menu: function (
@@ -232,20 +231,20 @@ define([],
                 this._initEvents = function () {
                     var Menu = this;
                     // Event for clicks on the mask.
-                    this.mask.click(function (e) {
+                    this.mask.on('click', function (e) {
                         e.preventDefault();
                         Menu.close();
                     });
                     //Event for the button that opens the menu
                     this.openBtns.forEach(function (element, index, array) {
-                        element.click(function (e) {
+                        element.on('click', function (e) {
                             e.preventDefault();
                             Menu.open();
                         });
                     });
                     //Event for the button that closes the menu
                     this.closeBtns.forEach(function (element, index, array) {
-                        element.click(function (e) {
+                        element.on('click', function (e) {
                             e.preventDefault();
                             Menu.close();
                         });

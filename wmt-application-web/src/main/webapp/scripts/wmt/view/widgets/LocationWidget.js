@@ -81,6 +81,9 @@ define([
                 backgroundOffset = new WorldWind.Offset(
                     WorldWind.OFFSET_INSET_PIXELS, -RIGHT_MARGIN,
                     WorldWind.OFFSET_INSET_PIXELS, BOTTOM_MARGIN + BG_HEIGHT),
+                resetOffset = new WorldWind.Offset(
+                    WorldWind.OFFSET_INSET_PIXELS, -10,
+                    WorldWind.OFFSET_INSET_PIXELS, BOTTOM_MARGIN + BG_HEIGHT + 30),
                 dialOffset = new WorldWind.Offset(
                     WorldWind.OFFSET_INSET_PIXELS, -RIGHT_MARGIN - DIAL_MARGIN,
                     WorldWind.OFFSET_INSET_PIXELS, BOTTOM_MARGIN + DIAL_MARGIN + DIAL_HEIGHT),
@@ -103,7 +106,11 @@ define([
                     WorldWind.OFFSET_INSET_PIXELS, RIGHT_MARGIN + 110,
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN - 25),
                 textAttr = new WorldWind.TextAttributes(null);
+            
             // Graphics
+            this.reset = new WorldWind.ScreenImage(lowerRight, wmt.IMAGE_PATH + "reset-button.png");
+            this.reset.imageOffset = resetOffset;
+                        
             this.background = new WorldWind.ScreenImage(lowerRight, wmt.IMAGE_PATH + "widget-circle-bg.png");
             this.background.imageOffset = backgroundOffset;
 
@@ -116,8 +123,11 @@ define([
             this.aspectIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "location-widget_aspect-icon.png");
             this.aspectIcon.imageOffset = center;
 
-            this.solarIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-icon.png");
-            this.solarIcon.imageOffset = center;
+            this.sunIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-icon.png");
+            this.sunIcon.imageOffset = center;
+
+            this.eclipseIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-eclipsed-icon.png");
+            this.eclipseIcon.imageOffset = center;
 
 
             // Text
@@ -190,6 +200,9 @@ define([
             // else z-ording gets confused with non-rotated images
             // appearing on top of rotated images.
             var RADIUS = 50,
+                localHour = WorldWind.Angle.normalizedDegrees(this.sunlight.localHourAngle ? parseFloat(this.sunlight.localHourAngle.value) : 0),
+                riseHourAngle = this.sunlight.sunriseHourAngle ? parseFloat(this.sunlight.sunriseHourAngle.value) : 0,
+                setsHourAngle = this.sunlight.sunsetHourAngle ? parseFloat(this.sunlight.sunsetHourAngle.value) : 0,
                 heading = dc.navigatorState.heading || 0.001,
                 slope = this.viewpoint.target.slope || 0.001,
                 aspect = this.viewpoint.target.aspect || 0.001,
@@ -201,7 +214,10 @@ define([
             this.aspectIcon.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_PIXELS, aspectPt.x,
                 WorldWind.OFFSET_PIXELS, aspectPt.y);
-            this.solarIcon.imageOffset = new WorldWind.Offset(
+            this.sunIcon.imageOffset = new WorldWind.Offset(
+                WorldWind.OFFSET_PIXELS, solarPt.x,
+                WorldWind.OFFSET_PIXELS, solarPt.y);
+            this.eclipseIcon.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_PIXELS, solarPt.x,
                 WorldWind.OFFSET_PIXELS, solarPt.y);
             // Rotate the aspect "diamond" icon
@@ -218,12 +234,16 @@ define([
             this.inclinometer.render(dc);
             this.compass.render(dc);
             this.aspectIcon.render(dc);
-            this.solarIcon.render(dc);
-
+            if (localHour > riseHourAngle && localHour < setsHourAngle) {
+                this.sunIcon.render(dc);
+            } else {
+                this.eclipseIcon.render(dc);
+            }
             this.latitude.render(dc);
             this.longitude.render(dc);
             this.elevation.render(dc);
             this.slope.render(dc);
+            this.reset.render(dc);
         };
 
         LocationWidget.rotatePoint = function (pointX, pointY, originX, originY, angle) {

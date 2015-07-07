@@ -64,7 +64,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
         <script type="text/javascript" src="./thirdparty/pace/pace.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-2.1.4.min.js" ></script>
-        <script type="text/javascript">$(document).bind("mobileinit", function(){$.extend(  $.mobile , {autoInitializePage: false});});</script>
+        <script type="text/javascript">$(document).bind("mobileinit", function () {
+                $.extend($.mobile, {autoInitializePage: false});
+            });</script>
         <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
@@ -206,6 +208,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                          <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             <li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                            <li class="c-menu__item"><a id="mobileMarkersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                             <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                             <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
                         </ul>
@@ -493,6 +496,97 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>
         <!-- /Mobile Layers List Menu -->
 
+        <!-- Mobile Markers Menu -->
+        <nav id="mobileMarkers" class="hidden-md hidden-lg c-menu">
+            <div class="container-fluid" style="margin-top:37px">
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
+                            <!--Marker List-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#markersAccordion" 
+                                     href="#markersListBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="markersListBody"
+                                     role="tab" 
+                                     id="markersListHeading">
+                                    <h4 class="panel-title">
+                                        Marker List
+                                    </h4>
+                                </div>
+                                <div id="markersListBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="markersListHeading">
+                                    <div class="panel-body">                                        
+                                        <ul class="list-group pre-scrollable"
+                                            style='max-height: calc(70vh)'
+                                            id="allMarkersList">
+                                        </ul>                              
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Marker Settings-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading collapsed" 
+                                     data-toggle="collapse" 
+                                     data-parent="#markersAccordion" 
+                                     href="#markersSettingsBody" 
+                                     aria-expanded="false" 
+                                     aria-controls="markersSettingsBody" 
+                                     role="tab" 
+                                     id="markersSettingsHeading">
+                                    <h4 class="panel-title">
+                                        Settings
+                                    </h4>
+                                </div>
+                                <div id="markersSettingsBody" 
+                                     class="panel-collapse collapse" 
+                                     role="tabpanel" 
+                                     aria-labelledby="markersSettingsHeading">
+                                    <div class="panel-body">
+                                        <div class="btn-group btn-block btn-group-sm"  role="group">
+                                            <button type="button" class="col-sm-8  btn btn-default">
+                                                Action
+                                            </button>
+                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-pencil"></button>
+                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-trash"></button>
+                                        </div>
+                                        <div class="btn-group btn-block "  role="group">
+                                            <button type="button" class="col-sm-8  btn btn-danger">
+                                                Action
+                                            </button>
+                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-pencil"></button>
+                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-trash"></button>
+                                        </div>
+                                        <div class="btn-group btn-block">
+                                            <button type="button" class="col-sm-10 col-md-11 btn btn-danger ">Action</button>
+                                            <button type="button" class="col-sm-2 col-md-1 btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">Action</a></li>
+                                                <li><a href="#">Another action</a></li>
+                                                <li><a href="#">Something else here</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#">Separated link</a></li>
+                                            </ul>        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="c-maskMarkers" class="c-mask"></div>
+        <!-- /Mobile Markers Menu -->
+
         <!-- Mobile Weather Menu -->
         <nav id="mobileWeather" class="hidden-md hidden-lg c-menu">
             <div class="container-fluid" style="margin-top:37px">                
@@ -706,36 +800,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </nav>    
-        <!-- /Mobile Fire Lookouts Menu -->
-
-        <!--     <nav id="" class="hidden-md hidden-lg c-menu">
-                 <div class="container-fluid" style="margin-top:37px">
-                     <div class="row" style="padding-top: 10px">
-                         <div class="col-xs-9 col-sm-9"
-                              <ul class="c-menu__items">
-     
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-             </nav>
-     
-             <div id="c-mask" class="c-mask"></div>
-             
-             <nav id="" class="hidden-md hidden-lg c-menu">
-                 <div class="container-fluid" style="margin-top:37px">
-                     <div class="row" style="padding-top: 10px">
-                         <div class="col-xs-9 col-sm-9"
-                              <ul class="c-menu__items">
-     
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-             </nav>
-     
-             <div id="c-mask" class="c-mask"></div>
-        -->
+        <!-- /Mobile Fire Lookouts Menu -->        
 
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
@@ -1018,7 +1083,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         </button>
                                     </div>
                                     <ul class="list-group pre-scrollable" 
-                                        id="markerList">
+                                        id="allMarkersList">
                                     </ul>                              
                                 </div>
                             </div>

@@ -36,10 +36,12 @@
 define([
     'wmt/controller/Controller',
     'wmt/view/widgets/LocationWidget',
+    'wmt/util/Selectable',
     'worldwind'],
     function (
         controller,
         LocationWidget,
+        selectable,
         ww) {
         "use strict";
 
@@ -49,6 +51,12 @@ define([
                 this.widget = new LocationWidget();
                 this.layer.addRenderable(this.widget);
                 controller.globe.addLayer(this.layer, false); // False: hide in layer list
+                
+                // Listen for mouse clicks.
+                selectable.makeSelectable(this.widget.reset, function () {
+                    controller.globe.resetHeadingAndTilt();
+                });
+                
             }
         };
         return LocationView;
