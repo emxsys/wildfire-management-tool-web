@@ -64,6 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
         <script type="text/javascript" src="./thirdparty/pace/pace.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-2.1.4.min.js" ></script>
+        <script type="text/javascript">$(document).bind("mobileinit", function(){$.extend(  $.mobile , {autoInitializePage: false});});</script>
         <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
