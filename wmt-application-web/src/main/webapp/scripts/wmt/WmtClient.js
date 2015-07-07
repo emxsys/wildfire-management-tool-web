@@ -74,7 +74,7 @@ define([
                 'slide-right',
                 '#c-maskCtrlPanel',
                 Array('#mobileControlPanelButton'),
-                Array('#ctrlPanelGlobe','#findMe'),
+                Array('#ctrlPanelGlobe', '#findMe'),
                 '100',
                 '100%',
                 '85%'
@@ -82,7 +82,7 @@ define([
             var mobileGlobeMenu = new mobileMenu.Menu(
                 '#mobileGlobe',
                 'slide-top',
-                '', 
+                '',
                 Array('#ctrlPanelGlobe'),
                 Array('#globeCheck'),
                 '110',
@@ -102,7 +102,7 @@ define([
             var mobileLayersList = new mobileMenu.Menu(
                 '#mobileLayersList',
                 'slide-top',
-                '', 
+                '',
                 Array('#layersListButton'),
                 Array('#layersListCheck'),
                 '110',
@@ -122,8 +122,8 @@ define([
             var mobileWeatherScouts = new mobileMenu.Menu(
                 '#mobileWeatherScouts',
                 'slide-top',
-                '', 
-                Array('#weatherWeatherScoutsButton','#globeWeatherScoutsButton'),
+                '',
+                Array('#weatherWeatherScoutsButton', '#globeWeatherScoutsButton'),
                 Array('#weatherScoutsCheck'),
                 '110',
                 '39%',
@@ -139,16 +139,25 @@ define([
                 '100%',
                 '85%'
                 );
-            var mobileWeatherScouts = new mobileMenu.Menu(
+            var mobileFireLookouts = new mobileMenu.Menu(
                 '#mobileFireLookouts',
                 'slide-top',
-                '', 
-                Array('#firesFireLookoutsButton','#globeFireLookoutsButton'),
+                '',
+                Array('#firesFireLookoutsButton', '#globeFireLookoutsButton'),
                 Array('#fireLookoutsCheck'),
                 '110',
                 '39%',
                 '100%'
                 );
+
+
+            //initialize the hold events for the globe scout and lookout buttons
+            $('#globeCreateFireLookout').on('taphold', function () {
+                mobileFireLookouts.open();              
+            });
+            $('#globeCreateWeatherScout').on('taphold', function () {
+                mobileWeatherScouts.open();
+            });
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {

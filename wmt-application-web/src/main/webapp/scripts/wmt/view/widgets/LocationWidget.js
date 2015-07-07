@@ -110,9 +110,9 @@ define([
             this.inclinometer = new WorldWind.ScreenImage(lowerRight, wmt.IMAGE_PATH + "location-widget_inclinometer.png");
             this.inclinometer.imageOffset = dialOffset;
 
-            this.compassRose = new WorldWind.ScreenImage(lowerRight, wmt.IMAGE_PATH + "location-widget_compass.png");
-            this.compassRose.imageOffset = dialOffset;
-
+            this.compass = new WorldWind.ScreenImage(lowerRight, wmt.IMAGE_PATH + "location-widget_compass.png");
+            this.compass.imageOffset = dialOffset;
+            
             this.aspectIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "location-widget_aspect-icon.png");
             this.aspectIcon.imageOffset = center;
 
@@ -210,13 +210,13 @@ define([
 
             // Rotate the dials
             //  Rotate the background as a hack to force it behind the other layers
-            this.background.imageRotation = heading; // HACK
-            this.compassRose.imageRotation = heading;
+            this.background.imageRotation = 0.001; // HACK
+            this.compass.imageRotation = heading;
             this.inclinometer.imageRotation = slope;
 
             this.background.render(dc);
             this.inclinometer.render(dc);
-            this.compassRose.render(dc);
+            this.compass.render(dc);
             this.aspectIcon.render(dc);
             this.solarIcon.render(dc);
 

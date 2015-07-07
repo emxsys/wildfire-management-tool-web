@@ -77,7 +77,7 @@ define([
                 }
 
                 // Add button event handlers
-                $("#createWeatherScout").on("click", function (event) {
+                $(".createWeatherScoutButton").on("click", function (event) {
                     controller.dropWeatherScoutOnGlobe(new WeatherScout());
                 });               
                 

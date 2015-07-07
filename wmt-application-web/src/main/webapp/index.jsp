@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"> <!-- Not sure "height=device-height" is needed, but It's an option. -->
         <!-- Bootstrap: The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         <title>Wildfire Management Tool (WMT)</title>
@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--During development, using local copies, and sometimes development versions of libraries. -->
         <!--Note: font-awesome and jquery-ui are required by prime-ui. -->
         <!--Style note: prime-ui themes compatible with bootstrap-slate include afterdark and afterwork (alt. cruze and ui-darkness). -->
-        <link rel="stylesheet" type="text/css" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />   
+        <link rel="stylesheet" type="text/css" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />         
         <link rel="stylesheet" type="text/css" href="./thirdparty/font-awesome-4.3.0/css/font-awesome.min.css"  />
         <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/themes/afterdark/theme.css" />   
         <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/production/primeui-2.0-min.css" />   
@@ -64,16 +64,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
         <script type="text/javascript" src="./thirdparty/pace/pace.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-2.1.4.min.js" ></script>
+        <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>
+        <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
         <script type="text/javascript" src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js"></script>
         <script type="text/javascript" src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js"></script>
-        <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
 
 
         <!--For production, use content delivery network (CDN) libraries-->
         <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
+        <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css">-->
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>-->
+        <!--<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>-->
         <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
         <!--<script data-main="./scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
     </head>
@@ -571,7 +574,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div class="panel-body">
                                 <button id="createWeatherScout" 
                                         type="button"
-                                        class="btn btn-default" 
+                                        class="btn btn-default createWeatherScoutButton" 
                                         data-toggle="tooltip" 
                                         data-placement="top" 
                                         title="Add a weather scout to the globe.">
@@ -661,9 +664,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>
 
         <div id="c-maskMobileFires" class="c-mask"></div>
-        <!-- /Mobile Weather Menu -->
+        <!-- /Mobile Fires Menu -->
 
-        <!-- Mobile Weather Scouts Menu -->
+        <!-- Mobile Fire Lookouts Menu -->
         <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
@@ -684,7 +687,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div class="panel-body">
                                     <button id="createFireLookout" 
                                             type="button"
-                                            class="btn btn-default" 
+                                            class="btn btn-default createFireLookoutButton" 
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Add a fire lookout to the globe.">
@@ -702,7 +705,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </nav>    
-        <!-- /Mobile Weather Scouts Menu -->
+        <!-- /Mobile Fire Lookouts Menu -->
 
         <!--     <nav id="" class="hidden-md hidden-lg c-menu">
                  <div class="container-fluid" style="margin-top:37px">
@@ -1102,7 +1105,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div class="panel-body">
                                     <button id="createWeatherScout" 
                                             type="button"
-                                            class="btn btn-default" 
+                                            class="btn btn-default createWeatherScoutButton" 
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Add a weather scout to the globe.">
@@ -1195,7 +1198,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div class="panel-body">
                                     <button id="createFireLookout" 
                                             type="button"
-                                            class="btn btn-default" 
+                                            class="btn btn-default createFireLookoutButton" 
                                             data-toggle="tooltip" 
                                             data-placement="top" 
                                             title="Add a fire lookout to the globe.">
@@ -1340,26 +1343,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-<!--                                    <div id="globe" class="col-xs-2" style='float: right;'>
-                                        <button id="createWeatherScout" 
+                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px;'>
+                                        <button id="globeCreateWeatherScout" 
                                                 type="button"
-                                                class="btn btn-default" 
+                                                class="btn btn-default createWeatherScoutButton" 
+                                                style="float:right"
                                                 data-toggle="tooltip" 
                                                 data-placement="top" 
                                                 title="Add a weather scout to the globe.">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
-                                        <button id="createFireLookout" 
+                                        <button id="globeCreateFireLookout" 
                                                 type="button"
-                                                class="btn btn-default" 
+                                                class="btn btn-default createFireLookoutButton" 
+                                                style="float: right; margin-top: 5px"
                                                 data-toggle="tooltip" 
                                                 data-placement="top" 
                                                 title="Add a fire lookout to the globe.">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                                         </button>
-                                    </div>                 -->
+                                    </div>                 
                                 </div>
 
                             </div>
