@@ -1,29 +1,46 @@
-# README #
-
-This README would normally document whatever steps are necessary to get your application up and running.
+# README - Wildfire Management Tool Web (WMTweb) #
 
 ## What is this repository for? ##
 
-### Quick summary ###
+This repository is used to build the WMT Web Application and the WMT REST Server.
+The REST server is a Java project comprised of several NetBeans modules. 
+The web application is a JavaScript project.
+All of the projects are managed by Maven.
 
+For more information, see the [Wiki Home](https://bitbucket.org/emxsys/wildfire-management-tool-web/wiki/Home).
 
-See Vision and Scope. (TODO: add link)
+### Overview ###
 
-
-* Version(s)
+* Version(s): 1.0.0
 * Repository Structure
-    * WMT Web Client Application
-    * WMT REST Server Application 
+    * wmt-application-web: WMT Web Application
+    * wmt-application-rest: WMT REST Server Application 
+        * wmt-gis: WMT GIS API module
+        * wmt-jfree: JFree Charts wrapper module
+        * wmt-libraries: Wrapper module for third party libraries
+        * wmt-solar: WMT Solar API module
+        * wmt-time: WMT Time API module
+        * wmt-utilties: WMT Utilities module
+        * wmt-visad: VisAD wrapper module
+        * wmt-weather: WMT Weather API module
+        * wmt-weather-mesowest: WMT MesoWest Weather Service Provider modulea
+        * wmt-weather-nws: WMT National Weather Service Provider module
+        * wmt-wildfire: WMT Wildfire API
+    * vpproject: Visual Paradigm UML project
 
 ## How do I get set up? ##
-See Software Architecture Document (TODO: add wiki link).
+Refer to the following documents for insight into the structure and design of this project:
+
+See the [Software Architecture Document](https://bitbucket.org/emxsys/wildfire-management-tool-web/wiki/Software%20Architecture)
+
+See the [Software Design Guidelines](https://bitbucket.org/emxsys/wildfire-management-tool-web/wiki/Software%20Design)
 
 * Summary of set up
     * Install NetBeans IDE Enterprise Edition (includes web servers)
         * Download: 
     * Install Tomcat web server (may be included in NetBeans EE)
         * Download: 
-    * Clone this repository
+    * Clone this repository to your local drive
     * Open and build the **wildfire-management-tool-web** project
         * NetBeans: File > Open Project 
 * Configuration
@@ -42,32 +59,24 @@ See Software Architecture Document (TODO: add wiki link).
         * Run **WMT Application - Web** project
             * The WMT web application should be displayed in your web browser
             * Safari prerequisites: You must enable WebGL
-                * Safari > Preferences > Advanced | Show Develop menu [checked]
-                * Safari > Develop > Enable WebGL [checked]
-* Deployment instructions
-    * Tomcat Deployment
-        1. Open Tomcat Web Application Manager (TODO: add link http://emxsys.azurewebsites.net/manager/html)
+                * Safari > Preferences > Advanced | Show Develop menu = checked
+                * Safari > Develop > Enable WebGL = checked
+* Deployment instructions: Two methods are described
+    * Apache Tomcat Deployment
+        1. Open your Tomcat Web Application Manager
         1. Undeploy existing web app.
         1. Browse to .war file
         1. Deploy
-    * Microsoft WebMatrix (TODO)
+    * Microsoft WebMatrix
         1. Copy .war to local site's bin/apache-tomcat-<version>/webapps
         1. Upload to remote site
     
 ## Contribution guidelines ##
-See Software Development Plan (TODO: add wiki link).
-
-* Overview
-* Writing tests
-* Code review
-* Other guidelines
-    * See Design and Coding Guidelines (TODO: add wiki link)
+Contact the repository owner regarding access to the repository or to submit changes.
+Also suggest enhancements and bug fixes via the [Issue Tracker](https://bitbucket.org/emxsys/wildfire-management-tool-web/issues)
 
 ## Who do I talk to? ##
-
-* Repo owner or admin
-* Other community or team contact
+* Bruce Schubert: bruce at emxsys dot com
 
 ## Project metrics
-
-* [WMTweb on OpenHub](https://www.openhub.net/p/wildfire-management-tool-web)
+* See the [Wildfire-Management-Tool-Web project on OpenHub](https://www.openhub.net/p/wildfire-management-tool-web)
