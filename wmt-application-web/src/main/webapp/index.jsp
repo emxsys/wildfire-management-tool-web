@@ -88,7 +88,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <body style="padding-top: 50px;"> 
 
         <!--Main Menu-->
-        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs">
+        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs hidden-sm">
             <div class="container-fluid">
                 <!--Navbar: Collapsed Menu-->
                 <div class="navbar-header">
@@ -478,13 +478,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     Layer List
                                 </h4>
                             </div>
-                            <div class="panel-collapse collapse in" 
+                            <div class="panel-collapse collapse in"
+                                 style='max-height: calc(27vh)'
                                  role="tabpanel" 
                                  aria-labelledby="layerListHeading"
                                  id="layerListBody" >
                                 <div class="panel-body">
                                     <ul class="list-group"
-                                        style="max-height:150px;overflow-y: scroll;"
+                                        style="max-height:calc(23vh);overflow-y: scroll;"
                                         id="layerList">
                                     </ul>                              
                                 </div>
@@ -1409,7 +1410,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px;'>
+                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px; max-width: 58px'>
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
                                                 class="btn btn-default createWeatherScoutButton" 

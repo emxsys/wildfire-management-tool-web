@@ -86,7 +86,7 @@ define([
                 Array('#ctrlPanelGlobe'),
                 Array('#globeCheck'),
                 '110',
-                '27%',
+                'calc(5vh + 180px)',
                 '100%'
                 );
             var mobileLayers = new mobileMenu.Menu(
@@ -106,7 +106,7 @@ define([
                 Array('#layersListButton'),
                 Array('#layersListCheck'),
                 '110',
-                '47%',
+                'calc(30vh + 100px)',
                 '100%'
                 );
             var mobileMarkers = new mobileMenu.Menu(
@@ -136,7 +136,7 @@ define([
                 Array('#weatherWeatherScoutsButton', '#globeWeatherScoutsButton'),
                 Array('#weatherScoutsCheck'),
                 '110',
-                '39%',
+                'calc(39vh + 50px)',
                 '100%'
                 );
             var mobileFires = new mobileMenu.Menu(
@@ -156,7 +156,7 @@ define([
                 Array('#firesFireLookoutsButton', '#globeFireLookoutsButton'),
                 Array('#fireLookoutsCheck'),
                 '110',
-                '39%',
+                'calc(39vh + 50px)',
                 '100%'
                 );
 
