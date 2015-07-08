@@ -73,7 +73,7 @@ define([
             },
             whileMousedown: function () {
                 var value = $("#timeControlSlider").slider("value");
-                console.log("whileMousedown: " + value);
+                //console.log("whileMousedown: " + value);
                 controller.incrementDateTime(this.sliderValueToMilliseconds(value));
             },
             onMouseup: function (event) {
@@ -84,7 +84,7 @@ define([
                 }
             },
             onSlide: function (event, ui) {
-                console.log("onSlide: " + ui.value);
+                //console.log("onSlide: " + ui.value);
                 controller.incrementDateTime(this.sliderValueToMilliseconds(ui.value));
             },
             sliderValueToMilliseconds: function (value) {
