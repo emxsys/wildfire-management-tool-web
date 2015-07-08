@@ -88,7 +88,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <body style="padding-top: 50px;"> 
 
         <!--Main Menu-->
+        <!-- BDS: Using mobile menu for desktop
         <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden-xs hidden-sm">
+        -->
+        <nav id="mainMenu" class="navbar navbar-default navbar-fixed-top navbar-nomargin hidden">
             <div class="container-fluid">
                 <!--Navbar: Collapsed Menu-->
                 <div class="navbar-header">
@@ -201,7 +204,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>
         <!-- Mobile Main Menu -->
-        <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">
+        <!--BDS: <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">-->
+        <nav id="mobileMenu" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-9 col-sm-9"
@@ -240,12 +244,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Main Menu -->
 
         <!-- Mobile Control Panel -->
+        <!-- BDS: Using MobileMenu for desktop
         <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
+        -->
+        <nav id="mobileControlPanel" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-12 col-sm-12">
+            <!-- BDS margin vs padding 
+            <div class="row" style="padding-top: 10px">-->
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-xs-11 col-sm-11">
                         <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
-                            <!--Location Panel-->
                             <div class="panel panel-default">
                                 <div class="panel-heading collapsed" 
                                      id="controlPanelLocationHeading"
@@ -273,19 +281,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                     title="Centers the globe on your location.">
                                                 Find Me
                                             </button>
-                                            <button id="followMe" 
-                                                    class="btn btn-default" 
-                                                    type="button"
-                                                    data-toggle="tooltip" 
-                                                    data-placement="top" 
-                                                    title="Keeps the globe centered on your location.">
-                                                Follow Me
-                                            </button>
+<!--                                            Suppressed: Follow Me has not been implemented, hide the button until it is.
+                                                <button id="followMe" 
+                                                        class="btn btn-default" 
+                                                        type="button"
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="Keeps the globe centered on your location.">
+                                                    Follow Me
+                                                </button>-->                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>                            
-                            <!--Settings-->
                             <div class="panel panel-default">
                                 <div id="controlPanelSettingsHeading"
                                      class="panel-heading collapsed" 
@@ -312,7 +320,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     </div>
                                 </div>
                             </div>
-                            <!--Options-->
                             <div class="panel panel-default">
                                 <div id="controlPanelOptionsHeading"
                                      class="panel-heading collapsed" 
@@ -349,7 +356,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Control Panel -->
 
         <!-- Mobile Globe Menu -->
-        <nav id="mobileGlobe" class="hidden-md hidden-lg c-menu">
+        <!-- BDS: <nav id="mobileGlobe" class="hidden-md hidden-lg c-menu"> -->
+        <nav id="mobileGlobe" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -407,7 +415,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Globe Menu -->
 
         <!-- Mobile Layers Menu -->
-        <nav id="mobileLayers" class="hidden-md hidden-lg c-menu">
+        <!-- BDS: <nav id="mobileLayers" class="hidden-md hidden-lg c-menu"> -->
+        <nav id="mobileLayers" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-11 col-sm-11">
@@ -451,7 +460,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Layers Menu -->
 
         <!-- Mobile Layers List Menu -->
-        <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu">
+        <!-- BDS: <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu"> -->
+        <nav id="mobileLayersList" class="c-menu">
             <div class="container-fluid" style="margin-top:5%;">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -466,7 +476,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <!--Layer List-->
                         <div class="panel panel-default">
                             <!--Show this panel at startup via "collapsed.in"-->
-                            <div class="panel-heading collapsed" 
+<!--                            <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
                                  data-parent="#layersAccordion" 
                                  href="#layerListBody" 
@@ -477,8 +487,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <h4 class="panel-title">
                                     Layer List
                                 </h4>
-                            </div>
+                            </div>-->
+                            <!--BDS Creates visbible region at top of screen 
                             <div class="panel-collapse collapse in"
+                            -->
+                            <div class="panel-collapse"
                                  style='max-height: calc(27vh)'
                                  role="tabpanel" 
                                  aria-labelledby="layerListHeading"
@@ -498,7 +511,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Layers List Menu -->
 
         <!-- Mobile Markers Menu -->
-        <nav id="mobileMarkers" class="hidden-md hidden-lg c-menu">
+        <!--BDS: <nav id="mobileMarkers" class="hidden-md hidden-lg c-menu">-->
+        <nav id="mobileMarkers" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-12 col-sm-12">
@@ -589,7 +603,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Markers Menu -->
 
         <!-- Mobile Weather Menu -->
-        <nav id="mobileWeather" class="hidden-md hidden-lg c-menu">
+        <!--BDS: <nav id="mobileWeather" class="hidden-md hidden-lg c-menu">-->
+        <nav id="mobileWeather" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
@@ -654,7 +669,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Menu -->
 
         <!-- Mobile Weather Scouts Menu -->
-        <nav id="mobileWeatherScouts" class="hidden-md hidden-lg c-menu">
+        <!--BDS: <nav id="mobileWeatherScouts" class="hidden-md hidden-lg c-menu">-->
+        <nav id="mobileWeatherScouts" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -690,7 +706,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Scouts Menu -->
 
         <!-- Mobile Fires Menu -->
-        <nav id="mobileFires" class="hidden-md hidden-lg c-menu">
+        <!--BDS:<nav id="mobileFires" class="hidden-md hidden-lg c-menu">-->
+        <nav id="mobileFires" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
@@ -763,7 +780,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Fires Menu -->
 
         <!-- Mobile Fire Lookouts Menu -->
-        <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">
+        <!--BDS: <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">-->
+        <nav id="mobileFireLookouts" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -809,14 +827,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <div class="row-full">
 
                 <!--Control Panel Sidebar-->
-                <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar hidden-xs"
+                <!-- BDS: <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar hidden-xs"-->
+<!--                <div id="controlPanel" 
+                     class="col-sm-4 col-lg-3 sidebar"
                      style="display:none;">
                     <h4>
                         <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
                         Control Panel
                     </h4>
                     <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
-                        <!--Location Panel-->
+                        Location Panel
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  id="controlPanelLocationHeading"
@@ -844,6 +864,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 title="Centers the globe on your location.">
                                             Find Me
                                         </button>
+                                        Suppressed: Follow Me has not been implemented, hide the button until it is.
                                         <button id="followMe" 
                                                 class="btn btn-default" 
                                                 type="button"
@@ -856,7 +877,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Globe -->
+                        Globe 
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  id="controlPanelGlobeHeading"
@@ -910,7 +931,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Settings-->
+                        Settings
                         <div class="panel panel-default">
                             <div id="controlPanelSettingsHeading"
                                  class="panel-heading collapsed" 
@@ -937,7 +958,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Options-->
+                        Options
                         <div class="panel panel-default">
                             <div id="controlPanelOptionsHeading"
                                  class="panel-heading collapsed" 
@@ -962,10 +983,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>            
-                </div>
+                </div>-->
 
                 <!--Layers Sidebar-->
-                <div id="layersPanel" 
+<!--                <div id="layersPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
                      style="display:none;">
                     <h4>
@@ -976,9 +997,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                          role="tablist" 
                          aria-multiselectable="false"
                          id="layersAccordion">
-                        <!--Layer List-->
+                        Layer List
                         <div class="panel panel-default">
-                            <!--Show this panel at startup via "collapsed.in"-->
+                            Show this panel at startup via "collapsed.in"
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
                                  data-parent="#layersAccordion" 
@@ -1002,7 +1023,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Settings-->
+                        Settings
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1031,10 +1052,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>            
-                </div>
+                </div>-->
 
                 <!--Markers Sidebar-->
-                <div id="markersPanel" 
+<!--                <div id="markersPanel" 
                      class="col-sm-4 col-lg-3 sidebar noselect" 
                      style="display:none;">
                     <h4 class="noselect">
@@ -1042,7 +1063,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         Markers
                     </h4>
                     <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
-                        <!--Marker List-->
+                        Marker List
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1089,7 +1110,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Marker Settings-->
+                        Marker Settings
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1140,10 +1161,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>            
-                </div>
+                </div>-->
 
                 <!--Weather Sidebar-->
-                <div id="weatherPanel" 
+<!--                <div id="weatherPanel" 
                      class="col-sm-4 col-lg-3 sidebar noselect" 
                      style="display:none;">
                     <h4>
@@ -1151,7 +1172,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         Weather
                     </h4>
                     <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">
-                        <!--Weather Scouts-->
+                        Weather Scouts
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1185,7 +1206,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>                   
-                        <!--Weather Stations-->
+                        Weather Stations
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1210,7 +1231,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>
-                        <!--Weather Settings-->
+                        Weather Settings
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1233,10 +1254,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>            
-                </div>
+                </div>-->
 
                 <!--Fires Sidebar-->
-                <div id="firesPanel" 
+<!--                <div id="firesPanel" 
                      class="col-sm-4 col-lg-3 sidebar" 
                      style="display:none;">
                     <h4>
@@ -1244,7 +1265,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         Fires
                     </h4>
                     <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">
-                        <!--Fire Lookouts-->
+                        Fire Lookouts
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1278,7 +1299,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                             </div>
                         </div>       
-                        <!--Fire Incidents-->
+                        Fire Incidents
                         <div class="panel panel-default">
                             <div class="panel-heading collapsed" 
                                  data-toggle="collapse" 
@@ -1304,7 +1325,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
 
-                        <!--Fire Settings-->
+                        Fire Settings
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="firesSettingsHeading">
                                 <h4 class="panel-title">
@@ -1334,11 +1355,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                         </div>
                     </div>            
-                </div>
+                </div>-->
+                
                 <!---------------->
                 <!--Globe Window-->
                 <!---------------->
-                <div class="col-sm-8 col-lg-9 noselect" id="globe" style="height: 100%">
+                <!-- BDS:<div class="col-sm-8 col-lg-9 noselect" id="globe" style="height: 100%">-->
+                <div class="noselect" id="globe" style="height: 100%">
                     <!--<div style="position:relative">-->
                     <div id='canvas-wrap' style="height: 100%">
                         <!--Set canvas' tabindex so keydown events can be captured-->
@@ -1358,7 +1381,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div class="container-full non-interactive" Style="position:absolute;top:5px"> 
                             <div class="row">
                                 <!--Control Panel Button-->
-                                <div class="col-xs-2 col-sm-1 hidden-md hidden-lg">
+                                <!-- BDS: <div class="col-xs-2 col-sm-1 hidden-md hidden-lg">-->
+                                <div class="col-xs-2 col-sm-1">
                                     <button id="mobileMenuButton" class="c-hamburger c-hamburger--htla interactive">
                                         <span>toggle menu</span>
                                     </button>
@@ -1402,15 +1426,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                             <div class="row">
                                 <!--Prime-UI ICS Marker Palette --> 
-                                <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive" >
+                                <!--BDS: <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive" >-->
+                                <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 interactive" >
                                     <div id="markerList" ></div>
                                 </div>
                                 <!--Prime-UI Pushpin Palette --> 
-                                <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive">
+                                <!--BDS: <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive">-->
+                                <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 interactive">
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px; max-width: 58px'>
+                                    <!--BDS: <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px; max-width: 58px'>-->
+                                    <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 interactive" style='float: right; margin-top: 80px; max-width: 58px'>
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
                                                 class="btn btn-default createWeatherScoutButton" 
