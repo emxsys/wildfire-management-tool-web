@@ -113,15 +113,17 @@ define([
             this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
             this.isAnimating = false;
             
+            // Add the custom navigator *before* the select controller 
+            // so the select controller can consume the mouse events 
+            // and preempt the pan/drag operations when moving objects.
+            // Event handlers are called in the reverse order in which 
+            // they are registered.
+            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
             this.wwd.highlightController = new WorldWind.HighlightController(this.wwd);
             this.selectController = new SelectController(this.wwd);
             this.dndController = new DnDController(this.wwd);
             this.keyboardControls = new KeyboardControls(this);
             
-            // Add the custom navigator *after* the select controller 
-            // so the select controller can consume the mouse events 
-            // and preempt the pan/drag operations when moving objects.
-            this.wwd.navigator = new EnhancedLookAtNavigator(this.wwd);
 
             // Add terrain services (aspect, slope) to the globe
             this.terrainProvider = new TerrainProvider(this);

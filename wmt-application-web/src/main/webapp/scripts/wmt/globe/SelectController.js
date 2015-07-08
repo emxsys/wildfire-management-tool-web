@@ -73,10 +73,10 @@ define([
             this.wwd.addEventListener("mouseout", function (event) {
                 self.handlePick(event);
             });
-//            // Listen for single clicks to select an item
-//            this.wwd.addEventListener("click", function (event) {
-//                self.handlePick(event);
-//            });
+           // Listen for single clicks to select an item
+           this.wwd.addEventListener("click", function (event) {
+               self.handlePick(event);
+           });
             // Listen for double clicks to open an item
             this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
@@ -101,10 +101,10 @@ define([
 //            tapRecognizer = new WorldWind.TapRecognizer(this.wwd, function (event) {
 //                self.handlePick(event);
 //            });
-            // Listen for tap gestures on mobile devices
-            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd, function (event) {
-                self.handlePick(event);
-            });
+//            // Listen for tap gestures on mobile devices
+//            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd, function (event) {
+//                self.handlePick(event);
+//            });
         };
         /**
          * Performs the pick apply the appropriate action on the selected item.
