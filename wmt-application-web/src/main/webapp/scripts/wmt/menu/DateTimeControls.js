@@ -38,8 +38,11 @@
  * 
  * @author Theodore Walton
  */
-define(['wmt/controller/Controller'],
-    function (controller) {
+define([
+    'wmt/controller/Controller',
+    'wmt/util/WmtUtil'],
+    function (controller,
+        util) {
         "use strict";
         var DateTimeControls = {
             intervalID: -1,
@@ -70,8 +73,8 @@ define(['wmt/controller/Controller'],
             },
             whileMousedown: function () {
                 var value = $("#timeControlSlider").slider("value");
-                //console.log("whileMousedown: " + value);
-                controller.incrementDateTime(Math.pow(value, 2) * (value < 0 ? -1 : 1));
+                console.log("whileMousedown: " + value);
+                controller.incrementDateTime(this.sliderValueToMilliseconds(value));
             },
             onMouseup: function (event) {
                 //console.log("onMouseup: clearing interval timer");
@@ -81,8 +84,20 @@ define(['wmt/controller/Controller'],
                 }
             },
             onSlide: function (event, ui) {
-                //console.log("onSlide: " + ui.value);
-                controller.incrementDateTime(Math.pow(ui.value, 2) * (ui.value < 0 ? -1 : 1));
+                console.log("onSlide: " + ui.value);
+                controller.incrementDateTime(this.sliderValueToMilliseconds(ui.value));
+            },
+            sliderValueToMilliseconds: function (value) {
+                var val,
+                    factor = 50;
+
+                if (value < 45 && value > -45) {
+                    val = Math.min(Math.max(value, -45), 45);
+                    return Math.sin(val * util.DEG_TO_RAD) * factor;
+                }
+                val = Math.abs(value) - 44;
+                return Math.pow(val, 1.5) * (value < 0 ? -1 : 1) * factor;
+
             }
         };
         return DateTimeControls;
