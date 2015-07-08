@@ -89,7 +89,8 @@ function (
         });
 
         // Initially, show the Location tab
-        $('#controlPanelLocationBody').collapse('show');
+        // TODO: Obsolete with mobile menu? or duplicate ids between mobile and desktop?
+        //$('#controlPanelLocationBody').collapse('show'); 
 
     };
 
