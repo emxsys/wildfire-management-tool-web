@@ -44,13 +44,17 @@ define([
          */
         var SelectController = function (worldWindow) {
             this.wwd = worldWindow;
+            // Flag to signal that dragging/moving has been initiated.
             // When dragging, the mouse event is consumed, i.e., not propagated.
             this.isDragging = false;
+            // Flag to signal if a touch tap has occured.
+            // Used to determine single or double tap.
+            this.tapped = false;
             // The list of selected items under the mouse cursor
             this.selectedItems = [];
             // The top item in the pick list
             this.pickedItem = null;
-            // The clicked/double-clicked 
+            // Caches the clicked item for dblclick to process 
             this.clickedItem = null;
 
             var self = this,
@@ -73,10 +77,10 @@ define([
             this.wwd.addEventListener("mouseout", function (event) {
                 self.handlePick(event);
             });
-           // Listen for single clicks to select an item
-           this.wwd.addEventListener("click", function (event) {
-               self.handlePick(event);
-           });
+            // Listen for single clicks to select an item
+            this.wwd.addEventListener("click", function (event) {
+                self.handlePick(event);
+            });
             // Listen for double clicks to open an item
             this.wwd.addEventListener("dblclick", function (event) {
                 self.handlePick(event);
@@ -120,6 +124,7 @@ define([
                 redrawRequired,
                 pickList,
                 terrainObject,
+                tapped,
                 isTouchDevice = false;
 
             if (type.substring(0, 5) === 'touch') {
@@ -201,28 +206,45 @@ define([
                         }
                     }
                     break;
-                case 'touchcancel':
                 case 'touchend':
+                case 'touchcancel':
                 case 'mouseup':
                 case 'mouseout':
+                    // The end of a touch can signal either the end of a 
+                    // drag/move operation or a tap/double-tap
                     if (this.pickedItem) {
+                        // If our isDragging flag is set, then it's a given
+                        // that the touch/mouse event signals a move finished.
                         if (this.isDragging) {
-                        // Finish the move if the object has a "Movable" capability    
+                            // Test for a "Movable" capability    
                             if (this.pickedItem.userObject.moveFinished) {
                                 // Fires EVENT_OBJECT_MOVE_FINISHED
                                 this.pickedItem.userObject.moveFinished();
                             }
                             this.pickedItem = null;
                         } else if (type === 'touchend') {
-                            // If we're not moving the object, then select the object
-                            this.clickedItem = this.pickedItem;
-                            if (this.clickedItem) {
-                                if (this.clickedItem.userObject.select) {
-                                    this.clickedItem.userObject.select();
+                            // Determine if touch event is a single tap or double tap
+                            if (!this.tapped) {
+                                // Wait 300ms for another tap, if if doesn't happen,
+                                // then execute the Selectable capability
+                                this.tapped = setTimeout(function () {
+                                    this.tapped = null;
+                                    if (this.pickedItem.userObject.select) {
+                                        this.pickedItem.userObject.select();
+                                    }
+                                }, 300);
+                            } else {
+                                // A double tap has occured. Clear the pending
+                                // single tap and execute the Openable capability
+                                clearTimeout(this.tapped);
+                                tapped = null;
+                                if (this.pickedItem.userObject.open) {
+                                    this.pickedItem.userObject.open();
                                 }
+                                // Release the picked item 
+                                this.pickedItem = null;
+
                             }
-                            // Release the picked item 
-                            this.pickedItem = null;
                         }
                     }
                     this.isDragging = false;
