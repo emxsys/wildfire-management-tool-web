@@ -50,6 +50,8 @@ define([
             // Flag to signal if a touch tap has occured.
             // Used to determine single or double tap.
             this.tapped = false;
+            // The time in ms to wait for a double tap
+            this.DOUBLE_TAP_INTERVAL = 250;
             // The list of selected items under the mouse cursor
             this.selectedItems = [];
             // The top item in the pick list
@@ -57,9 +59,7 @@ define([
             // Caches the clicked item for dblclick to process 
             this.clickedItem = null;
 
-            var self = this,
-                tapRecognizer,
-                clickRecognizer;
+            var self = this;
 //            $('#globeContextMenu-popup').puimenu();
 
             // Listen for mouse down to select an item
@@ -100,15 +100,6 @@ define([
             this.wwd.addEventListener("touchend", function (event) {
                 self.handlePick(event);
             });
-
-//            // Listen for tap gestures on mobile devices
-//            tapRecognizer = new WorldWind.TapRecognizer(this.wwd, function (event) {
-//                self.handlePick(event);
-//            });
-//            // Listen for tap gestures on mobile devices
-//            clickRecognizer = new WorldWind.ClickRecognizer(this.wwd, function (event) {
-//                self.handlePick(event);
-//            });
         };
         /**
          * Performs the pick apply the appropriate action on the selected item.
@@ -118,23 +109,26 @@ define([
         SelectController.prototype.handlePick = function (o) {
             // The input argument is either an Event or a TapRecognizer. Both have the same properties for determining
             // the mouse or tap location.
-            var type = o.type,
+            var self = this,
+                type = o.type,
                 x, y,
                 button = o.button,
                 redrawRequired,
                 pickList,
                 terrainObject,
-                tapped,
                 isTouchDevice = false;
 
+            // Get our X,Y values from the event; 
+            // determine if this is a touch device.
             if (type.substring(0, 5) === 'touch') {
                 isTouchDevice = true;
-                // x, y remain undefined for touchend
+                // Use the first touches entry
+                // Note: x, y remain undefined for touchend
                 if (o.touches.length > 0) {
                     x = o.touches[0].clientX;
                     y = o.touches[0].clientY;
                 }
-            } else {
+            } else {  // Mouse events...
                 // Prevent handling of simulated mouse events on touch devices.
                 if (isTouchDevice) {
                     return;
@@ -149,13 +143,13 @@ define([
             switch (type) {
                 case 'touchstart':
                 case 'mousedown':
-                    // Handles right and left-clicks 
+                    // Handles right AND left-clicks, and touch event
                     if (pickList.hasNonTerrainObjects()) {
-
-                        // Establish the picked item - may be used by mousemove, click, dblclick and contextmenu handlers
+                        // Establish the picked item - may be used by 
+                        // mouse, select, and open actions
                         this.pickedItem = pickList.topPickedObject();
                         if (this.pickedItem) {
-                            // Capture the initial mouse down points for comparison in mousemove
+                            // Capture the initial mouse/touch points for comparison in mousemove/touchmove
                             // to detemine if whether to initiate dragging of the picked item.
                             this.startX = x;
                             this.startY = y;
@@ -167,31 +161,121 @@ define([
                 case 'touchmove':
                 case 'mousemove':
                     if (this.pickedItem) {
-                        // Handle left-click drag/move
+                        // Handle left-clicks and touch device 
                         if (button === 0 || type === 'touchmove') {
-                            // Initiate dragging only if the mouse has moved a few pixels.
+                            // To prevent confustion with clicks and taps,
+                            // start dragging only if the mouse or touch
+                            // point has moved a few pixels.
                             if (!this.isDragging &&
                                 (Math.abs(this.startX - x) > 2 || Math.abs(this.startY - y) > 2)) {
                                 this.isDragging = true;
-                                // "Start" the move if the object has a "Movable" capability
-                                if (this.pickedItem.userObject.moveStarted) {
-                                    // Fires EVENT_OBJECT_MOVE_STARTED
-                                    this.pickedItem.userObject.moveStarted();
-                                }
+                                this.startMove(this.pickedItem);
                             }
                             // Perform the actual move of the picked object
                             if (this.isDragging) {
                                 // Get the new terrain coords at the pick point
                                 terrainObject = pickList.terrainObject();
                                 if (terrainObject) {
-                                    // Do the move if the object has a "Movable" capability
-                                    if (this.pickedItem.userObject.moveToLatLon) {
-                                        // Fires EVENT_OBJECT_MOVED
-                                        this.pickedItem.userObject.moveToLatLon(
-                                            terrainObject.position.latitude,
-                                            terrainObject.position.longitude);
-                                    }
+                                    this.doMove(this.pickedItem, terrainObject);
                                 }
+                            }
+                        }
+                    }
+                    break;
+                case 'touchend':
+                case 'touchcancel':
+                case 'mouseup':
+                case 'mouseout':
+                    if (this.pickedItem) {
+                        // The end of a touch can signal either the end of a 
+                        // drag/move operation or a tap/double-tap.
+                        // If our isDragging flag is set, then it's a given
+                        // that the touch/mouse event signals a move finished.
+                        if (this.isDragging) {
+                            this.finishMove(this.pickedItem);
+                            this.pickedItem = null;
+                        } else if (type === 'touchend') {
+                            // Determine if touch event is a single tap or a double tap:
+                            // Capture the first tap, and if another tap doesn't come in 
+                            // within the alloted time, then perform single tap action.
+                            if (!this.tapped) {
+                                // Wait for another tap, if if doesn't happen,
+                                // then perform the select action
+                                this.clickedItem = this.pickedItem;
+                                this.tapped = setTimeout(function () {
+                                    self.tapped = null;
+                                    self.doSelect(self.clickedItem);
+                                }, this.DOUBLE_TAP_INTERVAL);
+                            } else {
+                                // A double tap has occured. Clear the pending
+                                // single tap action and perform the open action
+                                clearTimeout(this.tapped);
+                                this.tapped = null;
+                                this.doOpen(this.pickedItem);
+                            }
+                            this.pickedItem = null;
+                        }
+                    }
+                    this.isDragging = false;
+                    break;
+                case 'click':
+                    // Remember the clicked item for dblclick processing
+                    this.clickedItem = this.pickedItem;
+                    if (this.clickedItem) {
+                        this.doSelect(this.clickedItem);
+                    }
+                    // Release the picked item so mousemove doesn't act on it
+                    this.pickedItem = null;
+                    break;
+                case 'dblclick':
+                    if (this.clickedItem) {
+                        this.doOpen(this.clickedItem);
+                        // Release the picked item so mousemove doesn't act on it
+                    }
+                    this.pickedItem = null;
+                    break;
+                case 'contextmenu':
+                    this.isDragging = false;
+                    if (this.pickedItem) {
+                        this.doContextSensitive(this.pickedItem);
+                        // Release the picked item so mousemove doesn't act on it
+                        this.pickedItem = null;
+                    }
+                    break;
+            }
+            // Prevent pan/drag operations on the globe when we're dragging an object.
+            if (this.isDragging) {
+                o.stopImmediatePropagation();   // Try and prevent WW PanRecognizer TouchEvent from processing event
+                o.preventDefault();
+            }
+            // Update the window if we changed anything.
+            if (redrawRequired) {
+                this.wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
+            }
+        };
+
+        SelectController.prototype.doContextSensitive = function (pickedItem) {
+            if (pickedItem.userObject.showContextMenu) {
+                pickedItem.userObject.showContextMenu();
+            } else {
+                // Otherwise, build a context menu from standard capabilities
+//              $('#globeContextMenu-popup').puimenu('show');
+            }
+        };
+
+        SelectController.prototype.startMove = function (pickedItem) {
+            if (pickedItem.userObject.moveStarted) {
+                // Fires EVENT_OBJECT_MOVE_STARTED
+                pickedItem.userObject.moveStarted();
+            }
+        };
+        SelectController.prototype.doMove = function (pickedItem, terrainObject) {
+            if (pickedItem.userObject.moveToLatLon) {
+                // Fires EVENT_OBJECT_MOVED
+                pickedItem.userObject.moveToLatLon(
+                    terrainObject.position.latitude,
+                    terrainObject.position.longitude);
+            }
 // Uncomment to allow ordinary renderables to be moved.                        
 //                            // Or, move the object (a Renderable) if it has a position object
 //                            else if (this.pickedItem.userObject.position) {
@@ -202,100 +286,28 @@ define([
 //                                        this.pickedItem.userObject.position.elevation);
 //                                redrawRequired = true;
 //                            }
-                            }
-                        }
-                    }
-                    break;
-                case 'touchend':
-                case 'touchcancel':
-                case 'mouseup':
-                case 'mouseout':
-                    // The end of a touch can signal either the end of a 
-                    // drag/move operation or a tap/double-tap
-                    if (this.pickedItem) {
-                        // If our isDragging flag is set, then it's a given
-                        // that the touch/mouse event signals a move finished.
-                        if (this.isDragging) {
-                            // Test for a "Movable" capability    
-                            if (this.pickedItem.userObject.moveFinished) {
-                                // Fires EVENT_OBJECT_MOVE_FINISHED
-                                this.pickedItem.userObject.moveFinished();
-                            }
-                            this.pickedItem = null;
-                        } else if (type === 'touchend') {
-                            // Determine if touch event is a single tap or double tap
-                            if (!this.tapped) {
-                                // Wait 300ms for another tap, if if doesn't happen,
-                                // then execute the Selectable capability
-                                this.tapped = setTimeout(function () {
-                                    this.tapped = null;
-                                    if (this.pickedItem.userObject.select) {
-                                        this.pickedItem.userObject.select();
-                                    }
-                                }, 300);
-                            } else {
-                                // A double tap has occured. Clear the pending
-                                // single tap and execute the Openable capability
-                                clearTimeout(this.tapped);
-                                tapped = null;
-                                if (this.pickedItem.userObject.open) {
-                                    this.pickedItem.userObject.open();
-                                }
-                                // Release the picked item 
-                                this.pickedItem = null;
+        };
 
-                            }
-                        }
-                    }
-                    this.isDragging = false;
-                    break;
-                case 'click':
-                    // Remember the clicked item for dblclick processing
-                    this.clickedItem = this.pickedItem;
-                    if (this.clickedItem) {
-                        if (this.clickedItem.userObject.select) {
-                            this.clickedItem.userObject.select();
-                        }
-                    }
-                    // Release the picked item so mousemove doesn't act on it
-                    this.pickedItem = null;
-                    break;
-                case 'dblclick':
-                    if (this.clickedItem) {
-                        if (this.clickedItem.userObject.open) {
-                            this.clickedItem.userObject.open();
-                        }
-                        // Release the picked item so mousemove doesn't act on it
-                        this.pickedItem = null;
-                    }
-                    break;
-                case 'contextmenu':
-                    this.isDragging = false;
-                    if (this.pickedItem) {
-                        // Invoke the object's context menu if it has one
-                        if (this.pickedItem.userObject.showContextMenu) {
-                            this.pickedItem.userObject.showContextMenu();
-                        } else {
-                            // Otherwise, build a context menu from standard capabilities
-//                            $('#globeContextMenu-popup').puimenu('show');
-                        }
-                        // Release the picked item so mousemove doesn't act on it
-                        this.pickedItem = null;
-                    }
-                    break;
+        SelectController.prototype.finishMove = function (pickedItem) {
+            // Test for a "Movable" capability    
+            if (pickedItem.userObject.moveFinished) {
+                // Fires EVENT_OBJECT_MOVE_FINISHED
+                pickedItem.userObject.moveFinished();
             }
-            // Prevent pan/drag operations on the globe when we're dragging an object.
-            if (this.isDragging) {
-                o.stopImmediatePropagation();   // Try and prevent WW PanRecognizer TouchEvent from processing event
-                o.stopPropagation();
-                o.preventDefault();
+        };
+
+        SelectController.prototype.doSelect = function (pickedItem) {
+            if (pickedItem.userObject.select) {
+                pickedItem.userObject.select();
             }
-            // Update the window if we changed anything.
-            if (redrawRequired) {
-                this.wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
+        };
+
+        SelectController.prototype.doOpen = function (pickedItem) {
+            if (pickedItem.userObject.open) {
+                pickedItem.userObject.open();
             }
-        }
-        ;
+        };
+
         return SelectController;
     }
 );
