@@ -58,8 +58,10 @@ define([
                 DIAL_HEIGHT = 95,
                 DIAL_RADIUS = DIAL_HEIGHT / 2,
                 DIAL_MARGIN = (BG_HEIGHT - DIAL_HEIGHT) / 2,
-                DIAL_ORIGIN_X = DIAL_RADIUS + LEFT_MARGIN,
+                DIAL_ORIGIN_X = DIAL_RADIUS + LEFT_MARGIN -2,
                 DIAL_ORIGIN_Y = DIAL_RADIUS + BOTTOM_MARGIN - 2,
+                MARKER_ORIGIN_X = DIAL_RADIUS + LEFT_MARGIN + 5,
+                MARKER_ORIGIN_Y = DIAL_RADIUS + BOTTOM_MARGIN + 5,
                 center = new WorldWind.Offset(
                     WorldWind.OFFSET_FRACTION, 0.5,
                     WorldWind.OFFSET_FRACTION, 0.5),
@@ -84,6 +86,9 @@ define([
                 dialOrigin = new WorldWind.Offset(
                     WorldWind.OFFSET_PIXELS, DIAL_ORIGIN_X,
                     WorldWind.OFFSET_PIXELS, DIAL_ORIGIN_Y),
+                markerOrigin = new WorldWind.Offset(
+                    WorldWind.OFFSET_PIXELS, MARKER_ORIGIN_X,
+                    WorldWind.OFFSET_PIXELS, MARKER_ORIGIN_Y),
                 timeOffset = new WorldWind.Offset(
                     WorldWind.OFFSET_PIXELS, LEFT_MARGIN + 52,
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN + 65),
@@ -91,10 +96,10 @@ define([
                     WorldWind.OFFSET_PIXELS, LEFT_MARGIN + 52,
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN + 35),
                 riseOffset = new WorldWind.Offset(
-                    WorldWind.OFFSET_PIXELS, 0,
+                    WorldWind.OFFSET_PIXELS, 3,
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN - 25),
                 setsOffset = new WorldWind.Offset(
-                    WorldWind.OFFSET_PIXELS, 65,
+                    WorldWind.OFFSET_PIXELS, 64,
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN - 25),
                 rise2Offset = new WorldWind.Offset(
                     WorldWind.OFFSET_PIXELS, -25,
@@ -126,10 +131,10 @@ define([
             this.eclipseIcon = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "sun-eclipsed-icon.png");
             this.eclipseIcon.imageOffset = center;
 
-            this.sunriseMarker = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "time-widget_sunrise-marker.png");
+            this.sunriseMarker = new WorldWind.ScreenImage(markerOrigin, wmt.IMAGE_PATH + "time-widget_sunrise-marker.png");
             this.sunriseMarker.imageOffset = center;
 
-            this.sunsetMarker = new WorldWind.ScreenImage(dialOrigin, wmt.IMAGE_PATH + "time-widget_sunset-marker.png");
+            this.sunsetMarker = new WorldWind.ScreenImage(markerOrigin, wmt.IMAGE_PATH + "time-widget_sunset-marker.png");
             this.sunsetMarker.imageOffset = center;
 
             this.sunriseIcon = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "time-widget_sunrise-icon.png");
@@ -156,11 +161,13 @@ define([
             this.sunrise.alwaysOnTop = true;
             this.sunrise.attributes = new WorldWind.TextAttributes(textAttr);
             this.sunrise.attributes.offset = lowerLeft;
+            this.sunrise.attributes.color = new WorldWind.Color(249/255, 237/255, 50/255, 1);
 
             this.sunset = new WorldWind.ScreenText(setsOffset, "Sunset");
             this.sunset.alwaysOnTop = true;
             this.sunset.attributes = new WorldWind.TextAttributes(textAttr);
             this.sunset.attributes.offset = lowerLeft;
+            this.sunset.attributes.color = new WorldWind.Color(241/255, 90/255, 41/255, 1);
 
             /**
              * Handles EVENT_TIME_CHANGED.
@@ -238,12 +245,12 @@ define([
 
 
             // Translate icons around the dial
-            this.sunriseMarker.imageOffset = new WorldWind.Offset(
-                WorldWind.OFFSET_PIXELS, risePt.x,
-                WorldWind.OFFSET_PIXELS, risePt.y);
-            this.sunsetMarker.imageOffset = new WorldWind.Offset(
-                WorldWind.OFFSET_PIXELS, setsPt.x,
-                WorldWind.OFFSET_PIXELS, setsPt.y);
+//            this.sunriseMarker.imageOffset = new WorldWind.Offset(
+//                WorldWind.OFFSET_PIXELS, risePt.x,
+//                WorldWind.OFFSET_PIXELS, risePt.y);
+//            this.sunsetMarker.imageOffset = new WorldWind.Offset(
+//                WorldWind.OFFSET_PIXELS, setsPt.x,
+//                WorldWind.OFFSET_PIXELS, setsPt.y);
             this.sunIcon.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_PIXELS, solarPt.x,
                 WorldWind.OFFSET_PIXELS, solarPt.y);
@@ -252,8 +259,8 @@ define([
                 WorldWind.OFFSET_PIXELS, solarPt.y);
 
             // Rotate the marker arrow icons
-            this.sunriseMarker.imageRotation = riseHourAngle+90;
-            this.sunsetMarker.imageRotation = setsHourAngle-90;
+            this.sunriseMarker.imageRotation = -riseHourAngle+90;
+            this.sunsetMarker.imageRotation = -setsHourAngle+90;
 
             // Rotate the dials
             //  Rotate the these static images as a hack to force it behind the other rotated images
