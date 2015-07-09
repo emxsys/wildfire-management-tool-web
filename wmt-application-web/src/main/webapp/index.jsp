@@ -160,29 +160,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </a>
                         </li>
                     </ul>
-                    <!--Navbar Search-->
-                    <!--                    <div class="navbar-form navbar-right"
-                                             style="padding-right: 0; padding-left: 0"
-                                             id="searchBox">
-                                            <div class="form-group">
-                                                <input type="text" 
-                                                       class="form-control"
-                                                       style="width: 150px"
-                                                       placeholder="Go To..."
-                                                       id="searchText">
-                                            </div>
-                                            <div class="btn-group">
-                                                <button type="button" 
-                                                        class="btn btn-default glyphicon glyphicon-circle-arrow-left"
-                                                        id="searchUndo">
-                                                </button>
-                                                <button type="button" 
-                                                        class="btn btn-default glyphicon glyphicon-circle-arrow-right"
-                                                        id="searchRedo">
-                                                    </span>  
-                                                </button>
-                                            </div>
-                                        </div>-->
                     <!--Help button - hidden until we make room by adjusting button margins-->
                     <!-- <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -204,7 +181,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>
         <!-- Mobile Main Menu -->
-        <!--BDS: <nav id="mobileMenu" class=" hidden-md hidden-lg c-menu">-->
         <nav id="mobileMenu" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
@@ -244,9 +220,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Main Menu -->
 
         <!-- Mobile Control Panel -->
-        <!-- BDS: Using MobileMenu for desktop
-        <nav id="mobileControlPanel" class="hidden-md hidden-lg c-menu">
-        -->
         <nav id="mobileControlPanel" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
             <!-- BDS margin vs padding 
@@ -281,15 +254,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                     title="Centers the globe on your location.">
                                                 Find Me
                                             </button>
-<!--                                            Suppressed: Follow Me has not been implemented, hide the button until it is.
-                                                <button id="followMe" 
-                                                        class="btn btn-default" 
-                                                        type="button"
-                                                        data-toggle="tooltip" 
-                                                        data-placement="top" 
-                                                        title="Keeps the globe centered on your location.">
-                                                    Follow Me
-                                                </button>-->                                            
                                         </div>
                                     </div>
                                 </div>
@@ -356,7 +320,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Control Panel -->
 
         <!-- Mobile Globe Menu -->
-        <!-- BDS: <nav id="mobileGlobe" class="hidden-md hidden-lg c-menu"> -->
         <nav id="mobileGlobe" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
@@ -415,7 +378,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Globe Menu -->
 
         <!-- Mobile Layers Menu -->
-        <!-- BDS: <nav id="mobileLayers" class="hidden-md hidden-lg c-menu"> -->
         <nav id="mobileLayers" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
@@ -511,7 +473,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Layers List Menu -->
 
         <!-- Mobile Markers Menu -->
-        <!--BDS: <nav id="mobileMarkers" class="hidden-md hidden-lg c-menu">-->
         <nav id="mobileMarkers" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
@@ -603,7 +564,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Markers Menu -->
 
         <!-- Mobile Weather Menu -->
-        <!--BDS: <nav id="mobileWeather" class="hidden-md hidden-lg c-menu">-->
         <nav id="mobileWeather" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
@@ -669,7 +629,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Menu -->
 
         <!-- Mobile Weather Scouts Menu -->
-        <!--BDS: <nav id="mobileWeatherScouts" class="hidden-md hidden-lg c-menu">-->
         <nav id="mobileWeatherScouts" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
@@ -706,7 +665,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Scouts Menu -->
 
         <!-- Mobile Fires Menu -->
-        <!--BDS:<nav id="mobileFires" class="hidden-md hidden-lg c-menu">-->
         <nav id="mobileFires" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
@@ -760,7 +718,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 class="btn btn-default" 
                                                 data-toggle="tooltip" 
                                                 data-placement="top" 
-                                                title="Select fuel model.">
+                                                title="Select the default fuel model.">
                                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                             Fuel Model
                                         </button>
@@ -780,7 +738,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Fires Menu -->
 
         <!-- Mobile Fire Lookouts Menu -->
-        <!--BDS: <nav id="mobileFireLookouts" class="hidden-md hidden-lg c-menu">-->
         <nav id="mobileFireLookouts" class="c-menu">
             <div class="container-fluid" style="margin-top:5%">
                 <div class="row">
@@ -825,537 +782,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
             <!--Content-->
             <div class="row-full">
-
-                <!--Control Panel Sidebar-->
-                <!-- BDS: <div id="controlPanel" class="col-sm-4 col-lg-3 sidebar hidden-xs"-->
-<!--                <div id="controlPanel" 
-                     class="col-sm-4 col-lg-3 sidebar"
-                     style="display:none;">
-                    <h4>
-                        <span class="glyphicon glyphicon-globe" aria-hidden="true" style="padding-right: 5px;"></span>
-                        Control Panel
-                    </h4>
-                    <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
-                        Location Panel
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 id="controlPanelLocationHeading"
-                                 role="tab" 
-                                 data-toggle="collapse" 
-                                 data-parent="#controlPanelAccordion" 
-                                 href="#controlPanelLocationBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="controlPanelLocationBody">                           
-                                <h4 class="panel-title">
-                                    Location
-                                </h4>
-                            </div>
-                            <div class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="controlPanelLocationHeading"
-                                 id="controlPanelLocationBody" >
-                                <div class="panel-body">
-                                    <div class="btn-group btn-block" role="group">
-                                        <button id="findMe" 
-                                                class="btn btn-default" 
-                                                type="button"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Centers the globe on your location.">
-                                            Find Me
-                                        </button>
-                                        Suppressed: Follow Me has not been implemented, hide the button until it is.
-                                        <button id="followMe" 
-                                                class="btn btn-default" 
-                                                type="button"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Keeps the globe centered on your location.">
-                                            Follow Me
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        Globe 
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 id="controlPanelGlobeHeading"
-                                 role="tab" 
-                                 data-toggle="collapse" 
-                                 data-parent="#controlPanelAccordion" 
-                                 href="#controlPanelGlobeBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="controlPanelGlobeBody">                           
-                                <h4 class="panel-title">
-                                    Globe
-                                </h4>
-                            </div>
-                            <div class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="controlPanelGlobeHeading"
-                                 id="controlPanelGlobeBody" >
-                                <div class="panel-body">
-                                    <h5>Projection</h5>
-                                    <div class="dropdown" 
-                                         id="projectionDropdown">
-                                        <h6>Initializing...</h6>
-                                    </div>
-                                    <h5>Reset</h5>
-                                    <div class="btn-group btn-block" role="group">
-                                        <button id="resetHeading" 
-                                                class="btn btn-default" 
-                                                type="button"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Reset to north up">
-                                            Heading
-                                        </button>
-                                        <button id="resetView" 
-                                                class="btn btn-default" 
-                                                type="button"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Reset to north up and look down">
-                                            View
-                                        </button>
-                                        <button id="resetGlobe" 
-                                                class="btn btn-default" 
-                                                type="button"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Reset view to factory defaults">
-                                            Globe
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        Settings
-                        <div class="panel panel-default">
-                            <div id="controlPanelSettingsHeading"
-                                 class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#controlPanelAccordion" 
-                                 href="#controlPanelSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="controlPanelSettingsBody" 
-                                 role="tab">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="controlPanelSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="conntrolPanelSettingsHeading">
-                                <div class="panel-body">
-                                    <ul>
-                                        <li>A...</li>
-                                        <li>B...</li>
-                                        <li>C...</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        Options
-                        <div class="panel panel-default">
-                            <div id="controlPanelOptionsHeading"
-                                 class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#controlPanelAccordion" 
-                                 href="#controlPanelOptionsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="controlPanelOptionsBody"
-                                 role="tab" >
-                                <h4 class="panel-title">
-                                    Options
-                                </h4>
-                            </div>
-                            <div id="controlPanelOptionsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="controlPanelOptionsHeading">
-                                <div class="panel-body">
-                                    <li> 
-                                    </li>  
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-                </div>-->
-
-                <!--Layers Sidebar-->
-<!--                <div id="layersPanel" 
-                     class="col-sm-4 col-lg-3 sidebar" 
-                     style="display:none;">
-                    <h4>
-                        <span class="glyphicon glyphicon-list" aria-hidden="true" style="padding-right: 5px;"></span>
-                        Layers
-                    </h4>
-                    <div class="panel-group" 
-                         role="tablist" 
-                         aria-multiselectable="false"
-                         id="layersAccordion">
-                        Layer List
-                        <div class="panel panel-default">
-                            Show this panel at startup via "collapsed.in"
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#layersAccordion" 
-                                 href="#layerListBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="layerListBody"
-                                 role="tab" 
-                                 id="layerListHeading">
-                                <h4 class="panel-title">
-                                    Layer List
-                                </h4>
-                            </div>
-                            <div class="panel-collapse collapse in" 
-                                 role="tabpanel" 
-                                 aria-labelledby="layerListHeading"
-                                 id="layerListBody" >
-                                <div class="panel-body">
-                                    <ul class="list-group pre-scrollable" 
-                                        id="layerList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>
-                        Settings
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#layersAccordion" 
-                                 href="#layerSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="layerSettingsBody"
-                                 role="tab" 
-                                 id="labelSettingsHeading">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="layerSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="layerSettingsHeading">
-                                <div class="panel-body">
-                                    <ul>
-                                        <li>A...</li>
-                                        <li>B...</li>
-                                        <li>C...</li>
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-                </div>-->
-
-                <!--Markers Sidebar-->
-<!--                <div id="markersPanel" 
-                     class="col-sm-4 col-lg-3 sidebar noselect" 
-                     style="display:none;">
-                    <h4 class="noselect">
-                        <span class="glyphicon glyphicon-flag" aria-hidden="true" style="padding-right: 5px;"></span>
-                        Markers
-                    </h4>
-                    <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
-                        Marker List
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#markersAccordion" 
-                                 href="#markersListBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="markersListBody"
-                                 role="tab" 
-                                 id="markersListHeading">
-                                <h4 class="panel-title">
-                                    Marker List
-                                </h4>
-                            </div>
-                            <div id="markersListBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="markersListHeading">
-                                <div class="panel-body">
-                                    <div class="btn-group btn-block" 
-                                         role="group"
-                                         id="createMarkerButtons">
-                                        <button id="createMarker" 
-                                                type="button"
-                                                class="btn btn-default" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Add a marker to the globe at the center.">
-                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                            ICS
-                                        </button>
-                                        <button id="createPushpin" 
-                                                type="button"
-                                                class="btn btn-default" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Add a pushpin to the globe at the center.">
-                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                            Pushpin
-                                        </button>
-                                    </div>
-                                    <ul class="list-group pre-scrollable" 
-                                        id="allMarkersList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>
-                        Marker Settings
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#markersAccordion" 
-                                 href="#markersSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="markersSettingsBody" 
-                                 role="tab" 
-                                 id="markersSettingsHeading">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="markersSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="markersSettingsHeading">
-                                <div class="panel-body">
-                                    <div class="btn-group btn-block btn-group-sm"  role="group">
-                                        <button type="button" class="col-sm-8  btn btn-default">
-                                            Action
-                                        </button>
-                                        <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-pencil"></button>
-                                        <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-trash"></button>
-                                    </div>
-                                    <div class="btn-group btn-block "  role="group">
-                                        <button type="button" class="col-sm-8  btn btn-danger">
-                                            Action
-                                        </button>
-                                        <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-pencil"></button>
-                                        <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-trash"></button>
-                                    </div>
-                                    <div class="btn-group btn-block">
-                                        <button type="button" class="col-sm-10 col-md-11 btn btn-danger ">Action</button>
-                                        <button type="button" class="col-sm-2 col-md-1 btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-                </div>-->
-
-                <!--Weather Sidebar-->
-<!--                <div id="weatherPanel" 
-                     class="col-sm-4 col-lg-3 sidebar noselect" 
-                     style="display:none;">
-                    <h4>
-                        <span class="glyphicon glyphicon-cloud" aria-hidden="true" style="padding-right: 5px;"></span>
-                        Weather
-                    </h4>
-                    <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">
-                        Weather Scouts
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#weatherAccordion" 
-                                 href="#weatherScoutsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="weatherScoutsBody"
-                                 role="tab" 
-                                 id="weatherScoutsHeading">
-                                <h4 class="panel-title">
-                                    Scouts
-                                </h4>
-                            </div>
-                            <div id="weatherScoutsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="weatherScoutsHeading">
-                                <div class="panel-body">
-                                    <button id="createWeatherScout" 
-                                            type="button"
-                                            class="btn btn-default createWeatherScoutButton" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="Add a weather scout to the globe.">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        Add
-                                    </button>
-                                    <ul class="list-group pre-scrollable" 
-                                        id="weatherScoutList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>                   
-                        Weather Stations
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#weatherAccordion" 
-                                 href="#weatherStationsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="weatherStationsBody"
-                                 role="tab" 
-                                 id="weatherStationsHeading">
-                                <h4 class="panel-title">
-                                    Stations
-                                </h4>
-                            </div>
-                            <div id="weatherStationsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="weatherStationsHeading">
-                                <div class="panel-body">
-                                    <ul class="list-group pre-scrollable" 
-                                        id="weatherStationList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>
-                        Weather Settings
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#weathersAccordion" 
-                                 href="#weathersSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="weathersSettingsBody" 
-                                 role="tab" 
-                                 id="weatherSettingsHeading">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="weatherSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="weatherSettingsHeading">
-                                <div class="panel-body">
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-                </div>-->
-
-                <!--Fires Sidebar-->
-<!--                <div id="firesPanel" 
-                     class="col-sm-4 col-lg-3 sidebar" 
-                     style="display:none;">
-                    <h4>
-                        <span class="glyphicon glyphicon-fire" aria-hidden="true" style="padding-right: 5px;"></span>
-                        Fires
-                    </h4>
-                    <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">
-                        Fire Lookouts
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#fireAccordion" 
-                                 href="#fireLookoutsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="fireLookoutsBody"
-                                 role="tab" 
-                                 id="fireLookoutsHeading">
-                                <h4 class="panel-title">
-                                    Lookouts
-                                </h4>
-                            </div>
-                            <div id="fireLookoutsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="fireLookoutsHeading">
-                                <div class="panel-body">
-                                    <button id="createFireLookout" 
-                                            type="button"
-                                            class="btn btn-default createFireLookoutButton" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="Add a fire lookout to the globe.">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        Add
-                                    </button>
-                                    <ul class="list-group pre-scrollable" 
-                                        id="fireLookoutList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>       
-                        Fire Incidents
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#fireAccordion" 
-                                 href="#fireIncidentsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="fireIncidentsBody"
-                                 role="tab" 
-                                 id="fireIncidentsHeading">
-                                <h4 class="panel-title">
-                                    Incidents
-                                </h4>
-                            </div>
-                            <div id="fireIncidentsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="fireIncidentsHeading">
-                                <div class="panel-body">
-                                    <ul class="list-group pre-scrollable" 
-                                        id="fireIncidentList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>
-
-                        Fire Settings
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="firesSettingsHeading">
-                                <h4 class="panel-title">
-                                    <a class="collapsed" 
-                                       data-toggle="collapse" 
-                                       data-parent="#firesAccordion" 
-                                       href="#firesSettingsBody" 
-                                       aria-expanded="false" 
-                                       aria-controls="firesSettingsBody">
-                                        Settings
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
-                                 aria-labelledby="firesSettingsHeading">
-                                <div class="panel-body">
-                                    <button id="fuelModel-btn" 
-                                            type="button"
-                                            class="btn btn-default" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="Select fuel model.">
-                                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                        Fuel Model
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-                </div>-->
                 
                 <!---------------->
                 <!--Globe Window-->
@@ -1425,18 +851,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div id="timeControlSlider" class="col-xs-5 col-sm-5 interactive"></div>
                             </div>
                             <div class="row">
-                                <!--Prime-UI ICS Marker Palette --> 
-                                <!--BDS: <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive" >-->
+                                <!-- ICS Marker Palette --> 
                                 <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 interactive" >
                                     <div id="markerList" ></div>
                                 </div>
-                                <!--Prime-UI Pushpin Palette --> 
-                                <!--BDS: <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 hidden-md hidden-lg interactive">-->
+                                <!-- Pushpin Palette --> 
                                 <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 interactive">
                                     <div id="markerList"></div>
                                 </div>
                                 <div class="row">
-                                    <!--BDS: <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 hidden-md hidden-lg interactive" style='float: right; margin-top: 80px; max-width: 58px'>-->
                                     <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 interactive" style='float: right; margin-top: 80px; max-width: 58px'>
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
