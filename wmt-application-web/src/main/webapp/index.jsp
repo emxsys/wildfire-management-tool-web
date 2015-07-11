@@ -439,31 +439,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <!--Layer List-->
                         <div class="panel panel-default">
                             <!--Show this panel at startup via "collapsed.in"-->
-                            <!--                            <div class="panel-heading collapsed" 
-                                                             data-toggle="collapse" 
-                                                             data-parent="#layersAccordion" 
-                                                             href="#layerListBody" 
-                                                             aria-expanded="false" 
-                                                             aria-controls="layerListBody"
-                                                             role="tab" 
-                                                             id="layerListHeading">
-                                                            <h4 class="panel-title">
-                                                                Layer List
-                                                            </h4>
-                                                        </div>-->
-                            <!--BDS Creates visbible region at top of screen 
+                            <div class="panel-heading collapsed" 
+                                 data-toggle="collapse" 
+                                 data-parent="#layersAccordion" 
+                                 href="#layerListBody" 
+                                 aria-expanded="false" 
+                                 aria-controls="layerListBody"
+                                 role="tab" 
+                                 id="layerListHeading">
+                                <h4 class="panel-title">
+                                    Layer List
+                                </h4>
+                            </div>
                             <div class="panel-collapse collapse in"
-                            -->
-                            <div class="panel-collapse"
+                                 <div class="panel-collapse"
                                  style='max-height: calc(27vh)'
                                  role="tabpanel" 
                                  aria-labelledby="layerListHeading"
                                  id="layerListBody" >
-                                <div class="panel-body">
-                                    <ul class="list-group"
-                                        style="max-height:calc(23vh);overflow-y: scroll;"
-                                        id="layerList">
-                                    </ul>                              
+                                    <div class="panel-body">
+                                        <ul class="list-group"
+                                            style="max-height:calc(23vh);overflow-y: scroll;"
+                                            id="layerList">
+                                        </ul>                              
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1039,8 +1038,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div id="lookout-tabs">      
                             <ul>
                                 <li><a href="#lookout-general-tab">General</a></li>
-                                <li><a href="#lookout-forces-tab">Forces</a></li>
                                 <li><a href="#lookout-fuel-tab">Fuel</a></li>
+                                <li><a href="#lookout-forces-tab">Forces</a></li>
                                 <li><a href="#lookout-weather-tab">Weather</a></li>
                                 <li><a href="#lookout-behavior-tab">Behavior</a></li>
                                 <li><a href="#lookout-alerts-tab">Alerts</a></li>
@@ -1059,14 +1058,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         <input id="lookout-movable" type="checkbox" />
                                     </div>
                                 </div>
-                                <div id="lookout-forces-tab">
-                                    <h5>CPS Primary Forces</h5>
-                                </div>
                                 <div id="lookout-fuel-tab">
                                     <h5>Fuel Model</h5>
                                     <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
                                     <h5>Fuel Moisture</h5>
                                     <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
+                                </div>
+                                <div id="lookout-forces-tab">
+                                    <h5>CPS Primary Forces</h5>
                                 </div>
                                 <div id="lookout-weather-tab" >
                                 </div>
