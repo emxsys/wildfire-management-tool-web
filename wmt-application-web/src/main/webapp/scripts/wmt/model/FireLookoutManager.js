@@ -113,11 +113,11 @@ define([
                 string = JSON.stringify(validLookouts, [
                     'id',
                     'name',
-                    'place',
+                    'toponym',
                     'latitude',
                     'longitude',
                     'fuelModelNo',
-                    'fuelModelScenario'
+                    'moistureScenarioName'
                 ]);
             localStorage.setItem(wmt.STORAGE_KEY_FIRE_LOOKOUTS, string);
         };
@@ -142,11 +142,11 @@ define([
                     this.addLookout(new FireLookout({
                         id: array[i].id,
                         name: array[i].name,
-                        placename: array[i].place,
+                        toponym: array[i].toponym,
                         latitude: array[i].latitude,
                         longitude: array[i].longitude,
                         fuelModelNo: array[i].fuelModelNo,
-                        fuelMoistureScenario: array[i].fuelModelScenario
+                        moistureScenarioName: array[i].moistureScenarioName
                     }));
                 }
             }
