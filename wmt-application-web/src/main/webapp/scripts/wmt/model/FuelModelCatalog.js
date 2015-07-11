@@ -74,7 +74,7 @@ define([
             /**
              * Gets the fuel model for the given fuel model idenfifier.
              * @param {Number} fuelModelNo
-             * @param {String} group Model group: "standard40", "original13" or "any". Default: "any".
+             * @param {String} group Model group: "standard", "original" or "any". Default: "any".
              * @returns {Object} A JSON FuelModel object.
              * * E.g.:
              * {
@@ -146,16 +146,38 @@ define([
                     self = this;
 
                 // TODO: Add custom fuel model processing
-                if (grp === 'standard40' || grp === 'any') {
-                    fuelModel = this.findFuelModel(fuelModelNo, this.standard);
+                if (grp === 'standard' || grp === 'any') {
+                    fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.standard);
                 }
-                if (!fuelModel && (grp === 'original13' || grp === 'any')) {
+                if (!fuelModel && (grp === 'original' || grp === 'any')) {
                     fuelModel = FuelModelCatalog.findFuelModel(fuelModelNo, this.original);
                 }
                 if (!fuelModel) {
                     log.warning('FuelModelCatalog', 'getFuelModel', 'No fuel model found for #' + fuelModelNo);
                 }
                 return fuelModel;
+            },
+            /**
+             * Gets an array of fuel model numbers, suitable for use as values in dropdown.
+             * @param {String} group Either "standard" or "original"
+             * @returns {Array} An array of model numbers in the same order as the group's model array.
+             */
+            getFuelModelNumbers: function (group) {
+                var names = [],
+                    array,
+                    i, max;
+
+                if (group === 'standard') {
+                    array = this.standard;
+                } else if (group === 'original') {
+                    array = this.original;
+                } else {
+                    throw new Error(log.error('FuelModelCatalog', 'getFuelModelNumbers', 'group arg is not valid: ' + group));
+                }
+                for (i = 0, max = array.length; i < max; i++) {
+                    names.push(array[i].modelNo);
+                }
+                return names;
             },
             /**
              * Returns the fuel model item with the matching fuel model no.
