@@ -87,8 +87,8 @@ define([
                 return true;    // return true to fire a notification that allows the delete to proceed.
             });
             // Make context sensiive by the SelectController: shows the context menu.
-            contextSensitive.makeContextSenstive(this, function() {
-                messenger.infoGrowl("Show menu with delete, open, and lock/unlock", "TODO");                
+            contextSensitive.makeContextSenstive(this, function () {
+                messenger.infoGrowl("Show menu with delete, open, and lock/unlock", "TODO");
             });
 
             /**
@@ -112,7 +112,7 @@ define([
         };
 
         WeatherScout.prototype.getFirstForecast = function () {
-            return this.getForecastAt(null);
+            return this.getForecastAtTime(null);
         };
 
         /**
@@ -120,17 +120,17 @@ define([
          * @param {Date} time The date/time used to select the forecast. If null, the first forecast is returned.
          * @returns {Object} Example:
          *   {
-         *       forecastTime: Date,
-         *       airTempF: Number,
-         *       relHumidityPct: Number,
-         *       windSpdKts: Number,
-         *       windDirDeg: Number,
+         *       time: Date,
+         *       airTemperatureF: Number,
+         *       relaltiveHumidityPct: Number,
+         *       windSpeedKts: Number,
+         *       windDirectionDeg: Number,
          *       skyCoverPct: Number
          *   }
          */
-        WeatherScout.prototype.getForecastAt = function (time) {
+        WeatherScout.prototype.getForecastAtTime = function (time) {
             if (!this.temporalWx || this.temporalWx.length === 0) {
-                throw new Error(log.error('WeatherScout', 'getForecastAt', 'missingWeatherData'));
+                throw new Error(log.error('WeatherScout', 'getForecastAtTime', 'missingWeatherData'));
             }
             var wxTime,
                 wxTimeNext,
@@ -164,15 +164,46 @@ define([
                 forecast = this.temporalWx[i];
             }
             return {
-                time: forecast.time,
-//                types: this.range,
-//                values: forecast.values
-                airTemperatureF: forecast.values[0],
-                relaltiveHumidityPct: forecast.values[1],
-                windSpeedKts: forecast.values[2],
-                windDirectionDeg: forecast.values[3],
-                skyCoverPct: forecast.values[4]
+                time: new Date(forecast.time),
+                airTemperatureF: parseInt(forecast.values[0], 10),
+                relaltiveHumidityPct: parseInt(forecast.values[1], 10),
+                windSpeedKts: parseInt(forecast.values[2], 10),
+                windDirectionDeg: parseInt(forecast.values[3], 10),
+                skyCoverPct: parseInt(forecast.values[4], 10)
             };
+        };
+        /**
+         * Returns all the forecasts in an array.
+         * @returns {Array} Example:
+         *   [{
+         *       time: Date,
+         *       airTemperatureF: Number,
+         *       relaltiveHumidityPct: Number,
+         *       windSpeedKts: Number,
+         *       windDirectionDeg: Number,
+         *       skyCoverPct: Number
+         *   }]
+         */
+        WeatherScout.prototype.getForecasts = function () {
+            if (!this.temporalWx) {
+                throw new Error(log.error('WeatherScout', 'getForecasts', 'missingWeatherData'));
+            }
+            var array = [],
+                forecast,
+                i, max;
+
+            for (i = 0, max = this.temporalWx.length; i < max; i++) {
+                forecast = this.temporalWx[i];
+                array.push({
+                    time: new Date(forecast.time),
+                    airTemperatureF: parseInt(forecast.values[0], 10),
+                    relaltiveHumidityPct: parseInt(forecast.values[1], 10),
+                    windSpeedKts: parseInt(forecast.values[2], 10),
+                    windDirectionDeg: parseInt(forecast.values[3], 10),
+                    skyCoverPct: parseInt(forecast.values[4], 10)
+                });
+            }
+            return array;
         };
 
         /**
@@ -225,7 +256,7 @@ define([
 
                     // Load all the places into a place object array
                     if (!json.query.results) {
-                        log.error("WeatherScout","refreshPlace","json.query.results is null");
+                        log.error("WeatherScout", "refreshPlace", "json.query.results is null");
                         return;
                     }
                     for (i = 0, max = json.query.results.place.length; i < max; i++) {
@@ -238,7 +269,7 @@ define([
                     for (i = 0, max = place.length; i < max; i++) {
                         if (place[i].type !== "Zip Code") {
                             self.toponym = place[i].name;
-                            
+
                             // Until we have an editor, use the placename for the name
                             self.name = self.toponym;
                             break;
