@@ -52,6 +52,7 @@ define([
     'wmt/menu/DateTimeControls',
     'wmt/view/FireLookoutDialog',
     'wmt/view/FireView',
+    'wmt/menu/FuelModelDialog',
     'wmt/menu/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
@@ -65,6 +66,7 @@ define([
         dateTimeControls,
         fireLookoutDialog,
         fireView,
+        fuelModelDialog,
         LayerMenu,
         locationView,
         MarkerView,
@@ -82,7 +84,7 @@ define([
                 var self = this;
 
                 $(document).ready(function () {
-                    
+
                     //Fill out globe to screen if the nav-bar isn't displayed.
                     if ($('#mainMenu').css("display").indexOf("none") > -1) {
                         $("body").css("padding-top", "0px");
@@ -151,23 +153,24 @@ define([
 
                     // Initialize the constituent UI elements.
                     this.searchBox = new SearchBox();
-                    
+
                     // Panels
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();
                     fireView.initialize();
                     weatherView.initialize();
-                    
+
                     // Screen Widgets
                     dateTimeControls.initialize();
                     locationView.initialize();
                     timeView.initialize();
-                    
+
                     // Dialogs
                     aboutBox.initialize();
                     fireLookoutDialog.initialize();
-                });                
+                    fuelModelDialog.initialize();
+                });
             },
             /**
              * 
@@ -193,4 +196,4 @@ define([
         };
         return MainMenu;
     }
-);  
+);
