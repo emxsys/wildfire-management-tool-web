@@ -46,9 +46,7 @@ define([
             publisher.makePublisher(this);
             this.model = model;
             this.lookouts = [];
-
         };
-
         /**
          * Adds the given lookout to to the manager.
          * @param {FireLookout} lookout
@@ -56,20 +54,15 @@ define([
         FireLookoutManager.prototype.addLookout = function (lookout) {
             // Ensure we have a unique name by appending a (n) to duplicates.
             lookout.name = this.generateUniqueName(lookout.name || "Fire Lookout");
-
             // Subscribe to removal notifications
             lookout.on(wmt.EVENT_OBJECT_REMOVED, this.removeLookout, this);
-
             // Place the lookout under the management of this module
             this.lookouts.push(lookout);
-
             // Notify views that we have a new lookout
             this.fire(wmt.EVENT_FIRE_LOOKOUT_ADDED, lookout);
-            
             // Now that views are attached, invoke a refresh which will notify the view of any updates as they occur.
             lookout.refresh();
         };
-
         /**
          * Finds the fire lookout with the given id.
          * @param {String} id System assigned id for the lookout.
@@ -77,7 +70,6 @@ define([
          */
         FireLookoutManager.prototype.findLookout = function (id) {
             var lookout, i, len;
-
             for (i = 0, len = this.lookouts.length; i < len; i += 1) {
                 lookout = this.lookouts[i];
                 if (lookout.id === id) {
@@ -86,7 +78,6 @@ define([
             }
             return null;
         };
-
         /**
          * Removes the given lookout from the manager.
          * @param {FireLookout} lookout
@@ -95,7 +86,6 @@ define([
         FireLookoutManager.prototype.removeLookout = function (lookout) {
             var i, max,
                 removed;
-
             // Find the lookout item with the given id (should create an associative array)
             for (i = 0, max = this.lookouts.length; i < max; i++) {
                 if (this.lookouts[i].id === lookout.id) {
@@ -112,7 +102,6 @@ define([
             }
             return false;
         };
-
         /**
          * Saves the fire lookouts collection to local storage.
          */
@@ -121,11 +110,17 @@ define([
                 function (lookout) {
                     return !lookout.invalid;
                 }),
-                string = JSON.stringify(validLookouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
-
+                string = JSON.stringify(validLookouts, [
+                    'id',
+                    'name',
+                    'place',
+                    'latitude',
+                    'longitude',
+                    'fuelModelNo',
+                    'fuelModelScenario'
+                ]);
             localStorage.setItem(wmt.STORAGE_KEY_FIRE_LOOKOUTS, string);
         };
-
         /**
          * Restores the fire lookouts collection from local storage.
          */
@@ -144,15 +139,18 @@ define([
                 if (isNaN(item.latitude) || isNaN(item.longitude)) {
                     log.error("FireLookoutManager", "restoreLookouts", "Invalid lat/lon. Ignored.");
                 } else {
-                    this.addLookout(new FireLookout(
-                        array[i].name,
-                        array[i].latitude,
-                        array[i].longitude,
-                        array[i].id));
+                    this.addLookout(new FireLookout({
+                        id: array[i].id,
+                        name: array[i].name,
+                        placename: array[i].place,
+                        latitude: array[i].latitude,
+                        longitude: array[i].longitude,
+                        fuelModelNo: array[i].fuelModelNo,
+                        fuelMoistureScenario: array[i].fuelModelScenario
+                    }));
                 }
             }
         };
-
         /**
          * Generates a unique name by appending a suffix '(n)'.
          * @param {String} name
@@ -166,16 +164,13 @@ define([
                 n,
                 i,
                 len;
-
             do {
                 // Assume uniqueness, set to false if we find a matching name
                 isUnique = true;
-
                 for (i = 0, len = this.lookouts.length; i < len; i += 1) {
                     if (this.lookouts[i].name === uniqueName) {
 
                         isUnique = false;
-
                         // check for existing suffix '(n)' and increment
                         suffixes = uniqueName.match(/[(]\d+[)]$/);
                         if (suffixes) {
@@ -184,17 +179,15 @@ define([
                             uniqueName = uniqueName.replace(/[(]\d+[)]$/, '(' + n + ')');
                         } else {
                             // else if no suffix, create one
-                            uniqueName += ' (2)';   // The first duplicate is #2
+                            uniqueName += ' (2)'; // The first duplicate is #2
                         }
                         // Break out of for loop and recheck uniqueness
                         break;
                     }
                 }
             } while (!isUnique);
-
             return uniqueName;
         };
-
         return FireLookoutManager;
     }
 );
