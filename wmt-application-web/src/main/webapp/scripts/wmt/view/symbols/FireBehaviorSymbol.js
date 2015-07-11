@@ -86,42 +86,28 @@ define([
             };
             // EVENT_FIRE_BEHAVIOR_CHANGED handler 
             this.handleFireBehaviorChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol", "handleFireBehaviorChangedEvent", "Unhandled event.");
                 var head = lookout.surfaceFire.flameLength.value,
                     flanks = lookout.surfaceFire.flameLengthFlanking.value,
                     heal = lookout.surfaceFire.flameLengthBacking.value,
                     dir = lookout.surfaceFire.directionMaxSpread.value,
                     ros = lookout.surfaceFire.rateOfSpreadMax.value;
 
-
                 this.diamond.updateWildfireDiamondImage(Math.round(head), Math.round(flanks), Math.round(heal));
                 this.dirOfSpread.updateDirOfSpreadImage(Math.round(dir));
                 this.flameLengthHead.text = Math.round(head) + "'";
             };
-            // EVENT_WEATHER_CHANGED handler
-            this.handleWeatherChangedEvent = function (lookout) {
-                logger.warning("FireBehaviorSymbol", "handleWeatherChangedEvent", "Unhandled event.");
-            };
             // EVENT_PLACE_CHANGED handler
             this.handlePlaceChangedEvent = function (lookout) {
                 // Display the place name
-                if (lookout.placeName) {
-                    self.diamond.label = lookout.placeName;
+                if (lookout.toponym) {
+                    self.diamond.label = lookout.toponym;
                 }
-            };
-            // EVENT_TIME_CHANGED handler
-            this.handleTimeChangedEvent = function (time) {
-                logger.warning("FireBehaviorSymbol", "handleTimeChangedEvent", "Unhandled event.");
-                lookout.refresh();
             };
 
             // Establish the Publisher/Subscriber relationship between this symbol and the wx model
             lookout.on(wmt.EVENT_FIRE_BEHAVIOR_CHANGED, this.handleFireBehaviorChangedEvent, this);
             lookout.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
-            lookout.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             lookout.on(wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
-
-            controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
 
         };
         // Inherit Renderable functions.
