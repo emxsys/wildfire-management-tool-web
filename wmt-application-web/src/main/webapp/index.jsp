@@ -70,7 +70,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
-        <script type="text/javascript" src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js"></script>
+        <!--        <script type="text/javascript" src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js"></script>-->
+        <script type="text/javascript" src="./thirdparty/primeui-2.0/development/primeui-2.0.js"></script>
         <script type="text/javascript" src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js"></script>
         <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
 
@@ -222,8 +223,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- Mobile Control Panel -->
         <nav id="mobileControlPanel" class="c-menu">
             <div class="container-fluid" style="margin-top:37px">
-            <!-- BDS margin vs padding 
-            <div class="row" style="padding-top: 10px">-->
+                <!-- BDS margin vs padding 
+                <div class="row" style="padding-top: 10px">-->
                 <div class="row" style="margin-top: 10px">
                     <div class="col-xs-11 col-sm-11">
                         <div class="panel-group" id="controlPanelAccordion" role="tablist" aria-multiselectable="false">
@@ -438,18 +439,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <!--Layer List-->
                         <div class="panel panel-default">
                             <!--Show this panel at startup via "collapsed.in"-->
-<!--                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#layersAccordion" 
-                                 href="#layerListBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="layerListBody"
-                                 role="tab" 
-                                 id="layerListHeading">
-                                <h4 class="panel-title">
-                                    Layer List
-                                </h4>
-                            </div>-->
+                            <!--                            <div class="panel-heading collapsed" 
+                                                             data-toggle="collapse" 
+                                                             data-parent="#layersAccordion" 
+                                                             href="#layerListBody" 
+                                                             aria-expanded="false" 
+                                                             aria-controls="layerListBody"
+                                                             role="tab" 
+                                                             id="layerListHeading">
+                                                            <h4 class="panel-title">
+                                                                Layer List
+                                                            </h4>
+                                                        </div>-->
                             <!--BDS Creates visbible region at top of screen 
                             <div class="panel-collapse collapse in"
                             -->
@@ -720,7 +721,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 data-placement="top" 
                                                 title="Select the default fuel model.">
                                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                            Fuel Model
+                                            Default Fuel Model
+                                        </button>
+                                        <button id="fuelMoisture-btn" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Select the default fuel moisture scenario.">
+                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            Default Fuel Moisture
                                         </button>
                                     </div>
                                 </div>
@@ -782,7 +792,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
             <!--Content-->
             <div class="row-full">
-                
+
                 <!---------------->
                 <!--Globe Window-->
                 <!---------------->
@@ -1024,44 +1034,76 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>        
 
                 <!--Prime UI Fire Lookout Dialog--> 
-                <div id="fireLookout-dlg" title="Fire Lookout" style="display: none;">
-                    <div id="fireLookout-tabs">      
-                        <ul>
-                            <li><a href="#fire-general-tab">General</a></li>
-                            <li><a href="#fire-weather-tab">Weather</a></li>
-                            <li><a href="#fire-environment-tab">Environment</a></li>
-                            <li><a href="#fire-behavior-tab">Behavior</a></li>
-                            <li><a href="#fire-alerts-tab">Alerts</a></li>
-                        </ul>
-                        <div>
-                            <div id="fire-general-tab">
-                                <div class="form_entry">
-                                    <h4>Name</h4>
-                                    <input name="lookoutName" type="text" id="lookoutName" placeholder="Unique name" required>
+                <div id="lookout-dlg" title="Fire Lookout" style="display: none;">
+                    <form id="lookout-frm">
+                        <div id="lookout-tabs">      
+                            <ul>
+                                <li><a href="#lookout-general-tab">General</a></li>
+                                <li><a href="#lookout-forces-tab">Forces</a></li>
+                                <li><a href="#lookout-fuel-tab">Fuel</a></li>
+                                <li><a href="#lookout-weather-tab">Weather</a></li>
+                                <li><a href="#lookout-behavior-tab">Behavior</a></li>
+                                <li><a href="#lookout-alerts-tab">Alerts</a></li>
+                            </ul>
+                            <div>
+                                <div id="lookout-general-tab">
+                                    <div class="form_entry">
+                                        <h4>Name</h4>
+                                        <input name="lookoutName" type="text" id="lookoutName" placeholder="Unique name" required>
+                                    </div>
+                                    <div class="form_entry">
+                                        <h4>Location</h4>
+                                        <p id="lookout-placename"></p> 
+                                        <p id="lookout-latitude"></p> 
+                                        <p id="lookout-longitude"></p> 
+                                        <input id="lookout-movable" type="checkbox" />
+                                    </div>
                                 </div>
-                                <div class="form_entry">
-                                    <h4>Location</h4>
-                                    <p id="lookoutPlacename"></p> 
-                                    <p id="lookoutLatitude"></p> 
-                                    <p id="lookoutLongitude"></p> 
-                                    <input id="lookoutMovable" type="checkbox" />
+                                <div id="lookout-forces-tab">
+                                    <h5>CPS Primary Forces</h5>
                                 </div>
-                            </div>
-                            <div id="fire-weather-tab">
-                            </div>
-                            <div id="fire-environment-tab">
-                            </div>
-                            <div id="fire-behavior-tab">
-                            </div>
-                            <div id="fire-alerts-tab">
-                            </div>
-                        </div>                    
-                    </div>
+                                <div id="lookout-fuel-tab">
+                                    <h5>Fuel Model</h5>
+                                    <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
+                                    <h5>Fuel Moisture</h5>
+                                    <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
+                                </div>
+                                <div id="lookout-weather-tab" >
+                                </div>
+                                <div id="lookout-behavior-tab" >
+                                </div>
+                                <div id="lookout-alerts-tab" >
+                                </div>
+                            </div>                    
+                        </div>
+                    </form>
                 </div>    
-
                 <!--Prime UI Fuel Model Dialog--> 
-                <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
-                    <div id="fuelModel-tbl">
+                <form id="fuelModel-frm">
+                    <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
+                        <div id="fuelModel-tabs">      
+                            <ul>
+                                <li><a href="#fuelModel-standard-tab">Standard</a></li>
+                                <li><a href="#fuelModel-original-tab">Original</a></li>
+                                <li><a href="#fuelModel-custom-tab">Custom</a></li>
+                            </ul>
+                            <div>
+                                <div id="fuelModel-standard-tab">
+                                    <div id="fuelModel-standard-tbl"></div>
+                                </div>
+                                <div id="fuelModel-original-tab">
+                                    <div id="fuelModel-original-tbl"></div>
+                                </div>
+                                <div id="fuelModel-custom-tab">
+                                    <div id="fuelModel-custom-tbl"></div>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>        
+                </form>
+                <!--Prime UI Fuel Moisture Dialog--> 
+                <div id="fuelMoisture-dlg" title="Set Fuel Moisture" style="display: none;">
+                    <div id="fuelMoisture-tbl">
                     </div>
                 </div>        
 
