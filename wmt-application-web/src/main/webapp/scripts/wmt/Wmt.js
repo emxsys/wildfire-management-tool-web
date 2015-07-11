@@ -203,11 +203,11 @@ define([],
          * </ul>
          */
         Wmt.configuration = {
-            defaultFuelModelNo: 6,
+            defaultFuelModelNo: 5,  // Brush
             defaultFuelMoistureScenario:'Very Low Dead, Fully Cured Herb',
             startupLatitude: 34.29,
             startupLongitude: -119.29,
-            startupAltitude: 100000,
+            startupAltitude: 1000000,
             startupHeading: 0,
             startupTilt: 0,
             startupRoll: 0,
