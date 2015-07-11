@@ -48,7 +48,7 @@ define(["require",
     function (
         require,
         controller,
-        dialog,
+        fuelLookoutEditor,
         fuelModels,
         fuelMoistureScenarios,
         log,
@@ -73,30 +73,30 @@ define(["require",
          * @param {String} id
          * @returns {FireLookout}
          */
-        var FireLookout = function (name, latitude, longitude, id) {
-
+        var FireLookout = function (params) {
+            var arg = params || {};
             // Inherit the weather forecasting capabilites of the WeatherScout
-            WeatherScout.call(this, name, 24, null, latitude, longitude, id);
+            WeatherScout.call(this, arg.name, 24, null, arg.latitude, arg.longitude, arg.id);
 
             /**
              * Override the WeatherScout name set by the parent
              */
-            this.name = name || 'Fire Lookout';
+            this.name = arg.name || 'Fire Lookout';
+            this.place = arg.place;
 
             /**
-             * Override the parent WeatherScout's Openable implementationwith a FireLookoutDialog
+             * Override the parent WeatherScout's Openable implementation with a FireLookoutDialog
              */
             var self = this;
             this.openMe = function () {
-                dialog.show(self);
+                fuelLookoutEditor.show(self);
             };
 
+            this.fuelModel = fuelModels.getFuelModel(arg.fuelModelNo || wmt.configuration.defaultFuelModelNo);
+            this.fuelMoisture = fuelMoistureScenarios.getScenario(arg.fuelMoistureScenario ||wmt.configuration.defaultFuelMoistureScenario);
             this.terrain = Terrain.ZERO;
             this.terrainTuple = terrainService.makeTuple(0, 0, 0);
-            this.fuelModel = fuelModels.getFuelModel(wmt.configuration.defaultFuelModel);
-            this.fuelMoisture = fuelMoistureScenarios.getScenario(wmt.configuration.defaultFuelMoistureScenario);
             this.surfaceFuel = null;
-            
             
             this.refreshInProgress = false;
             this.refreshPending = false;
@@ -161,9 +161,6 @@ define(["require",
             // Coordinated refresh of wx and fuel
             this.refreshForecast(d1);
             this.refreshSurfaceFuel(d2);
-
-            // Uncoordinated 
-            this.refreshPlace();
         };
 
 
