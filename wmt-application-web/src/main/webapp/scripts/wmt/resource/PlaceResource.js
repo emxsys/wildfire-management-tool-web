@@ -49,6 +49,8 @@ define([
              */
             places: function (latitude, longitude, callback) {
                 // TODO: assert input values
+                // See: https://developer.yahoo.com/yql/console/#h=desc+geo.places
+                // And: http://real.developer.yahoo.com/geo/geoplanet/guide/yql-tables.html#geo-places
                 var url = 'https://query.yahooapis.com/v1/public/yql',
                     query ='q=select * from geo.places where '
                     + 'text="'+ latitude + ' ' + longitude + '"' 
@@ -67,6 +69,8 @@ define([
              */
             placefinder: function (latitude, longitude, callback) {
                 // TODO: assert input values
+                // Yahoo Query Language (YQL) API call
+                // https://developer.yahoo.com/yql/console/#h=desc+geo.placefinder
                 var url = 'https://query.yahooapis.com/v1/public/yql',
                     query ='q=select * from geo.placefinder where '
                     + 'text="'+ latitude + ' ' + longitude + '" and gflags="R"'
@@ -83,6 +87,7 @@ define([
              */
             gazetteer: function (place, callback) {
                 // TODO: assert input values
+                // https://developer.yahoo.com/yql/console/#h=desc+geo.placefinder
                 var url = 'https://query.yahooapis.com/v1/public/yql',
                     query ='q=select * from geo.placefinder where '
                     + 'text="'+  place + '"'
