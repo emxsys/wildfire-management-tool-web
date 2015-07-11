@@ -26,6 +26,19 @@
     width: 75px; /* width of coordinate overlay value column */
 }
 
+
+/*Override the 'auto' width on dropdowns in the fuel model tab*/
+#lookout-fuel-tab .pui-dropdown {
+    width: 100%
+}
+
+/*In the Fire Lookout viewer, make the tabs fill the dialog*/
+#lookout-tabs .pui-tabview {
+    width: 100%;
+    height: 100%;
+        
+}
+
 #timeControlSlider {
     position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
     bottom: 5%;   
