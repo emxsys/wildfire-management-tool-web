@@ -54,53 +54,73 @@ define([
          * @returns {FireLookoutDialog}
          */
         var FireLookoutDialog = {
+            /**
+             * Shows the FireLookout viewer/editor.
+             * @param {FireLookout} lookout The lookout to be viewed or edited.
+             */
             show: function (lookout) {
                 // Load the controls
                 $('#lookout-name').val(lookout.name);
-                $('#lookout-placename').text('Place: ' + lookout.placeName);
+                $('#lookout-placename').text('Place: ' + lookout.toponym);
                 $('#lookout-latitude').text('Latitude: ' + formatter.formatDecimalDegreesLat(lookout.latitude, 5));
                 $('#lookout-longitude').text('Longitude: ' + formatter.formatDecimalDegreesLon(lookout.longitude, 5));
                 $('#lookout-movable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
-                $('#lookout-fuelmodel-drpdwn').puidropdown('selectValue', lookout.fuelModel.modelNo);
-                
+                $('#lookout-fuelmodel-drpdwn').puidropdown('selectValue', lookout.fuelModelNo);
+                $('#lookout-fuelmoisture-drpdwn').puidropdown('selectValue', lookout.moistureScenarioName);
+
                 // Save button callback
                 this.saveAction = function () {
-                    var modelNo = $('#lookout-fuelmodel-drpdwn').puidropdown('getSelectedValue');
+                    var modelNo = $('#lookout-fuelmodel-drpdwn').puidropdown('getSelectedValue'),
+                        scenarioName = $('#lookout-fuelmoisture-drpdwn').puidropdown('getSelectedValue');
                     lookout.name = $('#lookout-name').val();
                     lookout.isMovable = !($('#lookout-movable').puitogglebutton('isChecked'));
-                    lookout.fuelModel = fuelModelCatalog.getFuelModel(modelNo, 'original');
+                    lookout.fuelModelNo = modelNo;
+                    lookout.moistureScenarioName = scenarioName;
+                    // Update the views
+                    lookout.refresh();
                 };
 
                 // Show the modal dialog
                 $('#lookout-dlg').puidialog('show');
             },
             /**
-             * Generates, then shows the Weather modal dialog.
-             * @param {type} fail Callback function accepting an error.
+             * Intializes the PrimeUI dialog components. Called once, at startup.
              */
             initialize: function () {
                 var self = this,
-                    $dlg = $('#lookout-dlg'),
-                    $fuelModels = $('#lookout-fuelmodel-drpdwn'),
-                    fuelModelOptions = [],
-                    i, max, model;
+                    options = [],
+                    i, max, item;
 
-                for ( i = 0, max = fuelModelCatalog.original.length; i < max; i++) {
-                    model = fuelModelCatalog.original[i];                
-                    fuelModelOptions.push({
-                        label: model.modelNo + ': ' + model.modelName, 
-                        value: parseInt(model.modelNo, 10)});
+                // Build an array of label,value options for the fuel model dropdown
+                for (i = 0, max = fuelModelCatalog.original.length; i < max; i++) {
+                    item = fuelModelCatalog.original[i];
+                    options.push({
+                        label: item.modelNo + ': ' + item.modelName,
+                        value: parseInt(item.modelNo, 10)});
                 }
 
                 // DropDowns
-                $fuelModels.puidropdown({
-                    data: fuelModelOptions
+                $('#lookout-fuelmodel-drpdwn').puidropdown({
+                    data: options
+                });
+
+                $('#lookout-fuelmoisture-drpdwn').puidropdown({
+                    data: fuelMoistureCatalog.getScenarioNames()
+                });
+
+                // Toggle buttons
+                $('#lookout-movable').puitogglebutton({
+                    onLabel: 'Locked',
+                    offLabel: 'Movable',
+                    onIcon: 'fa-check-square',
+                    offIcon: 'fa-square'
                 });
 
                 // Tabs
                 $('#lookout-tabs').puitabview();
 
-                $dlg.puidialog({
+                // The dialog
+                $('#lookout-dlg').puidialog({
                     locaiton: 'top',
                     width: '90%',
                     height: 'auto',
@@ -116,24 +136,18 @@ define([
                             icon: 'fa-save',
                             click: function () {
                                 self.saveAction();
-                                $dlg.puidialog('hide');
+                                $('#lookout-dlg').puidialog('hide');
                             }
                         },
                         {
                             text: wmt.BUTTON_TEXT_CANCEL,
                             icon: 'fa-close',
                             click: function () {
-                                $dlg.puidialog('hide');
+                                $('#lookout-dlg').puidialog('hide');
                             }
                         }]
                 });
-                // Toggle buttons
-                $('#lookout-movable').puitogglebutton({
-                    onLabel: 'Locked',
-                    offLabel: 'Movable',
-                    onIcon: 'fa-check-square',
-                    offIcon: 'fa-square'
-                });
+                
             }
         };
         return FireLookoutDialog;
