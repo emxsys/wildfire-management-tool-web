@@ -36,10 +36,14 @@
  *  * @author Bruce Schubert
  */
 define([
+    'wmt/model/FuelModelCatalog',
+    'wmt/model/FuelMoistureCatalog',
     'wmt/util/Formatter',
     'wmt/Wmt',
     'worldwind'],
     function (
+        fuelModelCatalog,
+        fuelMoistureCatalog,
         formatter,
         wmt,
         ww) {
@@ -52,18 +56,23 @@ define([
         var FireLookoutDialog = {
             show: function (lookout) {
                 // Load the controls
-                $('#lookoutName').val(lookout.name);
-                $('#lookoutPlacename').text('Place: ' + lookout.placeName);
-                $('#lookoutLatitude').text('Latitude: ' + formatter.formatDecimalDegreesLat(lookout.latitude, 5));
-                $('#lookoutLongitude').text('Longitude: ' + formatter.formatDecimalDegreesLon(lookout.longitude, 5));
-                $('#lookoutMovable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
+                $('#lookout-name').val(lookout.name);
+                $('#lookout-placename').text('Place: ' + lookout.placeName);
+                $('#lookout-latitude').text('Latitude: ' + formatter.formatDecimalDegreesLat(lookout.latitude, 5));
+                $('#lookout-longitude').text('Longitude: ' + formatter.formatDecimalDegreesLon(lookout.longitude, 5));
+                $('#lookout-movable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
+                $('#lookout-fuelmodel-drpdwn').puidropdown('selectValue', lookout.fuelModel.modelNo);
+                
                 // Save button callback
                 this.saveAction = function () {
-                    lookout.name = $('#lookoutName').val();
-                    lookout.isMovable = !($('#lookoutMovable').puitogglebutton('isChecked'));
+                    var modelNo = $('#lookout-fuelmodel-drpdwn').puidropdown('getSelectedValue');
+                    lookout.name = $('#lookout-name').val();
+                    lookout.isMovable = !($('#lookout-movable').puitogglebutton('isChecked'));
+                    lookout.fuelModel = fuelModelCatalog.getFuelModel(modelNo, 'original');
                 };
+
                 // Show the modal dialog
-                $('#fireLookout-dlg').puidialog('show');
+                $('#lookout-dlg').puidialog('show');
             },
             /**
              * Generates, then shows the Weather modal dialog.
@@ -71,14 +80,35 @@ define([
              */
             initialize: function () {
                 var self = this,
-                    $dlg = $('#fireLookout-dlg');
+                    $dlg = $('#lookout-dlg'),
+                    $fuelModels = $('#lookout-fuelmodel-drpdwn'),
+                    fuelModelOptions = [],
+                    i, max, model;
+
+                for ( i = 0, max = fuelModelCatalog.original.length; i < max; i++) {
+                    model = fuelModelCatalog.original[i];                
+                    fuelModelOptions.push({
+                        label: model.modelNo + ': ' + model.modelName, 
+                        value: parseInt(model.modelNo, 10)});
+                }
+
+                // DropDowns
+                $fuelModels.puidropdown({
+                    data: fuelModelOptions
+                });
+
+                // Tabs
+                $('#lookout-tabs').puitabview();
+
                 $dlg.puidialog({
-                    width: 'auto',
+                    locaiton: 'top',
+                    width: '90%',
                     height: 'auto',
                     showEffect: 'fade',
                     hideEffect: 'fade',
-                    minimizable: true,
+                    minimizable: false,
                     maximizable: false,
+                    resizable: true,
                     responsive: true,
                     modal: true,
                     buttons: [{
@@ -97,10 +127,8 @@ define([
                             }
                         }]
                 });
-                // Tabs
-                $('#fireLookout-tabs').puitabview();
                 // Toggle buttons
-                $('#lookoutMovable').puitogglebutton({
+                $('#lookout-movable').puitogglebutton({
                     onLabel: 'Locked',
                     offLabel: 'Movable',
                     onIcon: 'fa-check-square',
