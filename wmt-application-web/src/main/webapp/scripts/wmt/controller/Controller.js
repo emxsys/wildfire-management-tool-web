@@ -46,7 +46,6 @@
  * @returns {Controller_L50.Controller}
  */
 define([
-    'wmt/controller/FuelModelManager',
     'wmt/controller/LocationManager',
     'wmt/util/Log',
     'wmt/util/Messenger',
@@ -57,7 +56,6 @@ define([
     'wmt/Wmt',
     'worldwind'],
     function (
-        FuelModelManager,
         LocationManager,
         log,
         messenger,
@@ -81,7 +79,6 @@ define([
                 // Create the other input managers
                 this.timeManager = new TimeManager(this);
                 this.locationManager = new LocationManager(this);
-                this.fuelModelManager = new FuelModelManager(this);
                 this.weatherManager = new WeatherManager(this);
 
                 this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
