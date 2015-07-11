@@ -180,7 +180,7 @@ define([
          */
         WeatherScout.prototype.refresh = function () {
             this.refreshForecast();
-            this.refreshPlace();
+            //this.refreshPlace();
         };
 
         /**
@@ -237,10 +237,10 @@ define([
                     // Apply the first place name (ordered by granularity) that's not a zip code
                     for (i = 0, max = place.length; i < max; i++) {
                         if (place[i].type !== "Zip Code") {
-                            self.placeName = place[i].name;
+                            self.toponym = place[i].name;
                             
                             // Until we have an editor, use the placename for the name
-                            self.name = self.placeName;
+                            self.name = self.toponym;
                             break;
                         }
                     }
