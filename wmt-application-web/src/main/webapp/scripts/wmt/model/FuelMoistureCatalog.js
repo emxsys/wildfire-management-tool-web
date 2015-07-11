@@ -88,50 +88,34 @@ define([
              * Gets the fuel moisture for the given scenario.
              * @param {String} scenarioName
              * @returns {Object} A JSON FuelModel object.
-             * * E.g.:
-             *{
-             *  "dead1HrFuelMoisture" : {
-             *    "type" : "fuel_moisture_1h:%",
-             *    "value" : "6.0",
-             *    "unit" : "%"
-             *  },
-             *  "dead10HrFuelMoisture" : {
-             *    "type" : "fuel_moisture_10h:%",
-             *    "value" : "7.0",
-             *    "unit" : "%"
-             *  },
-             *  "dead100HrFuelMoisture" : {
-             *    "type" : "fuel_moisture_100h:%",
-             *    "value" : "8.0",
-             *    "unit" : "%"
-             *  },
-             *  "liveHerbFuelMoisture" : {
-             *    "type" : "fuel_moisture_herb:%",
-             *    "value" : "70.0",
-             *    "unit" : "%"
-             *  },
-             *  "liveWoodyFuelMoisture" : {
-             *    "type" : "fuel_moisture_woody:%",
-             *    "value" : "70.0",
-             *    "unit" : "%"
+             * E.g.:
+             * {
+             *  name: "Very Low Dead, Fully Cured Herb",
+             *  fuelMoisture: {
+             *      dead1HrFuelMoisture: {type: "fuel_moisture_1h:%", value: "3.0", unit: "%"},
+             *      dead1HrFuelMoisture: {type: "fuel_moisture_1h:%", value: "3.0", unit: "%"},
+             *      dead10HrFuelMoisture: {type: "fuel_moisture_10h:%", value: "4.0", unit: "%"},
+             *      dead100HrFuelMoisture: {type: "fuel_moisture_100h:%", value: "5.0", unit: "%"},
+             *      liveHerbFuelMoisture: {type: "fuel_moisture_herb:%", value: "30.0", unit: "%"},
+             *      liveWoodyFuelMoisture: {type: "fuel_moisture_woody:%", value: "60.0", unit: "%"}
              *  }
-             *}
+             * }
              */
             getScenario: function (scenarioName) {
-                var fuelMoisture = null;
+                var scenario = null;
 
                 // TODO: Add custom fuel model processing
-                fuelMoisture = FuelMoistureCatalog.findScenario(scenarioName, this.scenarios);
-                if (!fuelMoisture) {
+                scenario = FuelMoistureCatalog.findScenario(scenarioName, this.scenarios);
+                if (!scenario) {
                     log.warning('FuelMoistureCatalog', 'getScenario', 'No fuel moisture scenario found for: ' + scenarioName);
                 }
-                return fuelMoisture;
+                return scenario;
             },
             /**
              * Returns the fuel moisture item with the matching fuel moisture no.
              * @param {String} scenarioName Unique moisture no.
              * @param {Array} array Fuel moisture scenario array
-             * @returns {Object} JSON fuel moisture object.
+             * @returns {Object} JSON fuel moisture scenario object.
              */
             findScenario: function (scenarioName, array) {
                 var i, max;
@@ -142,7 +126,7 @@ define([
                 }
                 for (i = 0, max = array.length; i < max; i++) {
                     if (array[i].name === scenarioName) {
-                        return array[i].fuelMoisture;
+                        return array[i];
                     }
                 }
                 return null;
