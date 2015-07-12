@@ -39,12 +39,14 @@ define([
     'wmt/model/FuelModelCatalog',
     'wmt/model/FuelMoistureCatalog',
     'wmt/util/Formatter',
+    'wmt/util/WmtUtil',
     'wmt/Wmt',
     'worldwind'],
     function (
         fuelModelCatalog,
         fuelMoistureCatalog,
         formatter,
+        util,
         wmt,
         ww) {
         "use strict";
@@ -60,6 +62,9 @@ define([
              */
             show: function (lookout) {
                 var forecasts = lookout.getForecasts();
+
+                // Draw the CPS force vectors
+                this.drawCpsForces(lookout);
 
                 // Load the controls
                 $('#lookout-name').val(lookout.name);
@@ -95,8 +100,7 @@ define([
                     options = [],
                     i, max, item;
 
-                this.loadImages();
-                this.loadWeatherTable();
+                this.initWeatherTable();
 
                 // Build an array of label,value options for the fuel model dropdown
                 for (i = 0, max = fuelModelCatalog.original.length; i < max; i++) {
@@ -155,27 +159,62 @@ define([
                         }]
                 });
             },
-            loadImages: function () {
+            drawCpsForces: function (lookout) {
                 // Draw the image in the canvas after loading
                 var canvas = document.getElementById('lookout-forces-canvas'),
                     context = canvas.getContext("2d"),
-                    img = new Image(),
+                    imgRose = new Image(),
+                    imgPreheat = new Image(),
+                    imgSlope = new Image(),
+                    imgWind = new Image(),
                     WIDTH = 300,
-                    HEIGHT = 300;
+                    HEIGHT = 300,
+                    self = this;
 
-                img.onload = function () {
-                    canvas.width = WIDTH;//img.width;
-                    canvas.height = HEIGHT;//img.height;
-                    context.drawImage(img, 0, 0, WIDTH, HEIGHT);
-//                    context.drawImage(img, 0, 0, img.width, img.height);
+                canvas.width = WIDTH;
+                canvas.height = HEIGHT;
+
+                imgRose.onload = function () {
+//                    canvas.width = imgRose.width;
+//                    canvas.height = imgRose.height;
+//                    context.drawImage(imgRose, 0, 0, img.width, img.height);
+                    context.drawImage(imgRose, 0, 0, WIDTH, HEIGHT);
                 };
-                img.src = wmt.IMAGE_PATH + 'location-widget_compass-rose.svg';          // Set the image -- which fires the onload event
+                imgPreheat.onload = function () {
+                    context.drawImage(imgPreheat, 0, 0, WIDTH, HEIGHT);
+                };
+                imgSlope.onload = function () {
+                    context.save();
+                    self.rotateAbout(context, lookout.terrain.aspect, 150, 150);
+                    context.drawImage(imgSlope, 0, 0, WIDTH, HEIGHT);
+                    context.restore();
+                };
+                imgWind.onload = function () {
+                    context.drawImage(imgWind, 0, 0, WIDTH, HEIGHT);
+                };
+                imgRose.src = wmt.IMAGE_PATH + 'location-widget_compass-rose.svg';          // Set the image -- which fires the onload event
+                imgPreheat.src = wmt.IMAGE_PATH + 'cps-force_solar.svg';          // Set the image -- which fires the onload event
+                imgSlope.src = wmt.IMAGE_PATH + 'cps-force_slope.svg';          // Set the image -- which fires the onload event
+                imgWind.src = wmt.IMAGE_PATH + 'cps-force_wind.svg';          // Set the image -- which fires the onload event
+            },
+            /**
+             * @param {Context} c
+             * @param {Number} theta Degrees
+             * @param {Number} x
+             * @param {Number} y
+             */
+            rotateAbout: function (c, theta, x, y) {
+                // Rotates theta radians counterclockwise around the point (x,y). This can also be accomplished with a 
+                // translate,rotate,translate sequence.
+                // Copied from the book "JavaScript: The Definitive Reference"
+                var rad = -theta * util.DEG_TO_RAD,
+                    ct = Math.cos(rad), st = Math.sin(rad);
+                c.transform(ct, -st, st, ct, -x * ct - y * st + x, x * st - y * ct + y);
             },
             /**
              * 
              */
-            loadWeatherTable: function () {
-                var self = this;
+            initWeatherTable: function () {
                 $('#lookout-weather-tbl').puidatatable({
                     paginator: {
                         rows: 10,
