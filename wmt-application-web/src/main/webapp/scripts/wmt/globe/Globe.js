@@ -246,6 +246,18 @@ define([
             return this.terrainProvider.terrainAtLatLon(latitude, longitude);
         };
         /**
+         * EXPERIMENTAL!!
+         * Gets terrain at the given latitude and longitude.
+         * @param {Number} latitude
+         * @param {Number} longitude
+         * @param {Number} targetResolution: The desired elevation resolution, in radians. (To compute radians from
+         * meters, divide the number of meters by the globe's radius.) Default 1/WorldWind.EARTH_RADIUS.
+         * @return {Terrain} A WMT Terrain object at the given lat/lon.
+         */
+        Globe.prototype.getTerrainAtLatLonHiRes = function (latitude, longitude, targetResolution) {
+            return this.terrainProvider.terrainAtLatLon(latitude, longitude, targetResolution || 1 / WorldWind.EARTH_RADIUS);
+        };
+        /**
          * Gets terrain at the screen point.
          * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
          * @return {Terrain} A WMT Terrain object at the screen point.
