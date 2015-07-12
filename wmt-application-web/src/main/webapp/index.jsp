@@ -322,7 +322,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!-- Mobile Globe Menu -->
         <nav id="mobileGlobe" class="c-menu">
-            <div class="container-fluid" style="margin-top:5%">
+            <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
                         <button id="globeCheck" class="c-check">
@@ -425,7 +425,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- Mobile Layers List Menu -->
         <!-- BDS: <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu"> -->
         <nav id="mobileLayersList" class="c-menu">
-            <div class="container-fluid" style="margin-top:5%;">
+            <div class="container-fluid" style="margin-top:5px;">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
                         <button id="layersListCheck" class="c-check">
@@ -630,7 +630,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!-- Mobile Weather Scouts Menu -->
         <nav id="mobileWeatherScouts" class="c-menu">
-            <div class="container-fluid" style="margin-top:5%">
+            <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
                         <button id="weatherScoutsCheck" class="c-check">
@@ -748,7 +748,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!-- Mobile Fire Lookouts Menu -->
         <nav id="mobileFireLookouts" class="c-menu">
-            <div class="container-fluid" style="margin-top:5%">
+            <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
                         <button id="fireLookoutsCheck" class="c-check">
