@@ -32,15 +32,15 @@
 
 
 /**
- * The FireView module is responsible for rendering Fire Lookouts and Fire Incidents
+ * The LookoutViewManagerManager module is responsible for rendering Fire Lookouts 
  * on the globe and within lists in a panel.
  * 
  * @param {Controller} controller MVC controller.
  * @param {Log} logger Error logger.
- * @param {FireLookout} FireLookout Fire behavior monitor.
+ * @param {FireLookout} FireLookout
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
- * @returns {FireView}
+ * @returns {LookoutViewManager}
  * 
  * @author Bruce Schubert
  */
@@ -61,7 +61,10 @@ define([
         wmt,
         ww) {
         "use strict";
-        var FireView = {
+        var LookoutViewManager = {
+            /**
+             * Initializes the FireLookout renderables on the globe and the Lookout List in the menu system.
+             */
             initialize: function () {
 
                 this.manager = controller.model.fireLookoutManager;
@@ -72,7 +75,7 @@ define([
                 this.lookoutLayer = controller.globe.findLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME);
                 if (!this.lookoutLayer) {
                     throw new Error(
-                        logger.error("FireView", "constructor",
+                        logger.error("LookoutViewManager", "constructor",
                             "Could not find a Layer named " + wmt.FIRE_BEHAVIOR_LAYER_NAME));
                 }
 
@@ -112,7 +115,7 @@ define([
                     this.synchronizeFireList();
                 }
                 catch (e) {
-                    logger.error("FireView", "handleFireAddedEvent", e.toString());
+                    logger.error("LookoutViewManager", "handleFireAddedEvent", e.toString());
                 }
             },
             /**
@@ -137,7 +140,7 @@ define([
                     this.synchronizeFireList();
                 }
                 catch (e) {
-                    logger.error("FireView", "handleFireRemovedEvent", e.toString());
+                    logger.error("LookoutViewManager", "handleFireRemovedEvent", e.toString());
                 }
             },
             /**
@@ -190,7 +193,7 @@ define([
                 var lookout = this.manager.findLookout(lookoutId);
 
                 if (!lookout) {
-                    messenger.notify(logger.error("FireView", "onFireItemClick", "Could not find selected lookout with ID: " + lookoutId));
+                    messenger.notify(logger.error("LookoutViewManager", "onFireItemClick", "Could not find selected lookout with ID: " + lookoutId));
                     return;
                 }
                 switch (action) {
@@ -204,11 +207,11 @@ define([
                         lookout.remove();
                         break;
                     default:
-                        logger.error("FireView", "onFireItemClick", "Unhandled action: " + action);
+                        logger.error("LookoutViewManager", "onFireItemClick", "Unhandled action: " + action);
                 }
             }
         };
 
-        return FireView;
+        return LookoutViewManager;
     }
 );

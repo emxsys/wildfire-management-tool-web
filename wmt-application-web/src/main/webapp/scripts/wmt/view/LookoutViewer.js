@@ -51,14 +51,16 @@ define([
         /**
          * @constructor
          * @param {FireLookout} lookout The lookout to be displayed
-         * @returns {FireLookoutDialog}
+         * @returns {LookoutViewer}
          */
-        var FireLookoutDialog = {
+        var LookoutViewer = {
             /**
              * Shows the FireLookout viewer/editor.
              * @param {FireLookout} lookout The lookout to be viewed or edited.
              */
             show: function (lookout) {
+                var forecasts = lookout.getForecasts();
+
                 // Load the controls
                 $('#lookout-name').val(lookout.name);
                 $('#lookout-placename').text('Place: ' + lookout.toponym);
@@ -67,6 +69,8 @@ define([
                 $('#lookout-movable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
                 $('#lookout-fuelmodel-drpdwn').puidropdown('selectValue', lookout.fuelModelNo);
                 $('#lookout-fuelmoisture-drpdwn').puidropdown('selectValue', lookout.moistureScenarioName);
+                $('#lookout-weather-tbl').puidatatable('option', 'datasource', forecasts);
+                $('#lookout-weather-tbl').puidatatable('option', 'paginator', {totalRecords: forecasts.length, rows: 10});
 
                 // Save button callback
                 this.saveAction = function () {
@@ -90,6 +94,9 @@ define([
                 var self = this,
                     options = [],
                     i, max, item;
+
+                this.loadImages();
+                this.loadWeatherTable();
 
                 // Build an array of label,value options for the fuel model dropdown
                 for (i = 0, max = fuelModelCatalog.original.length; i < max; i++) {
@@ -121,8 +128,8 @@ define([
 
                 // The dialog
                 $('#lookout-dlg').puidialog({
-                    locaiton: 'top',
-                    width: '90%',
+                    location: 'top',
+                    width: '360px',
                     height: 'auto',
                     showEffect: 'fade',
                     hideEffect: 'fade',
@@ -147,9 +154,76 @@ define([
                             }
                         }]
                 });
-                
+            },
+            loadImages: function () {
+                // Draw the image in the canvas after loading
+                var canvas = document.getElementById('lookout-forces-canvas'),
+                    context = canvas.getContext("2d"),
+                    img = new Image(),
+                    WIDTH = 300,
+                    HEIGHT = 300;
+
+                img.onload = function () {
+                    canvas.width = WIDTH;//img.width;
+                    canvas.height = HEIGHT;//img.height;
+                    context.drawImage(img, 0, 0, WIDTH, HEIGHT);
+//                    context.drawImage(img, 0, 0, img.width, img.height);
+                };
+                img.src = wmt.IMAGE_PATH + 'location-widget_compass-rose.svg';          // Set the image -- which fires the onload event
+            },
+            /**
+             * 
+             */
+            loadWeatherTable: function () {
+                var self = this;
+                $('#lookout-weather-tbl').puidatatable({
+                    paginator: {
+                        rows: 10,
+                        totalRecords: 50
+                    },
+                    caption: 'Forecasts',
+                    columns: [
+                        {
+                            field: 'time',
+                            headerText: 'Time',
+                            headerStyle: 'width: 70px; padding-left: 4px; padding-right: 4px;',
+                            content: function (row) {
+                                return formatter.formatDayOfMonthTime(row.time, 'en');
+                            },
+                            sortable: true
+                        },
+                        {
+                            field: 'airTemperatureF',
+                            headerText: 'F°',
+                            sortable: true
+                        },
+                        {
+                            field: 'relaltiveHumidityPct',
+                            headerText: 'RH',
+                            sortable: true
+                        },
+                        {
+                            field: 'windSpeedKts',
+                            headerText: 'Kts',
+                            sortable: true
+                        },
+                        {
+                            field: 'windDirectionDeg',
+                            headerText: 'Dir',
+                            sortable: true
+                        },
+                        {
+                            field: 'skyCoverPct',
+                            headerText: 'Sky',
+                            sortable: true
+                        }
+                    ],
+                    datasource: [],
+                    selectionMode: 'single'
+                });
             }
+
         };
-        return FireLookoutDialog;
+        return LookoutViewer;
     }
 );

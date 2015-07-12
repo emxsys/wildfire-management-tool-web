@@ -128,7 +128,7 @@ define([
             };
             //EVENT_TIME_CHANGED handler that updates the label
             this.handleTimeChangedEvent = function (time) {
-                var wx = this.wxModel.getForecastAt(time),
+                var wx = this.wxModel.getForecastAtTime(time),
                     timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
 
                 // Update the values

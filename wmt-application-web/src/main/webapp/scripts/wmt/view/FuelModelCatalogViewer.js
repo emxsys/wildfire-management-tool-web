@@ -41,9 +41,9 @@ define([
         "use strict";
         /**
          * @constructor
-         * @returns {FuelModelDialog}
+         * @returns {FuelModelCatalogViewer}
          */
-        var FuelModelDialog = {
+        var FuelModelCatalogViewer = {
             selectedFuelModel: null,
             show: function () {
                 $('#fuelModel-dlg').puidialog('show');
@@ -144,6 +144,6 @@ define([
                 });
             }
         };
-        return FuelModelDialog;
+        return FuelModelCatalogViewer;
     }
 );

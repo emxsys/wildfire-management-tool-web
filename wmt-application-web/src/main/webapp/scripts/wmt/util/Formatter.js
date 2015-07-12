@@ -35,8 +35,12 @@
  * @module {Formatter}
  * @author Bruce Schubert
  */
-define(['worldwind'],
-    function (ww) {
+define([
+    'wmt/util/WmtUtil',
+    'worldwind'],
+    function (
+        util,
+        ww) {
         "use strict";
         /**
          * Provides useful utilities specicially for WMT.
@@ -169,7 +173,7 @@ define(['worldwind'],
                     angle += 360;
                 }
                 return angle.toFixed(decimals) + "\u00b0";
-            }, 
+            },
             /**
              * Format an altitude with a units suffix.
              * @param {Number} altitude Meters.
@@ -186,6 +190,20 @@ define(['worldwind'],
                 // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
                 return altitude.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " " + units;
 
+            },
+            formatDayOfMonthTime: function (datetime, locale) {
+                var timeOptions =
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    }, dateOptions =
+                    {
+                        day: "2-digit"
+                    };
+
+                return datetime.toLocaleDateString(locale || 'en', dateOptions)
+                    + ' ' + datetime.toLocaleTimeString(locale || 'en', timeOptions);
             }
 
         };

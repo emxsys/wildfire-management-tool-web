@@ -1032,7 +1032,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </div>        
 
-                <!--Prime UI Fire Lookout Dialog--> 
+                <!--Prime UI Fire Lookout Viewer--> 
                 <div id="lookout-dlg" title="Fire Lookout" style="display: none;">
                     <form id="lookout-frm">
                         <div id="lookout-tabs">      
@@ -1048,7 +1048,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div id="lookout-general-tab">
                                     <div class="form_entry">
                                         <h4>Name</h4>
-                                        <input name="lookoutName" type="text" id="lookoutName" placeholder="Unique name" required>
+                                        <input name="lookout-name" type="text" id="lookout-name" placeholder="Unique name" required>
                                     </div>
                                     <div class="form_entry">
                                         <h4>Location</h4>
@@ -1066,8 +1066,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                                 <div id="lookout-forces-tab">
                                     <h5>CPS Primary Forces</h5>
+                                    <div>
+                                        <canvas id="lookout-forces-canvas">
+                                            <h1>Your browser does not support HTML5 Canvas.</h1>
+                                        </canvas>                
+                                    </div>
                                 </div>
                                 <div id="lookout-weather-tab" >
+                                    <div id="lookout-weather-tbl"></div>
                                 </div>
                                 <div id="lookout-behavior-tab" >
                                 </div>

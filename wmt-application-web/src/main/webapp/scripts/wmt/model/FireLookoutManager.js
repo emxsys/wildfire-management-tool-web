@@ -116,6 +116,7 @@ define([
                     'toponym',
                     'latitude',
                     'longitude',
+                    'isMovable',
                     'fuelModelNo',
                     'moistureScenarioName'
                 ]);
@@ -145,6 +146,7 @@ define([
                         toponym: array[i].toponym,
                         latitude: array[i].latitude,
                         longitude: array[i].longitude,
+                        isMovable: array[i].isMovable,
                         fuelModelNo: array[i].fuelModelNo,
                         moistureScenarioName: array[i].moistureScenarioName
                     }));

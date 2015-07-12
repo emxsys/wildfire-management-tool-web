@@ -31,10 +31,10 @@
 /*global define*/
 
 define(["require",
-    'wmt/view/FireLookoutDialog',
     'wmt/model/FuelModelCatalog',
     'wmt/model/FuelMoistureCatalog',
     'wmt/util/Log',
+    'wmt/view/LookoutViewer',
     'wmt/util/Messenger',
     'wmt/resource/SurfaceFireResource',
     'wmt/resource/SurfaceFuelResource',
@@ -46,10 +46,10 @@ define(["require",
     'wmt/Wmt'],
     function (
         require,
-        fuelLookoutEditor,
         fuelModelCatalog,
         fuelMoistureCatalog,
         log,
+        lookoutViewer,
         messenger,
         surfaceFireResource,
         surfaceFuelResource,
@@ -72,10 +72,13 @@ define(["require",
          * @returns {FireLookout}
          */
         var FireLookout = function (params) {
-            var arg = params || {};
+            var arg = params || {},
+                self = this,
+                model = require("wmt/controller/Controller").model;
+            
             // Inherit the weather forecasting capabilites of the WeatherScout
             WeatherScout.call(this, arg.name, 24, null, arg.latitude, arg.longitude, arg.id);
-
+            
             /**
              * Override the WeatherScout name set by the parent
              */
@@ -85,19 +88,21 @@ define(["require",
             /**
              * Override the parent WeatherScout's Openable implementation with a FireLookoutDialog
              */
-            var self = this,
-                                model = require("wmt/controller/Controller").model;
-
             this.openMe = function () {
-                fuelLookoutEditor.show(self);
+                lookoutViewer.show(self);
             };
 
+            // Persistent properties
             this.fuelModelNo = arg.fuelModelNo || wmt.configuration.defaultFuelModelNo;
             this.moistureScenarioName = arg.moistureScenarioName || wmt.configuration.defaultFuelMoistureScenario;
+            this.isMovable = arg.isMovable === undefined ? true : arg.isMovable;
+            
+            // Dynamic properties
             this.terrain = Terrain.ZERO;
             this.terrainTuple = terrainResource.makeTuple(0, 0, 0);
             this.surfaceFuel = null;
 
+            // Internals
             this.refreshInProgress = false;
             this.refreshPending = false;
 
@@ -166,7 +171,7 @@ define(["require",
             // Note: the when and done arguments are position senstive (thus the numbering)
             $.when(d1, d2).done(function (v1, v2) {
                 // Create a weather tuple for the current applciation time
-                weatherTuple = weatherResource.makeTuple(self.getForecastAt(model.applicationTime));
+                weatherTuple = weatherResource.makeTuple(self.getForecastAtTime(model.applicationTime));
 
                 // Compute fire behavior
                 surfaceFireResource.surfaceFire(
