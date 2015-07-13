@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, $*/
 
 define(["require",
     'wmt/model/FuelModelCatalog',
@@ -36,6 +36,7 @@ define(["require",
     'wmt/util/Log',
     'wmt/view/LookoutViewer',
     'wmt/util/Messenger',
+    'wmt/resource/SolarResource',
     'wmt/resource/SurfaceFireResource',
     'wmt/resource/SurfaceFuelResource',
     'wmt/globe/Terrain',
@@ -51,6 +52,7 @@ define(["require",
         log,
         lookoutViewer,
         messenger,
+        solarResource,
         surfaceFireResource,
         surfaceFuelResource,
         Terrain,
@@ -75,10 +77,10 @@ define(["require",
             var arg = params || {},
                 self = this,
                 model = require("wmt/controller/Controller").model;
-            
+
             // Inherit the weather forecasting capabilites of the WeatherScout
             WeatherScout.call(this, arg.name, 24, null, arg.latitude, arg.longitude, arg.id);
-            
+
             /**
              * Override the WeatherScout name set by the parent
              */
@@ -96,8 +98,9 @@ define(["require",
             this.fuelModelNo = arg.fuelModelNo || wmt.configuration.defaultFuelModelNo;
             this.moistureScenarioName = arg.moistureScenarioName || wmt.configuration.defaultFuelMoistureScenario;
             this.isMovable = arg.isMovable === undefined ? true : arg.isMovable;
-            
+
             // Dynamic properties
+            this.sunlight = model.sunlight;
             this.terrain = Terrain.ZERO;
             this.terrainTuple = terrainResource.makeTuple(0, 0, 0);
             this.surfaceFuel = null;
@@ -114,7 +117,7 @@ define(["require",
 
         Object.defineProperties(FireLookout.prototype, {
             /**
-             * Sets the fuel model.
+             * The fuel model number determines the fuel model object.
              */
             fuelModelNo: {
                 get: function () {
@@ -125,7 +128,7 @@ define(["require",
                 }
             },
             /**
-             * Sets the fuel moisture
+             * The fuel moisture scenario determines the fuel moisture object.
              */
             moistureScenarioName: {
                 get: function () {
@@ -161,6 +164,7 @@ define(["require",
                 globe = model.globe,
                 d1 = $.Deferred(),
                 d2 = $.Deferred(),
+                d3 = $.Deferred(),
                 weatherTuple;
 
             // Refresh Terrain
@@ -169,9 +173,11 @@ define(["require",
 
             // Wait for async fuel and weather updates to finish before computing fire behavior
             // Note: the when and done arguments are position senstive (thus the numbering)
-            $.when(d1, d2).done(function (v1, v2) {
+            $.when(d1, d2, d3).done(function (v1, v2, v3) {
+                
                 // Create a weather tuple for the current applciation time
-                weatherTuple = weatherResource.makeTuple(self.getForecastAtTime(model.applicationTime));
+                self.activeWeather = self.getForecastAtTime(model.applicationTime);
+                weatherTuple = weatherResource.makeTuple(self.activeWeather);
 
                 // Compute fire behavior
                 surfaceFireResource.surfaceFire(
@@ -192,11 +198,31 @@ define(["require",
                 );
             });
             // Coordinated refresh of wx and fuel
-            this.refreshForecast(d1);
-            this.refreshSurfaceFuel(d2);
+            this.refreshSunlight(d1);
+            this.refreshForecast(d2);
+            this.refreshSurfaceFuel(d3);
         };
 
 
+        /**
+         * Retrieves a Sunlight object from the REST service. Resolves the given
+         * Deferred object with this object's sunlight property.
+         * @param {$.Deferred} deferred Deferred object that resolves when the query and processing are complete.
+         */
+        FireLookout.prototype.refreshSunlight = function (deferred) {
+            var self = this,
+                model = require("wmt/controller/Controller").model;
+            
+            // Get the sunlight at this time and location
+            solarResource.sunlightAtLatLonTime(this.latitude, this.longitude, model.applicationTime,
+                function (json) { // Callback to process JSON result
+                    self.sunlight = json;
+                    if (deferred) {
+                        deferred.resolve(self.sunlight);
+                    }
+                });
+
+        };
         /**
          * Retrieves a SurfaceFuel object from the REST service. Resolves the given
          * Deferred object with this object's surfaceFuel property.

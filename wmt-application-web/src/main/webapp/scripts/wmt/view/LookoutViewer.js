@@ -181,16 +181,22 @@ define([
                     context.drawImage(imgRose, 0, 0, WIDTH, HEIGHT);
                 };
                 imgPreheat.onload = function () {
+                    context.save();
+                    self.rotateAbout(context, lookout.sunlight.azimuthAngle.value - 180, 150, 150);
                     context.drawImage(imgPreheat, 0, 0, WIDTH, HEIGHT);
+                    context.restore();
                 };
                 imgSlope.onload = function () {
                     context.save();
-                    self.rotateAbout(context, lookout.terrain.aspect, 150, 150);
+                    self.rotateAbout(context, lookout.terrain.aspect - 180, 150, 150);
                     context.drawImage(imgSlope, 0, 0, WIDTH, HEIGHT);
                     context.restore();
                 };
                 imgWind.onload = function () {
+                    context.save();
+                    self.rotateAbout(context, lookout.activeWeather.windDirectionDeg - 180, 150, 150);
                     context.drawImage(imgWind, 0, 0, WIDTH, HEIGHT);
+                    context.restore();
                 };
                 imgRose.src = wmt.IMAGE_PATH + 'location-widget_compass-rose.svg';          // Set the image -- which fires the onload event
                 imgPreheat.src = wmt.IMAGE_PATH + 'cps-force_solar.svg';          // Set the image -- which fires the onload event
