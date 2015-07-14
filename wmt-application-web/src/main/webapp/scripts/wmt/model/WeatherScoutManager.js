@@ -63,7 +63,7 @@ define([
 
             // Notify views of the new wx scount
             this.fire(wmt.EVENT_WEATHER_SCOUT_ADDED, scout);
-            
+
             // Do a refresh now that view are attached, so they can get the notifications as they occur
             scout.refresh();
         };
@@ -110,7 +110,18 @@ define([
             }
             return false;
         };
+        
+        /**
+         * Invokes refresh on all the scouts managed by this manager.
+         */
+        WeatherScoutManager.prototype.refreshScouts = function () {
+            var i, max;
 
+            for (i = 0, max = this.scouts.length; i < max; i++) {
+                this.scouts[i].refresh();
+            }
+        };
+        
         /**
          * Saves the weather scouts collection to local storage.
          */
