@@ -182,14 +182,16 @@ define([
                 //return "Close WMT?";
                 return null;
             };
-            
+
             // Now that MVC is set up, restore the model from the previous session.
             // But wait for the globe (specically the elevation model) to finish 
             // loading before adding placemarks, else the terrain data will be
             // inaccurate.
             if (Pace.running) {
                 Pace.on("done", function () {
-                    controller.restoreSession();
+                    setTimeout(function () {
+                        controller.restoreSession();
+                    }, 0);
                 });
             } else {
                 controller.restoreSession();
