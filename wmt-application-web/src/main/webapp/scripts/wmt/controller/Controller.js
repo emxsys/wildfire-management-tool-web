@@ -236,21 +236,34 @@ define([
             getTargetTerrain: function () {
                 return this.model.viewpoint.target;
             },
+            /**
+             * Restores all the persistant data from a previous session.
+             * This method must be called after World Wind has finished 
+             * updating. See the use Pace.on("done",...) in WmtClient.
+             */
             restoreSession: function () {
                 this.model.markerManager.restoreMarkers();
                 this.model.weatherScoutManager.restoreScouts();
                 this.model.fireLookoutManager.restoreLookouts();
                 this.restoreSessionView();
+                // Update all time sensitive objects
+                this.changeDateTime(new Date());
             },
+            // Internal method
             restoreSessionView: function () {
                 Settings.restoreSessionSettings(this);
             },
+            /**
+             * Saves the current session to the persistent store.
+             * See the call to window.onUnload(...) in WmtClient.
+             */
             saveSession: function () {
                 this.saveSessionView();
                 this.model.markerManager.saveMarkers();
                 this.model.weatherScoutManager.saveScouts();
                 this.model.fireLookoutManager.saveLookouts();
             },
+            // Internal method.
             saveSessionView: function () {
                 Settings.saveSessionSettings(this);
             },
