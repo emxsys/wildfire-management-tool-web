@@ -207,6 +207,10 @@ public class BasicSunlight implements Sunlight {
     public String getObserverTime() {
         return dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
     }
+    public void setObserverTime(ZonedDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
 
     /**
      * Gets the location from where the sunlight is calculated.
@@ -215,6 +219,9 @@ public class BasicSunlight implements Sunlight {
     @Override
     public Coord3D getLocation() {
         return location;
+    }
+    public void setLocation(Coord3D location) {
+        this.location = location;
     }
 
     @XmlElement
@@ -256,6 +263,10 @@ public class BasicSunlight implements Sunlight {
     public Real getSubsolarLatitude() {
         return this.subsolarLatitude;
     }
+    public void setSubsolarLatitude(Real subsolarLatitude) {
+        this.subsolarLatitude = subsolarLatitude;
+    }
+
 
     /**
      * Gets the subsolar longitude: the earth longitude for where the sun is overhead at a given
@@ -268,6 +279,10 @@ public class BasicSunlight implements Sunlight {
     public Real getSubsolarLongitude() {
         return this.subsolarLongitude;
     }
+    public void setSubsolarLongitude(Real subsolarLongitude) {
+        this.subsolarLongitude = subsolarLongitude;
+    }
+
 
     @Override
     @XmlElement
@@ -275,6 +290,10 @@ public class BasicSunlight implements Sunlight {
     public Real getAzimuthAngle() {
         return this.azimuthAngle;
     }
+    public void setAzimuthAngle(Real azimuthAngle) {
+        this.azimuthAngle = azimuthAngle;
+    }
+
 
     /**
      * Gets the solar zenith angle: where is sun relative to the observer's zenith.
@@ -285,6 +304,9 @@ public class BasicSunlight implements Sunlight {
     @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getZenithAngle() {
         return this.zenithAngle;
+    }
+    public void setZenithAngle(Real zenithAngle) {
+        this.zenithAngle = zenithAngle;
     }
 
     /**
@@ -297,6 +319,9 @@ public class BasicSunlight implements Sunlight {
     public Real getAltitudeAngle() {
         return this.altitudeAngle;
     }
+    public void setAltitudeAngle(Real altitudeAngle) {
+        this.altitudeAngle = altitudeAngle;
+    }
 
     /**
      * Gets the local hour angle relative to the observer.
@@ -307,6 +332,9 @@ public class BasicSunlight implements Sunlight {
     @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getLocalHourAngle() {
         return this.localHourAngle;
+    }
+    public void setLocalHourAngle(Real localHourAngle) {
+        this.localHourAngle = localHourAngle;
     }
 
     /**
@@ -319,6 +347,9 @@ public class BasicSunlight implements Sunlight {
     public Real getSunriseHourAngle() {
         return this.sunriseHourAngle;
     }
+    public void setSunriseHourAngle(Real sunriseHourAngle) {
+        this.sunriseHourAngle = sunriseHourAngle;
+    }
 
     /**
      * Gets the solar hour angle for sunset.
@@ -330,6 +361,11 @@ public class BasicSunlight implements Sunlight {
     public Real getSunsetHourAngle() {
         return this.sunsetHourAngle;
     }
+    public void setSunsetHourAngle(Real sunsetHourAngle) {
+        this.sunsetHourAngle = sunsetHourAngle;
+    }
+
+
 
     /**
      * Gets the local time of sunrise.
@@ -339,6 +375,10 @@ public class BasicSunlight implements Sunlight {
     public Real getSunriseHour() {
         return this.sunriseHour;
     }
+    public void setSunriseHour(Real sunriseHour) {
+        this.sunriseHour = sunriseHour;
+    }
+
 
     /**
      * Gets the local time of sunset.
@@ -348,6 +388,10 @@ public class BasicSunlight implements Sunlight {
     public Real getSunsetHour() {
         return this.sunsetHour;
     }
+    public void setSunsetHour(Real sunsetHour) {
+        this.sunsetHour = sunsetHour;
+    }
+
 
     /**
      * Gets the local sun transit time (or solar noon).
@@ -357,6 +401,10 @@ public class BasicSunlight implements Sunlight {
     public Real getSunTransitHour() {
         return this.sunTransitHour;
     }
+    public void setSunTransitHour(Real sunTransitHour) {
+        this.sunTransitHour = sunTransitHour;
+    }
+
 
     /**
      * Gets the time zone offset.
@@ -366,6 +414,10 @@ public class BasicSunlight implements Sunlight {
     public Real getZoneOffsetHour() {
         return this.zoneOffsetHour;
     }
+    public void setZoneOffsetHour(Real zoneOffsetHour) {
+        this.zoneOffsetHour = zoneOffsetHour;
+    }
+
 
     /**
      * Gets the local time of sunrise.
