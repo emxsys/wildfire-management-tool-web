@@ -29,6 +29,9 @@
  */
 package com.emxsys.wmt.web;
 
+import com.emxsys.gis.api.BasicTerrain;
+import com.emxsys.solar.api.BasicSunlight;
+import com.emxsys.weather.api.BasicWeather;
 import com.emxsys.wildfire.api.BasicFuelModel;
 import com.emxsys.wildfire.api.BasicFuelMoisture;
 import com.emxsys.wildfire.behavior.SurfaceFuel;
@@ -49,6 +52,7 @@ import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+
 /**
  * Surface Fuel REST Web Service.
  *
@@ -68,11 +72,9 @@ public class SurfaceFuelResource {
     }
 
     /**
-     * Retrieves representation of an instance of
-     * com.emxsys.wildfire.behavior.SurfaceFuel
+     * Retrieves representation of an instance of com.emxsys.wildfire.behavior.SurfaceFuel
      *
-     * @param mimeType Optional. A specified mime-type overrides the Accepts
-     * header.
+     * @param mimeType Optional. A specified mime-type overrides the Accepts header.
      * @param fuelModel An XML or JSON FuelModel representation.
      * @param fuelMoisture An XML or JSON FuelMoisture representation.
      * @return A Response containing a SurfaceFuel entity.
@@ -81,37 +83,89 @@ public class SurfaceFuelResource {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createSurfaceFuel(
-            @DefaultValue("") @FormDataParam("mime-type") String mimeType,
-            @FormDataParam("fuelModel") BasicFuelModel fuelModel,
-            @FormDataParam("fuelMoisture") BasicFuelMoisture fuelMoisture) {
+        @DefaultValue("") @FormDataParam("mime-type") String mimeType,
+        @FormDataParam("fuelModel") BasicFuelModel fuelModel,
+        @FormDataParam("fuelMoisture") BasicFuelMoisture fuelMoisture) {
 
         // Preconditions
         if (fuelModel == null || fuelMoisture == null) {
             throw new WebApplicationException(
-                    Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity(fuelModel == null ? "BasicFuelModel is null" : "BasicFuelMoisture is null")
-                    .type(MediaType.TEXT_PLAIN_TYPE)
-                    .build());
+                Response.status(Response.Status.PRECONDITION_FAILED)
+                .entity(fuelModel == null ? "BasicFuelModel is null" : "BasicFuelMoisture is null")
+                .type(MediaType.TEXT_PLAIN_TYPE)
+                .build());
         }
         // Dermine representation
         MediaType mediaType = WebUtil.getPermittedMediaType(mimeType,
-                permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
+            permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
 
         // Create the resource
         SurfaceFuel fuel = fuelProvider.getSurfaceFuel(fuelModel, fuelMoisture);
         if (fuel == null) {
             throw new WebApplicationException(
-                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("SurfaceFuelProvider failed to create a SurfaceFuel object")
-                    .type(MediaType.TEXT_PLAIN_TYPE)
-                    .build());
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("SurfaceFuelProvider failed to create a SurfaceFuel object")
+                .type(MediaType.TEXT_PLAIN_TYPE)
+                .build());
         }
 
         // Return the representation
         return Response.ok(
-                mediaType.equals(TEXT_PLAIN_TYPE) ? fuel.toString() : fuel,
-                mediaType).build();
+            mediaType.equals(TEXT_PLAIN_TYPE) ? fuel.toString() : fuel,
+            mediaType).build();
     }
 
-    
+    /**
+     * Retrieves representation of an instance of com.emxsys.wildfire.behavior.SurfaceFuel
+     *
+     * @param mimeType Optional. A specified mime-type overrides the Accepts header.
+     * @param fuelModel An XML or JSON FuelModel representation.
+     * @param sunlight
+     * @param weather
+     * @param terrain
+     * @param shaded
+     * @param initialFuelMoisture An XML or JSON FuelMoisture representation.
+     * @return A Response containing a conditioned SurfaceFuel entity.
+     */
+    @POST
+    @Path("/conditioned")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response createSurfaceFuelConditioned(
+        @DefaultValue("") @FormDataParam("mime-type") String mimeType,
+        @FormDataParam("fuelModel") BasicFuelModel fuelModel,
+        @FormDataParam("sunlight") BasicSunlight sunlight,
+        @FormDataParam("weather") BasicWeather weather,
+        @FormDataParam("terrain") BasicTerrain terrain,
+        @FormDataParam("shaded") boolean shaded,
+        @FormDataParam("initialFuelMoisture") BasicFuelMoisture initialFuelMoisture) {
+
+        // Preconditions
+        if (fuelModel == null || initialFuelMoisture == null) {
+            throw new WebApplicationException(
+                Response.status(Response.Status.PRECONDITION_FAILED)
+                .entity(fuelModel == null ? "BasicFuelModel is null" : "BasicFuelMoisture is null")
+                .type(MediaType.TEXT_PLAIN_TYPE)
+                .build());
+        }
+        // Dermine representation
+        MediaType mediaType = WebUtil.getPermittedMediaType(mimeType,
+            permittedTypes, headers, MediaType.TEXT_PLAIN_TYPE);
+
+        // Create the resource
+        SurfaceFuel fuel = fuelProvider.getSurfaceFuel(fuelModel, sunlight, weather, terrain, shaded, initialFuelMoisture);
+        if (fuel == null) {
+            throw new WebApplicationException(
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("SurfaceFuelProvider failed to create a SurfaceFuel object")
+                .type(MediaType.TEXT_PLAIN_TYPE)
+                .build());
+        }
+
+        // Return the representation
+        return Response.ok(
+            mediaType.equals(TEXT_PLAIN_TYPE) ? fuel.toString() : fuel,
+            mediaType).build();
+    }
+
 }
