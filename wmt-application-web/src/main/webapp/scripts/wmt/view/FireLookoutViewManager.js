@@ -87,18 +87,6 @@ define([
                 // Initially show the Lookouts tab
                 $('#fireLookoutsBody').collapse('show');
                 
-                this.loadExistingFireLookouts();
-            },
-            /**
-             * Load lookouts from persistant storage
-             */
-            loadExistingFireLookouts: function () {
-                var lookouts = this.manager.lookouts,
-                    i, max;
-                // Invoke our add event handler for each lookout
-                for (i = 0, max = lookouts.length; i < max; i++) {
-                    this.handleFireLookoutAddedEvent(lookouts[i]);
-                }
             },
             /**
              * Creates a renderable and UI representatiions for the given lookout object
