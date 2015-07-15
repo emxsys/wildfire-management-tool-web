@@ -97,7 +97,7 @@ define([
                 imgName = 'sky_cover-' + Math.round(8 * (skyCoverPct / 100)) + '.8.svg';
             }
             else {
-                imgName = 'sky_cover-obscurred.svg';
+                imgName = 'sky_cover-obscured.svg';
             }
             // Fire the onload event
             img.src = wmt.IMAGE_PATH + 'weather/' + imgName;
