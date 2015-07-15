@@ -39,7 +39,7 @@
  * @param {LayerMenu} LayerMenu Shows the layer list sidebar.
  * @param {MarkerView} MarkerView Shows the marker list sidebar.
  * @param {SearchBox} SearchBox Shows the search box in the nav bar
- * @param {WeatherView} weatherView Shows the weather scouts.
+ * @param {WeatherScoutViewManager} weatherScoutViewManager Shows the weather scouts.
  * @returns {MainMenu}
  * 
  * @author Bruce Schubert
@@ -58,7 +58,7 @@ define([
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
     'wmt/view/TimeView',
-    'wmt/view/WeatherView'],
+    'wmt/view/WeatherScoutViewManager'],
     function (
         aboutBox,
         controller,
@@ -72,7 +72,7 @@ define([
         MarkerView,
         SearchBox,
         timeView,
-        weatherView) {
+        weatherScoutViewManager) {
         "use strict";
         var MainMenu = {
             /**
@@ -159,7 +159,7 @@ define([
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();                   
                     fireLookoutViewManager.initialize();
-                    weatherView.initialize();
+                    weatherScoutViewManager.initialize();
 
                     // Screen Widgets
                     dateTimeControls.initialize();
