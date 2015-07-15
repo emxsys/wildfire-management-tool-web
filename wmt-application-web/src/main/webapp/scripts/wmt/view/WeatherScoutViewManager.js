@@ -32,7 +32,7 @@
 
 
 /**
- * The WeatherView module is responsible for rendering Weather Scouts and Weather Stations
+ * The WeatherScoutViewManager module is responsible for rendering Weather Scouts and Weather Stations
  * on the globe and within lists in a panel.
  * 
  * @param {Controller} controller MVC.
@@ -40,7 +40,7 @@
  * @param {WeatherScout} WeatherScout
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
- * @returns {WeatherView}
+ * @returns {WeatherScoutViewManager}
  * 
  * @author Bruce Schubert
  */
@@ -61,7 +61,14 @@ define([
         wmt,
         ww) {
         "use strict";
-        var WeatherView = {
+        /**
+         * 
+         * @type type
+         */
+        var WeatherScoutViewManager = {
+            /**
+             * Initilizes the event handlers. Called once during the application startup.
+             */
             initialize: function () {
 
                 this.manager = controller.model.weatherScoutManager;
@@ -72,7 +79,7 @@ define([
                 this.weatherLayer = controller.globe.findLayer(wmt.WEATHER_LAYER_NAME);
                 if (!this.weatherLayer) {
                     throw new Error(
-                        log.error("WeatherView", "constructor",
+                        log.error("WeatherScoutViewManager", "constructor",
                             "Could not find a Layer named " + wmt.WEATHER_LAYER_NAME));
                 }
 
@@ -84,18 +91,6 @@ define([
                 // Initially show the Scouts tab
                 $('#weatherScoutsBody').collapse('show');
                 
-                this.loadExistingWeatherScouts();
-            },
-            /**
-             * Load scouts from persistant storage
-             */
-            loadExistingWeatherScouts: function () {
-                var scouts = this.manager.scouts,
-                    i, max;
-                // Invoke our add event handler for each scout
-                for (i = 0, max = scouts.length; i < max; i++) {
-                    this.handleWeatherScoutAddedEvent(scouts[i]);
-                }
             },
             /**
              * Creates a renderable and UI representatiions for the given scout object
@@ -112,7 +107,7 @@ define([
                     this.synchronizeWeatherList();
                 }
                 catch (e) {
-                    log.error("WeatherView", "handleWeatherAddedEvent", e.toString());
+                    log.error("WeatherScoutViewManager", "handleWeatherAddedEvent", e.toString());
                 }
             },
             /**
@@ -137,7 +132,7 @@ define([
                     this.synchronizeWeatherList();
                 }
                 catch (e) {
-                    log.error("WeatherView", "handleWeatherRemovedEvent", e.toString());
+                    log.error("WeatherScoutViewManager", "handleWeatherRemovedEvent", e.toString());
                 }
             },
             /**
@@ -190,7 +185,7 @@ define([
                 var scout = this.manager.findScout(scoutId);
 
                 if (!scout) {
-                    messenger.notify(log.error("WeatherView", "onWeatherItemClick", "Could not find selected scout with ID: " + scoutId));
+                    messenger.notify(log.error("WeatherScoutViewManager", "onWeatherItemClick", "Could not find selected scout with ID: " + scoutId));
                     return;
                 }
                 switch (action) {
@@ -204,11 +199,11 @@ define([
                         scout.remove();
                         break;
                     default:
-                        log.error("WeatherView", "onWeatherItemClick", "Unhandled action: " + action);
+                        log.error("WeatherScoutViewManager", "onWeatherItemClick", "Unhandled action: " + action);
                 }
             }
         };
 
-        return WeatherView;
+        return WeatherScoutViewManager;
     }
 );
