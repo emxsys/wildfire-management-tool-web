@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define, WorldWind*/
+/*global define, WorldWind, Pace*/
 
 /**
  * WMT Client Application.
@@ -55,6 +55,7 @@ define([
         mobileMenu) {
         "use strict";
         var WmtClient = function () {
+
 
             // Create the primary globe
             this.globe = new Globe("canvasOne");
@@ -163,17 +164,17 @@ define([
 
             //initialize the hold events for the globe scout and lookout buttons
             $('#globeCreateFireLookout').on('taphold', function () {
-                mobileFireLookouts.open();              
+                mobileFireLookouts.open();
             });
             $('#globeCreateWeatherScout').on('taphold', function () {
                 mobileWeatherScouts.open();
             });
-            
+
             // needed delegate event handling for these buttons
-            $('#allMarkersList').on('click','button.mkr-goto', function(){
-                mobileMarkers.close();                
+            $('#allMarkersList').on('click', 'button.mkr-goto', function () {
+                mobileMarkers.close();
             });
-            
+
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {
                 controller.saveSession();
@@ -183,7 +184,18 @@ define([
             };
 
             // Now that MVC is set up, restore the model from the previous session.
-            controller.restoreSession();
+            // But wait for the globe (specically the elevation model) to finish 
+            // loading before adding placemarks, else the terrain data will be
+            // inaccurate.
+            if (Pace.running) {
+                Pace.on("done", function () {
+                    setTimeout(function () {
+                        controller.restoreSession();
+                    }, 0);
+                });
+            } else {
+                controller.restoreSession();
+            }
 
         };
 

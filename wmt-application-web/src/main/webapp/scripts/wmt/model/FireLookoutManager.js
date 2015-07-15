@@ -102,6 +102,18 @@ define([
             }
             return false;
         };
+        
+        /**
+         * Invokes refresh on all the lookouts managed by this manager.
+         */
+        FireLookoutManager.prototype.refreshLookouts = function () {
+            var i, max;
+
+            for (i = 0, max = this.lookouts.length; i < max; i++) {
+                this.lookouts[i].refresh();
+            }
+        };
+        
         /**
          * Saves the fire lookouts collection to local storage.
          */
