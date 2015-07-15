@@ -27,47 +27,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.emxsys.wmt.web;
 
-import java.util.Set;
-import javax.ws.rs.core.Application;
+import com.emxsys.solar.api.BasicSunlight;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+
+
 /**
+ * Custom message body reader that can handle JSON and XML types as well as JSON objects passed as
+ * "text/plain" in a multipart/form-data post.
  *
  * @author Bruce Schubert
- * @version $Id$
  */
-@javax.ws.rs.ApplicationPath("rs")
-public class ApplicationConfig extends Application {
-
+@Provider
+public class SunlightMessageBodyReader extends BasicMessageBodyReader<BasicSunlight> {
     @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> resources = new java.util.HashSet<>();
-        addRestResourceClasses(resources);        
-        return resources;
-    }
-
-    /**
-     * Do not modify addRestResourceClasses() method.
-     * It is automatically populated with
-     * all resources defined in the project.
-     * If required, comment out calling this method in getClasses().
-     */
-    private void addRestResourceClasses(
-                                        Set<Class<?>> resources) {
-        resources.add(com.emxsys.wmt.web.FuelModelMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.FuelModelsResource.class);
-        resources.add(com.emxsys.wmt.web.FuelMoistureMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.FuelMoistureResource.class);
-        resources.add(com.emxsys.wmt.web.SunlightMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.SunlightResource.class);
-        resources.add(com.emxsys.wmt.web.SurfaceFireResource.class);
-        resources.add(com.emxsys.wmt.web.SurfaceFuelMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.SurfaceFuelResource.class);
-        resources.add(com.emxsys.wmt.web.TerrainMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.TerrainResource.class);
-        resources.add(com.emxsys.wmt.web.WeatherMessageBodyReader.class);
-        resources.add(com.emxsys.wmt.web.WeatherResource.class);
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
+                              MediaType mediaType) {
+        return type == BasicSunlight.class;
     }
 
 }
