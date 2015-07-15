@@ -32,6 +32,8 @@
 
 /**
  * The WeatherMapSymbol module renders a composite WorldWind.Renderable representing a weather station.
+ * A WeatherMapSymbol object is a "view" of a WeatherScout "model" object.
+ * 
  * @param {type} AirTemperature
  * @param {type} controller
  * @param {type} ForecastTime
@@ -64,31 +66,36 @@ define([
         ww) {
         "use strict";
 
-        var WeatherMapSymbol = function (wxModel) {
+        var WeatherMapSymbol = function (wxScout) {
 
             // Inherit Renderable properties
             WorldWind.Renderable.call(this);
-            
+
+            var self = this,
+                wx, i, max,
+                timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
+
             // Maintain a reference to the weather object this symbol represents
-            this.wxModel = wxModel;
-            
-            // Create the weather map symbol components
-            this.skyCover = new SkyCover(wxModel.latitude, wxModel.longitude);
-            this.windBarb = new WindBarb(wxModel.latitude, wxModel.longitude);
-            this.airTemperature = new AirTemperature(wxModel.latitude, wxModel.longitude, 'F');
-            this.relHumidity = new RelativeHumidity(wxModel.latitude, wxModel.longitude, '%');
-            this.forecastTime = new ForecastTime(wxModel.latitude, wxModel.longitude, ' ');
+            this.wxScout = wxScout;
+
+            // Create the composite weather map symbol components
+            this.skyCover = new SkyCover(wxScout.latitude, wxScout.longitude);
+            this.windBarb = new WindBarb(wxScout.latitude, wxScout.longitude);
+            this.airTemperature = new AirTemperature(wxScout.latitude, wxScout.longitude, 'F');
+            this.relHumidity = new RelativeHumidity(wxScout.latitude, wxScout.longitude, '%');
+            this.forecastTime = new ForecastTime(wxScout.latitude, wxScout.longitude, ' ');
 
             // Add a reference to our wx model object to the principle renderables.
-            // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
-            this.skyCover.pickDelegate = wxModel;
-            this.windBarb.pickDelegate = wxModel;
-            this.airTemperature.pickDelegate = wxModel;
-            this.relHumidity.pickDelegate = wxModel;
-            this.forecastTime.pickDelegate = wxModel;
-            
-            // EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
-            var self = this;
+            // The "movable" wxScoute will generate EVENT_OBJECT_MOVED events. 
+            // See the SelectController.
+            this.skyCover.pickDelegate = wxScout;
+            this.windBarb.pickDelegate = wxScout;
+            this.airTemperature.pickDelegate = wxScout;
+            this.relHumidity.pickDelegate = wxScout;
+            this.forecastTime.pickDelegate = wxScout;
+
+
+            // EVENT_OBJECT_MOVED handler that synchronizes the composite renderables with the model's location
             this.handleObjectMovedEvent = function (wxModel) {
                 self.skyCover.position.latitude = wxModel.latitude;
                 self.skyCover.position.longitude = wxModel.longitude;
@@ -101,11 +108,10 @@ define([
                 self.forecastTime.position.latitude = wxModel.latitude;
                 self.forecastTime.position.longitude = wxModel.longitude;
             };
+
             // EVENT_WEATHER_CHANGED handler that updates the symbology
             this.handleWeatherChangedEvent = function (wxModel) {
-                var wx = wxModel.getFirstForecast(),
-                    timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
-
+                wx = wxModel.getFirstForecast();
                 // Update the values
                 self.skyCover.updateSkyCoverImage(wx.skyCoverPct);
                 self.windBarb.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
@@ -113,24 +119,24 @@ define([
                 self.relHumidity.text = wx.relaltiveHumidityPct + '%';
                 self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
             };
+
             // EVENT_PLACE_CHANGED handler that updates the label
-            this.handlePlaceChangedEvent = function (wxModel) {
+            this.handlePlaceChangedEvent = function (wxScout) {
                 // Display the place name
-                if (wxModel.place) {
+                if (wxScout.place) {
                     // Use the first place name (ordered by granularity) that's not a zip code
-                    for (var i = 0, max = wxModel.place.length; i < max; i++) {
-                        if (wxModel.place[i].type !== "Zip Code") {
-                            self.skyCover.label = wxModel.place[i].name;
+                    for (i = 0, max = wxScout.place.length; i < max; i++) {
+                        if (wxScout.place[i].type !== "Zip Code") {
+                            self.skyCover.label = wxScout.place[i].name;
                             return;
                         }
                     }
                 }
             };
-            //EVENT_TIME_CHANGED handler that updates the label
-            this.handleTimeChangedEvent = function (time) {
-                var wx = this.wxModel.getForecastAtTime(time),
-                    timeOptions = {"hour": "2-digit", "minute": "2-digit", "timeZoneName": "short"};
 
+            //EVENT_TIME_CHANGED handler that updates the label and symbology
+            this.handleTimeChangedEvent = function (time) {
+                wx = self.wxScout.getForecastAtTime(time);
                 // Update the values
                 self.skyCover.updateSkyCoverImage(wx.skyCoverPct);
                 self.windBarb.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
@@ -138,12 +144,11 @@ define([
                 self.relHumidity.text = wx.relaltiveHumidityPct + '%';
                 self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
             };
-            
-            // Establish the Publisher/Subscriber relationship between this symbol and the wx model
-            wxModel.on(wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
-            wxModel.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
-            wxModel.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
-            
+
+            // Establish the Publisher/Subscriber relationship between this symbol and the wx scout
+            wxScout.on(wmt.EVENT_OBJECT_MOVED, this.handleObjectMovedEvent, this);
+            wxScout.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
+            wxScout.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
 
         };
