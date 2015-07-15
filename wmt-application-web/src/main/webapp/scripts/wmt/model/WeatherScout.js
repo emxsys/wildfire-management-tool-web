@@ -110,7 +110,7 @@ define([
             this.on(wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
 
         };
-        
+
         /**
          * Invalid Weather object
          */
@@ -255,6 +255,7 @@ define([
                 this.duration,
                 function (json) { // Callback to process JSON result
                     self.processForecast(json);
+                    log.info('WeatherScout', 'refreshForecast', self.name + ': EVENT_WEATHER_CHANGED');
                     self.fire(wmt.EVENT_WEATHER_CHANGED, self);
                     if (deferred) {
                         deferred.resolve(self);
@@ -300,6 +301,7 @@ define([
                             break;
                         }
                     }
+                    log.info('WeatherScout', 'refreshPlace', self.name + ': EVENT_PLACE_CHANGED');
                     self.fire(wmt.EVENT_PLACE_CHANGED, self);
                 }
             );
