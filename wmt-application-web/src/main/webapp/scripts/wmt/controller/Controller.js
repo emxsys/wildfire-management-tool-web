@@ -242,6 +242,7 @@ define([
              * updating. See the use Pace.on("done",...) in WmtClient.
              */
             restoreSession: function () {
+                log.info('Controller','restoreSession','Restoring the model and view.');
                 this.model.markerManager.restoreMarkers();
                 this.model.weatherScoutManager.restoreScouts();
                 this.model.fireLookoutManager.restoreLookouts();
@@ -258,6 +259,7 @@ define([
              * See the call to window.onUnload(...) in WmtClient.
              */
             saveSession: function () {
+                log.info('Controller','saveSession','Saving the model and view.');
                 this.saveSessionView();
                 this.model.markerManager.saveMarkers();
                 this.model.weatherScoutManager.saveScouts();
