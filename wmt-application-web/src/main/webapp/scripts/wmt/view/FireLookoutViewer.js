@@ -53,9 +53,9 @@ define([
         /**
          * @constructor
          * @param {FireLookout} lookout The lookout to be displayed
-         * @returns {LookoutViewer}
+         * @returns {FireLookoutViewer}
          */
-        var LookoutViewer = {
+        var FireLookoutViewer = {
             /**
              * Shows the FireLookout viewer/editor.
              * @param {FireLookout} lookout The lookout to be viewed or edited.
@@ -269,6 +269,6 @@ define([
             }
 
         };
-        return LookoutViewer;
+        return FireLookoutViewer;
     }
 );

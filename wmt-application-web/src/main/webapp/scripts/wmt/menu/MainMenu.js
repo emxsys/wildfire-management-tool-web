@@ -50,9 +50,9 @@ define([
     'wmt/controller/Controller',
     'wmt/menu/ControlPanel',
     'wmt/menu/DateTimeControls',
+    'wmt/view/FireLookoutViewer',
     'wmt/view/FuelModelCatalogViewer',
-    'wmt/view/LookoutViewer',
-    'wmt/view/LookoutViewManager',
+    'wmt/view/FireLookoutViewManager',
     'wmt/menu/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
@@ -64,9 +64,9 @@ define([
         controller,
         ControlPanel,
         dateTimeControls,
+        fireLookoutViewer,
         fuelModelCatalogViewer,
-        lookoutViewer,
-        lookoutViewManager,
+        fireLookoutViewManager,
         LayerMenu,
         locationView,
         MarkerView,
@@ -158,7 +158,7 @@ define([
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();                   
-                    lookoutViewManager.initialize();
+                    fireLookoutViewManager.initialize();
                     weatherView.initialize();
 
                     // Screen Widgets
@@ -168,7 +168,7 @@ define([
 
                     // Dialogs
                     aboutBox.initialize();
-                    lookoutViewer.initialize();
+                    fireLookoutViewer.initialize();
                     fuelModelCatalogViewer.initialize();
                 });
             },

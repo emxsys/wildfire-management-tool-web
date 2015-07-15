@@ -31,10 +31,10 @@
 /*global define, $*/
 
 define(["require",
+    'wmt/view/FireLookoutViewer',
     'wmt/model/FuelModelCatalog',
     'wmt/model/FuelMoistureCatalog',
     'wmt/util/Log',
-    'wmt/view/LookoutViewer',
     'wmt/util/Messenger',
     'wmt/resource/SolarResource',
     'wmt/resource/SurfaceFireResource',
@@ -47,10 +47,10 @@ define(["require",
     'wmt/Wmt'],
     function (
         require,
+        fireLookoutViewer,
         fuelModelCatalog,
         fuelMoistureCatalog,
         log,
-        lookoutViewer,
         messenger,
         solarResource,
         surfaceFireResource,
@@ -91,7 +91,7 @@ define(["require",
              * Override the parent WeatherScout's Openable implementation with a FireLookoutDialog
              */
             this.openMe = function () {
-                lookoutViewer.show(self);
+                fireLookoutViewer.show(self);
             };
 
             // Persistent properties
