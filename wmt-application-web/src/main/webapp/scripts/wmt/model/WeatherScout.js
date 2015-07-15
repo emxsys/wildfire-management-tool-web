@@ -110,7 +110,31 @@ define([
             this.on(wmt.EVENT_OBJECT_MOVE_FINISHED, this.refresh);
 
         };
+        
+        /**
+         * Invalid Weather object
+         */
+        WeatherScout.INVALID_WX = {
+            time: new Date(0),
+            airTemperatureF: Number.NaN,
+            relaltiveHumidityPct: Number.NaN,
+            windSpeedKts: Number.NaN,
+            windDirectionDeg: Number.NaN,
+            skyCoverPct: Number.NaN
+        };
 
+        /**
+         * Gets the earlies forecast entry.
+         * @returns {Object} A fire weather object 
+         *  {
+         *      time: Date,
+         *      airTemperatureF: Number,
+         *      relaltiveHumidityPct: Number,
+         *      windSpeedKts: Number, 
+         *      windDirectionDeg: Number,
+         *      skyCoverPct: Number
+         *  }
+         */
         WeatherScout.prototype.getFirstForecast = function () {
             return this.getForecastAtTime(null);
         };
@@ -118,7 +142,7 @@ define([
         /**
          * Returns the forecast nearest the given time.
          * @param {Date} time The date/time used to select the forecast. If null, the first forecast is returned.
-         * @returns {Object} Example:
+         * @returns {Object} Fire weather forecast. Example:
          *   {
          *       time: Date,
          *       airTemperatureF: Number,
@@ -130,7 +154,8 @@ define([
          */
         WeatherScout.prototype.getForecastAtTime = function (time) {
             if (!this.temporalWx || this.temporalWx.length === 0) {
-                throw new Error(log.error('WeatherScout', 'getForecastAtTime', 'missingWeatherData'));
+                log.warning('WeatherScout', 'getForecastAtTime', 'missingWeatherData');
+                return WeatherScout.INVALID_WX;
             }
             var wxTime,
                 wxTimeNext,
