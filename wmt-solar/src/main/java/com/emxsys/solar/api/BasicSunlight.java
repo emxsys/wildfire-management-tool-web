@@ -62,10 +62,11 @@ import visad.VisADException;
  */
 @XmlRootElement(name = "sunlight")
 @XmlType(propOrder
-        = {"observerTime", "observerLatitude", "observerLongitude", "observerAltitude",
+        = {"dateTime", "location",
            "subsolarLatitude", "subsolarLongitude",
            "azimuthAngle", "altitudeAngle", "zenithAngle",
            "localHourAngle", "sunriseHourAngle", "sunsetHourAngle",
+           "sunriseHour", "sunsetHour", "sunTransitHour", "zoneOffsetHour",
            "sunriseTime", "sunsetTime", "sunTransitTime",
         })
 public class BasicSunlight implements Sunlight {
@@ -195,51 +196,26 @@ public class BasicSunlight implements Sunlight {
      * @return The sunlight observation time.
      */
     @Override
+    @XmlElement
+    @XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
     public ZonedDateTime getDateTime() {
         return dateTime;
     }
-
-    /**
-     * Gets the date/time for when the sunlight is calculated.
-     * @return Date/time as ISO DATE TIME string.
-     */
-    @XmlElement
-    public String getObserverTime() {
-        return dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
-    }
-    public void setObserverTime(ZonedDateTime dateTime) {
+    public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
-
 
     /**
      * Gets the location from where the sunlight is calculated.
      * @return The sunlight observer's location.
      */
     @Override
+    @XmlJavaTypeAdapter(Coord3DXmlAdapter.class)
     public Coord3D getLocation() {
         return location;
     }
     public void setLocation(Coord3D location) {
         this.location = location;
-    }
-
-    @XmlElement
-    @XmlJavaTypeAdapter(RealXmlAdapter.class)
-    public Real getObserverLatitude() {
-        return location.getLatitude();
-    }
-
-    @XmlElement
-    @XmlJavaTypeAdapter(RealXmlAdapter.class)
-    public Real getObserverLongitude() {
-        return location.getLongitude();
-    }
-
-    @XmlElement
-    @XmlJavaTypeAdapter(RealXmlAdapter.class)
-    public Real getObserverAltitude() {
-        return location.getAltitude();
     }
 
     /**
@@ -365,13 +341,13 @@ public class BasicSunlight implements Sunlight {
         this.sunsetHourAngle = sunsetHourAngle;
     }
 
-
-
     /**
      * Gets the local time of sunrise.
      * @return Sunrise time in the local time zone. [hours]
      */
     @Override
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getSunriseHour() {
         return this.sunriseHour;
     }
@@ -385,6 +361,8 @@ public class BasicSunlight implements Sunlight {
      * @return Sunset time in the local time zone. [hours]
      */
     @Override
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getSunsetHour() {
         return this.sunsetHour;
     }
@@ -398,6 +376,8 @@ public class BasicSunlight implements Sunlight {
      * @return The time of solar noon in local time zone. [hours]
      */
     @Override
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getSunTransitHour() {
         return this.sunTransitHour;
     }
@@ -411,6 +391,8 @@ public class BasicSunlight implements Sunlight {
      * @return The offset from UTC to local time. [hours]
      */
     @Override
+    @XmlElement
+    @XmlJavaTypeAdapter(RealXmlAdapter.class)
     public Real getZoneOffsetHour() {
         return this.zoneOffsetHour;
     }
