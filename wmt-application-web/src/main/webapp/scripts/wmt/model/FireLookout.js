@@ -102,7 +102,6 @@ define(["require",
             // Dynamic properties
             this.sunlight = model.sunlight;
             this.terrain = Terrain.ZERO;
-            this.terrainTuple = terrainResource.makeTuple(0, 0, 0);
             this.surfaceFuel = null;
 
             // Internals
@@ -161,40 +160,59 @@ define(["require",
                 return;
             }
             this.refreshInProgress = true;
-
             // Note: using require() to get around circular dependency with Controller.
             var self = this,
                 model = require("wmt/controller/Controller").model,
                 globe = model.globe,
-                d1 = $.Deferred(),
-                d2 = $.Deferred(),
-                weatherTuple;
+                deferredSunlight = $.Deferred(),
+                deferredFuel = $.Deferred(),
+                weatherTuple,
+                terrainTuple,
+                shaded = 'false';
 
+            // Create a weather tuple for the current applciation time
+            this.activeWeather = this.getForecastAtTime(model.applicationTime);
+            weatherTuple = weatherResource.makeTuple(self.activeWeather);
             // Refresh Terrain
             this.terrain = globe.getTerrainAtLatLon(this.latitude, this.longitude);
-            this.terrainTuple = terrainResource.makeTuple(this.terrain.aspect, this.terrain.slope, this.terrain.elevation);
+            terrainTuple = terrainResource.makeTuple(this.terrain.aspect, this.terrain.slope, this.terrain.elevation);
 
-            // Wait for async fuel conditioning updates to finish before computing fire behavior.
-            // When the other "refresh" methods below "resolve" their deferred objects (d1 an d2),
-            // then the .done() function will be executed, with v1 and v2 receiving the resolved 
-            // objects. Note: the "when" and "done" arguments are position senstive (thus the numbering)
-            $.when(d1, d2).done(function (v1, v2) {
-                
-                // Create a weather tuple for the current applciation time
-                self.activeWeather = self.getForecastAtTime(model.applicationTime);
-                weatherTuple = weatherResource.makeTuple(self.activeWeather);
+            // Get the sunlight at this time and place,
+            // resolving deferredSunlight when done.
+            this.refreshSunlight(deferredSunlight);
 
-                // Compute fire behavior
+            // Get conditioned fuel using current environmental values
+            // when the deferred sunlight is resolved
+            $.when(deferredSunlight).done(function (resolvedSunlight) {
+                // Get conditioned fuel at this location,
+                // resolving deferredFuel when complete
+                self.refreshSurfaceFuel(
+                    self.fuelModel,
+                    resolvedSunlight,
+                    weatherTuple,
+                    terrainTuple,
+                    shaded,
+                    self.fuelMoisture, 
+                    deferredFuel);
+            });
+            
+            // Compute the fire behaivor after the 
+            // conditioned fuel is resolved.
+            $.when(deferredFuel).done(function (resolvedFuel) {
+                // Retrieve the computed fire behavior using 
+                // conditioned fuel, weather and terrain.
                 surfaceFireResource.surfaceFire(
-                    self.surfaceFuel, weatherTuple, self.terrainTuple,
-                    function (json) { // Callback to process JSON result
+                    resolvedFuel, weatherTuple, terrainTuple,
+                    function (json) { 
+                        //Callback to process JSON result
                         //log.info('FireLookout', 'refresh-deferred', JSON.stringify(json));
                         self.surfaceFire = json;
-                        log.info('FireLookout','refreshFireBehavior',self.name + ': EVENT_FIRE_BEHAVIOR_CHANGED');
+
+                        log.info('FireLookout', 'refreshFireBehavior', self.name + ': EVENT_FIRE_BEHAVIOR_CHANGED');
                         self.fire(wmt.EVENT_FIRE_BEHAVIOR_CHANGED, self);
 
-                        // Fire off another refresh if a request was queued while
-                        // this request was being fullfilled.
+                        // Fire off another refresh if a request was queued 
+                        // while this request was being fullfilled.
                         self.refreshInProgress = false;
                         if (self.refreshPending) {
                             self.refreshPending = false;
@@ -203,23 +221,20 @@ define(["require",
                     }
                 );
             });
-            
-            // Coordinated refresh of sunlight and fuel using Deferred objects
-            this.refreshSunlight(d1);
-            this.refreshSurfaceFuel(d2);
         };
 
 
         /**
-         * Retrieves a Sunlight object from the REST service. Resolves the given
-         * Deferred object with this object's sunlight property.
+         * Retrieves a Sunlight object from the REST service. Resolves the
+         * optional Deferred object with this object's sunlight property.
+         * 
          * @param {$.Deferred} deferred Deferred object that resolves with a sunlight object 
          * when the query and processing is complete.
          */
         FireLookout.prototype.refreshSunlight = function (deferred) {
             var self = this,
                 model = require("wmt/controller/Controller").model;
-            
+
             // Get the sunlight at this time and location
             solarResource.sunlightAtLatLonTime(this.latitude, this.longitude, model.applicationTime,
                 function (json) { // Callback to process JSON result
@@ -231,32 +246,32 @@ define(["require",
 
         };
         /**
-         * Retrieves a SurfaceFuel object from the REST service. Resolves the given
+         * Retrieves a SurfaceFuel object from the REST service. Resolves the optional 
          * Deferred object with this object's surfaceFuel property.
-         * @param {$.Deferred} deferred Deferred object that resolves when the query and processing are complete.
+         * 
+         * @param {type} fuelModel
+         * @param {type} sunlight
+         * @param {type} weatherTuple
+         * @param {type} terrainTuple
+         * @param {type} shaded
+         * @param {type} fuelMoisture
+         * @param {$.Deferred} deferredFuel Deferred object that is resolved with the surface fuel 
+         * when the query and processing are complete.
          */
-        FireLookout.prototype.refreshSurfaceFuel = function (deferred) {
+        FireLookout.prototype.refreshSurfaceFuel = function (fuelModel, sunlight, weatherTuple, terrainTuple, shaded,
+            fuelMoisture, deferredFuel) {
             var self = this;
             // Get the conditioned fuel at this location
-            surfaceFuelResource.surfaceFuel(
-                this.fuelModel, this.fuelMoisture,
+            surfaceFuelResource.conditionedSurfaceFuel(
+                fuelModel, sunlight, weatherTuple, terrainTuple, shaded, fuelMoisture,
                 function (json) { // Callback to process JSON result
                     //log.info('FireLookout', 'processSurfaceFuel', JSON.stringify(json));
-                    self.processSurfaceFuel(json);
-                    if (deferred) {
-                        deferred.resolve(self.surfaceFuel);
+                    self.surfaceFuel = json;
+                    if (deferredFuel) {
+                        deferredFuel.resolve(self.surfaceFuel);
                     }
                 });
 
-        };
-
-        /**
-         * Assigns the processed JSON data to this object's surfaceFuel property.
-         * @param {JSON} json SurfaceFuel JSON object to be processed
-         */
-        FireLookout.prototype.processSurfaceFuel = function (json) {
-            //log.info('FireLookout', 'processSurfaceFuel', JSON.stringify(json));
-            this.surfaceFuel = json;
         };
 
         return FireLookout;
