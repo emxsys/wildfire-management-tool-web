@@ -12,21 +12,23 @@ For more information, see the [Wiki Home](https://bitbucket.org/emxsys/wildfire-
 ### Overview ###
 
 * Version(s): 1.0.0
-* Repository Structure
-    * wmt-application-web: WMT Web Application
-    * wmt-application-rest: WMT REST Server Application 
-        * wmt-gis: WMT GIS API module
-        * wmt-jfree: JFree Charts wrapper module
-        * wmt-libraries: Wrapper module for third party libraries
-        * wmt-solar: WMT Solar API module
-        * wmt-time: WMT Time API module
-        * wmt-utilties: WMT Utilities module
-        * wmt-visad: VisAD wrapper module
-        * wmt-weather: WMT Weather API module
-        * wmt-weather-mesowest: WMT MesoWest Weather Service Provider modulea
-        * wmt-weather-nws: WMT National Weather Service Provider module
-        * wmt-wildfire: WMT Wildfire API
-    * vpproject: Visual Paradigm UML project
+#### Repository Structure
+ Module                    | Description 
+-------------------------- | -------------------------------------------------
+***wmt-application-web***  | ***WMT Web Application***
+***wmt-application-rest*** | ***WMT REST Server Application*** 
+wmt-gis                    | WMT GIS API module [REST Server]
+wmt-jfree                  | JFree Charts wrapper module
+wmt-libraries              | Wrapper module for third party libraries [REST Server]
+wmt-solar                  | WMT Solar API module [REST Server]
+wmt-time                   | WMT Time API module [REST Server]
+wmt-utilties               | WMT Utilities module [REST Server]
+wmt-visad                  | VisAD wrapper module [REST Server]
+wmt-weather                | WMT Weather API module [REST Server]
+wmt-weather-mesowest       | WMT MesoWest Weather Service Provider module [REST Server]
+wmt-weather-nws            | WMT National Weather Service Provider module [REST Server]
+wmt-wildfire               | WMT Wildfire API [REST Server]
+vpproject                  | Visual Paradigm UML project
 
 ## How do I get set up? ##
 Refer to the following documents for insight into the structure and design of this project:
