@@ -80,8 +80,8 @@ define([
         DirOfSpread.prototype.updateDirOfSpreadImage = function (dirOfSpread) {
             var img = new Image(),
                 self = this;
-            
-            if (!dirOfSpread) {
+
+            if (dirOfSpread === null) {
                 this.enabled = false;
                 return;
             }
@@ -100,7 +100,7 @@ define([
 
                 // Rotate about the center
                 self.rotateAbout(context, ccwRadians, center, center);
-                context.drawImage(img, center/2, 0);
+                context.drawImage(img, center / 2, 0);
 
                 // Assign the loaded image to the placemark
                 self.attributes.imageSource = new WorldWind.ImageSource(canvas);

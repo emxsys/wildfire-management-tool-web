@@ -34,6 +34,7 @@ define([
     'wmt/controller/Controller',
     'wmt/view/symbols/DirOfSpread',
     'wmt/view/symbols/FlameLengthHead',
+    'wmt/view/symbols/FuelModelNo',
     'wmt/view/symbols/WildfireDiamond',
     'wmt/util/Log',
     'wmt/Wmt',
@@ -42,6 +43,7 @@ define([
         controller,
         DirOfSpread,
         FlameLengthHead,
+        FuelModelNo,
         WildfireDiamond,
         logger,
         wmt,
@@ -62,18 +64,21 @@ define([
                 flanks = surfaceFire ? lookout.surfaceFire.flameLengthFlanking.value : null,
                 heal = surfaceFire ? lookout.surfaceFire.flameLengthBacking.value : null,
                 dir = surfaceFire ? lookout.surfaceFire.directionMaxSpread.value : null,
-                ros = surfaceFire ? lookout.surfaceFire.rateOfSpreadMax.value : null;
+                ros = surfaceFire ? lookout.surfaceFire.rateOfSpreadMax.value : null,
+                modelNo = surfaceFire ? lookout.surfaceFire.fuelBed.fuelModel.modelCode : '-';
 
             // Create the weather map symbol components
             this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, Math.round(head), Math.round(flanks), Math.round(heal));
             this.dirOfSpread = new DirOfSpread(lookout.latitude, lookout.longitude, Math.round(dir));
             this.flameLengthHead = new FlameLengthHead(lookout.latitude, lookout.longitude, head || '-');
+            this.fuelModelNo = new FuelModelNo(lookout.latitude, lookout.longitude, modelNo);
 
             // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
             this.diamond.pickDelegate = lookout;
             this.dirOfSpread.pickDelegate = lookout;
             this.flameLengthHead.pickDelegate = lookout;
+            this.fuelModelNo.pickDelegate = lookout;
 
             // EVENT_OBJECT_MOVED handler that synchronizes the renderables with the model's location
             this.handleObjectMovedEvent = function (lookout) {
@@ -83,6 +88,8 @@ define([
                 self.dirOfSpread.position.longitude = lookout.longitude;
                 self.flameLengthHead.position.latitude = lookout.latitude;
                 self.flameLengthHead.position.longitude = lookout.longitude;
+                self.fuelModelNo.position.latitude = lookout.latitude;
+                self.fuelModelNo.position.longitude = lookout.longitude;
             };
             // EVENT_FIRE_BEHAVIOR_CHANGED handler 
             this.handleFireBehaviorChangedEvent = function (lookout) {
@@ -90,11 +97,17 @@ define([
                     flanks = lookout.surfaceFire.flameLengthFlanking.value,
                     heal = lookout.surfaceFire.flameLengthBacking.value,
                     dir = lookout.surfaceFire.directionMaxSpread.value,
-                    ros = lookout.surfaceFire.rateOfSpreadMax.value;
+                    ros = lookout.surfaceFire.rateOfSpreadMax.value,
+                    modelNo = lookout.surfaceFire.fuelBed.fuelModel.modelCode;
 
-                this.diamond.updateWildfireDiamondImage(Math.round(head), Math.round(flanks), Math.round(heal));
-                this.dirOfSpread.updateDirOfSpreadImage(Math.round(dir));
-                this.flameLengthHead.text = Math.round(head) + "'";
+                this.diamond.updateWildfireDiamondImage(head, flanks, heal);
+                this.dirOfSpread.updateDirOfSpreadImage(head > 0 ? Math.round(dir) : null);
+                if (head > 1) {
+                    this.flameLengthHead.text = Math.round(head) + "'";
+                } else {
+                    this.flameLengthHead.text = (Math.round(head * 10) / 10) + "'";
+                }
+                this.fuelModelNo.text = modelNo;
             };
             // EVENT_PLACE_CHANGED handler
             this.handlePlaceChangedEvent = function (lookout) {
@@ -121,10 +134,11 @@ define([
 
             // Rotate and dir of spread arrot to match the view
             this.dirOfSpread.imageRotation = dc.navigatorState.heading;
-            
+
             this.diamond.render(dc);
             this.dirOfSpread.render(dc);
             this.flameLengthHead.render(dc);
+            this.fuelModelNo.render(dc);
         };
 
         return FireBehaviorSymbol;

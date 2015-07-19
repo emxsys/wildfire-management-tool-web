@@ -71,7 +71,8 @@ define([
         WildfireDiamond.prototype.updateWildfireDiamondImage = function (head, flanks, heal) {
             var imgName = 'unkn';
 
-            if (head && flanks  && heal) {
+            // if burnable
+            if (head) {
                 imgName = WildfireDiamond.getColorCode(head)
                     + WildfireDiamond.getColorCode(flanks)
                     + WildfireDiamond.getColorCode(flanks)
@@ -84,18 +85,18 @@ define([
 
         WildfireDiamond.getColorCode = function (flameLen) {
             if (flameLen >= 15) {
-                return 'f';
+                return 'f'; // RED
             }
             if (flameLen >= 7) {
-                return '7';
+                return '7'; // MAGENTA
             }
             if (flameLen >= 3) {
-                return '3';
+                return '3'; // ORANGE
             }
             if (flameLen >= 1) {
-                return '1';
+                return '1'; // GREEN
             }
-            return '0';
+            return '0';     // BLUE
         };
 
         return WildfireDiamond;
