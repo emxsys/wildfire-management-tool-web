@@ -119,9 +119,13 @@ define([],
              */
             IMAGE_PATH: "scripts/wmt/images/",
             /**
+             * The URL for the LANDFIRE MapServer REST service.
+             * LANDFIRE 2012 (LF 2012 - LF_1.3.0) 
+             */
+            LANDFIRE_REST_SERVICE: "http://landfire.cr.usgs.gov/arcgis/rest/services/Landfire/US_130/MapServer",
+            /**
              * The display name for the layer that displays markers.
              */
-
             LAYER_NAME_COMPASS: "Compass",
             LAYER_NAME_RETICLE: "Crosshairs",
             LAYER_NAME_SKY: "Sky",
@@ -203,8 +207,8 @@ define([],
          * </ul>
          */
         Wmt.configuration = {
-            defaultFuelModelNo: 5,  // Brush
-            defaultFuelMoistureScenario:'Very Low Dead, Fully Cured Herb',
+            defaultFuelModelNo: 5, // Brush
+            defaultFuelMoistureScenario: 'Very Low Dead, Fully Cured Herb',
             startupLatitude: 34.29,
             startupLongitude: -119.29,
             startupAltitude: 1000000,

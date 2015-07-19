@@ -236,7 +236,7 @@ define([
          */
         WeatherScout.prototype.refresh = function () {
             this.refreshForecast();
-            //this.refreshPlace();
+            this.refreshPlace();
         };
 
         /**
@@ -267,44 +267,53 @@ define([
         /**
          * Updates this object's place attributes. 
          */
-        WeatherScout.prototype.refreshPlace = function () {
-            if (!this.latitude || !this.longitude || !this.duration) {
-                return;
+        WeatherScout.prototype.refreshPlace = function (deferred) {
+            this.fire(wmt.EVENT_PLACE_CHANGED, this);
+            if (deferred) {
+                deferred.resolve(this);
             }
-            var self = this,
-                i, max, item, place = [];
-
-            // Get the place name(s) at this location
-            PlaceResource.places(
-                this.latitude,
-                this.longitude,
-                function (json) { // Callback to process YQL Geo.Places result
-
-                    // Load all the places into a place object array
-                    if (!json.query.results) {
-                        log.error("WeatherScout", "refreshPlace", "json.query.results is null");
-                        return;
-                    }
-                    for (i = 0, max = json.query.results.place.length; i < max; i++) {
-                        item = json.query.results.place[i];
-                        place[i] = {"name": item.name, "type": item.placeTypeName.content};
-                    }
-                    self.place = place;
-
-                    // Apply the first place name (ordered by granularity) that's not a zip code
-                    for (i = 0, max = place.length; i < max; i++) {
-                        if (place[i].type !== "Zip Code") {
-                            self.toponym = place[i].name;
-
-                            // Until we have an editor, use the placename for the name
-                            self.name = self.toponym;
-                            break;
-                        }
-                    }
-                    log.info('WeatherScout', 'refreshPlace', self.name + ': EVENT_PLACE_CHANGED');
-                    self.fire(wmt.EVENT_PLACE_CHANGED, self);
-                }
-            );
+// Did the Yahoo places service block my ip address due to overuse?
+//             
+//            if (!this.latitude || !this.longitude || !this.duration) {
+//                return;
+//            }
+//            var self = this,
+//                i, max, item, place = [];
+//
+//            // Get the place name(s) at this location
+//            PlaceResource.places(
+//                this.latitude,
+//                this.longitude,
+//                function (json) { // Callback to process YQL Geo.Places result
+//
+//                    // Load all the places into a place object array
+//                    if (!json.query.results) {
+//                        log.error("WeatherScout", "refreshPlace", "json.query.results is null");
+//                        return;
+//                    }
+//                    for (i = 0, max = json.query.results.place.length; i < max; i++) {
+//                        item = json.query.results.place[i];
+//                        place[i] = {"name": item.name, "type": item.placeTypeName.content};
+//                    }
+//                    self.place = place;
+//
+//                    // Apply the first place name (ordered by granularity) that's not a zip code
+//                    for (i = 0, max = place.length; i < max; i++) {
+//                        if (place[i].type !== "Zip Code") {
+//                            self.toponym = place[i].name;
+//
+//                            // Until we have an editor, use the placename for the name
+//                            self.name = self.toponym;
+//                            break;
+//                        }
+//                    }
+//                    log.info('WeatherScout', 'refreshPlace', self.name + ': EVENT_PLACE_CHANGED');
+//                    self.fire(wmt.EVENT_PLACE_CHANGED, self);
+//                    if (deferred) {
+//                        deferred.resolve(self);
+//                    }
+//                }
+//            );
         };
 
         /**
