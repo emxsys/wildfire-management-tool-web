@@ -182,7 +182,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>
         <!--End Main Menu-->
-        
+
         <!-- Mobile Main Menu -->
         <nav id="mobileMenu" class="c-menu hidden" >
             <div class="container-fluid" style="margin-top:37px">
@@ -863,12 +863,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                             <div class="row">
                                 <!-- ICS Marker Palette --> 
-                                <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3 interactive" >
-                                    <div id="markerList" ></div>
+                                <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3" >
+                                    <div id="markerList" class="interactive"></div>
                                 </div>
                                 <!-- Pushpin Palette --> 
-                                <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3 interactive">
-                                    <div id="markerList"></div>
+                                <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3">
+                                    <div id="markerList" class="interactive"></div>
                                 </div>
                                 <div class="row">
                                     <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 interactive" style='float: right; margin-top: 80px; max-width: 58px'>
