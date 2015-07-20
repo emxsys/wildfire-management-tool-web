@@ -49,6 +49,9 @@ define([],
     function () {
         "use strict";
         var MobileMenu = {
+            /**
+             * Initializes the MobileMenu framework by adding click handlers to the constituents.
+             */
             initialize: function () {
                 //Function handling the toggle of the mobile menu button.
                 (function () {
@@ -59,12 +62,13 @@ define([],
                         var toggle = toggles[i];
                         toggleHandler(toggle);
                     }
-                    ;
+
                     function toggleHandler(toggle) {
                         toggle.addEventListener("click", function (e) {
                             e.preventDefault();
                             (this.classList.contains("is-active") === true) ? this.classList.remove("is-active") : this.classList.add("is-active");
                         });
+
                         $('#c-maskMain').on('click', function (e) {
                             e.preventDefault();
                             toggle.classList.remove("is-active");
@@ -103,6 +107,7 @@ define([],
                         });
                     }
                 })();
+
                 var mobileMenu = new MobileMenu.Menu(
                     '#mobileMenu',
                     'slide-left',
@@ -113,6 +118,8 @@ define([],
                     '100%',
                     '85%'
                     );
+
+
                 var mobileMenuBtn = document.querySelector('#mobileMenuButton');
                 mobileMenuBtn.addEventListener('click', function (e) {
                     e.preventDefault;
@@ -125,16 +132,29 @@ define([],
 
                 });
 
-                $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {                    
+                $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
                     mobileMenu.close();
                 });
             },
+            /**
+             * Constructs a Menu object.
+             * @constructor
+             * @param {type} menuId The menu ID.
+             * @param {type} type The menu type.
+             * @param {type} maskId The ID of the mask.
+             * @param {type} openBtnIds The ID of the button that opens the menu.
+             * @param {type} closeBtnIds Array of button IDs that close the menu.
+             * @param {type} zIndex
+             * @param {type} height
+             * @param {type} width
+             * @returns {MobileMenu.Menu}
+             */
             Menu: function (
-                menuId, //the menu ID                        
-                type, // The menu type
-                maskId, // The ID of the mask
-                openBtnIds, // The ID of the button that opens the menu
-                closeBtnIds, // Array of IDs of buttons that closes the menu    
+                menuId,
+                type,
+                maskId,
+                openBtnIds,
+                closeBtnIds,
                 zIndex,
                 height,
                 width
@@ -160,13 +180,11 @@ define([],
                 for (var i = 0; i < openBtnIds.length; i++) {
                     this.openBtns.push($(openBtnIds[i]));
                 }
-                ;
 
                 //build array of closing button objects
                 for (var i = 0; i < closeBtnIds.length; i++) {
                     this.closeBtns.push($(closeBtnIds[i]));
                 }
-                ;
 
                 /**
                  * Menu Options.
