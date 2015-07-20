@@ -4,197 +4,202 @@
 
 /* Mobile Menu Buttons' Parameters */
 .c-hamburger {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  font-size: 0;
-  text-indent: -9999px;
-  appearance: none;
-  box-shadow: none;
-  border-radius: 3px;
-  border: #000000;
-  cursor: pointer;
-  transition: background 0.3s;
-  z-index: 52;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 0;
+    text-indent: -9999px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 3px;
+    border: #000000;
+    cursor: pointer;
+    transition: background 0.3s;
+    z-index: 52;
 }
 
 .c-hamburger:focus {
-  outline: none;
+    outline: none;
 }
 
 .c-hamburger span {
-  display: block;
-  position: absolute;
-  top: 15px;
-  left: 6px;
-  right: 6px;
-  height: 3px;
-  background: #c8c8c8;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 6px;
+    right: 6px;
+    height: 3px;
+    background: #c8c8c8;
 }
 
 .c-hamburger span::before,
 .c-hamburger span::after {
-  position: absolute;
-  display: block;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: #c8c8c8;
-  content: "";
+    position: absolute;
+    display: block;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #c8c8c8;
+    content: "";
 }
 
 .c-hamburger span::before {
-  top: -6px;
+    top: -6px;
 }
 
 .c-hamburger span::after {
-  bottom: -6px;
+    bottom: -6px;
 }
 
 .c-hamburger--htla {
-  background-color: #272b30;
+    background-color: #272b30;
 }
 
 .c-hamburger--htla span {
-  transition: transform 0.3s;
+    transition: transform 0.3s;
 }
 
 .c-hamburger--htla span::before {
-  transform-origin: top right;
-  transition: transform 0.3s, width 0.3s, top 0.3s;
+    transform-origin: top right;
+    transition: transform 0.3s, width 0.3s, top 0.3s;
 }
 
 .c-hamburger--htla span::after {
-  transform-origin: bottom right;
-  transition: transform 0.3s, width 0.3s, bottom 0.3s;
+    transform-origin: bottom right;
+    transition: transform 0.3s, width 0.3s, bottom 0.3s;
 }
 
 /* active state, i.e. menu open */
 .c-hamburger--htla.is-active {
-  background-color: #272b30;
+    background-color: #272b30;
 }
 
 .c-hamburger--htla.is-active span {
-  transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .c-hamburger--htla.is-active span::before,
 .c-hamburger--htla.is-active span::after {
-  width: 50%;
+    width: 50%;
 }
 
 .c-hamburger--htla.is-active span::before {
-  top: 0;
-  transform: translateX(12px) translateY(1.5px) rotate(45deg);
+    top: 0;
+    transform: translateX(12px) translateY(1.5px) rotate(45deg);
 }
 
 .c-hamburger--htla.is-active span::after {
-  bottom: 0;
-  transform: translateX(12px) translateY(-1.5px) rotate(-45deg);
+    bottom: 0;
+    transform: translateX(12px) translateY(-1.5px) rotate(-45deg);
 }
 
 .c-check {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  font-size: 0;
-  text-indent: -9999px;
-  appearance: none;
-  box-shadow: none;
-  border-radius: 3px;
-  border: #000000;
-  cursor: pointer;    
-  background-color: #32dc64;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 0;
+    text-indent: -9999px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 3px;
+    border: #000000;
+    cursor: pointer;    
+    background-color: #32dc64;
 }
 
 .c-check:focus {
-  outline: none;
+    outline: none;
 }
 
 .c-check span {
-  display: block;
-  position: absolute;
-  top: 15px;
-  left: 2.5px;
-  right: 6px;
-  height: 3px;
-  background: #c8c8c8;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 2.5px;
+    right: 6px;
+    height: 3px;
+    background: #c8c8c8;
 }
 
 .c-check .span1 {
-  width: 65%;
-  content: "";
-  transform:  rotate(-45deg) translateX(5px) translateY(4px);
+    width: 65%;
+    content: "";
+    transform:  rotate(-45deg) translateX(5px) translateY(4px);
+    -webkit-transform:  rotate(-45deg) translateX(5px) translateY(4px);
+    
 }
 .c-check .span2 {
-  width: 30%;
-  content: "";
-  transform:  rotate(45deg) translateX(5px) translateY(0px);
+    width: 30%;
+    content: "";
+    transform:  rotate(45deg) translateX(5px) translateY(0px);
+    -webkit-transform:  rotate(45deg) translateX(5px) translateY(0px);
 }
 
 .c-cancel {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  font-size: 0;
-  text-indent: -9999px;
-  appearance: none;
-  box-shadow: none;
-  border-radius: 3px;
-  border: #000000;
-  cursor: pointer;    
-  background-color: #ff3264;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 0;
+    text-indent: -9999px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 3px;
+    border: #000000;
+    cursor: pointer;    
+    background-color: #ff3264;
 }
 
 .c-cancel:focus {
-  outline: none;
+    outline: none;
 }
 
 .c-cancel span {
-  display: block;
-  position: absolute;
-  top: 15px;
-  left: 2.5px;
-  right: 6px;
-  height: 3px;
-  background: #c8c8c8;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 2.5px;
+    right: 6px;
+    height: 3px;
+    background: #c8c8c8;
 }
 
 .c-cancel .span1 {
-  width: 85%;
-  content: "";
-  transform:  rotate(-45deg);
+    width: 85%;
+    content: "";
+    transform:  rotate(-45deg);
+    -webkit-transform:  rotate(-45deg);
 }
 .c-cancel .span2 {
-  width: 85%;
-  content: "";
-  transform:  rotate(45deg);
+    width: 85%;
+    content: "";
+    transform:  rotate(45deg);
+    -webkit-transform:  rotate(45deg);
 }
 /* End Mobile Menu Buttons */
 
 /* Sliding Mobile Menu Parameters*/
 .c-menu {
-  position: fixed;
-  background-color: #272b30;
-  transition: transform 0.3s;
+    position: fixed;
+    background-color: #272b30;
+    transition: transform 0.3s;
 }
 
 .c-menu__items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 /**
  * Body states.
@@ -203,7 +208,7 @@
  * awkward document scrolling.
  */
 body.has-active-menu {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 /**
@@ -211,154 +216,164 @@ body.has-active-menu {
  */
 
 .c-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  width: 0;
-  height: 0;
-  background-color: #000;
-  opacity: 0;
-  transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    background-color: #000;
+    opacity: 0;
+    transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
 }
 
 .c-mask.is-active {
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-  transition: opacity 0.3s;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    transition: opacity 0.3s;
 }
 
 /* sliding component */
 .c-menu--slide-left,
 .c-menu--slide-right {
-  width: 100%;
-  height: 100%;
-  //overflow-y: scroll; Not necessarily needed, but I'll leave it here just in case.
+    width: 100%;
+    height: 100%;
+    /*overflow-y: scroll; Not necessarily needed, but I'll leave it here just in case.*/
 }
 
 @media all and (min-width: 320px) {
-  .c-menu--slide-left,
-  .c-menu--slide-right {
-    width: 300px;
-  }
+    .c-menu--slide-left,
+    .c-menu--slide-right {
+        width: 300px;
+    }
 }
 
 .c-menu--slide-left .c-menu__item,
 .c-menu--slide-right .c-menu__item {
-  display: block;
-  text-align: left;  
+    display: block;
+    text-align: left;  
 }
 
 .c-menu--slide-left .c-menu__item:first-child,
 .c-menu--slide-right .c-menu__item:first-child {
-  border-top: none;
+    border-top: none;
 }
 
 .c-menu--slide-left .c-menu__item:last-child,
 .c-menu--slide-right .c-menu__item:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .c-menu--slide-left .c-menu__link,
 .c-menu--slide-right .c-menu__link {
-  display: block;
-  padding: 12px 24px;
-  color: #fff;
+    display: block;
+    padding: 12px 24px;
+    color: #fff;
 }
 
 .c-menu--slide-left .c-menu__close,
 .c-menu--slide-right .c-menu__close {
-  display: block;
-  padding: 12px 24px;
-  width: 100%;
+    display: block;
+    padding: 12px 24px;
+    width: 100%;
 }
 
 .c-menu--slide-left {
-  top: 0;
-  left: 0;
-  transform: translateX(-100%);
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
 }
 
 @media all and (min-width: 320px) {
-  .c-menu--slide-left {
-    transform: translateX(-100%);
-  }
+    .c-menu--slide-left {
+        transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+    }
 }
 
 .c-menu--slide-left.is-active {
-  transform: translateX(0);
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
 }
 
 .c-menu--slide-right {
-  top: 0;
-  right: 0;
-  transform: translateX(100%);
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
 }
 
 @media all and (min-width: 320px) {
-  .c-menu--slide-right {
-    transform: translateX(100%);
-  }
+    .c-menu--slide-right {
+        transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+    }
 }
 
 .c-menu--slide-right.is-active {
-  transform: translateX(0);
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
 }
 
 .c-menu--slide-top,
 .c-menu--slide-bottom {
-  vertical-align: middle;
-  width: 100%;
-  height: 60px;
-  text-align: center;
-  //overflow-x: scroll; shouldn't be needed by default
+    vertical-align: middle;
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    /*overflow-x: scroll; shouldn't be needed by default*/
 }
 
 .c-menu--slide-top .c-menu__items,
 .c-menu--slide-bottom .c-menu__items {
-  display: inline-block;
-  text-align: center;
+    display: inline-block;
+    text-align: center;
 }
 
 .c-menu--slide-top .c-menu__item,
 .c-menu--slide-bottom .c-menu__item {
-  display: inline-block;
-  line-height: 60px;
+    display: inline-block;
+    line-height: 60px;
 }
 
 .c-menu--slide-top .c-menu__link,
 .c-menu--slide-bottom .c-menu__link {
-  display: block;
-  padding: 0 4px;
-  color: #fff;
+    display: block;
+    padding: 0 4px;
+    color: #fff;
 }
 
 .c-menu--slide-top .c-menu__close,
 .c-menu--slide-bottom .c-menu__close {
-  display: inline-block;
-  margin-right: 12px;
-  padding: 0 24px;
-  height: 60px;
-  line-height: 60px;
+    display: inline-block;
+    margin-right: 12px;
+    padding: 0 24px;
+    height: 60px;
+    line-height: 60px;
 }
 
 .c-menu--slide-top {
-  top: 0;
-  left: 0;
-  transform: translateY(-100%);
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    -webkit-transform: translateY(-100%);
 }
 
 .c-menu--slide-top.is-active {
-  transform: translateY(0);
+    transform: translateY(0);
+    -webkit-transform: translateY(0);
 }
 
 .c-menu--slide-bottom {
-  bottom: 0;
-  left: 0;
-  transform: translateY(100%);
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+    -webkit-transform: translateY(100%);
 }
 
 .c-menu--slide-bottom.is-active {
-  transform: translateY(0);
+    transform: translateY(0);
+    -webkit-transform: translateY(0%);
 }
