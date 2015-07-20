@@ -181,8 +181,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
             </div>
         </nav>
+        <!--End Main Menu-->
+        
         <!-- Mobile Main Menu -->
-        <nav id="mobileMenu" class="c-menu">
+        <nav id="mobileMenu" class="c-menu hidden" >
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-9 col-sm-9"
@@ -195,9 +197,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </ul>
                     </div>                    
                 </div>
-                <!--                <div class="row-full">
-                                                        <span style="float:right;">||</span>
-                                </div>-->
+                <!-- <div class="row-full">
+                        <span style="float:right;">||</span>
+                </div>-->
                 <div class="row">
                     <div class="col-xs-12 col-sm-12">
                         <div class="btn-group">
@@ -221,7 +223,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Main Menu -->
 
         <!-- Mobile Control Panel -->
-        <nav id="mobileControlPanel" class="c-menu">
+        <nav id="mobileControlPanel" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:37px">
                 <!-- BDS margin vs padding 
                 <div class="row" style="padding-top: 10px">-->
@@ -321,7 +323,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Control Panel -->
 
         <!-- Mobile Globe Menu -->
-        <nav id="mobileGlobe" class="c-menu">
+        <nav id="mobileGlobe" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -379,7 +381,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Globe Menu -->
 
         <!-- Mobile Layers Menu -->
-        <nav id="mobileLayers" class="c-menu">
+        <nav id="mobileLayers" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-11 col-sm-11">
@@ -424,7 +426,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!-- Mobile Layers List Menu -->
         <!-- BDS: <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu"> -->
-        <nav id="mobileLayersList" class="c-menu">
+        <nav id="mobileLayersList" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:5px;">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -473,7 +475,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Layers List Menu -->
 
         <!-- Mobile Markers Menu -->
-        <nav id="mobileMarkers" class="c-menu">
+        <nav id="mobileMarkers" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:37px">
                 <div class="row" style="padding-top: 10px">
                     <div class="col-xs-12 col-sm-12">
@@ -564,7 +566,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Markers Menu -->
 
         <!-- Mobile Weather Menu -->
-        <nav id="mobileWeather" class="c-menu">
+        <nav id="mobileWeather" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
@@ -629,7 +631,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Menu -->
 
         <!-- Mobile Weather Scouts Menu -->
-        <nav id="mobileWeatherScouts" class="c-menu">
+        <nav id="mobileWeatherScouts" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">
@@ -665,7 +667,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Weather Scouts Menu -->
 
         <!-- Mobile Fires Menu -->
-        <nav id="mobileFires" class="c-menu">
+        <nav id="mobileFires" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:37px">                
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
@@ -747,7 +749,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Fires Menu -->
 
         <!-- Mobile Fire Lookouts Menu -->
-        <nav id="mobileFireLookouts" class="c-menu">
+        <nav id="mobileFireLookouts" class="c-menu hidden">
             <div class="container-fluid" style="margin-top:5px">
                 <div class="row">
                     <div class="col-xs-2 col-sm-2" style="float:left;">

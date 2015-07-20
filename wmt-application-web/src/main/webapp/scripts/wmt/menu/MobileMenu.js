@@ -55,6 +55,13 @@ define([],
             initialize: function () {
                 //Function handling the toggle of the mobile menu button.
                 (function () {
+                    
+                    // MobileMenu items are hidden during startup--show them now.
+                    $('.c-menu').each(function() {
+                        $(this).removeClass('hidden');
+                    });                 
+                    
+                    
                     var toggles = $("#mobileMenuButton"),
                         i;
 
@@ -68,44 +75,44 @@ define([],
                             e.preventDefault();
                             (this.classList.contains("is-active") === true) ? this.classList.remove("is-active") : this.classList.add("is-active");
                         });
-
-                        $('#c-maskMain').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#ctrlPanelGlobe').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#findMe').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#layersListButton').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#pushpinMarkersToggle').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#icsMarkersToggle').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#weatherWeatherScoutsButton').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#firesFireLookoutsButton').on('click', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
-                        $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
-                            e.preventDefault();
-                            toggle.classList.remove("is-active");
-                        });
                     }
+                    $('#c-maskMain').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#ctrlPanelGlobe').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#findMe').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#layersListButton').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#pushpinMarkersToggle').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#icsMarkersToggle').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#weatherWeatherScoutsButton').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#firesFireLookoutsButton').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+                    $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
+
                 })();
 
                 var mobileMenu = new MobileMenu.Menu(
