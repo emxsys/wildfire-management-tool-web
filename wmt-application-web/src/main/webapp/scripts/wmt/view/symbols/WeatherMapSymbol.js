@@ -52,6 +52,7 @@ define([
     'wmt/view/symbols/ForecastTime',
     'wmt/view/symbols/RelativeHumidity',
     'wmt/view/symbols/SkyCover',
+    'wmt/model/WeatherScout',
     'wmt/view/symbols/WindBarb',
     'wmt/Wmt',
     'worldwind'],
@@ -61,6 +62,7 @@ define([
         ForecastTime,
         RelativeHumidity,
         SkyCover,
+        WeatherScout,
         WindBarb,
         wmt,
         ww) {
@@ -111,7 +113,7 @@ define([
 
             // EVENT_WEATHER_CHANGED handler that updates the symbology
             this.handleWeatherChangedEvent = function (wxModel) {
-                wx = wxModel.getFirstForecast();
+                wx = wxModel.getForecastAtTime(controller.model.applicationTime);
                 // Update the values
                 self.skyCover.updateSkyCoverImage(wx.skyCoverPct);
                 self.windBarb.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
@@ -142,7 +144,11 @@ define([
                 self.windBarb.updateWindBarbImage(wx.windSpeedKts, wx.windDirectionDeg);
                 self.airTemperature.text = wx.airTemperatureF + 'F';
                 self.relHumidity.text = wx.relaltiveHumidityPct + '%';
-                self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
+                if (wx.time === WeatherScout.INVALID_WX.time) {
+                    self.forecastTime.text = '-';
+                } else {
+                    self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
+                }
             };
 
             // Establish the Publisher/Subscriber relationship between this symbol and the wx scout
@@ -150,7 +156,9 @@ define([
             wxScout.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
             wxScout.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
-
+            
+            // Set the initial values to the current application time
+            this.handleTimeChangedEvent(controller.model.applicationTime);
         };
         // Inherit Renderable functions.
         WeatherMapSymbol.prototype = Object.create(WorldWind.Renderable.prototype);
