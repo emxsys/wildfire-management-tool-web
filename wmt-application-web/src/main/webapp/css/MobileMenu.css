@@ -80,6 +80,7 @@
 
 .c-hamburger--htla.is-active span {
     transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
 }
 
 .c-hamburger--htla.is-active span::before,
@@ -90,11 +91,13 @@
 .c-hamburger--htla.is-active span::before {
     top: 0;
     transform: translateX(12px) translateY(1.5px) rotate(45deg);
+    -webkit-transform: translateX(12px) translateY(1.5px) rotate(45deg);
 }
 
 .c-hamburger--htla.is-active span::after {
     bottom: 0;
     transform: translateX(12px) translateY(-1.5px) rotate(-45deg);
+    -webkit-transform: translateX(12px) translateY(-1.5px) rotate(-45deg);
 }
 
 .c-check {
@@ -357,8 +360,8 @@ body.has-active-menu {
 .c-menu--slide-top {
     top: 0;
     left: 0;
-    transform: translateY(-100%);
-    -webkit-transform: translateY(-100%);
+    transform: translateY(-100vh);
+    -webkit-transform: translateY(-100vh);
 }
 
 .c-menu--slide-top.is-active {
@@ -375,5 +378,5 @@ body.has-active-menu {
 
 .c-menu--slide-bottom.is-active {
     transform: translateY(0);
-    -webkit-transform: translateY(0%);
+    -webkit-transform: translateY(0);
 }
