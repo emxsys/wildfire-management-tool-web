@@ -167,9 +167,9 @@ img.icon {
 }
 
 #markerList {
-    max-height: calc(50vh); 
+    max-height: calc(75vh - 120px); 
     /*max-width: calc(10vw);*/
-    max-width: 48px;
+    max-width: 64px;
     overflow-y: scroll;
     border-radius: 6px; 
     border: 2px #000000 solid;
