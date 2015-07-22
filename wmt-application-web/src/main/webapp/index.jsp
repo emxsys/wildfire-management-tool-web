@@ -287,29 +287,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div id="controlPanelOptionsHeading"
-                                     class="panel-heading collapsed" 
-                                     data-toggle="collapse" 
-                                     data-parent="#controlPanelAccordion" 
-                                     href="#controlPanelOptionsBody" 
-                                     aria-expanded="false" 
-                                     aria-controls="controlPanelOptionsBody"
-                                     role="tab" >
-                                    <h4 class="panel-title">
-                                        Options
-                                    </h4>
-                                </div>
-                                <div id="controlPanelOptionsBody" 
-                                     class="panel-collapse collapse" 
-                                     role="tabpanel" 
-                                     aria-labelledby="controlPanelOptionsHeading">
-                                    <div class="panel-body">
-                                        <li> 
-                                        </li>  
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="ctrlPanelGlobe" href="#" class="c-menu__link panel panel-default">Globe</a></li>
