@@ -50,32 +50,41 @@ define([],
         "use strict";
         var MobileMenu = {
             /**
-             * Initializes the MobileMenu framework by adding click handlers to the constituents.
+             * Initializes the MobileMenu framework by showing menu elements hidden during startup and 
+             * adding click handlers that toggle activation.
              */
             initialize: function () {
-                //Function handling the toggle of the mobile menu button.
-                (function () {
+                    var toggles = $("#mobileMenuButton"),
+                        toggle,
+                        i,
+                        mobileMenu,
+                        mobileMenuBtn;
+                    
+                // Function handling the toggle of the mobile menu button.
+                $(function () {
                     
                     // MobileMenu items are hidden during startup--show them now.
                     $('.c-menu').each(function() {
                         $(this).removeClass('hidden');
                     });                 
-                    
-                    
-                    var toggles = $("#mobileMenuButton"),
-                        i;
 
-                    for (i = toggles.length - 1; i >= 0; i--) {
-                        var toggle = toggles[i];
-                        toggleHandler(toggle);
-                    }
-
+                    // Adds a click handler to the given element that toggles the is-active state
                     function toggleHandler(toggle) {
                         toggle.addEventListener("click", function (e) {
                             e.preventDefault();
-                            (this.classList.contains("is-active") === true) ? this.classList.remove("is-active") : this.classList.add("is-active");
+                            if (this.classList.contains("is-active") === true) {
+                                this.classList.remove("is-active");
+                            } else { 
+                                this.classList.add("is-active");
+                            }
                         });
                     }
+                    for (i = toggles.length - 1; i >= 0; i--) {
+                        toggle = toggles[i];
+                        toggleHandler(toggle);
+                    }
+
+
                     $('#c-maskMain').on('click', function (e) {
                         e.preventDefault();
                         toggle.classList.remove("is-active");
@@ -113,23 +122,23 @@ define([],
                         toggle.classList.remove("is-active");
                     });
 
-                })();
+                });
 
-                var mobileMenu = new MobileMenu.Menu(
+                mobileMenu = new MobileMenu.Menu(
                     '#mobileMenu',
                     'slide-left',
                     '#c-maskMain',
-                    Array(''),
-                    Array('#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton', "#firesFireLookoutsButton"),
+                    [''],
+                    ['#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton', "#firesFireLookoutsButton"],
                     '50',
                     '100%',
                     '85%'
                     );
 
 
-                var mobileMenuBtn = document.querySelector('#mobileMenuButton');
+                mobileMenuBtn = document.querySelector('#mobileMenuButton');
                 mobileMenuBtn.addEventListener('click', function (e) {
-                    e.preventDefault;
+                    e.preventDefault();
                     if (this.classList.contains("is-active") === true) {
                         mobileMenu.open();
                     }
@@ -166,9 +175,12 @@ define([],
                 height,
                 width
                 ) {
-
+                
+                var i, options;
+                
                 function extend(a, b) {
-                    for (var key in b) {
+                    var key;
+                    for (key in b) {
                         if (b.hasOwnProperty(key)) {
                             a[key] = b[key];
                         }
@@ -180,16 +192,16 @@ define([],
                 this.body = document.body;
                 this.mask = $(maskId);
                 this.menu = $(menuId);
-                this.openBtns = new Array();
-                this.closeBtns = new Array();
+                this.openBtns = [];
+                this.closeBtns = [];
 
                 //build array of opening button objects
-                for (var i = 0; i < openBtnIds.length; i++) {
+                for (i = 0; i < openBtnIds.length; i++) {
                     this.openBtns.push($(openBtnIds[i]));
                 }
 
                 //build array of closing button objects
-                for (var i = 0; i < closeBtnIds.length; i++) {
+                for (i = 0; i < closeBtnIds.length; i++) {
                     this.closeBtns.push($(closeBtnIds[i]));
                 }
 
@@ -197,17 +209,17 @@ define([],
                  * Menu Options.
                  */
                 this.options = {
-                    menuId: '', //the menu ID                        
-                    type: '', // The menu type
-                    maskId: '', // The ID of the mask
-                    openBtnIds: new Array(''), // The ID of the button that opens the menu
-                    closeBtnIds: new Array(''), // The ID of the button that closes the menu    
+                    menuId: '',         //the menu ID                        
+                    type: '',           // The menu type
+                    maskId: '',         // The ID of the mask
+                    openBtnIds: [''],   // The ID of the buttons that open the menu
+                    closeBtnIds: [''],  // The ID of the buttons that close the menu    
                     zIndex: '',
                     height: '',
                     width: ''            // The ID of the mask
                 };
 
-                var options = {
+                options = {
                     menuId: menuId, //the menu ID                        
                     type: type, // The menu type
                     maskId: maskId, // The ID of the mask
