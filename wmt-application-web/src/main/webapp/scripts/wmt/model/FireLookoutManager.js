@@ -130,6 +130,7 @@ define([
                     'longitude',
                     'isMovable',
                     'fuelModelNo',
+                    'fuelModelManualSelect',
                     'moistureScenarioName'
                 ]);
             localStorage.setItem(wmt.STORAGE_KEY_FIRE_LOOKOUTS, string);
@@ -160,6 +161,7 @@ define([
                         longitude: array[i].longitude,
                         isMovable: array[i].isMovable,
                         fuelModelNo: array[i].fuelModelNo,
+                        fuelModelManualSelect: array[i].fuelModelManualSelect,
                         moistureScenarioName: array[i].moistureScenarioName
                     }));
                 }

@@ -72,6 +72,7 @@ define([
                 $('#lookout-latitude').text('Latitude: ' + formatter.formatDecimalDegreesLat(lookout.latitude, 5));
                 $('#lookout-longitude').text('Longitude: ' + formatter.formatDecimalDegreesLon(lookout.longitude, 5));
                 $('#lookout-movable').puitogglebutton(lookout.isMovable ? 'uncheck' : 'check');
+                $('#lookout-fuelmodel-auto').puicheckbox(lookout.fuelModelManualSelect ? 'uncheck' : 'check');
                 $('#lookout-fuelmodel-drpdwn').puidropdown('selectValue', lookout.fuelModelNo);
                 $('#lookout-fuelmoisture-drpdwn').puidropdown('selectValue', lookout.moistureScenarioName);
                 $('#lookout-weather-tbl').puidatatable('option', 'datasource', forecasts);
@@ -83,6 +84,7 @@ define([
                         scenarioName = $('#lookout-fuelmoisture-drpdwn').puidropdown('getSelectedValue');
                     lookout.name = $('#lookout-name').val();
                     lookout.isMovable = !($('#lookout-movable').puitogglebutton('isChecked'));
+                    lookout.fuelModelManualSelect = !($('#lookout-fuelmodel-auto').puicheckbox('isChecked'));
                     lookout.fuelModelNo = modelNo;
                     lookout.moistureScenarioName = scenarioName;
                     // Update the views
@@ -109,6 +111,8 @@ define([
                         label: item.modelNo + ': ' + item.modelName,
                         value: parseInt(item.modelNo, 10)});
                 }
+                // Checkboxes
+                $('#lookout-fuelmodel-auto').puicheckbox();
 
                 // DropDowns
                 $('#lookout-fuelmodel-drpdwn').puidropdown({

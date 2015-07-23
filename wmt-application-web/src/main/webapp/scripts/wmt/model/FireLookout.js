@@ -98,6 +98,7 @@ define(["require",
 
             // Persistent properties
             this.fuelModelNo = arg.fuelModelNo || wmt.configuration.defaultFuelModelNo;
+            this.fuelModelManualSelect = arg.fuelModelManualSelect || false;
             this.moistureScenarioName = arg.moistureScenarioName || wmt.configuration.defaultFuelMoistureScenario;
             this.isMovable = arg.isMovable === undefined ? true : arg.isMovable;
 
@@ -148,8 +149,10 @@ define(["require",
         });
 
         FireLookout.prototype.refreshFuelModel = function () {
+            if (this.fuelModelManualSelect) {
+                return;
+            }
             var self = this;
-            
             landfireResource.FBFM13(this.latitude, this.longitude, function (fuelModelNo) {
                 self.fuelModel = fuelModelCatalog.getFuelModel(parseInt(fuelModelNo,10));
                 self.refreshFireBehavior();

@@ -1039,6 +1039,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                                 <div id="lookout-fuel-tab">
                                     <h5>Fuel Model</h5>
+                                    
+                                    <input type="checkbox" id="lookout-fuelmodel-auto" name="lookout-fuelmodel-auto" value="1"/>
+                                    <label for="lookout-fuelmodel-auto">Automatic Selection</label>
                                     <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
                                     <h5>Fuel Moisture</h5>
                                     <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
