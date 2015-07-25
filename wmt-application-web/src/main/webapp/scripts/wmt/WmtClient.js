@@ -169,6 +169,10 @@ define([
             $('#globeCreateWeatherScout').on('taphold', function () {
                 mobileWeatherScouts.open();
             });
+            $('#globeRefreshWeatherForecasts').on('click', function () {
+                controller.model.weatherScoutManager.refreshScouts();
+                controller.model.fireLookoutManager.refreshLookouts();
+            });
 
             // needed delegate event handling for these buttons
             $('#allMarkersList').on('click', 'button.mkr-goto', function () {

@@ -847,8 +847,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3">
                                     <div id="markerList" class="interactive"></div>
                                 </div>
+                                <!--Add Weather Scouts and Fire Lookouts Buttons-->
                                 <div class="row">
                                     <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 interactive" style='float: right; margin-top: 80px; max-width: 58px'>
+                                        
+                                        <!--Add Weather Scout button-->
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
                                                 class="btn btn-default createWeatherScoutButton" 
@@ -859,6 +862,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
+                                        
+                                        <!--Add Fire Lookout button-->
                                         <button id="globeCreateFireLookout" 
                                                 type="button"
                                                 class="btn btn-default createFireLookoutButton" 
@@ -868,6 +873,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 title="Add a fire lookout to the globe.">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                                        </button>
+                                        
+                                        <!-- Refresh Weather Forecasts button-->
+                                        <button id="globeRefreshWeatherForecasts" 
+                                                type="button"
+                                                class="btn btn-default refreshWeatherForecastButton" 
+                                                style="float: right; margin-top: 5px"
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Refresh all weather forecasts.">
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
                                     </div>                 
                                 </div>
