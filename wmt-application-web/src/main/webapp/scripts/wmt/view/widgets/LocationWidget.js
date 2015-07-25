@@ -187,7 +187,7 @@ define([
             this.latitude.text = formatter.formatDecimalDegreesLat(this.viewpoint.target.latitude, 3);
             this.longitude.text = formatter.formatDecimalDegreesLon(this.viewpoint.target.longitude, 3);
             this.elevation.text = formatter.formatAltitude(this.viewpoint.target.elevation, 'm');
-            this.slope.text = formatter.formatAngle360(this.viewpoint.target.slope, 0);
+            this.slope.text = formatter.formatPercentSlope(this.viewpoint.target.slope, 0);
         };
 
         /**

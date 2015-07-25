@@ -204,7 +204,23 @@ define([
 
                 return datetime.toLocaleDateString(locale || 'en', dateOptions)
                     + ' ' + datetime.toLocaleTimeString(locale || 'en', timeOptions);
-            }
+            },
+            /**
+             * Formats an angle to slope as a percent of slope.
+             * @param {type} angle
+             * @param {type} decimals
+             * @returns {String} Formatted string with % sign.
+             */
+            formatPercentSlope: function (angle, decimals) {
+                while (angle < 0) {
+                    angle += 360;
+                }
+                while (angle >= 360) {
+                    angle -= 360;
+                }
+                var percent = Math.tan(angle * util.DEG_TO_RAD) * 100;
+                return percent.toFixed(decimals) + "%";
+            },
 
         };
         return Formatter;
