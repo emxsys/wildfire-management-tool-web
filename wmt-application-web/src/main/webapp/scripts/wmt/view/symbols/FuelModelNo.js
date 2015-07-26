@@ -54,7 +54,7 @@ define([
             this.attributes.scale = 1.0;
             this.attributes.offset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,    // Center
-                WorldWind.OFFSET_FRACTION, 2.2);   // Lower
+                WorldWind.OFFSET_FRACTION, 0.5);   // Lower
             this.attributes.color = WorldWind.Color.WHITE;
             this.attributes.depthTest = false;
         };
