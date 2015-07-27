@@ -839,10 +839,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <div id="timeControlSlider" class="col-xs-5 col-sm-5 interactive"></div>
                             </div>
                             <div class="row">
+                                
                                 <!-- ICS Marker Palette --> 
                                 <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3" >
                                     <div id="markerList" class="interactive"></div>
                                 </div>
+                                
                                 <!-- Pushpin Palette --> 
                                 <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3">
                                     <div id="markerList" class="interactive"></div>
@@ -850,12 +852,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <!--Add Weather Scouts and Fire Lookouts Buttons-->
                                 <div class="row">
                                     <div id="globeScoutsLookoutsButtons" class="col-xs-3 col-sm-1 interactive" style='float: right; margin-top: 80px; max-width: 58px'>
+
+                                        <!-- Refresh Weather Forecasts button-->
+                                        <button id="globeRefreshWeatherForecasts" 
+                                                type="button"
+                                                class="btn btn-default refreshWeatherForecastButton" 
+                                                style="float: right; margin-top: 5px"
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Refresh all weather forecasts.">
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                                        </button>
                                         
                                         <!--Add Weather Scout button-->
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
                                                 class="btn btn-default createWeatherScoutButton" 
-                                                style="float:right"
+                                                style="float:right; margin-top: 5px"
                                                 data-toggle="tooltip" 
                                                 data-placement="top" 
                                                 title="Add a weather scout to the globe.">
@@ -873,19 +887,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 title="Add a fire lookout to the globe.">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-                                        </button>
-                                        
-                                        <!-- Refresh Weather Forecasts button-->
-                                        <button id="globeRefreshWeatherForecasts" 
-                                                type="button"
-                                                class="btn btn-default refreshWeatherForecastButton" 
-                                                style="float: right; margin-top: 5px"
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Refresh all weather forecasts.">
-                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                            <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
-                                        </button>
+                                        </button>                                        
                                     </div>                 
                                 </div>
 
