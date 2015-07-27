@@ -32,7 +32,8 @@ package com.emxsys.wildfire.behavior;
 import com.emxsys.gis.api.Terrain;
 import com.emxsys.weather.api.Weather;
 import static java.lang.Math.round;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
 import visad.Real;
@@ -44,20 +45,43 @@ import visad.Real;
 public class SurfaceFireProvider {
 
     private static final Logger logger = Logger.getLogger(SurfaceFireProvider.class.getName());
-    private final HashMap<FireEnvironment, SurfaceFire> fires = new HashMap<>();
+    private final FiresHashMap fires = new FiresHashMap();
+    private transient long hits = 0;
 
     public SurfaceFireProvider() {
     }
 
-    public SurfaceFire getFireBehavior(SurfaceFuel fuel, Weather weather, Terrain terrain) {
+    public synchronized SurfaceFire getFireBehavior(SurfaceFuel fuel, Weather weather, Terrain terrain) {
 
         FireEnvironment key = new FireEnvironment(fuel, weather, terrain);
         SurfaceFire fire = fires.get(key);
         if (fire == null) {
             fire = SurfaceFire.from(fuel, weather, terrain);
             fires.put(key, fire);
+        } else {
+            hits++;
+            if (hits % 1000 == 0) {
+                System.out.println("***** SurfaceFireProvider.getFireBehavior() cache hits: " + hits);
+            }
+            if (hits == Long.MAX_VALUE) {
+                System.out.println("***** SurfaceFireProvider.getFireBehavior() resetting cache hits back to zero.");
+                hits = 0;
+            }
         }
         return fire;
+    }
+
+    private class FiresHashMap extends LinkedHashMap<FireEnvironment, SurfaceFire> {
+
+        // The max value of 10,000 is arbitrary.  Feel free to change
+        // it based on performance monitoring an load testing.
+        private static final int MAX_ENTRIES = 10000;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry eldest) {
+            // Return true if it's ok to remove the eldest
+            return size() > MAX_ENTRIES;
+        }
     }
 
     /**
