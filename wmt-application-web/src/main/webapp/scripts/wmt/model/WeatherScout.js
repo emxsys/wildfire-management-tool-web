@@ -210,12 +210,14 @@ define([
          *   }]
          */
         WeatherScout.prototype.getForecasts = function () {
-            if (!this.temporalWx) {
-                throw new Error(log.error('WeatherScout', 'getForecasts', 'missingWeatherData'));
-            }
             var array = [],
                 forecast,
                 i, max;
+            
+            if (!this.temporalWx) {
+                log.error('WeatherScout', 'getForecasts', 'missingWeatherData');
+                return array;
+            }
 
             for (i = 0, max = this.temporalWx.length; i < max; i++) {
                 forecast = this.temporalWx[i];
