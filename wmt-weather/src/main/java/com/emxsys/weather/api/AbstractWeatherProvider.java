@@ -41,17 +41,13 @@ import org.openide.util.lookup.InstanceContent;
 public abstract class AbstractWeatherProvider implements WeatherProvider {
 
     private final InstanceContent content = new InstanceContent();
-    private AbstractLookup lookup;
-    
-   
+    private AbstractLookup lookup = new AbstractLookup(content);
+
     @Override
     public Lookup getLookup() {
-        if (lookup == null) {
-            lookup = new AbstractLookup(content);
-        }
         return lookup;
     }
-    
+
     @Override
     public <T extends WeatherService> T getService(Class<T> clazz) {
         return getLookup().lookup(clazz);
@@ -80,5 +76,4 @@ public abstract class AbstractWeatherProvider implements WeatherProvider {
         return null;
     }
 
-    
 }
