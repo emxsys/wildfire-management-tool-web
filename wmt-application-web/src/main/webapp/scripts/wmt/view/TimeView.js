@@ -52,10 +52,10 @@ define([
                 this.layer.addRenderable(this.widget);
                 controller.globe.addLayer(this.layer, false); // False: hide in layer list
                 
-                // Listen for mouse clicks.
-                selectable.makeSelectable(this.widget.reset, function () {
-                    controller.model.updateAppTime(new Date());
-                });
+// The reset button has been superseded by the time control buttons 
+//                selectable.makeSelectable(this.widget.reset, function () {
+//                    controller.model.updateAppTime(new Date());
+//                });
             }
         };
         return TimeView;

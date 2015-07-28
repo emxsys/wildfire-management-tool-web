@@ -22,9 +22,15 @@
     padding-top: 0;
 }
 
+#timeControlButtons {
+    position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
+    bottom: 35px;   
+    left: calc(50vw - 98px); 
+}
+
 #timeControlSlider {
     position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
-    bottom: 5%;   
+    bottom: 20px;   
     left: 29%;
 }
 

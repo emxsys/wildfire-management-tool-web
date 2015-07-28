@@ -40,6 +40,7 @@ define(['worldwind'],
         "use strict";
         var WmtUtil = {
             DEG_TO_RAD: Math.PI / 180,
+            HOURS_TO_MILLISECS: 1000 * 60 * 60,
             METERS_TO_FEET: 3.28084,
             METERS_TO_MILES: 0.000621371,
             MILLISECS_TO_MINUTES: 1 / (1000 * 60),

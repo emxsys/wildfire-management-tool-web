@@ -835,16 +835,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </a>
                             </div>
                             <div class="row" style="padding-top: 5px;padding-left: 5px;">
+                                <!--DateTime buttons-->
+                                <div id="timeControlButtons" class="col-xs-7 col-sm-5">
+                                    <div class="btn-group btn-group-sm interactive" role="group" aria-label="time controls">
+                                        <button id="time-fast-back" type="button" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>
+                                        <button id="time-step-back" type="button" class="btn btn-default"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></button>
+                                        <button id="time-reset" type="button" class="btn btn-default"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
+                                        <button id="time-step-forward" type="button" class="btn btn-default"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></button>
+                                        <button id="time-fast-forward" type="button" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>
+                                    </div>               
+                                </div>
                                 <!--DateTime slider-->
                                 <div id="timeControlSlider" class="col-xs-5 col-sm-5 interactive"></div>
                             </div>
                             <div class="row">
-                                
+
                                 <!-- ICS Marker Palette --> 
                                 <div id="mobileIcsMarkerPalette" class="col-xs-3 col-sm-3" >
                                     <div id="markerList" class="interactive"></div>
                                 </div>
-                                
+
                                 <!-- Pushpin Palette --> 
                                 <div id="mobilePushpinPalette" class="col-xs-3 col-sm-3">
                                     <div id="markerList" class="interactive"></div>
@@ -864,7 +874,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
-                                        
+
                                         <!--Add Weather Scout button-->
                                         <button id="globeCreateWeatherScout" 
                                                 type="button"
@@ -876,7 +886,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
                                         </button>
-                                        
+
                                         <!--Add Fire Lookout button-->
                                         <button id="globeCreateFireLookout" 
                                                 type="button"
@@ -887,8 +897,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                                 title="Add a fire lookout to the globe.">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-                                        </button>                                        
-                                    </div>                 
+                                        </button>          
+                                    </div>   
                                 </div>
 
                             </div>
@@ -1058,7 +1068,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 </div>
                                 <div id="lookout-fuel-tab">
                                     <h5>Fuel Model</h5>
-                                    
+
                                     <input type="checkbox" id="lookout-fuelmodel-auto" name="lookout-fuelmodel-auto" value="1"/>
                                     <label for="lookout-fuelmodel-auto">Automatic Selection</label>
                                     <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>

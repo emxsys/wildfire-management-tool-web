@@ -41,7 +41,8 @@
 define([
     'wmt/controller/Controller',
     'wmt/util/WmtUtil'],
-    function (controller,
+    function (
+        controller,
         util) {
         "use strict";
         var DateTimeControls = {
@@ -58,8 +59,16 @@ define([
                 });
                 $("#timeControlSlider").on('mousedown', $.proxy(this.onMousedown, this));
                 $("#timeControlSlider").on('mouseup', $.proxy(this.onMouseup, this));
+                
                 // The slide event provides events from the keyboard
                 $("#timeControlSlider").on('slide', $.proxy(this.onSlide, this));
+
+                // Time control button click handlers
+                $("#time-fast-back").on('click', function() {controller.incrementDateTime(-60 * 24);});
+                $("#time-step-back").on('click', function() {controller.incrementDateTime(-60);});
+                $("#time-reset").on('click', function() {controller.model.updateAppTime(new Date());});
+                $("#time-step-forward").on('click', function() {controller.incrementDateTime(60);});
+                $("#time-fast-forward").on('click', function() {controller.incrementDateTime(60 * 24);});
 
             },
             onMousedown: function (event) {

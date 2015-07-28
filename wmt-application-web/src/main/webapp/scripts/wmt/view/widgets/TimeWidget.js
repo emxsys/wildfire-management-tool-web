@@ -109,9 +109,9 @@ define([
                     WorldWind.OFFSET_PIXELS, BOTTOM_MARGIN - 45),
                 textAttr = new WorldWind.TextAttributes(null);
             // Graphics
-            
-            this.reset = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "reset-button.png");
-            this.reset.imageOffset = resetOffset;
+// The reset button has been superseded by the time control buttons            
+//            this.reset = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "reset-button.png");
+//            this.reset.imageOffset = resetOffset;
             
             this.background = new WorldWind.ScreenImage(lowerLeft, wmt.IMAGE_PATH + "widget-circle-bg.png");
             this.background.imageOffset = backgroundOffset;
@@ -283,7 +283,7 @@ define([
             this.sunriseIcon.render(dc);
             this.sunsetIcon.render(dc);
             
-            this.reset.render(dc);
+            //this.reset.render(dc);
             
 
             // Text
