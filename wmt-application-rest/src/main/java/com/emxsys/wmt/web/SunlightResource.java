@@ -48,9 +48,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.openide.util.Exceptions;
 
+
 /**
- * REST Web Service. Retrieves representation of an instance of
- * com.emxsys.solar.BasicSunliht. Example:
+ * REST Web Service. Retrieves representation of an instance of com.emxsys.solar.BasicSunliht.
+ * Example:
  * <pre>GET http://localhost:8080/sunlight?time=2015-04-13T13:34:25-07:00[America/Los_Angeles]&latitude=34.25&longitude=-119.2</pre>
  *
  * @author Bruce Schubert
@@ -74,17 +75,16 @@ public class SunlightResource {
      * @param time An ISO Date/Time string.
      * @param latitude Latitude in degrees.
      * @param longitude Longitude in degrees.
-     * @param mimeType Optional. "application/json", "application/xml" or
-     * "text/plain".
+     * @param mimeType Optional. "application/json", "application/xml" or "text/plain".
      * @return A Response containing entity representation.
      */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getResource(
-            @QueryParam("time") String time,
-            @QueryParam("latitude") double latitude,
-            @QueryParam("longitude") double longitude,
-            @QueryParam("mime-type") String mimeType) {
+        @QueryParam("time") String time,
+        @QueryParam("latitude") double latitude,
+        @QueryParam("longitude") double longitude,
+        @QueryParam("mime-type") String mimeType) {
 
         try {
             // Validate params and decode JavaScript encoded params
@@ -92,6 +92,8 @@ public class SunlightResource {
                 // mandatory parameter
                 // TODO: throw
             } else {
+                // A plus sign may be embedded in the time string. Ensure the 
+                // URLDecoder doesn't intepret it as a space by encoding it.
                 time = URLDecoder.decode(time.replace("+", "%2B"), "UTF-8");
             }
             if (mimeType != null && !mimeType.isEmpty()) {
@@ -100,7 +102,17 @@ public class SunlightResource {
             }
 
             // Get the resource entity
-            BasicSunlight sunlight = getSunlight(time, latitude, longitude);
+            BasicSunlight sunlight = null;
+            try {
+                sunlight = getSunlight(time, latitude, longitude);
+            }
+            catch (Exception e) {
+                // Probably improperly formatted time.
+                // Return 400 response with exception text as the entity.
+                return Response.status(Status.BAD_REQUEST)
+                    .entity(e.getMessage()).type("text/plain")
+                    .build();
+            }
 
             MediaType mediaType = MediaType.APPLICATION_XML_TYPE;  // default.
 
@@ -129,8 +141,9 @@ public class SunlightResource {
                 }
             }
             return Response.ok(mediaType.getType().equals("text") ? sunlight.toString() : sunlight, mediaType)
-                    .build();
-        } catch (Exception ex) {
+                .build();
+        }
+        catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             return Response.serverError().entity(ex.toString()).build();
         }
