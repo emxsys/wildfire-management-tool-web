@@ -92,13 +92,14 @@ define([
             },
             /**
              * @param {Number} offset Timezone offset in minutes
-             * @returns {String} [+/-]HH:MM string.
+             * @returns {String} [+/-]HH:MM string. Note the "+" sign must be encoded
+             * as %2b to ensure it is not interpreted as a space at the server.
              */
             formatOffset: function (offset) {
                 var total = Math.abs(offset),
                     hours = Math.floor(total / 60),
                     minutes = total - (hours * 60);
-                return (offset < 0) ? "+" : "-" + this.pad(hours) + ":" + this.pad(minutes);
+                return (offset < 0 ? "%2b" : "-") + this.pad(hours) + ":" + this.pad(minutes);
             },
             pad: function (value) {
                 var n = Math.abs(value);
