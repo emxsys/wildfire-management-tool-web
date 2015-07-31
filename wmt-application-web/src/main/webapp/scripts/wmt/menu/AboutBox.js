@@ -82,7 +82,7 @@ define(['wmt/Wmt'],
                 $('#aboutBox-dlg_label').text('About WMT Version ' + wmt.VERSION);
 
                 // Show the dialog when the WMT icon is clicked
-                $("#about").on("click", function (event) {
+                $("#wmt-logo").on("click", function (event) {
                     $('#aboutBox-dlg').puidialog('show');
                 });
 

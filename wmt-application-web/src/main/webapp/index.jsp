@@ -795,43 +795,61 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div class="container-full non-interactive" Style="position:absolute;top:5px"> 
                             <div class="row">
                                 <!--Control Panel Button-->
-                                <!-- BDS: <div class="col-xs-2 col-sm-1 hidden-md hidden-lg">-->
                                 <div class="col-xs-2 col-sm-1">
                                     <button id="mobileMenuButton" class="c-hamburger c-hamburger--htla interactive">
                                         <span>toggle menu</span>
                                     </button>
                                 </div>
                                 <!--Search Bar-->
-                                <div class=" col-xs-7 col-sm-8"
+                                <div class="col-xs-5 col-sm-6" 
                                      style="padding-right: 0; padding-left: 0; height:32px"
                                      id="searchBox">
-                                    <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px; max-width: 40px">
-                                        <button type="button" 
-                                                class="btn btn-default interactive"
-                                                style="height:32px;"
-                                                id="searchUndo">
-                                            <span class="glyphicon glyphicon-circle-arrow-left" style=""/>
-                                        </button>
-                                    </div>
-                                    <div class="form-group col-xs-6 col-sm-8" style="height:32px;padding:0px;">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="button" 
+                                                    class="btn btn-default btn-sm interactive"
+                                                    style="height:32px;"
+                                                    id="searchUndo">
+                                                <span class="glyphicon glyphicon-circle-arrow-left" style=""/>
+                                            </button>
+                                        </span>
                                         <input type="text" 
                                                class="form-control interactive"
                                                style="height:32px;"
                                                placeholder="Go To..."
                                                id="searchText" />
-                                    </div>
-                                    <div class="col-xs-2 col-sm-2" style="padding-right: 0; padding-left: 0; height:32px; max-width: 40px">
-                                        <button type="button" 
-                                                class="btn btn-default interactive"
-                                                style="height:32px;"
-                                                id="searchRedo"> 
-                                            <span class="glyphicon glyphicon-circle-arrow-right" style=""/>
-                                        </button>
+                                        <span class="input-group-btn">
+                                            <button type="button" 
+                                                    class="btn btn-default btn-sm interactive"
+                                                    style="height:32px;"
+                                                    id="searchRedo"> 
+                                                <span class="glyphicon glyphicon-circle-arrow-right" style=""/>
+                                            </button>
+                                        </span>
                                     </div>
                                 </div>
-
-                                <a class="col-xs-3 col-sm-2 interactive" href="#" style="float:right;">
-                                    <img alt="WMT" src="./images/wmt-web-white-53x24.png" style='float:right;'>
+                                <!--Help Button-->
+                                <div class="col-xs-2 col-sm-3"
+                                     style="padding-right: 0; padding-left: 0; height:32px">
+                                    <a class="btn btn-default btn-sm interactive" 
+                                       href="https://bitbucket.org/emxsys/wildfire-management-tool-web/wiki/Quick%20Start" 
+                                       title="Opens Quick Start help in another window."
+                                       target="_blank"
+                                       style="float:right;">
+                                        <span class="glyphicon glyphicon-question-sign" />
+                                    </a>
+                                    <!--                                    <button type="button" 
+                                                                                class="btn btn-default btn-sm interactive"
+                                                                                id="help"> 
+                                                                            <span class="glyphicon glyphicon-question-sign" />
+                                                                        </button>-->
+                                </div>
+                                <!--WMT Logo-->
+                                <a class="btn btn-link interactive" 
+                                   href="#" 
+                                   title="About WMTweb"
+                                   style="padding-right: 15px; padding-top: 0px; padding-left: 0; height:32px; float:right;">
+                                    <img id="wmt-logo" alt="WMTweb" src="./images/wmt-web-white-53x24.png" style='float:right;'>
                                 </a>
                             </div>
                             <div class="row" style="padding-top: 5px;padding-left: 5px;">
@@ -923,7 +941,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <div>
                             <div id="aboutBox-tab1">
                                 <div>      
-                                    <img alt="WMT" src="./images/emxsys-wmt-splash-fire-v4.png">
+                                    <!--<img alt="WMT" src="./images/wmt-web-logo.png" width="50%" height="50%">-->
+                                    <img alt="Emxsys" src="./images/emxsys_small_rect.jpg">
+                                    <p>Copyright (c) 2015, Bruce Schubert <a href="mailto:bruce@emxsys.com">(bruce@emxsys.com)</a> All rights reserved.</p>
+                                    <!--                                    <p>Redistribution and use in source and binary forms, with or without
+                                                                            modification, are permitted provided that the following conditions are met:</p>
+                                                                        <ul>
+                                                                            <li>Redistributions of source code must retain the above copyright
+                                                                                notice, this list of conditions and the following disclaimer.</li>
+                                    
+                                                                            <li>Redistributions in binary form must reproduce the above copyright
+                                                                                notice, this list of conditions and the following disclaimer in the
+                                                                                documentation and/or other materials provided with the distribution.</li>
+                                    
+                                                                            <li>Neither the name of Bruce Schubert, Emxsys nor the names of its 
+                                                                                contributors may be used to endorse or promote products derived
+                                                                                from this software without specific prior written permission.</li>
+                                                                        </ul>-->
+                                    <p> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+                                        ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                                        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                                        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+                                        ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                                        (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                                        LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                                        ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                                        (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                                        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
                                 </div>
                             </div>
                             <div id="aboutBox-credit-tabs">
