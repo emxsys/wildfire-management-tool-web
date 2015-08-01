@@ -76,11 +76,11 @@ define([
                 this.manager.on(wmt.EVENT_WEATHER_SCOUT_REMOVED, this.handleWeatherScoutRemovedEvent, this);
 
                 // Get the RenderableLayer that we'll add the weathers to.
-                this.weatherLayer = controller.globe.findLayer(wmt.WEATHER_LAYER_NAME);
+                this.weatherLayer = controller.globe.findLayer(wmt.LAYER_NAME_WEATHER);
                 if (!this.weatherLayer) {
                     throw new Error(
                         log.error("WeatherScoutViewManager", "constructor",
-                            "Could not find a Layer named " + wmt.WEATHER_LAYER_NAME));
+                            "Could not find a Layer named " + wmt.LAYER_NAME_WEATHER));
                 }
 
                 // Add button event handlers

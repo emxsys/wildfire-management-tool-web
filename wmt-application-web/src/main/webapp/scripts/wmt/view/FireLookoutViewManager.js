@@ -72,11 +72,11 @@ define([
                 this.manager.on(wmt.EVENT_FIRE_LOOKOUT_REMOVED, this.handleFireLookoutRemovedEvent, this);
 
                 // Get the RenderableLayer that we'll add the fires to.
-                this.lookoutLayer = controller.globe.findLayer(wmt.FIRE_BEHAVIOR_LAYER_NAME);
+                this.lookoutLayer = controller.globe.findLayer(wmt.LAYER_NAME_FIRE_BEHAVOR);
                 if (!this.lookoutLayer) {
                     throw new Error(
                         logger.error("FireLookoutViewManager", "constructor",
-                            "Could not find a Layer named " + wmt.FIRE_BEHAVIOR_LAYER_NAME));
+                            "Could not find a Layer named " + wmt.LAYER_NAME_FIRE_BEHAVOR));
                 }
 
                 // Event handler for new FireLookouts

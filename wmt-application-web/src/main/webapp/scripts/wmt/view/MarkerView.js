@@ -72,11 +72,11 @@ define([
             this.manager.on(wmt.EVENT_MARKER_REMOVED, this.handleMarkerRemovedEvent, this);
 
             // Get the RenderableLayer that we'll add the markers to.
-            this.markerLayer = controller.globe.findLayer(wmt.MARKERS_LAYER_NAME);
+            this.markerLayer = controller.globe.findLayer(wmt.LAYER_NAME_MARKERS);
             if (!this.markerLayer) {
                 throw new Error(
                     log.error("MarkerView", "constructor",
-                        "Could not find a Layer named " + wmt.MARKERS_LAYER_NAME));
+                        "Could not find a Layer named " + wmt.LAYER_NAME_MARKERS));
             }
 
             // Create Click/Drop (DnD) palettes 

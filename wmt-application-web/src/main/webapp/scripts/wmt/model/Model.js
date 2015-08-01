@@ -59,6 +59,7 @@ define([
     'wmt/globe/Terrain',
     'wmt/globe/Viewpoint',
     'wmt/model/WeatherScoutManager',
+    'wmt/model/WildlandFireManager',
     'wmt/util/WmtUtil',
     'wmt/Wmt',
     'worldwind'],
@@ -75,6 +76,7 @@ define([
         Terrain,
         Viewpoint,
         WeatherScoutManager,
+        WildlandFireManager,
         util,
         wmt,
         ww) {
@@ -99,6 +101,7 @@ define([
             this.markerManager = new MarkerManager(this);
             this.weatherScoutManager = new WeatherScoutManager(this);
             this.fireLookoutManager = new FireLookoutManager(this);
+            this.wildlandFireManager = new WildlandFireManager(this);
                         
             // Properties (available for non-subscribers)
             this.viewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);

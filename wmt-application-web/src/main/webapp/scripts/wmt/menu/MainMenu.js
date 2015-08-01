@@ -58,7 +58,8 @@ define([
     'wmt/view/MarkerView',
     'wmt/menu/SearchBox',
     'wmt/view/TimeView',
-    'wmt/view/WeatherScoutViewManager'],
+    'wmt/view/WeatherScoutViewManager',
+    'wmt/view/WildlandFireViewManager'],
     function (
         aboutBox,
         controller,
@@ -72,7 +73,8 @@ define([
         MarkerView,
         SearchBox,
         timeView,
-        weatherScoutViewManager) {
+        weatherScoutViewManager,
+        wildlandFireViewManager) {
         "use strict";
         var MainMenu = {
             /**
@@ -160,6 +162,7 @@ define([
                     this.markerPanel = new MarkerView();                   
                     fireLookoutViewManager.initialize();
                     weatherScoutViewManager.initialize();
+                    wildlandFireViewManager.initialize();
 
                     // Screen Widgets
                     dateTimeControls.initialize();

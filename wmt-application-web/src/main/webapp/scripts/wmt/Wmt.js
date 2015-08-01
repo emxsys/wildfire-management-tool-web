@@ -63,6 +63,9 @@ define([],
             EVENT_MARKER_ADDED: "markerAdded",
             EVENT_MARKER_CHANGED: "markerChanged",
             EVENT_MARKER_REMOVED: "markerRemoved",
+            EVENT_WILDLAND_FIRE_ADDED: "wildlandFireAdded",
+            EVENT_WILDLAND_FIRE_CHANGED: "wildlandFireChanged",
+            EVENT_WILDLAND_FIRE_REMOVED: "wildlandFireRemoved",
             /**
              * Publish/subscibe event name for notifcation of mouse position on the globe.
              * @constant
@@ -99,14 +102,6 @@ define([],
             EVENT_WEATHER_SCOUT_CHANGED: "weatherScoutChanged",
             EVENT_WEATHER_SCOUT_REMOVED: "weatherScoutRemoved",
             /**
-             * The display name for the layer that displays fire behavior lookouts.
-             */
-            FIRE_BEHAVIOR_LAYER_NAME: "Fire Lookouts",
-            /**
-             * The display name for the layer that displays fire perimeters and related data.
-             */
-            FIRE_PERIMETERS_LAYER_NAME: "Fire Perimeters",
-            /**
              * The URL for the fuel models REST service.
              */
             FUELMODELS_REST_SERVICE: "/wmt-rest/rs/fuelmodels",
@@ -114,6 +109,10 @@ define([],
              * The URL for the fuel models REST service.
              */
             FUELMOISTURE_REST_SERVICE: "/wmt-rest/rs/fuelmoisture",
+            /**
+             * The URL for the GeoMAC MapServer REST service.
+             */
+            GEOMAC_REST_SERVICE: "http://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_fires/MapServer",
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
@@ -127,11 +126,23 @@ define([],
              * The display name for the layer that displays markers.
              */
             LAYER_NAME_COMPASS: "Compass",
+            /**
+             * The display name for the layer that displays fire behavior lookouts.
+             */
+            LAYER_NAME_FIRE_BEHAVOR: "Fire Lookouts",
+            LAYER_NAME_MARKERS: "Markers",
             LAYER_NAME_RETICLE: "Crosshairs",
             LAYER_NAME_SKY: "Sky",
             LAYER_NAME_VIEW_CONTROLS: "Controls",
+            /**
+             * The display name for the layer that displays weather stations and lookouts.
+             */
+            LAYER_NAME_WEATHER: "Weather",
             LAYER_NAME_WIDGETS: "Widgets",
-            MARKERS_LAYER_NAME: "Markers",
+            /**
+             * The display name for the layer that displays fire perimeters and related data.
+             */
+            LAYER_NAME_WILDLAND_FIRES: "Fire Perimeters",
             MAP_SYMBOL_ALTITUDE_WEATHER: 500,
             MAP_SYMBOL_ALTITUDE_WILDFIRE: 250,
             /**
@@ -174,10 +185,6 @@ define([],
              * The URL for the terrain REST service.
              */
             TERRAIN_REST_SERVICE: "/wmt-rest/rs/terrain",
-            /**
-             * The display name for the layer that displays weather stations and lookouts.
-             */
-            WEATHER_LAYER_NAME: "Weather",
             /**
              * The URL for the weather REST service.
              */

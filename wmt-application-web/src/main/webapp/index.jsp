@@ -669,7 +669,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                      aria-labelledby="fireIncidentsHeading">
                                     <div class="panel-body">
                                         <ul class="list-group pre-scrollable" 
-                                            id="fireIncidentList">
+                                            id="wildlandFireList">
                                         </ul>                              
                                     </div>
                                 </div>
