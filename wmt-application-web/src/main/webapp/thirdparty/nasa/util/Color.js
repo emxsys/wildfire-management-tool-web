@@ -288,6 +288,20 @@ define([
         };
 
         /**
+         * Creates an rgba color string that CSS can use that supports trannsparency. Returns a string representation 
+         * of this color, in a style compatible with the canvas fillstyle.
+         * @returns {String}
+         */
+        Color.prototype.toRgbaString = function () {
+            var rb = Math.round(this.red * 255),
+                gb = Math.round(this.green * 255),
+                bb = Math.round(this.blue * 255),
+                ab = this.alpha;
+
+            return "rgba(" + rb + "," + gb + "," + bb + "," + ab + ")";
+        };
+
+        /**
          * Create a hex color string that CSS can use. Optionally, inhibit capturing alpha,
          * because some uses reject a four-component color specification.
          * @param {Boolean} isUsingAlpha Enable the use of an alpha component.
