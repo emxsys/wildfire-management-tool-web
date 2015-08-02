@@ -63,15 +63,27 @@ define([
 
             var marker,
                 i, numRings, ring,
-                j, numPoints, perimeter;
-            
-            // Create the composite weather map symbol components
-            if (fire.geometry.x && fire.geometry.y) {
+                j, numPoints, perimeter,
+                attributes, highlightAttributes;
+
+            // Create and set attributes for fire perimeter polygons
+            attributes = new WorldWind.ShapeAttributes(null);
+            attributes.outlineColor = WorldWind.Color.RED;
+            attributes.interiorColor = new WorldWind.Color(0, 0, 0, 0.5);
+
+            highlightAttributes = new WorldWind.ShapeAttributes(attributes);
+            highlightAttributes.interiorColor = new WorldWind.Color(1, 1, 1, 0.5);
+
+            // Create the symbol components
+            if (fire.type === 'point') {
+
                 marker = new IcsMarker(fire.geometry.y, fire.geometry.x, "ics-fire-location");
                 marker.pickDelegate = fire;
                 marker.label = fire.name;
                 this.shapes.push(marker);
-            } else if (fire.geometry.rings) {
+
+            } else if (fire.type === 'polygon') {
+
                 for (i = 0, numRings = fire.geometry.rings.length; i < numRings; i++) {
                     ring = fire.geometry.rings[i];
                     perimeter = [];
@@ -79,19 +91,10 @@ define([
                         perimeter.push(new WorldWind.Location(ring[j][1], ring[j][0]));
                     }
 
-                    // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
-                    // object. Real apps typically create new attributes objects for each shape unless they know the attributes
-                    // can be shared among shapes.
-                    var attributes = new WorldWind.ShapeAttributes(null);
-                    attributes.outlineColor = WorldWind.Color.RED;
-                    attributes.interiorColor = new WorldWind.Color(.5, 0, 0, 0.5);
-
-                    var highlightAttributes = new WorldWind.ShapeAttributes(attributes);
-                    highlightAttributes.interiorColor = new WorldWind.Color(1, 1, 1, 1);
 
                     var shape = new WorldWind.SurfacePolygon(perimeter, attributes);
                     shape.highlightAttributes = highlightAttributes;
-                    
+
                     this.shapes.push(shape);
                 }
             }
@@ -105,7 +108,21 @@ define([
          * @param {DrawContext} dc The current draw context.
          */
         WildlandFireSymbol.prototype.render = function (dc) {
-            for (var i = 0, max = this.shapes.length; i < max; i++) {
+            if (!this.enabled) {
+                return;
+            }
+
+            var i, max, shape;
+
+            for (i = 0, max = this.shapes.length; i < max; i++) {
+                shape = this.shapes[i];
+                // Preempt SurfaceShapeTile processing if the shape is not in view.
+                // Note: isPrepared and sector are initialized on the first rendering.
+                if (shape instanceof WorldWind.SurfaceShape && shape.isPrepared) {
+                    if (!shape.sector.overlaps(dc.terrain.sector)) {
+                        continue;
+                    }
+                }
                 this.shapes[i].render(dc);
             }
         };

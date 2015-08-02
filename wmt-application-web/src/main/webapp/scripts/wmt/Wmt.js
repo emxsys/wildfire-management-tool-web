@@ -142,7 +142,8 @@ define([],
             /**
              * The display name for the layer that displays fire perimeters and related data.
              */
-            LAYER_NAME_WILDLAND_FIRES: "Fire Perimeters",
+            LAYER_NAME_WILDLAND_FIRES: "Active Fires",
+            LAYER_NAME_WILDLAND_FIRE_PERIMETERS: "Active Fire Permimeters",
             MAP_SYMBOL_ALTITUDE_WEATHER: 500,
             MAP_SYMBOL_ALTITUDE_WILDFIRE: 250,
             /**

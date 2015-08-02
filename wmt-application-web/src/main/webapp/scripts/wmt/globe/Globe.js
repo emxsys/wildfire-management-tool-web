@@ -150,11 +150,11 @@ define([
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new LandfireLayer(null), enabled: false},
-                    {layer: new GeoMacCurrentPerimetersLayer(null), enabled: false},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WEATHER), enabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true, pickEnabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WEATHER), enabled: true, pickEnabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WIDGETS), enabled: true, hide: true}
                 ],
                 layer,
@@ -177,6 +177,8 @@ define([
                 for (i = 0, max = defaultLayers.length; i < max; i++) {
                     // Propagate enabled option to the layer object
                     defaultLayers[i].layer.enabled = defaultLayers[i].enabled;
+                    defaultLayers[i].layer.pickEnabled = defaultLayers[i].pickEnabled;
+                    
                     // Hide background and control layers in the menu 
                     if (defaultLayers[i].hide) {
                         defaultLayers[i].layer.hide = defaultLayers[i].hide;

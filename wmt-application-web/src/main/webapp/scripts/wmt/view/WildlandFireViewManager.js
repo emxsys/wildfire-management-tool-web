@@ -76,19 +76,20 @@ define([
                 this.manager.on(wmt.EVENT_WILDLAND_FIRE_REMOVED, this.handleWildlandFireRemovedEvent, this);
 
                 // Get the RenderableLayer that we'll add the weathers to.
-                this.wildlandFiresLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRES);
-                if (!this.wildlandFiresLayer) {
+                this.activeFiresLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRES);
+                this.activeFirePerimetersLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS);
+                if (!this.activeFiresLayer) {
                     throw new Error(
                         log.error("WildlandFireViewManager", "constructor",
                             "Could not find a Layer named " + wmt.LAYER_NAME_WILDLAND_FIRES));
-                }            
+                }
             },
             /**
              * Creates a renderable and UI representatiions for the given fire object
              * @param {WildlandFire} fire 
              */
             handleWildlandFireAddedEvent: function (fire) {
-                if (!this.wildlandFiresLayer) {
+                if (!this.activeFiresLayer) {
                     return;
                 }
                 try {
@@ -108,15 +109,15 @@ define([
             handleWildlandFireRemovedEvent: function (fire) {
                 var i, max, renderable;
 
-                if (!this.wildlandFiresLayer) {
+                if (!this.activeFiresLayer) {
                     // The model is initialized before this panel is initialized
                     return;
                 }
                 try {
-                    for (i = 0, max = this.wildlandFiresLayer.renderables.length; i < max; i++) {
-                        renderable = this.wildlandFiresLayer.renderables[i];
+                    for (i = 0, max = this.activeFiresLayer.renderables.length; i < max; i++) {
+                        renderable = this.activeFiresLayer.renderables[i];
                         if (renderable.wxFire.id === fire.id) {
-                            this.wildlandFiresLayer.renderables.splice(i, 1);
+                            this.activeFiresLayer.renderables.splice(i, 1);
                             break;
                         }
                     }
@@ -132,7 +133,11 @@ define([
              */
             createRenderable: function (fire) {
                 // Add the wildland fire symbol on the globe
-                this.wildlandFiresLayer.addRenderable(new WildlandFireSymbol(fire));
+                if (fire.type === 'point') {
+                    this.activeFiresLayer.addRenderable(new WildlandFireSymbol(fire));
+                } else {
+                    this.activeFirePerimetersLayer.addRenderable(new WildlandFireSymbol(fire));
+                }
             },
             /**
              * Synchronize the wildland fires list with the wildland fires model.

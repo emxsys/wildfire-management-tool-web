@@ -48,9 +48,9 @@ define([
             this.fires = [];
 
             var self = this,
-                i, max, 
+                i, max,
                 feature;
-            
+
             // Load the large fire points
             geoMac.activeFires(function (features) {
                 for (i = 0, max = features.length; i < max; i++) {
@@ -62,8 +62,11 @@ define([
             geoMac.activeFirePerimeters(function (features) {
                 for (i = 0, max = features.length; i < max; i++) {
                     feature = features[i];
-                    self.addFire(new WildlandFire(feature));
-                }
+                    // Breakup the long processing with a timeout
+                    setTimeout(function (feature) {
+                        self.addFire(new WildlandFire(feature));
+                    }, 50, feature);
+                };
             }, false);  // async = false
         };
 

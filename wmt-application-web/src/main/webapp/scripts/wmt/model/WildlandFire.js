@@ -28,31 +28,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define*/
+/*global define, WorldWind*/
 
-define(['require',
+define([
     'wmt/util/ContextSensitive',
     'wmt/util/Openable',
     'wmt/util/Log',
     'wmt/util/Messenger',
-    'wmt/util/Movable',
-    'wmt/util/Removable',
     'wmt/util/WmtUtil'],
     function (
-        require,
         contextSensitive,
         openable,
         log,
         messenger,
-        movable,
-        removable,
         util) {
         "use strict";
 
         var WildlandFire = function (feature) {
             var attributes = feature.attributes || {},
-                self = this,
-                model = require("wmt/controller/Controller").model;
+                i, numRings, ring,
+                j, numPoints,
+                minLat, maxLat,
+                minLon, maxLon;
 
             // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
             openable.makeOpenable(this, function () {
@@ -73,9 +70,32 @@ define(['require',
             // First attempt to assign a "large fire point", the the "current fire perimeter" attribute
             this.name = attributes.incidentname || attributes.fire_name || 'Fire';
             this.number = attributes.uniquefireidentifier || attributes.inc_num || 'Unknown';
-            this.latitude = attributes.latitude;
-            this.longitude = attributes.longitude;
             this.geometry = feature.geometry;
+            
+            // Create the composite weather map symbol components
+            if (feature.geometry.x && feature.geometry.y) {
+                this.latitude = feature.geometry.y;
+                this.longitude = feature.geometry.x;
+                this.type = 'point';
+            } else if (feature.geometry.rings) {
+                minLat = Number.MAX_VALUE;
+                minLon = Number.MAX_VALUE;
+                maxLat = -Number.MAX_VALUE;
+                maxLon = -Number.MAX_VALUE;
+                for (i = 0, numRings = feature.geometry.rings.length; i < numRings; i++) {
+                    ring = feature.geometry.rings[i];
+                    for (j = 0, numPoints = ring.length; j < numPoints; j++) {
+                        minLat = Math.min(minLat,ring[j][1]);
+                        maxLat = Math.max(maxLat,ring[j][1]);
+                        minLon = Math.min(minLon,ring[j][0]);
+                        maxLon = Math.max(maxLon,ring[j][0]);
+                    }
+                }
+                this.extents = new WorldWind.Sector(minLat, maxLat, minLon, maxLon);
+                this.latitude = extents.centroidLatitude();
+                this.longitude = extents.centroidLongitude();
+                this.type = 'polygon';
+            }
         };
 
 
