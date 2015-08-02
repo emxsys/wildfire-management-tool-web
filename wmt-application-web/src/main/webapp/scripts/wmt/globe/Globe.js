@@ -151,7 +151,7 @@ define([
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new LandfireLayer(null), enabled: false},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true},
+                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WEATHER), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), enabled: true, pickEnabled: true},

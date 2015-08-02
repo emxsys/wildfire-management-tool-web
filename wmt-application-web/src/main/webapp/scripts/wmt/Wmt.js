@@ -113,6 +113,9 @@ define([],
              * The URL for the GeoMAC MapServer REST service.
              */
             GEOMAC_REST_SERVICE: "http://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_fires/MapServer",
+            GEOMETRY_POINT: 'point',
+            GEOMETRY_POLYGON: 'polygon',
+            GEOMETRY_POLYLINE: 'polyline',
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */

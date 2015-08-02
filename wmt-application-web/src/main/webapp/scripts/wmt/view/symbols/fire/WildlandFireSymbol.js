@@ -75,14 +75,14 @@ define([
             highlightAttributes.interiorColor = new WorldWind.Color(1, 1, 1, 0.5);
 
             // Create the symbol components
-            if (fire.type === 'point') {
+            if (fire.geometryType === wmt.GEOMETRY_POINT) {
 
                 marker = new IcsMarker(fire.geometry.y, fire.geometry.x, "ics-fire-location");
                 marker.pickDelegate = fire;
                 marker.label = fire.name;
                 this.shapes.push(marker);
 
-            } else if (fire.type === 'polygon') {
+            } else if (fire.geometryType === wmt.GEOMETRY_POLYGON) {
 
                 for (i = 0, numRings = fire.geometry.rings.length; i < numRings; i++) {
                     ring = fire.geometry.rings[i];
