@@ -133,7 +133,7 @@ define([
              */
             createRenderable: function (fire) {
                 // Add the wildland fire symbol on the globe
-                if (fire.type === 'point') {
+                if (fire.geometryType === wmt.GEOMETRY_POINT) {
                     this.activeFiresLayer.addRenderable(new WildlandFireSymbol(fire));
                 } else {
                     this.activeFirePerimetersLayer.addRenderable(new WildlandFireSymbol(fire));

@@ -64,7 +64,7 @@ define([
             var marker,
                 i, numRings, ring,
                 j, numPoints, perimeter,
-                attributes, highlightAttributes;
+                shape, attributes, highlightAttributes;
 
             // Create and set attributes for fire perimeter polygons
             attributes = new WorldWind.ShapeAttributes(null);
@@ -76,23 +76,21 @@ define([
 
             // Create the symbol components
             if (fire.geometryType === wmt.GEOMETRY_POINT) {
-
+                // Points are symbolized with an ICS Fire Location symbol
                 marker = new IcsMarker(fire.geometry.y, fire.geometry.x, "ics-fire-location");
                 marker.pickDelegate = fire;
                 marker.label = fire.name;
                 this.shapes.push(marker);
 
             } else if (fire.geometryType === wmt.GEOMETRY_POLYGON) {
-
+                // Polygons are rendered as SurfacePolygons
                 for (i = 0, numRings = fire.geometry.rings.length; i < numRings; i++) {
                     ring = fire.geometry.rings[i];
                     perimeter = [];
                     for (j = 0, numPoints = ring.length; j < numPoints; j++) {
                         perimeter.push(new WorldWind.Location(ring[j][1], ring[j][0]));
                     }
-
-
-                    var shape = new WorldWind.SurfacePolygon(perimeter, attributes);
+                    shape = new WorldWind.SurfacePolygon(perimeter, attributes);
                     shape.highlightAttributes = highlightAttributes;
 
                     this.shapes.push(shape);
@@ -111,18 +109,12 @@ define([
             if (!this.enabled) {
                 return;
             }
-
-            var i, max, shape;
-
-            for (i = 0, max = this.shapes.length; i < max; i++) {
-                shape = this.shapes[i];
-                // Preempt SurfaceShapeTile processing if the shape is not in view.
-                // Note: isPrepared and sector are initialized on the first rendering.
-                if (shape instanceof WorldWind.SurfaceShape && shape.isPrepared) {
-                    if (!shape.sector.overlaps(dc.terrain.sector)) {
-                        continue;
-                    }
-                }
+            // Preempt SurfaceShapeTile processing if the shape is not in view.
+            if (this.fire.extents && !this.fire.extents.overlaps(dc.terrain.sector)) {
+                return;
+            }
+            
+            for (var i = 0, max = this.shapes.length; i < max; i++) {
                 this.shapes[i].render(dc);
             }
         };
