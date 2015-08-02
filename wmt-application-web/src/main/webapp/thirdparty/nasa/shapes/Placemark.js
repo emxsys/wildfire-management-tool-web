@@ -4,7 +4,7 @@
  */
 /**
  * @exports Placemark
- * @version $Id: Placemark.js 3292 2015-06-30 17:09:42Z tgaskins $
+ * @version $Id: Placemark.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -475,7 +475,7 @@ define([
 
                 this.labelTexture = dc.gpuResourceCache.resourceForKey(labelKey);
                 if (!this.labelTexture) {
-                    this.labelTexture = dc.textSupport.createTexture(dc, this.label, labelFont);
+                    this.labelTexture = dc.textSupport.createTexture(dc, this.label, labelFont, true);
                     dc.gpuResourceCache.putResource(labelKey, this.labelTexture, this.labelTexture.size);
                 }
 
@@ -597,7 +597,6 @@ define([
             gl.disableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Clear GL bindings.
-            dc.bindProgram(null);
             gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
             gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
         };
@@ -622,7 +621,7 @@ define([
             // Compute the effective visibility. Use the current value if picking.
             if (!dc.pickingMode && this.mustDrawLabel()) {
                 if (this.currentVisibility != this.targetVisibility) {
-                    var visibilityDelta = (dc.timestamp - dc.previousTimestamp) / dc.fadeTime;
+                    var visibilityDelta = (dc.timestamp - dc.previousRedrawTimestamp) / dc.fadeTime;
                     if (this.currentVisibility < this.targetVisibility) {
                         this.currentVisibility = Math.min(1, this.currentVisibility + visibilityDelta);
                     } else {

@@ -4,7 +4,7 @@
  */
 /**
  * @exports Navigator
- * @version $Id: Navigator.js 2940 2015-03-30 17:58:36Z tgaskins $
+ * @version $Id: Navigator.js 3298 2015-07-06 17:28:33Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -124,7 +124,7 @@ define([
             // Prevent the near clip plane from intersecting the terrain.
             distanceToSurface = eyePos.altitude - globe.elevationAtLocation(eyePos.latitude, eyePos.longitude);
             if (distanceToSurface > 0) {
-                maxNearDistance = WWMath.perspectiveNearDistance(viewport, distanceToSurface);
+                maxNearDistance = WWMath.perspectiveNearDistance(viewport.width, viewport.height, distanceToSurface);
                 if (this.nearDistance > maxNearDistance)
                     this.nearDistance = maxNearDistance;
             }
@@ -134,7 +134,7 @@ define([
 
             // Compute the current projection matrix based on this navigator's perspective properties and the current
             // WebGL viewport.
-            projectionMatrix.setToPerspectiveProjection(viewport, this.nearDistance, this.farDistance);
+            projectionMatrix.setToPerspectiveProjection(viewport.width, viewport.height, this.nearDistance, this.farDistance);
 
             return new NavigatorState(modelviewMatrix, projectionMatrix, viewport, this.heading, this.tilt);
         };

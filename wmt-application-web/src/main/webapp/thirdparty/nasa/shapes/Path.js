@@ -4,7 +4,7 @@
  */
 /**
  * @exports Path
- * @version $Id: Path.js 3259 2015-06-25 00:53:55Z tgaskins $
+ * @version $Id: Path.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../shapes/AbstractShape',
@@ -628,7 +628,6 @@ define([
             var gl = dc.currentGlContext;
 
             gl.disableVertexAttribArray(dc.currentProgram.vertexPointLocation);
-            dc.bindProgram(null);
             gl.depthMask(true);
             gl.lineWidth(1);
             gl.enable(WebGLRenderingContext.CULL_FACE);

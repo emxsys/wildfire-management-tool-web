@@ -4,7 +4,7 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3217 2015-06-19 18:58:03Z tgaskins $
+ * @version $Id: DrawContext.js 3351 2015-07-28 22:03:20Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -153,6 +153,12 @@ define([
             this.currentProgram = null;
 
             /**
+             * The list of surface renderables.
+             * @type {Array}
+             */
+            this.surfaceRenderables = [];
+
+            /**
              * Indicates whether this draw context is in ordered rendering mode.
              * @type {Boolean}
              */
@@ -168,18 +174,23 @@ define([
             this.orderedRenderablesCounter = 0; // Number
 
             /**
-             * The starting time of the current frame, in milliseconds.
+             * The starting time of the current frame, in milliseconds. The frame timestamp is updated immediately
+             * before the World Window associated with this draw context is rendered, either as a result of redrawing or
+             * as a result of a picking operation.
              * @type {Number}
              * @readonly
              */
             this.timestamp = Date.now();
 
             /**
-             * The [time stamp]{@link DrawContext#timestamp} of the previous frame, in milliseconds.
+             * The [time stamp]{@link DrawContext#timestamp} of the last visible frame, in milliseconds. This indicates
+             * the time stamp that was current during the World Window's last frame, ignoring frames associated with a
+             * picking operation. The difference between the previous redraw time stamp and the current time stamp
+             * indicates the duration between visible frames, e.g. <code style='white-space:nowrap'>timeStamp - previousRedrawTimestamp</code>.
              * @type {Number}
              * @readonly
              */
-            this.previousTimestamp = this.timestamp;
+            this.previousRedrawTimestamp = this.timestamp;
 
             /**
              * Indicates whether a redraw has been requested during the current frame. When true, this causes the World
@@ -330,6 +341,9 @@ define([
              * @readonly
              */
             this.objectsAtPickPoint = new PickedObjectList();
+
+            // Intentionally not documented.
+            this.pixelScale = 1;
         };
 
         // Internal use. Intentionally not documented.
@@ -344,14 +358,15 @@ define([
         DrawContext.prototype.reset = function () {
             // Reset the draw context's internal properties.
             this.screenCreditController.clear();
+            this.surfaceRenderables = []; // clears the surface renderables array
             this.orderedRenderingMode = false;
             this.orderedRenderables = []; // clears the ordered renderables array
             this.orderedRenderablesCounter = 0;
 
             // Advance the per-frame timestamp.
-            this.previousTimestamp = this.timestamp;
+            var previousTimestamp = this.timestamp;
             this.timestamp = Date.now();
-            if (this.timestamp === this.previousTimeStamp)
+            if (this.timestamp === previousTimestamp)
                 ++this.timestamp;
 
             // Reset properties set by the World Window every frame.
@@ -383,11 +398,12 @@ define([
          * frame has been set.
          */
         DrawContext.prototype.update = function () {
-            var eyePoint = this.navigatorState.eyePoint;
+            var gl = this.currentGlContext,
+                eyePoint = this.navigatorState.eyePoint;
 
             this.globeStateKey = this.globe.stateKey;
             this.globe.computePositionFromPoint(eyePoint[0], eyePoint[1], eyePoint[2], this.eyePosition);
-            this.screenProjection.setToScreenProjection(this.navigatorState.viewport);
+            this.screenProjection.setToScreenProjection(gl.drawingBufferWidth, gl.drawingBufferHeight);
         };
 
         /**
@@ -420,17 +436,12 @@ define([
          * default WebGL framebuffer is made active.
          */
         DrawContext.prototype.bindFramebuffer = function (framebuffer) {
-            var gl = this.currentGlContext;
-
-            if (framebuffer) {
-                framebuffer.bindFramebuffer(this);
-            } else {
-                gl.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER, null);
+            if (this.currentFramebuffer != framebuffer) {
+                this.currentGlContext.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER,
+                    framebuffer ? framebuffer.framebufferId : null);
+                this.currentFramebuffer = framebuffer;
             }
-
-            this.currentFramebuffer = framebuffer;
         };
-
 
         /**
          * Binds a specified WebGL program. This function also makes the program the current program.
@@ -438,15 +449,10 @@ define([
          * bound program is unbound.
          */
         DrawContext.prototype.bindProgram = function (program) {
-            var gl = this.currentGlContext;
-
-            if (program) {
-                program.bind(gl);
-            } else {
-                gl.useProgram(null);
+            if (this.currentProgram != program) {
+                this.currentGlContext.useProgram(program ? program.programId : null);
+                this.currentProgram = program;
             }
-
-            this.currentProgram = program;
         };
 
         /**
@@ -463,13 +469,12 @@ define([
                         "The specified program constructor is null or undefined."));
             }
 
-            var gl = this.currentGlContext,
-                program = this.gpuResourceCache.resourceForKey(programConstructor.key);
+            var program = this.gpuResourceCache.resourceForKey(programConstructor.key);
             if (program) {
                 this.bindProgram(program);
             } else {
                 try {
-                    program = new programConstructor(gl);
+                    program = new programConstructor(this.currentGlContext);
                     this.bindProgram(program);
                     this.gpuResourceCache.putResource(programConstructor.key, program, program.size);
                 } catch (e) {
@@ -478,6 +483,52 @@ define([
             }
 
             return program;
+        };
+
+        /**
+         * Adds a surface renderable to this draw context's surface renderable list.
+         * @param {SurfaceRenderable} surfaceRenderable The surface renderable to add. May be null, in which case the
+         * current surface renderable list remains unchanged.
+         */
+        DrawContext.prototype.addSurfaceRenderable = function (surfaceRenderable) {
+            if (surfaceRenderable) {
+                this.surfaceRenderables.push(surfaceRenderable);
+            }
+        };
+
+        /**
+         * Returns the surface renderable at the head of the surface renderable list without removing it from the list.
+         * @returns {SurfaceRenderable} The first surface renderable in this draw context's surface renderable list, or
+         * null if the surface renderable list is empty.
+         */
+        DrawContext.prototype.peekSurfaceRenderable = function () {
+            if (this.surfaceRenderables.length > 0) {
+                return this.surfaceRenderables[this.surfaceRenderables.length - 1];
+            } else {
+                return null;
+            }
+        };
+
+        /**
+         * Returns the surface renderable at the head of the surface renderable list and removes it from the list.
+         * @returns {SurfaceRenderable} The first surface renderable in this draw context's surface renderable list, or
+         * null if the surface renderable list is empty.
+         */
+        DrawContext.prototype.popSurfaceRenderable = function () {
+            if (this.surfaceRenderables.length > 0) {
+                return this.surfaceRenderables.pop();
+            } else {
+                return null;
+            }
+        };
+
+        /**
+         * Reverses the surface renderable list in place. After this function completes, the functions
+         * peekSurfaceRenderable and popSurfaceRenderable return renderables in the order in which they were added to
+         * the surface renderable list.
+         */
+        DrawContext.prototype.reverseSurfaceRenderables = function () {
+            this.surfaceRenderables.reverse();
         };
 
         /**

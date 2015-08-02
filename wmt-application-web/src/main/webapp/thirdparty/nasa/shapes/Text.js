@@ -4,7 +4,7 @@
  */
 /**
  * @exports Text
- * @version $Id: Text.js 3262 2015-06-25 16:50:39Z tgaskins $
+ * @version $Id: Text.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -310,7 +310,7 @@ define([
 
             this.activeTexture = dc.gpuResourceCache.resourceForKey(textureKey);
             if (!this.activeTexture) {
-                this.activeTexture = dc.textSupport.createTexture(dc, this.text, labelFont);
+                this.activeTexture = dc.textSupport.createTexture(dc, this.text, labelFont, true);
                 dc.gpuResourceCache.putResource(textureKey, this.activeTexture, this.activeTexture.size);
             }
 
@@ -441,7 +441,6 @@ define([
             gl.disableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Clear GL bindings.
-            dc.bindProgram(null);
             gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
             gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
 
@@ -464,7 +463,7 @@ define([
             // Compute the effective visibility. Use the current value if picking.
             if (!dc.pickingMode) {
                 if (this.currentVisibility != this.targetVisibility) {
-                    var visibilityDelta = (dc.timestamp - dc.previousTimestamp) / dc.fadeTime;
+                    var visibilityDelta = (dc.timestamp - dc.previousRedrawTimestamp) / dc.fadeTime;
                     if (this.currentVisibility < this.targetVisibility) {
                         this.currentVisibility = Math.min(1, this.currentVisibility + visibilityDelta);
                     } else {

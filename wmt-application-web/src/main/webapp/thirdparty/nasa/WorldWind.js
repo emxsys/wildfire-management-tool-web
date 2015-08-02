@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WorldWind.js 3291 2015-06-30 16:52:12Z tgaskins $
+ * @version $Id: WorldWind.js 3362 2015-07-31 19:29:12Z tgaskins $
  */
 define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not directory name).
         './error/AbstractError',
@@ -25,6 +25,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './util/Color',
         './shapes/Compass',
         './layer/CompassLayer',
+        './layer/CoordinatesDisplayLayer',
         './gesture/DragRecognizer',
         './render/DrawContext',
         './globe/EarthElevationModel',
@@ -32,6 +33,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './globe/ElevationModel',
         './util/Font',
         './util/FrameStatistics',
+        './layer/FrameStatisticsLayer',
         './render/FramebufferTexture',
         './render/FramebufferTile',
         './render/FramebufferTileController',
@@ -70,6 +72,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './layer/OpenStreetMapImageLayer',
         './gesture/PanRecognizer',
         './shapes/Path',
+        './util/PeriodicTimeSequence',
         './pick/PickedObject',
         './pick/PickedObjectList',
         './gesture/PinchRecognizer',
@@ -98,6 +101,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './shapes/SurfacePolygon',
         './shapes/SurfacePolyline',
         './shapes/SurfaceRectangle',
+        './render/SurfaceRenderable',
         './shapes/SurfaceSector',
         './shapes/SurfaceShape',
         './shapes/SurfaceShapeTile',
@@ -127,6 +131,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         './ogc/WmsCapabilities',
         './layer/WmsLayer',
         './ogc/WmsLayerCapabilities',
+        './layer/WmsTimeDimensionedLayer',
         './util/WmsUrlBuilder',
         './WorldWindow',
         './util/WWMath',
@@ -151,6 +156,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               Color,
               Compass,
               CompassLayer,
+              CoordinatesDisplayLayer,
               DragRecognizer,
               DrawContext,
               EarthElevationModel,
@@ -158,6 +164,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               ElevationModel,
               Font,
               FrameStatistics,
+              FrameStatisticsLayer,
               FramebufferTexture,
               FramebufferTile,
               FramebufferTileController,
@@ -196,6 +203,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               OpenStreetMapImageLayer,
               PanRecognizer,
               Path,
+              PeriodicTimeSequence,
               PickedObject,
               PickedObjectList,
               PinchRecognizer,
@@ -224,6 +232,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               SurfacePolygon,
               SurfacePolyline,
               SurfaceRectangle,
+              SurfaceRenderable,
               SurfaceSector,
               SurfaceShape,
               SurfaceShapeTile,
@@ -253,6 +262,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
               WmsCapabilities,
               WmsLayer,
               WmsLayerCapabilities,
+              WmsTimeDimensionedLayer,
               WmsUrlBuilder,
               WorldWindow,
               WWMath,
@@ -278,6 +288,18 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
              * @constant
              */
             ABSOLUTE: "absolute",
+
+            /**
+             * Indicates that a redraw callback has been called immediately after a redraw.
+             * @constant
+             */
+            AFTER_REDRAW: "afterRedraw",
+
+            /**
+             * Indicates that a redraw callback has been called immediately before a redraw.
+             * @constant
+             */
+            BEFORE_REDRAW: "beforeRedraw",
 
             /**
              * The BEGAN gesture recognizer state. Continuous gesture recognizers transition to this state from the
@@ -474,6 +496,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['Color'] = Color;
         WorldWind['Compass'] = Compass;
         WorldWind['CompassLayer'] = CompassLayer;
+        WorldWind['CoordinatesDisplayLayer'] = CoordinatesDisplayLayer;
         WorldWind['DragRecognizer'] = DragRecognizer;
         WorldWind['DrawContext'] = DrawContext;
         WorldWind['EarthElevationModel'] = EarthElevationModel;
@@ -481,6 +504,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['ElevationModel'] = ElevationModel;
         WorldWind['Font'] = Font;
         WorldWind['FrameStatistics'] = FrameStatistics;
+        WorldWind['FrameStatisticsLayer'] = FrameStatisticsLayer;
         WorldWind['FramebufferTexture'] = FramebufferTexture;
         WorldWind['FramebufferTile'] = FramebufferTile;
         WorldWind['FramebufferTileController'] = FramebufferTileController;
@@ -519,6 +543,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['OpenStreetMapImageLayer'] = OpenStreetMapImageLayer;
         WorldWind['PanRecognizer'] = PanRecognizer;
         WorldWind['Path'] = Path;
+        WorldWind['PeriodicTimeSequence'] = PeriodicTimeSequence;
         WorldWind['PickedObject'] = PickedObject;
         WorldWind['PickedObjectList'] = PickedObjectList;
         WorldWind['PinchRecognizer'] = PinchRecognizer;
@@ -547,6 +572,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['SurfacePolygon'] = SurfacePolygon;
         WorldWind['SurfacePolyline'] = SurfacePolyline;
         WorldWind['SurfaceRectangle'] = SurfaceRectangle;
+        WorldWind['SurfaceRenderable'] = SurfaceRenderable;
         WorldWind['SurfaceSector'] = SurfaceSector;
         WorldWind['SurfaceShape'] = SurfaceShape;
         WorldWind['SurfaceShapeTile'] = SurfaceShapeTile;
@@ -576,6 +602,7 @@ define([ // PLEASE KEEP ALL THIS IN ALPHABETICAL ORDER BY MODULE NAME (not direc
         WorldWind['WmsCapabilities'] = WmsCapabilities;
         WorldWind['WmsLayer'] = WmsLayer;
         WorldWind['WmsLayerCapabilities'] = WmsLayerCapabilities;
+        WorldWind['WmsTimeDimensionedLayer'] = WmsTimeDimensionedLayer;
         WorldWind['WmsUrlBuilder'] = WmsUrlBuilder;
         WorldWind['WWMath'] = WWMath;
         WorldWind['WWUtil'] = WWUtil;

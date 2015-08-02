@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: Logger.js 3018 2015-04-14 17:50:06Z dcollins $
+ * @version $Id: Logger.js 3298 2015-07-06 17:28:33Z dcollins $
  */
 define(function () {
     "use strict";
@@ -90,8 +90,9 @@ define(function () {
         messageTable: { // KEEP THIS TABLE IN ALPHABETICAL ORDER
             abstractInvocation: "The function called is abstract and must be overridden in a subclass.",
             indexOutOfRange: "The specified index is out of range.",
+            invalidHeight: "The specified height is zero or negative.",
+            invalidWidth: "The specified width is zero or negative.",
             invalidSize: "The specified size is zero or negative.",
-            invalidViewport: "The specified viewport's width or height is zero or negative.",
             missingAltitudeMode: "The specified altitude mode is null or undefined.",
             missingAttributeName: "The specified DBase attribute file name is null or undefined.",
             missingArray: "The specified array is null, undefined or of insufficient length.",

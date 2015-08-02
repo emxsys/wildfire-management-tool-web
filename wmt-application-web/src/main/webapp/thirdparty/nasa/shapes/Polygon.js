@@ -4,7 +4,7 @@
  */
 /**
  * @exports Polygon
- * @version $Id: Polygon.js 3261 2015-06-25 01:16:31Z tgaskins $
+ * @version $Id: Polygon.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../shapes/AbstractShape',
@@ -745,7 +745,6 @@ define([
             var gl = dc.currentGlContext;
 
             gl.disableVertexAttribArray(dc.currentProgram.vertexPointLocation);
-            dc.bindProgram(null);
             gl.depthMask(true);
             gl.lineWidth(1);
             gl.enable(WebGLRenderingContext.CULL_FACE);

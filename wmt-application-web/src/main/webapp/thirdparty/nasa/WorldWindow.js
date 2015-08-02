@@ -4,7 +4,7 @@
  */
 /**
  * @exports WorldWindow
- * @version $Id: WorldWindow.js 3230 2015-06-20 00:15:32Z dcollins $
+ * @version $Id: WorldWindow.js 3351 2015-07-28 22:03:20Z dcollins $
  */
 define([
         './error/ArgumentError',
@@ -169,14 +169,14 @@ define([
              */
             this.frameStatistics = new FrameStatistics();
 
-            // Documented with its property accessor below.
-            this._redrawCallbacks = [];
-
             /**
              * The {@link GoToAnimator} used by this world window to respond to its goTo method.
              * @type {GoToAnimator}
              */
             this.goToAnimator = new GoToAnimator(this);
+
+            // Documented with its property accessor below.
+            this._redrawCallbacks = [];
 
             // Documented with its property accessor below.
             this._orderedRenderingFilters = [
@@ -187,6 +187,9 @@ define([
                     thisWindow.declutter(dc, 2);
                 }
             ];
+
+            // Intentionally not documented.
+            this.pixelScale = 1;
 
             // Set up to handle WebGL context lost events.
             var thisWindow = this;
@@ -239,9 +242,11 @@ define([
                 }
             },
             /**
-             * The list of callbacks to call immediately after performing a redraw. The callbacks have a single
-             * argument: this world window, e.g., <code>redrawCallback(WorldWindow);</code>. Applications may
-             * add functions to this array or remove them.
+             * The list of callbacks to call immediately before and immediately after performing a redraw. The callbacks
+             * have two arguments: this world window and the redraw stage, e.g., <code style='white-space:nowrap'>redrawCallback(worldWindow, stage);</code>.
+             * The stage will be either WorldWind.BEFORE_REDRAW or WorldWind.AFTER_REDRAW indicating whether the
+             * callback has been called either immediately before or immediately after a redraw, respectively.
+             * Applications may add functions to this array or remove them.
              * @type {Function[]}
              * @readonly
              * @memberof WorldWindow.prototype
@@ -521,41 +526,40 @@ define([
 
         // Internal function. Intentionally not documented.
         WorldWindow.prototype.redrawIfNeeded = function () {
-            // Resize the canvas to match its screen size. This sets needToRedraw when the size changes.
+            // Check if the drawing buffer needs to resize to match its screen size, which requires a redraw.
             this.resize();
 
-            // Render to the WebGL context only when necessary.
-            if (this.redrawRequested) {
-                this.redrawRequested = false;
-                this.render();
+            // Redraw the WebGL drawing buffer only when necessary.
+            if (!this.redrawRequested) {
+                return;
             }
-        };
 
-        // Internal function. Intentionally not documented.
-        WorldWindow.prototype.render = function () {
             try {
-                this.resize();
+                // Prepare to redraw and notify the redraw callbacks that a redraw is about to occur.
+                this.redrawRequested = false;
+                this.drawContext.previousRedrawTimestamp = this.drawContext.timestamp;
+                this.callRedrawCallbacks(WorldWind.BEFORE_REDRAW);
+                // Redraw the WebGL drawing buffer.
                 this.resetDrawContext();
                 this.drawFrame();
-
-                for (var i = 0, len = this._redrawCallbacks.length; i < len; i++) {
-                    this._redrawCallbacks[i](this);
-                }
-
+            } catch (e) {
+                Logger.logMessage(Logger.LEVEL_SEVERE, "WorldWindow", "redrawIfNeeded",
+                    "Exception occurred during redrawing.\n" + e.toString());
+            } finally {
+                // Notify the redraw callbacks that a redraw has completed.
+                this.callRedrawCallbacks(WorldWind.AFTER_REDRAW);
+                // Handle rendering code redraw requests.
                 if (this.drawContext.redrawRequested) {
                     this.redrawRequested = true;
                 }
-            } catch (e) {
-                Logger.logMessage(Logger.LEVEL_SEVERE, "WorldWindow", "render",
-                    "Exception occurred during rendering: " + e.toString());
             }
         };
 
         // Internal function. Intentionally not documented.
         WorldWindow.prototype.resize = function () {
             var gl = this.drawContext.currentGlContext,
-                width = gl.canvas.clientWidth,
-                height = gl.canvas.clientHeight;
+                width = gl.canvas.clientWidth * this.pixelScale,
+                height = gl.canvas.clientHeight * this.pixelScale;
 
             if (gl.canvas.width != width ||
                 gl.canvas.height != height) {
@@ -586,6 +590,7 @@ define([
             dc.surfaceOpacity = this.surfaceOpacity;
             dc.deepPicking = this.deepPicking;
             dc.frameStatistics = this.frameStatistics;
+            dc.pixelScale = this.pixelScale;
             dc.update();
         };
 
@@ -686,9 +691,8 @@ define([
             gl.depthFunc(WebGLRenderingContext.LESS);
             gl.clearColor(0, 0, 0, 1);
 
-            if (this.drawContext.pickingMode) {
-                this.drawContext.bindFramebuffer(null);
-            }
+            this.drawContext.bindFramebuffer(null);
+            this.drawContext.bindProgram(null);
         };
 
         // Internal function. Intentionally not documented.
@@ -709,6 +713,7 @@ define([
                 this.drawContext.currentGlContext.disable(WebGLRenderingContext.STENCIL_TEST);
                 this.drawContext.surfaceShapeTileBuilder.clear();
                 this.drawLayers(true);
+                this.drawSurfaceRenderables();
                 this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
                 if (!this.deferOrderedRendering) {
@@ -730,6 +735,7 @@ define([
             } else {
                 this.drawContext.surfaceShapeTileBuilder.clear();
                 this.drawLayers(true);
+                this.drawSurfaceRenderables();
                 this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
                 if (!this.deferOrderedRendering) {
@@ -748,6 +754,7 @@ define([
                 WebGLRenderingContext.KEEP, WebGLRenderingContext.KEEP, WebGLRenderingContext.KEEP);
             this.drawContext.surfaceShapeTileBuilder.clear();
             this.drawLayers(false);
+            this.drawSurfaceRenderables();
             this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
         };
 
@@ -761,6 +768,7 @@ define([
                 this.drawContext.surfaceShapeTileBuilder.clear();
 
                 this.drawLayers(true);
+                this.drawSurfaceRenderables();
 
                 this.drawContext.surfaceShapeTileBuilder.doRender(this.drawContext);
 
@@ -920,7 +928,7 @@ define([
                         layer.render(dc);
                     } catch (e) {
                         Logger.log(Logger.LEVEL_SEVERE, "Error while rendering layer " + layer.displayName + ".\n"
-                        + e.toString());
+                            + e.toString());
                         // Keep going. Render the rest of the layers.
                     }
                 }
@@ -975,6 +983,24 @@ define([
         };
 
         // Internal function. Intentionally not documented.
+        WorldWindow.prototype.drawSurfaceRenderables = function () {
+            var dc = this.drawContext,
+                sr;
+
+            dc.reverseSurfaceRenderables();
+
+            while (sr = dc.popSurfaceRenderable()) {
+                try {
+                    sr.renderSurface(dc);
+                } catch (e) {
+                    Logger.logMessage(Logger.LEVEL_WARNING, "WorldWindow", "drawSurfaceRenderables",
+                        "Error while rendering a surface renderable.\n" + e.message);
+                    // Keep going. Render the rest of the surface renderables.
+                }
+            }
+        };
+
+        // Internal function. Intentionally not documented.
         WorldWindow.prototype.drawOrderedRenderables = function () {
             var beginTime = Date.now(),
                 dc = this.drawContext,
@@ -995,7 +1021,7 @@ define([
                     or.renderOrdered(dc);
                 } catch (e) {
                     Logger.logMessage(Logger.LEVEL_WARNING, "WorldWindow", "drawOrderedRenderables",
-                        "Error while rendering a shape:" + e.message);
+                        "Error while rendering an ordered renderable.\n" + e.message);
                     // Keep going. Render the rest of the ordered renderables.
                 }
             }
@@ -1095,6 +1121,18 @@ define([
                     // Remove the SurfaceShape that was not visible to the pick rectangle.
                     pickedObjects.objects.splice(i, 1);
                     i -= 1;
+                }
+            }
+        };
+
+        // Internal. Intentionally not documented.
+        WorldWindow.prototype.callRedrawCallbacks = function (stage) {
+            for (var i = 0, len = this._redrawCallbacks.length; i < len; i++) {
+                try {
+                    this._redrawCallbacks[i](this, stage);
+                } catch (e) {
+                    Logger.log(Logger.LEVEL_SEVERE, "Exception calling redraw callback.\n" + e.toString());
+                    // Keep going. Execute the rest of the callbacks.
                 }
             }
         };

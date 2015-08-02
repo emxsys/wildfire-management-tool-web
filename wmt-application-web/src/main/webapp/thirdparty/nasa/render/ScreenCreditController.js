@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenCreditController
- * @version $Id: ScreenCreditController.js 3206 2015-06-17 18:06:31Z tgaskins $
+ * @version $Id: ScreenCreditController.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -192,7 +192,6 @@ define([
             gl.disableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Clear GL bindings.
-            dc.bindProgram(null);
             gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
             gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
 
@@ -255,7 +254,7 @@ define([
             textureKey = credit.text + this.creditFont.toString();
             activeTexture = dc.gpuResourceCache.resourceForKey(textureKey);
             if (!activeTexture) {
-                activeTexture = dc.textSupport.createTexture(dc, credit.text, this.creditFont);
+                activeTexture = dc.textSupport.createTexture(dc, credit.text, this.creditFont, false);
                 dc.gpuResourceCache.putResource(textureKey, activeTexture, activeTexture.size);
             }
 

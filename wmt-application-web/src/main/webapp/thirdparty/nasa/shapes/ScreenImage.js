@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenImage
- * @version $Id: ScreenImage.js 3293 2015-06-30 18:20:17Z dcollins $
+ * @version $Id: ScreenImage.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -264,7 +264,7 @@ define([
             return this;
         };
 
-        ScreenImage.prototype.getActiveTexture = function(dc) {
+        ScreenImage.prototype.getActiveTexture = function (dc) {
             return dc.gpuResourceCache.resourceForKey(this._imageSource);
         };
 
@@ -323,7 +323,6 @@ define([
             gl.disableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Clear GL bindings.
-            dc.bindProgram(null);
             gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
             gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
 
@@ -343,12 +342,10 @@ define([
             ScreenImage.matrix.copy(dc.screenProjection);
             ScreenImage.matrix.multiplyMatrix(this.imageTransform);
 
-            if (this.imageRotation !== 0 || this.imageTilt !== 0) {
-                ScreenImage.matrix.multiplyByTranslation(0.5, 0.5, 0.5);
-                ScreenImage.matrix.multiplyByRotation(1, 0, 0, this.imageTilt);
-                ScreenImage.matrix.multiplyByRotation(0, 0, 1, this.imageRotation);
-                ScreenImage.matrix.multiplyByTranslation(-0.5, -0.5, 0);
-            }
+            ScreenImage.matrix.multiplyByTranslation(0.5, 0.5, 0.5); // shift Z to prevent image clipping
+            ScreenImage.matrix.multiplyByRotation(1, 0, 0, this.imageTilt);
+            ScreenImage.matrix.multiplyByRotation(0, 0, 1, this.imageRotation);
+            ScreenImage.matrix.multiplyByTranslation(-0.5, -0.5, 0);
 
             program.loadModelviewProjection(gl, ScreenImage.matrix);
 

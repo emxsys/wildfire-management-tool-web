@@ -4,7 +4,7 @@
  */
 /**
  * @exports BoundingBox
- * @version $Id: BoundingBox.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: BoundingBox.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -508,7 +508,6 @@ define([
                 gl.enable(WebGLRenderingContext.CULL_FACE);
                 gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
                 gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, null);
-                dc.bindProgram(null);
             }
         };
 
