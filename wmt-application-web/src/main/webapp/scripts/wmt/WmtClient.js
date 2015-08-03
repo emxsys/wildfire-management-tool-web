@@ -144,8 +144,8 @@ define([
                 '#mobileFires',
                 'slide-right',
                 '#c-maskMobileFires',
-                Array('#mobileFiresButton'),
-                Array('#firesFireLookoutsButton'),
+                ['#mobileFiresButton'],
+                ['#firesFireLookoutsButton', '#firesWildlandFiresButton'],
                 '100',
                 '100%',
                 '85%'
@@ -154,8 +154,18 @@ define([
                 '#mobileFireLookouts',
                 'slide-top',
                 '',
-                Array('#firesFireLookoutsButton', '#globeFireLookoutsButton'),
-                Array('#fireLookoutsCheck'),
+                ['#firesFireLookoutsButton', '#globeFireLookoutsButton'],
+                ['#fireLookoutsCheck'],
+                '110',
+                'calc(39vh + 50px)',
+                '100%'
+                );
+            var mobileWildlandFires = new mobileMenu.Menu(
+                '#mobileWildlandFires',
+                'slide-top',
+                '',
+                ['#firesWildlandFiresButton'],
+                ['#wildlandFiresCheck'],
                 '110',
                 'calc(39vh + 50px)',
                 '100%'

@@ -649,32 +649,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
                         <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">                                   
-                            <!--Fire Incidents-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading collapsed" 
-                                     data-toggle="collapse" 
-                                     data-parent="#fireAccordion" 
-                                     href="#fireIncidentsBody" 
-                                     aria-expanded="false" 
-                                     aria-controls="fireIncidentsBody"
-                                     role="tab" 
-                                     id="fireIncidentsHeading">
-                                    <h4 class="panel-title">
-                                        Incidents
-                                    </h4>
-                                </div>
-                                <div id="fireIncidentsBody" 
-                                     class="panel-collapse collapse" 
-                                     role="tabpanel" 
-                                     aria-labelledby="fireIncidentsHeading">
-                                    <div class="panel-body">
-                                        <ul class="list-group pre-scrollable" 
-                                            id="wildlandFireList">
-                                        </ul>                              
-                                    </div>
-                                </div>
-                            </div>
-
                             <!--Fire Settings-->
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="firesSettingsHeading">
@@ -716,6 +690,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         </div>
                         <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default">Fire Lookouts</a></li>
+                            <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default">Wildland Fires</a></li>
                         </ul>
                     </div>
                 </div>
@@ -765,6 +740,69 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>    
         <!-- /Mobile Fire Lookouts Menu -->        
+
+        <!-- Mobile Wildland Fires Menu -->
+        <nav id="mobileWildlandFires" class="c-menu hidden">
+            <div class="container-fluid" style="margin-top:5px;">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="wildlandFiresCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                    <div class="col-xs-10 col-sm-10 btn-group" role="group">
+                        <button id="selectAllWildlandFires" 
+                                type="button"
+                                class="btn btn-default btn-sm " 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Adds all wildland fire perimeters to the globe.">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            All
+                        </button>
+                        <button id="deselectAllWildlandFires" 
+                                type="button"
+                                class="btn btn-default btn-sm " 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Removes all wildland fire perimeters from the globe.">
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                            All
+                        </button>
+                        <button id="selectViewableWildlandFires" 
+                                type="button"
+                                class="btn btn-default btn-sm  " 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Adds all wildland fire perimeters that are in the current view.">
+                            <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                            Viewable
+                        </button>
+                        <button id="refreshWildlandFires" 
+                                type="button"
+                                class="btn btn-default btn-sm " 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Download and refresh wildland fire perimeters.">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 5px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel panel-default" style="margin-bottom: 0">                            
+                            <!--Override the pre-scrollable max-height-->
+                            <ul class="pre-scrollable"
+                                style="max-height: calc(39vh - 20px); margin-top: 5px;" 
+                                id="wildlandFireList">
+                            </ul>                              
+                        </div>       
+                    </div>
+                </div>
+            </div>
+        </nav>    
+        <!-- /Mobile Wildland Fires Menu -->        
 
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">

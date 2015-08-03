@@ -49,24 +49,25 @@ define([],
     function () {
         "use strict";
         var MobileMenu = {
+            menuItems: [],
             /**
              * Initializes the MobileMenu framework by showing menu elements hidden during startup and 
              * adding click handlers that toggle activation.
              */
             initialize: function () {
-                    var toggles = $("#mobileMenuButton"),
-                        toggle,
-                        i,
-                        mobileMenu,
-                        mobileMenuBtn;
-                    
+                var toggles = $("#mobileMenuButton"),
+                    toggle,
+                    i,
+                    mobileMenu,
+                    mobileMenuBtn;
+
                 // Function handling the toggle of the mobile menu button.
                 $(function () {
-                    
+
                     // MobileMenu items are hidden during startup--show them now.
-                    $('.c-menu').each(function() {
+                    $('.c-menu').each(function () {
                         $(this).removeClass('hidden');
-                    });                 
+                    });
 
                     // Adds a click handler to the given element that toggles the is-active state
                     function toggleHandler(toggle) {
@@ -74,7 +75,7 @@ define([],
                             e.preventDefault();
                             if (this.classList.contains("is-active") === true) {
                                 this.classList.remove("is-active");
-                            } else { 
+                            } else {
                                 this.classList.add("is-active");
                             }
                         });
@@ -117,6 +118,11 @@ define([],
                         e.preventDefault();
                         toggle.classList.remove("is-active");
                     });
+                    // What does this do?!
+                    $('#firesWildlandFiresButton').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
                     $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
                         e.preventDefault();
                         toggle.classList.remove("is-active");
@@ -129,7 +135,14 @@ define([],
                     'slide-left',
                     '#c-maskMain',
                     [''],
-                    ['#ctrlPanelGlobe', '#findMe', '#layersListButton', '#icsMarkersToggle', '#pushpinMarkersToggle', '#weatherWeatherScoutsButton', "#firesFireLookoutsButton"],
+                    ['#ctrlPanelGlobe', 
+                        '#findMe', 
+                        '#layersListButton', 
+                        '#icsMarkersToggle', 
+                        '#pushpinMarkersToggle', 
+                        '#weatherWeatherScoutsButton', 
+                        "#firesFireLookoutsButton",
+                        "#firesWildlandFiresButton"],
                     '50',
                     '100%',
                     '85%'
@@ -150,6 +163,58 @@ define([],
 
                 $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
                     mobileMenu.close();
+                });
+            },
+            add: function (options) {
+                // TODO: provide defaults for missing options.
+                this.menuItems.push(new MobileMenu.Menu(
+                    options.menuId,
+                    options.type,
+                    options.maskId,
+                    options.openBtnIds,
+                    options.closeBtnIds,
+                    options.zIndex,
+                    options.height,
+                    options.width));
+            },
+            build: function () {
+                var i, max,
+                    mobileMenuBtn,
+                    mobileMenu,
+                    closeBtnIds = [];
+                
+                for (i = 0, max = this.menuItems.length; i < max; i++) {
+                    closeBtnIds.push(this.menuItems[i].menuId);
+                }
+                mobileMenu = new MobileMenu.Menu(
+                    '#mobileMenu',
+                    'slide-left',
+                    '#c-maskMain',
+                    [''],
+                    [
+                        '#ctrlPanelGlobe', 
+                        '#findMe', 
+                        '#layersListButton', 
+                        '#icsMarkersToggle', 
+                        '#pushpinMarkersToggle', 
+                        '#weatherWeatherScoutsButton', 
+                        "#firesFireLookoutsButton"],
+                    '50',
+                    '100%',
+                    '85%'
+                    );
+
+
+                mobileMenuBtn = document.querySelector('#mobileMenuButton');
+                mobileMenuBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (this.classList.contains("is-active") === true) {
+                        mobileMenu.open();
+                    }
+                    else {
+                        mobileMenu.close();
+                    }
+
                 });
             },
             /**
@@ -175,9 +240,9 @@ define([],
                 height,
                 width
                 ) {
-                
+
                 var i, options;
-                
+
                 function extend(a, b) {
                     var key;
                     for (key in b) {
@@ -209,11 +274,11 @@ define([],
                  * Menu Options.
                  */
                 this.options = {
-                    menuId: '',         //the menu ID                        
-                    type: '',           // The menu type
-                    maskId: '',         // The ID of the mask
-                    openBtnIds: [''],   // The ID of the buttons that open the menu
-                    closeBtnIds: [''],  // The ID of the buttons that close the menu    
+                    menuId: '', //the menu ID                        
+                    type: '', // The menu type
+                    maskId: '', // The ID of the mask
+                    openBtnIds: [''], // The ID of the buttons that open the menu
+                    closeBtnIds: [''], // The ID of the buttons that close the menu    
                     zIndex: '',
                     height: '',
                     width: ''            // The ID of the mask
