@@ -153,9 +153,9 @@ define([
                 for (i = 0, len = fires.length; i < len; i += 1) {
                     fire = fires[i];
                     item =
-                        '<div class="btn-group btn-block btn-group-sm">' +
-                        ' <button type="button" class="col-sm-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.name + '</button>' +
-                        ' <button type="button" class="col-sm-2 btn btn-default wildland-fire-open glyphicon glyphicon-open" style="top: 0" fireId="' + fire.id + '"></button>' +
+                        '<div class= "btn-group btn-block btn-group-sm">' +
+                        ' <button type="button" class="col-xs-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.name + '</button>' +
+                        ' <button type="button" class="col-xs-2 btn btn-default wildland-fire-open glyphicon glyphicon-open" style="top: 0" fireId="' + fire.id + '"></button>' +
 //                        ' <button type="button" class="col-sm-2 btn btn-default wildland-fire-remove glyphicon glyphicon-trash" style="top: 0" fireId="' + fire.id + '"></button>' +
                         '</div>';
                     $list.append(item);
