@@ -102,6 +102,10 @@ define([],
                         e.preventDefault();
                         toggle.classList.remove("is-active");
                     });
+                    $('#markerListButton').on('click', function (e) {
+                        e.preventDefault();
+                        toggle.classList.remove("is-active");
+                    });
                     $('#pushpinMarkersToggle').on('click', function (e) {
                         e.preventDefault();
                         toggle.classList.remove("is-active");
@@ -123,10 +127,7 @@ define([],
                         e.preventDefault();
                         toggle.classList.remove("is-active");
                     });
-                    $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
-                        e.preventDefault();
-                        toggle.classList.remove("is-active");
-                    });
+
 
                 });
 
@@ -138,6 +139,7 @@ define([],
                     ['#ctrlPanelGlobe', 
                         '#findMe', 
                         '#layersListButton', 
+                        '#markerListButton', 
                         '#icsMarkersToggle', 
                         '#pushpinMarkersToggle', 
                         '#weatherWeatherScoutsButton', 
@@ -161,9 +163,7 @@ define([],
 
                 });
 
-                $('#allMarkersList').on('click', 'button.mkr-goto', function (e) {
-                    mobileMenu.close();
-                });
+
             },
             add: function (options) {
                 // TODO: provide defaults for missing options.

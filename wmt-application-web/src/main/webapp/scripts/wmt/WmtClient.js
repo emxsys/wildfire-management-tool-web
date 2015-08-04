@@ -90,35 +90,26 @@ define([
                 'calc(5vh + 180px)',
                 '100%'
                 );
-            var mobileLayers = new mobileMenu.Menu(
-                '#mobileLayers',
-                'slide-right',
-                '#c-maskMobileLayers',
-                Array('#mobileLayersButton'),
-                Array('#layersListButton'),
-                '100',
-                '100%',
-                '85%'
-                );
+
             var mobileLayersList = new mobileMenu.Menu(
                 '#mobileLayersList',
                 'slide-top',
                 '',
-                Array('#layersListButton'),
-                Array('#layersListCheck'),
+                ['#layersListButton'],
+                ['#layersListCheck'],
                 '110',
-                'calc(30vh + 100px)',
+                'calc(39vh + 50px)',
                 '100%'
                 );
-            var mobileMarkers = new mobileMenu.Menu(
-                '#mobileMarkers',
-                'slide-right',
-                '#c-maskMarkers',
-                Array('#mobileMarkersButton'),
-                Array(''),
-                '100',
-                '100%',
-                '85%'
+            var mobileMarkerList = new mobileMenu.Menu(
+                '#mobileMarkerList',
+                'slide-top',
+                '',
+                ['#markerListButton'],
+                ['#markerListCheck'],
+                '110',
+                'calc(35vh + 50px)',
+                '100%'
                 );
             var mobileWeather = new mobileMenu.Menu(
                 '#mobileWeather',
@@ -184,10 +175,6 @@ define([
                 controller.model.fireLookoutManager.refreshLookouts();
             });
 
-            // needed delegate event handling for these buttons
-            $('#allMarkersList').on('click', 'button.mkr-goto', function () {
-                mobileMarkers.close();
-            });
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {

@@ -192,7 +192,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             <!--<li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>-->
                             <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
-                            <li class="c-menu__item"><a id="mobileMarkersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
+                            <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                             <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                             <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
                         </ul>
@@ -262,29 +262,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                     </div>
                                 </div>
                             </div>                            
+                            <!--Fire Settings-->
                             <div class="panel panel-default">
-                                <div id="controlPanelSettingsHeading"
-                                     class="panel-heading collapsed" 
-                                     data-toggle="collapse" 
-                                     data-parent="#controlPanelAccordion" 
-                                     href="#controlPanelSettingsBody" 
-                                     aria-expanded="false" 
-                                     aria-controls="controlPanelSettingsBody" 
-                                     role="tab">
+                                <div class="panel-heading" role="tab" id="firesSettingsHeading">
                                     <h4 class="panel-title">
-                                        Settings
+                                        <a class="collapsed" 
+                                           data-toggle="collapse" 
+                                           data-parent="#firesAccordion" 
+                                           href="#firesSettingsBody" 
+                                           aria-expanded="false" 
+                                           aria-controls="firesSettingsBody">
+                                            Fire Settings
+                                        </a>
                                     </h4>
                                 </div>
-                                <div id="controlPanelSettingsBody" 
-                                     class="panel-collapse collapse" 
-                                     role="tabpanel" 
-                                     aria-labelledby="conntrolPanelSettingsHeading">
+                                <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
+                                     aria-labelledby="firesSettingsHeading">
                                     <div class="panel-body">
-                                        <ul>
-                                            <li>A...</li>
-                                            <li>B...</li>
-                                            <li>C...</li>
-                                        </ul>
+                                        <button id="fuelModel-btn" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Select the default fuel model.">
+                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            Default Fuel Model
+                                        </button>
+                                        <button id="fuelMoisture-btn" 
+                                                type="button"
+                                                class="btn btn-default" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Select the default fuel moisture scenario.">
+                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            Default Fuel Moisture
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -358,50 +370,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>        
         <!-- /Mobile Globe Menu -->
 
-        <!-- Mobile Layers Menu -->
-        <nav id="mobileLayers" class="c-menu hidden">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-11 col-sm-11">
-                        <!--Settings-->
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#layersAccordion" 
-                                 href="#layerSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="layerSettingsBody"
-                                 role="tab" 
-                                 id="labelSettingsHeading">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="layerSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="layerSettingsHeading">
-                                <div class="panel-body">
-                                    <ul>
-                                        <li>A...</li>
-                                        <li>B...</li>
-                                        <li>C...</li>
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <ul class="c-menu__items">
-                            <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default">Layers List</a></li>            
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <div id="c-maskMobileLayers" class="c-mask"></div>
-        <!-- /Mobile Layers Menu -->
-
         <!-- Mobile Layers List Menu -->
         <!-- BDS: <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu"> -->
         <nav id="mobileLayersList" class="c-menu hidden">
@@ -433,7 +401,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             </div>
                             <div class="panel-collapse collapse in"
                                  <div class="panel-collapse"
-                                 style='max-height: calc(27vh)'
+                                 style='max-height: calc(39vh - 50px)'
                                  role="tabpanel" 
                                  aria-labelledby="layerListHeading"
                                  id="layerListBody" >
@@ -452,96 +420,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>
         <!-- /Mobile Layers List Menu -->
 
-        <!-- Mobile Markers Menu -->
-        <nav id="mobileMarkers" class="c-menu hidden">
-            <div class="container-fluid" style="margin-top:37px">
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-xs-12 col-sm-12">
-                        <div class="panel-group" id="markersAccordion" role="tabcreate" aria-multiselectable="false">
-                            <!--Marker List-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading collapsed" 
-                                     data-toggle="collapse" 
-                                     data-parent="#markersAccordion" 
-                                     href="#markersListBody" 
-                                     aria-expanded="false" 
-                                     aria-controls="markersListBody"
-                                     role="tab" 
-                                     id="markersListHeading">
-                                    <h4 class="panel-title">
-                                        Marker List
-                                    </h4>
-                                </div>
-                                <div id="markersListBody" 
-                                     class="panel-collapse collapse" 
-                                     role="tabpanel" 
-                                     aria-labelledby="markersListHeading">
-                                    <div class="panel-body">                                        
-                                        <ul class="list-group pre-scrollable"
-                                            style='max-height: calc(70vh)'
-                                            id="allMarkersList">
-                                        </ul>                              
-                                    </div>
-                                </div>
-                            </div>
-                            <!--Marker Settings-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading collapsed" 
-                                     data-toggle="collapse" 
-                                     data-parent="#markersAccordion" 
-                                     href="#markersSettingsBody" 
-                                     aria-expanded="false" 
-                                     aria-controls="markersSettingsBody" 
-                                     role="tab" 
-                                     id="markersSettingsHeading">
-                                    <h4 class="panel-title">
-                                        Settings
-                                    </h4>
-                                </div>
-                                <div id="markersSettingsBody" 
-                                     class="panel-collapse collapse" 
-                                     role="tabpanel" 
-                                     aria-labelledby="markersSettingsHeading">
-                                    <div class="panel-body">
-                                        <div class="btn-group btn-block btn-group-sm"  role="group">
-                                            <button type="button" class="col-sm-8  btn btn-default">
-                                                Action
-                                            </button>
-                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-pencil"></button>
-                                            <button type="button" class="col-sm-2 btn btn-default glyphicon glyphicon-trash"></button>
-                                        </div>
-                                        <div class="btn-group btn-block "  role="group">
-                                            <button type="button" class="col-sm-8  btn btn-danger">
-                                                Action
-                                            </button>
-                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-pencil"></button>
-                                            <button type="button" class="col-sm-2 btn btn-danger glyphicon glyphicon-trash"></button>
-                                        </div>
-                                        <div class="btn-group btn-block">
-                                            <button type="button" class="col-sm-10 col-md-11 btn btn-danger ">Action</button>
-                                            <button type="button" class="col-sm-2 col-md-1 btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">Action</a></li>
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Separated link</a></li>
-                                            </ul>        
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
 
-        <div id="c-maskMarkers" class="c-mask"></div>
-        <!-- /Mobile Markers Menu -->
 
         <!-- Mobile Weather Menu -->
         <nav id="mobileWeather" class="c-menu hidden">
@@ -650,44 +529,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <div class="row" style="margin-top:10px;">            
                     <div class="col-xs-11 col-sm-11">
                         <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">                                   
-                            <!--Fire Settings-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="firesSettingsHeading">
-                                    <h4 class="panel-title">
-                                        <a class="collapsed" 
-                                           data-toggle="collapse" 
-                                           data-parent="#firesAccordion" 
-                                           href="#firesSettingsBody" 
-                                           aria-expanded="false" 
-                                           aria-controls="firesSettingsBody">
-                                            Settings
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="firesSettingsBody" class="panel-collapse collapse" role="tabpanel" 
-                                     aria-labelledby="firesSettingsHeading">
-                                    <div class="panel-body">
-                                        <button id="fuelModel-btn" 
-                                                type="button"
-                                                class="btn btn-default" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Select the default fuel model.">
-                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                            Default Fuel Model
-                                        </button>
-                                        <button id="fuelMoisture-btn" 
-                                                type="button"
-                                                class="btn btn-default" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Select the default fuel moisture scenario.">
-                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                            Default Fuel Moisture
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default">Fire Lookouts</a></li>
@@ -805,6 +646,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </nav>    
         <!-- /Mobile Wildland Fires Menu -->        
 
+        <!-- Mobile Markers List -->
+        <nav id="mobileMarkerList" class="c-menu hidden">
+            <div class="container-fluid" style="margin-top:5px;">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                        <button id="markerListCheck" class="c-check">
+                            <span class="span1"></span>
+                            <span class="span2"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 5px">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="panel panel-default" style="margin-bottom: 0">                            
+                            <!--Override the pre-scrollable max-height-->
+                            <ul class="pre-scrollable"
+                                style="max-height: calc(35vh - 20px); margin-top: 5px;" 
+                                id="allMarkersList">
+                            </ul>                              
+                        </div>       
+                    </div>
+                </div>
+            </div>
+        </nav>    
+        <!-- /Mobile Marker List -->        
+        
+        
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
             <!--Content-->
