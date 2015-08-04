@@ -73,6 +73,7 @@ define([
 
                 this.manager = controller.model.wildlandFireManager;
                 this.manager.on(wmt.EVENT_WILDLAND_FIRE_ADDED, this.handleWildlandFireAddedEvent, this);
+                this.manager.on(wmt.EVENT_WILDLAND_FIRES_ADDED, this.handleWildlandFiresAddedEvent, this);
                 this.manager.on(wmt.EVENT_WILDLAND_FIRE_REMOVED, this.handleWildlandFireRemovedEvent, this);
                 // Get the RenderableLayer that we'll add the weathers to.
                 this.activeFiresLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRES);
@@ -93,6 +94,21 @@ define([
                 }
                 // Create the symbol on the globe
                 this.createRenderable(fire);
+                // Update our list of fires
+                this.synchronizeFiresList();
+            },
+            /**
+             * Creates a renderable and UI representatiions for the array of fire objects
+             * @param {WildlandFire[]} fires 
+             */
+            handleWildlandFiresAddedEvent: function (fires) {
+                if (!this.activeFiresLayer) {
+                    return;
+                }
+                for (var i = 0, max = fires.length; i < max; i++) {
+                    // Create the symbol on the globe
+                    this.createRenderable(fires[i]);
+                }
                 // Update our list of fires
                 this.synchronizeFiresList();
             },
@@ -159,7 +175,7 @@ define([
                     $list = $("#wildlandFireList"),
                     fires = this.manager.fires.slice(0), // naive copy
                     fire, i, len, item;
-                    
+
                 // This preliminary implemenation does a brute force "clear and repopulate" of the list
                 $list.children().remove();
 

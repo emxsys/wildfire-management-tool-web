@@ -49,7 +49,9 @@ define([
 
             var self = this,
                 i, max,
-                feature;
+                feature,
+                deferredFires = $.Deferred(),
+                deferredPerimeters = $.Deferred();
 
             // Load the large fire points (includeGeometry)
             geoMac.activeFires(
@@ -57,8 +59,9 @@ define([
                 function (features) {
                     for (i = 0, max = features.length; i < max; i++) {
                         feature = features[i];
-                        self.addFire(new WildlandFire(feature));
+                        self.fires.push(new WildlandFire(feature));
                     }
+                    deferredFires.resolve(self.fires);
                 });
             // Load the current fire perimeters (without geometry)
             geoMac.activeFirePerimeters(
@@ -66,13 +69,14 @@ define([
                 function (features) {
                     for (i = 0, max = features.length; i < max; i++) {
                         feature = features[i];
-                        // Breakup the long processing with a timeout
-                        setTimeout(function (feature) {
-                            self.addFire(new WildlandFire(feature));
-                        }, 50, feature);
+                        self.fires.push(new WildlandFire(feature));
                     }
-                    ;
+                    deferredPerimeters.resolve(self.fires);
                 });
+            $.when(deferredFires, deferredPerimeters).done(function () {
+                // Notify views of the new fires
+                self.fire(wmt.EVENT_WILDLAND_FIRES_ADDED, self.fires);
+            });
         };
 
 

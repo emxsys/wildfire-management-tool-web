@@ -66,6 +66,7 @@ define([],
             EVENT_WILDLAND_FIRE_ADDED: "wildlandFireAdded",
             EVENT_WILDLAND_FIRE_CHANGED: "wildlandFireChanged",
             EVENT_WILDLAND_FIRE_REMOVED: "wildlandFireRemoved",
+            EVENT_WILDLAND_FIRES_ADDED: "wildlandFiresAdded",
             /**
              * Publish/subscibe event name for notifcation of mouse position on the globe.
              * @constant
