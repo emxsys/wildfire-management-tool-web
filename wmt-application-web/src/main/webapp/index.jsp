@@ -190,7 +190,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="col-xs-9 col-sm-9"
                          <ul class="c-menu__items">
                             <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
-                            <li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>
+                            <!--<li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>-->
+                            <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
                             <li class="c-menu__item"><a id="mobileMarkersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                             <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                             <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
