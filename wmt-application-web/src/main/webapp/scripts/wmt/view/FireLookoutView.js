@@ -40,7 +40,7 @@
  * @param {FireLookout} FireLookout
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
- * @returns {FireLookoutViewManager}
+ * @returns {FireLookoutView}
  * 
  * @author Bruce Schubert
  */
@@ -61,7 +61,7 @@ define([
         wmt,
         ww) {
         "use strict";
-        var FireLookoutViewManager = {
+        var FireLookoutView = {
             /**
              * Initializes the FireLookout renderables on the globe and the Lookout List in the menu system.
              */
@@ -200,6 +200,6 @@ define([
             }
         };
 
-        return FireLookoutViewManager;
+        return FireLookoutView;
     }
 );
