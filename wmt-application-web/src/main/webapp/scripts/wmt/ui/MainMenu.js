@@ -46,17 +46,17 @@
  * @author Theodore Walton
  */
 define([
-    'wmt/menu/AboutBox',
+    'wmt/ui/AboutBox',
     'wmt/controller/Controller',
-    'wmt/menu/ControlPanel',
-    'wmt/menu/DateTimeControls',
+    'wmt/ui/ControlPanel',
+    'wmt/ui/DateTimeControls',
     'wmt/view/FireLookoutViewer',
     'wmt/view/FuelModelCatalogViewer',
     'wmt/view/FireLookoutViewManager',
-    'wmt/menu/LayerMenu',
+    'wmt/ui/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
-    'wmt/menu/SearchBox',
+    'wmt/ui/SearchBox',
     'wmt/view/TimeView',
     'wmt/view/WeatherScoutViewManager',
     'wmt/view/WildlandFireViewManager'],

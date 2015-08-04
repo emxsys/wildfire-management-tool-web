@@ -45,8 +45,8 @@
 define([
     'wmt/controller/Controller',
     'wmt/globe/Globe',
-    'wmt/menu/MainMenu',
-    'wmt/menu/MobileMenu'
+    'wmt/ui/MainMenu',
+    'wmt/ui/MobileMenu'
 ],
     function (
         controller,
