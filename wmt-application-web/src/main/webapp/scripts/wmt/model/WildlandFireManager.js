@@ -51,23 +51,28 @@ define([
                 i, max,
                 feature;
 
-            // Load the large fire points
-            geoMac.activeFires(function (features) {
-                for (i = 0, max = features.length; i < max; i++) {
-                    feature = features[i];
-                    self.addFire(new WildlandFire(feature));
-                }
-            }, false);  // async = false
-            // Load the current fire perimeters
-            geoMac.activeFirePerimeters(function (features) {
-                for (i = 0, max = features.length; i < max; i++) {
-                    feature = features[i];
-                    // Breakup the long processing with a timeout
-                    setTimeout(function (feature) {
+            // Load the large fire points (includeGeometry)
+            geoMac.activeFires(
+                true, // include Geometry
+                function (features) {
+                    for (i = 0, max = features.length; i < max; i++) {
+                        feature = features[i];
                         self.addFire(new WildlandFire(feature));
-                    }, 50, feature);
-                };
-            }, false);  // async = false
+                    }
+                });
+            // Load the current fire perimeters (without geometry)
+            geoMac.activeFirePerimeters(
+                false, // don't include Geometry
+                function (features) {
+                    for (i = 0, max = features.length; i < max; i++) {
+                        feature = features[i];
+                        // Breakup the long processing with a timeout
+                        setTimeout(function (feature) {
+                            self.addFire(new WildlandFire(feature));
+                        }, 50, feature);
+                    }
+                    ;
+                });
         };
 
 

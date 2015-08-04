@@ -222,8 +222,8 @@ define([
              * ]
              *}               
              */
-            activeFires: function (callback) {
-                this.query("1=1", '1', callback);
+            activeFires: function (includeGeometry, callback) {
+                this.query("1=1", '1', includeGeometry, callback);
             },
             /**
              * 
@@ -398,16 +398,44 @@ define([
              * }
              *}
              */
-            activeFirePerimeters: function (callback) {
-                this.query("1=1", '2', callback);
+            activeFirePerimeters: function (includeGeometry, callback) {
+                this.query("1=1", '2', includeGeometry, callback);
+            },
+            getActiveFireFeature: function (featureId, callback) {
+                this.getFeature('1', featureId, callback);
+            },
+            getActivePerimeterFeature: function (featureId, callback) {
+                this.getFeature('2', featureId, callback);
             },
             /**
-             * Identifies features the GeoMAX ArcGIS MapService . 
+             * Gets the feature from the MapServer REST service.
+             * @param {String} layerId
+             * @param {String} objectId
+             * @param {Function} callback
+             */
+            getFeature: function(layerId, objectId, callback) {
+                var url = wmt.GEOMAC_REST_SERVICE + '/' + layerId + '/' +objectId,
+                    query = 'f=json';
+
+                console.log(url + '?' + query);
+
+                $.ajax({
+                    url: url,
+                    data: query,
+                    success: function (response) {
+                        var json = JSON.parse(response);
+                        callback(json.feature);
+                    }
+                });
+            },
+            /**
+             * Queries features the GeoMAX ArcGIS MapService . 
              * @param {String} whereCriteria
              * @param {String} layerId
+             * @param {Boolean} includeGeometry
              * @param {Function(Object[])} callback Receives query results "features" array.
              */
-            query: function (whereCriteria, layerId, callback) {
+            query: function (whereCriteria, layerId, includeGeometry, callback) {
                 var url = wmt.GEOMAC_REST_SERVICE + '/' + layerId + '/query',
                     query = 'where=' + (whereCriteria || '1=1')
                     + '&text='
@@ -417,7 +445,7 @@ define([
                     + '&geometryType=esriGeometryEnvelope'
                     + '&inSR=&spatialRel=esriSpatialRelIntersects'
                     + '&relationParam=&outFields=*'
-                    + '&returnGeometry=true'
+                    + '&returnGeometry=' + (includeGeometry ? 'true' : 'false')
                     + '&maxAllowableOffset='
                     + '&geometryPrecision='
                     + '&outSR=4326'

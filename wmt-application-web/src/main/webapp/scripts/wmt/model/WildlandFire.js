@@ -31,14 +31,18 @@
 /*global define, WorldWind*/
 
 define([
+    'require',
     'wmt/util/ContextSensitive',
+    'wmt/resource/GeoMacResource',
     'wmt/util/Openable',
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
+        require,
         contextSensitive,
+        geoMac,
         openable,
         log,
         messenger,
@@ -47,11 +51,7 @@ define([
         "use strict";
 
         var WildlandFire = function (feature) {
-            var attributes = feature.attributes || {},
-                i, numRings, ring,
-                j, numPoints,
-                minLat, maxLat,
-                minLon, maxLon;
+            var attributes = feature.attributes || {};
 
             // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
             openable.makeOpenable(this, function () {
@@ -73,24 +73,78 @@ define([
             this.name = attributes.incidentname
                 || attributes.fire_name
                 || 'Fire';
+            this.state = attributes.state || attributes.inc_num.substr(0,2);
             this.number = attributes.uniquefireidentifier
                 || attributes.inc_num
                 || 'Unknown';
-            this.geometry = feature.geometry;
-            this.extents = null;
+            this.featureId = attributes.objectid;
+            this.featureType = attributes.incidentname ? wmt.WILDLAND_FIRE_POINT : wmt.WILDLAND_FIRE_PERIMETER;
 
-            // Create the composite weather map symbol components
-            if (feature.geometry.x && feature.geometry.y) {
-                this.latitude = feature.geometry.y;
-                this.longitude = feature.geometry.x;
+            // If the feature has geometry then process it, otherwise defer until needed
+            if (feature.geometry) {
+                this.processGeometry(feature.geometry);
+            } else {
+                this.geometryType = wmt.GEOMETRY_UNKNOWN;
+                this.geometry = null;
+                this.extents = null;
+            }
+        };
+        /**
+         * 
+         * @param {type} deferred
+         */
+        WildlandFire.prototype.loadDeferredGeometry = function (deferred) {
+            var self = this;
+            if (this.featureType === wmt.WILDLAND_FIRE_POINT) {
+                geoMac.getActiveFireFeature(this.featureId,
+                    function (feature) {
+                        self.processGeometry(feature.geometry);
+                        if (deferred) {
+                            deferred.resolve(self);
+                        }
+                    });
+            }
+            else if (this.featureType === wmt.WILDLAND_FIRE_PERIMETER) {
+                geoMac.getActivePerimeterFeature(this.featureId,
+                    function (feature) {
+                        self.processGeometry(feature.geometry);
+                        if (deferred) {
+                            deferred.resolve(self);
+                        }
+                    });
+            }
+        };
+        /**
+         * 
+         * @param {type} geometry
+         * @returns {undefined}
+         */
+        WildlandFire.prototype.processGeometry = function (geometry) {
+            var i, numRings, ring,
+                j, numPoints,
+                minLat, maxLat,
+                minLon, maxLon;
+
+            this.geometry = geometry;
+
+            if (geometry.x && geometry.y) {
                 this.geometryType = wmt.GEOMETRY_POINT;
-            } else if (feature.geometry.rings) {
+
+                // Set the "goto" locaiton
+                this.latitude = geometry.y;
+                this.longitude = geometry.x;
+                this.extents = null;
+
+            } else if (geometry.rings) {
+                this.geometryType = wmt.GEOMETRY_POLYGON;
+
+                // Compute the extents
                 minLat = Number.MAX_VALUE;
                 minLon = Number.MAX_VALUE;
                 maxLat = -Number.MAX_VALUE;
                 maxLon = -Number.MAX_VALUE;
-                for (i = 0, numRings = feature.geometry.rings.length; i < numRings; i++) {
-                    ring = feature.geometry.rings[i];
+                for (i = 0, numRings = geometry.rings.length; i < numRings; i++) {
+                    ring = geometry.rings[i];
                     for (j = 0, numPoints = ring.length; j < numPoints; j++) {
                         minLat = Math.min(minLat, ring[j][1]);
                         maxLat = Math.max(maxLat, ring[j][1]);
@@ -99,9 +153,27 @@ define([
                     }
                 }
                 this.extents = new WorldWind.Sector(minLat, maxLat, minLon, maxLon);
+
+                // Set the "goto" locaiton
                 this.latitude = this.extents.centroidLatitude();
                 this.longitude = this.extents.centroidLongitude();
-                this.geometryType = wmt.GEOMETRY_POLYGON;
+            }
+        };
+
+
+        WildlandFire.prototype.goto = function () {
+            var controller = require("wmt/controller/Controller"),
+                deferred = $.Deferred();
+
+            if (this.geometry) {
+                controller.lookAtLatLon(this.latitude, this.longitude);
+            } else {
+                // Load the geometry
+                this.loadDeferredGeometry(deferred);
+                $.when(deferred).done(function (self) {
+                    controller.lookAtLatLon(self.latitude, self.longitude);
+                });
+
             }
         };
 

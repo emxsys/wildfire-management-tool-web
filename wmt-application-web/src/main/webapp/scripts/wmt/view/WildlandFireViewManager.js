@@ -74,7 +74,6 @@ define([
                 this.manager = controller.model.wildlandFireManager;
                 this.manager.on(wmt.EVENT_WILDLAND_FIRE_ADDED, this.handleWildlandFireAddedEvent, this);
                 this.manager.on(wmt.EVENT_WILDLAND_FIRE_REMOVED, this.handleWildlandFireRemovedEvent, this);
-
                 // Get the RenderableLayer that we'll add the weathers to.
                 this.activeFiresLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRES);
                 this.activeFirePerimetersLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS);
@@ -92,15 +91,10 @@ define([
                 if (!this.activeFiresLayer) {
                     return;
                 }
-                try {
-                    // Create the symbol on the globe
-                    this.createRenderable(fire);
-                    // Update our list of fires
-                    this.synchronizeFiresList();
-                }
-                catch (e) {
-                    log.error("WildlandFireViewManager", "handleWildlandFireAddedEvent", e.toString());
-                }
+                // Create the symbol on the globe
+                this.createRenderable(fire);
+                // Update our list of fires
+                this.synchronizeFiresList();
             },
             /**
              * Removes the given fire from the globe and the fire list.
@@ -108,7 +102,6 @@ define([
              */
             handleWildlandFireRemovedEvent: function (fire) {
                 var i, max, renderable;
-
                 if (!this.activeFiresLayer) {
                     // The model is initialized before this panel is initialized
                     return;
@@ -133,11 +126,30 @@ define([
              */
             createRenderable: function (fire) {
                 // Add the wildland fire symbol on the globe
-                if (fire.geometryType === wmt.GEOMETRY_POINT) {
-                    this.activeFiresLayer.addRenderable(new WildlandFireSymbol(fire));
-                } else {
-                    this.activeFirePerimetersLayer.addRenderable(new WildlandFireSymbol(fire));
+                if (fire.geometry) {
+                    var symbol = new WildlandFireSymbol(fire);
+                    if (fire.featureType === wmt.WILDLAND_FIRE_POINT) {
+                        this.activeFiresLayer.addRenderable(symbol);
+                    } else if (fire.featureType === wmt.WILDLAND_FIRE_PERIMETER) {
+                        this.activeFirePerimetersLayer.addRenderable(symbol);
+                    }
                 }
+            },
+            findRenderable: function (fire) {
+                // Add the wildland fire symbol on the globe
+                var layer, i, max, renderable;
+                if (fire.featureType === wmt.WILDLAND_FIRE_POINT) {
+                    layer = this.activeFiresLayer;
+                } else if (fire.featureType === wmt.WILDLAND_FIRE_PERIMETER) {
+                    layer = this.activeFirePerimetersLayer;
+                }
+                for (i = 0, max = layer.renderables.length; i < max; i++) {
+                    renderable = layer.renderables[i];
+                    if (renderable.fire && renderable.fire.id === fire.id) {
+                        return renderable;
+                    }
+                }
+                return null;
             },
             /**
              * Synchronize the wildland fires list with the wildland fires model.
@@ -145,16 +157,34 @@ define([
             synchronizeFiresList: function () {
                 var self = this,
                     $list = $("#wildlandFireList"),
-                    fires = this.manager.fires,
+                    fires = this.manager.fires.slice(0), // naive copy
                     fire, i, len, item;
-
+                    
                 // This preliminary implemenation does a brute force "clear and repopulate" of the list
                 $list.children().remove();
+
+                // Sort by State, Name
+                fires.sort(function (a, b) {
+                    if (a.state < b.state) {
+                        return -1;
+                    }
+                    if (a.state > b.state) {
+                        return 1;
+                    }
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
+                    return 0;
+                });
+
                 for (i = 0, len = fires.length; i < len; i += 1) {
                     fire = fires[i];
                     item =
                         '<div class= "btn-group btn-block btn-group-sm">' +
-                        ' <button type="button" class="col-xs-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.name + '</button>' +
+                        ' <button type="button" class="col-xs-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.state + ' ' + fire.name + ' (' + fire.featureType + ') </button>' +
                         ' <button type="button" class="col-xs-2 btn btn-default wildland-fire-open glyphicon glyphicon-open" style="top: 0" fireId="' + fire.id + '"></button>' +
 //                        ' <button type="button" class="col-sm-2 btn btn-default wildland-fire-remove glyphicon glyphicon-trash" style="top: 0" fireId="' + fire.id + '"></button>' +
                         '</div>';
@@ -179,27 +209,67 @@ define([
              */
             onFireItemClick: function (fireId, action) {
                 var fire = this.manager.findFire(fireId);
-
                 if (!fire) {
                     messenger.notify(log.error("WildlandFireViewManager", "onFireItemClick", "Could not find selected fire with ID: " + fireId));
                     return;
                 }
                 switch (action) {
                     case 'goto':
-                        controller.lookAtLatLon(fire.latitude, fire.longitude);
+                        this.goto(fire);
+                        break;
+                    case 'show':
+                        this.show(fire);
                         break;
                     case 'open':
                         fire.open();
                         break;
                     case 'remove':
-                        fire.remove();
+                        // TODO: find the renderable(s) and set enabled to false
                         break;
                     default:
                         log.error("WildlandFireViewManager", "onWeatherItemClick", "Unhandled action: " + action);
                 }
-            }
-        };
+            },
+            goto: function (fire) {
+                if (fire.geometry) {
+                    controller.lookAtLatLon(fire.latitude, fire.longitude);
+                    return;
+                }
+                var deferred = $.Deferred(),
+                    self = this;
+                // Load the fire's geometry before continuing
+                fire.loadDeferredGeometry(deferred);
+                $.when(deferred).done(function (resolvedFire) {
+                    // Center the crosshairs on the fire
+                    controller.lookAtLatLon(resolvedFire.latitude, resolvedFire.longitude);
+                    // Now that we have geometry, go ahead and load the new symbol/shape for the fire
+                    self.createRenderable(resolvedFire);
+                });
 
+            },
+            show: function (fire) {
+                var renderable = this.findRenderable(fire),
+                    deferred = $.Deferred(),
+                    self = this;
+
+                if (renderable) {
+                    renderable.enabled = true;
+                    return;
+                }
+
+                this.loadDeferredGeometry(deferred);
+                $.when(deferred).done(function (resolvedFire) {
+                    self.createRenderable(resolvedFire);
+                });
+            },
+            hide: function (fire) {
+                var renderable = this.findRenderable(fire);
+                if (renderable) {
+                    renderable.enabled = false;
+                }
+            }
+
+        };
         return WildlandFireViewManager;
     }
 );

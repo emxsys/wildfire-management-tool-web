@@ -116,6 +116,7 @@ define([],
             GEOMETRY_POINT: 'point',
             GEOMETRY_POLYGON: 'polygon',
             GEOMETRY_POLYLINE: 'polyline',
+            GEOMETRY_UNKNOWN: 'unknown',
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
@@ -193,6 +194,8 @@ define([],
              * The URL for the weather REST service.
              */
             WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
+            WILDLAND_FIRE_POINT: "point",
+            WILDLAND_FIRE_PERIMETER: "perimeter",
             /**
              * Base URL for Web World Wind SDK. (Do not use a reltive path.)
              * @default "scripts/nasa/"
