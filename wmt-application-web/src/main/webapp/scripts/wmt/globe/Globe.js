@@ -145,8 +145,8 @@ define([
                 includeFieldOfViewControls = options ? options.includeFieldOfViewControls : wmt.configuration.showFiewOfViewControl,
                 defaultLayers = [
                     {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
-                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
-                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
+                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false, detailHint: 0.1},
+                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: 0.2},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new LandfireLayer(null), enabled: false},
@@ -175,14 +175,21 @@ define([
             else {
                 // ... otherwise, we use the default layers
                 for (i = 0, max = defaultLayers.length; i < max; i++) {
+                    
                     // Propagate enabled option to the layer object
                     defaultLayers[i].layer.enabled = defaultLayers[i].enabled;
                     defaultLayers[i].layer.pickEnabled = defaultLayers[i].pickEnabled;
                     
+                    // Apply the level-of-detail hint, if provided
+                    if (defaultLayers[i].detailHint) {
+                        defaultLayers[i].layer.detailHint = defaultLayers[i].detailHint;
+                    }
+
                     // Hide background and control layers in the menu 
                     if (defaultLayers[i].hide) {
                         defaultLayers[i].layer.hide = defaultLayers[i].hide;
                     }
+                    
                     this.wwd.addLayer(defaultLayers[i].layer);
                 }
             }
