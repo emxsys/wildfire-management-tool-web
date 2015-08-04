@@ -145,8 +145,8 @@ define([
                 includeFieldOfViewControls = options ? options.includeFieldOfViewControls : wmt.configuration.showFiewOfViewControl,
                 defaultLayers = [
                     {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
-                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false, detailHint: 0.1},
-                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: 0.2},
+                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false, detailHint: 0.25},
+                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: 0.25},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false},
                     {layer: new LandfireLayer(null), enabled: false},
