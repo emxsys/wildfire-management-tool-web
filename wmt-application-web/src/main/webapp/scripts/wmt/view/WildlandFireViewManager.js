@@ -32,15 +32,15 @@
 
 
 /**
- * The WildlandFireViewManager module is responsible for rendering Wildland Fires
+ * The WildlandFireViewManager module is responsible for rendering Weather Fires and Weather Stations
  * on the globe and within lists in a panel.
  * 
  * @param {Controller} controller MVC.
  * @param {Log} log Error logger.
+ * @param {WildlandFire} WildlandFire
  * @param {Messenger} messenger User notifications.
- * @param {WildlandFire} WildlandFireSymbol
  * @param {Wmt} wmt Constants.
- * @returns {WildlandFireView}
+ * @returns {WildlandFireViewManager}
  * 
  * @author Bruce Schubert
  */
@@ -49,6 +49,7 @@ define([
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/view/symbols/fire/WildlandFireSymbol',
+    'wmt/model/WildlandFire',
     'wmt/Wmt',
     'worldwind'],
     function (
@@ -56,6 +57,7 @@ define([
         log,
         messenger,
         WildlandFireSymbol,
+        WildlandFire,
         wmt,
         ww) {
         "use strict";
@@ -63,7 +65,7 @@ define([
          * 
          * @type type
          */
-        var WildlandFireView = {
+        var WildlandFireViewManager = {
             /**
              * Initilizes the event handlers. Called once during the application startup.
              */
@@ -100,15 +102,12 @@ define([
              * @param {WildlandFire[]} fires 
              */
             handleWildlandFiresAddedEvent: function (fires) {
-                var i, max;
-                
                 if (!this.activeFiresLayer) {
                     return;
                 }
-                for (i = 0, max = fires.length; i < max; i++) {
-                    // Create the symbol on the globe if the fire has geometry
+                for (var i = 0, max = fires.length; i < max; i++) {
+                    // Create the symbol on the globe
                     this.createRenderable(fires[i]);
-                    //this.show(fires[i]);  // this function will load deferred geometry
                 }
                 // Update our list of fires
                 this.synchronizeFiresList();
@@ -175,8 +174,7 @@ define([
                 var self = this,
                     $list = $("#wildlandFireList"),
                     fires = this.manager.fires.slice(0), // naive copy
-                    fire, i, len, item,
-                    name1, name2;
+                    fire, i, len, item;
 
                 // This preliminary implemenation does a brute force "clear and repopulate" of the list
                 $list.children().remove();
@@ -189,13 +187,10 @@ define([
                     if (a.state > b.state) {
                         return 1;
                     }
-                    // Perform case insensitive sorting
-                    name1 = a.name.toLowerCase();
-                    name2 = b.name.toLowerCase();
-                    if (name1 < name2) {
+                    if (a.name < b.name) {
                         return -1;
                     }
-                    if (name1 > name2) {
+                    if (a.name > b.name) {
                         return 1;
                     }
                     return 0;
@@ -272,18 +267,13 @@ define([
                 var renderable = this.findRenderable(fire),
                     deferred = $.Deferred(),
                     self = this;
-                
+
                 if (renderable) {
                     renderable.enabled = true;
                     return;
                 }
 
-                if (fire.geometry) {
-                    self.createRenderable(fire);
-                    return;
-                }
-                
-                fire.loadDeferredGeometry(deferred);
+                this.loadDeferredGeometry(deferred);
                 $.when(deferred).done(function (resolvedFire) {
                     self.createRenderable(resolvedFire);
                 });
@@ -296,6 +286,6 @@ define([
             }
 
         };
-        return WildlandFireView;
+        return WildlandFireViewManager;
     }
 );

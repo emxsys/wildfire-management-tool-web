@@ -46,20 +46,20 @@
  * @author Theodore Walton
  */
 define([
-    'wmt/ui/AboutBox',
+    'wmt/menu/AboutBox',
     'wmt/controller/Controller',
-    'wmt/ui/ControlPanel',
-    'wmt/ui/DateTimeControls',
+    'wmt/menu/ControlPanel',
+    'wmt/menu/DateTimeControls',
     'wmt/view/FireLookoutViewer',
     'wmt/view/FuelModelCatalogViewer',
-    'wmt/view/FireLookoutView',
-    'wmt/ui/LayerMenu',
+    'wmt/view/FireLookoutViewManager',
+    'wmt/menu/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
-    'wmt/ui/SearchBox',
+    'wmt/menu/SearchBox',
     'wmt/view/TimeView',
-    'wmt/view/WeatherScoutView',
-    'wmt/view/WildlandFireView'],
+    'wmt/view/WeatherScoutViewManager',
+    'wmt/view/WildlandFireViewManager'],
     function (
         aboutBox,
         controller,
@@ -67,14 +67,14 @@ define([
         dateTimeControls,
         fireLookoutViewer,
         fuelModelCatalogViewer,
-        fireLookoutView,
+        fireLookoutViewManager,
         LayerMenu,
         locationView,
         MarkerView,
         SearchBox,
         timeView,
-        weatherScoutView,
-        wildlandFireView) {
+        weatherScoutViewManager,
+        wildlandFireViewManager) {
         "use strict";
         var MainMenu = {
             /**
@@ -160,9 +160,9 @@ define([
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();                   
-                    fireLookoutView.initialize();
-                    weatherScoutView.initialize();
-                    wildlandFireView.initialize();
+                    fireLookoutViewManager.initialize();
+                    weatherScoutViewManager.initialize();
+                    wildlandFireViewManager.initialize();
 
                     // Screen Widgets
                     dateTimeControls.initialize();

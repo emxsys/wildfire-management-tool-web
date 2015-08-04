@@ -40,7 +40,7 @@
  * @param {WeatherScout} WeatherScout
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
- * @returns {WeatherScoutView}
+ * @returns {WeatherScoutViewManager}
  * 
  * @author Bruce Schubert
  */
@@ -65,7 +65,7 @@ define([
          * 
          * @type type
          */
-        var WeatherScoutView = {
+        var WeatherScoutViewManager = {
             /**
              * Initilizes the event handlers. Called once during the application startup.
              */
@@ -204,6 +204,6 @@ define([
             }
         };
 
-        return WeatherScoutView;
+        return WeatherScoutViewManager;
     }
 );
