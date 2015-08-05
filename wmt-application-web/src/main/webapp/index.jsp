@@ -371,48 +371,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- /Mobile Globe Menu -->
 
         <!-- Mobile Layers List Menu -->
-        <!-- BDS: <nav id="mobileLayersList" class="hidden-md hidden-lg c-menu"> -->
         <nav id="mobileLayersList" class="c-menu hidden">
-            <div class="container-fluid" style="margin-top:5px;">
+            <div class="container-fluid" style="margin-top:5px; height: 100%">
                 <div class="row">
-                    <div class="col-xs-2 col-sm-2" style="float:left;">
+                    <div class="col-xs-2 col-sm-2" 
+                         style="float:left;">
                         <button id="layersListCheck" class="c-check">
                             <span class="span1"></span>
                             <span class="span2"></span>
                         </button>
                     </div>
+                    <div class="col-xs-10">
+                        <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Layers</h3>
+                    </div>
                 </div>
-                <div class="row" style="margin-top:5px;">
-                    <div class="col-xs-12 col-sm-12">
-                        <!--Layer List-->
-                        <div class="panel panel-default">
-                            <!--Show this panel at startup via "collapsed.in"-->
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#layersAccordion" 
-                                 href="#layerListBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="layerListBody"
-                                 role="tab" 
-                                 id="layerListHeading">
-                                <h4 class="panel-title">
-                                    Layer List
-                                </h4>
-                            </div>
-                            <div class="panel-collapse collapse in"
-                                 <div class="panel-collapse"
-                                 style='max-height: calc(39vh - 50px)'
-                                 role="tabpanel" 
-                                 aria-labelledby="layerListHeading"
-                                 id="layerListBody" >
-                                    <div class="panel-body">
-                                        <ul class="list-group"
-                                            style="max-height:calc(23vh);overflow-y: scroll;"
-                                            id="layerList">
-                                        </ul>                              
-                                    </div>
-                                </div>
-                            </div>
+                <div class="row" style="margin-top:5px; height: calc(100% - 50px)">
+                    <!--Layer List-->
+                    <div class="col-xs-12 col-sm-12" style="height: 100%">
+                        <div class="panel panel-default" style="height: 100%">
+                            <ul class="list-group"
+                                style="overflow-y: scroll; height: 100%"
+                                id="layerList">
+                            </ul>                              
                         </div>
                     </div>
                 </div>
@@ -671,8 +651,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </nav>    
         <!-- /Mobile Marker List -->        
-        
-        
+
+
         <!--WMTweb: Globe and Sidebars--> 
         <div id="wmtweb" class="container-full" style="position: relative; height: calc(100vh - 52px);">
             <!--Content-->

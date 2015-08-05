@@ -32,15 +32,15 @@
 
 
 /**
- * The WildlandFireViewManager module is responsible for rendering Weather Fires and Weather Stations
+ * The WildlandFireView module is responsible for rendering Weather Fires and Weather Stations
  * on the globe and within lists in a panel.
  * 
  * @param {Controller} controller MVC.
  * @param {Log} log Error logger.
- * @param {WildlandFire} WildlandFire
  * @param {Messenger} messenger User notifications.
  * @param {Wmt} wmt Constants.
- * @returns {WildlandFireViewManager}
+ * @param {WorldWind} ww 
+ * @returns {WildlandFireView}
  * 
  * @author Bruce Schubert
  */
@@ -49,7 +49,6 @@ define([
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/view/symbols/fire/WildlandFireSymbol',
-    'wmt/model/WildlandFire',
     'wmt/Wmt',
     'worldwind'],
     function (
@@ -57,7 +56,6 @@ define([
         log,
         messenger,
         WildlandFireSymbol,
-        WildlandFire,
         wmt,
         ww) {
         "use strict";
@@ -65,7 +63,7 @@ define([
          * 
          * @type type
          */
-        var WildlandFireViewManager = {
+        var WildlandFireView = {
             /**
              * Initilizes the event handlers. Called once during the application startup.
              */
@@ -80,7 +78,7 @@ define([
                 this.activeFirePerimetersLayer = controller.globe.findLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS);
                 if (!this.activeFiresLayer) {
                     throw new Error(
-                        log.error("WildlandFireViewManager", "constructor",
+                        log.error("WildlandFireView", "constructor",
                             "Could not find a Layer named " + wmt.LAYER_NAME_WILDLAND_FIRES));
                 }
             },
@@ -133,11 +131,11 @@ define([
                     this.synchronizeFiresList();
                 }
                 catch (e) {
-                    log.error("WildlandFireViewManager", "handleWildlandFireRemovedEvent", e.toString());
+                    log.error("WildlandFireView", "handleWildlandFireRemovedEvent", e.toString());
                 }
             },
             /**
-             * Creates a Placemark renderable for the given fire object.
+             * Creates a renderable for the given fire object.
              * @param {WildlandFire} fire
              */
             createRenderable: function (fire) {
@@ -174,7 +172,9 @@ define([
                 var self = this,
                     $list = $("#wildlandFireList"),
                     fires = this.manager.fires.slice(0), // naive copy
-                    fire, i, len, item;
+                    fire, i, len, item,
+                    currState, collapseId, headingId,
+                    $stateDiv, $heading, $title, $anchor, $bodyParent, $body;
 
                 // This preliminary implemenation does a brute force "clear and repopulate" of the list
                 $list.children().remove();
@@ -198,13 +198,37 @@ define([
 
                 for (i = 0, len = fires.length; i < len; i += 1) {
                     fire = fires[i];
+                    if (fire.state !== currState) {
+                        // Create an accordion panel for the state
+                        currState = fire.state;
+                        headingId = 'wildfire-state-heading-' + currState;
+                        collapseId = 'wildfire-state-body-' + currState;
+                        $stateDiv = $('<div class="panel panel-default"></div>');
+                        $heading = $('<div class="panel-heading" role="tab" id="' + headingId + '"></div>');
+                        $title = $('<h4 class="panel-title"></h4>');
+                        $anchor = $('<a data-toggle="collapse" href="#' + collapseId + '"' +
+                            ' aria-expanded="true" aria-controls="' + collapseId + '">' + currState + '</a>');
+                        $bodyParent = $('<div id="' + collapseId + '" class="panel-collapse collapse" role="tabpanel"' +
+                            ' aria-labelledby="' + headingId + '"></div>');
+                        $body = $('<div style=""></div>');
+
+                        // Assemble the accordion panel
+                        $title.append($anchor);
+                        $heading.append($title);
+                        $stateDiv.append($heading);
+                        $bodyParent.append($body);
+                        $stateDiv.append($bodyParent);
+
+                        $list.append($stateDiv);
+                    }
                     item =
                         '<div class= "btn-group btn-block btn-group-sm">' +
                         ' <button type="button" class="col-xs-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.state + ' ' + fire.name + ' (' + fire.featureType + ') </button>' +
                         ' <button type="button" class="col-xs-2 btn btn-default wildland-fire-open glyphicon glyphicon-open" style="top: 0" fireId="' + fire.id + '"></button>' +
 //                        ' <button type="button" class="col-sm-2 btn btn-default wildland-fire-remove glyphicon glyphicon-trash" style="top: 0" fireId="' + fire.id + '"></button>' +
                         '</div>';
-                    $list.append(item);
+
+                    $body.append(item);
                 }
 
                 // Add event handler to the buttons
@@ -226,7 +250,7 @@ define([
             onFireItemClick: function (fireId, action) {
                 var fire = this.manager.findFire(fireId);
                 if (!fire) {
-                    messenger.notify(log.error("WildlandFireViewManager", "onFireItemClick", "Could not find selected fire with ID: " + fireId));
+                    messenger.notify(log.error("WildlandFireView", "onFireItemClick", "Could not find selected fire with ID: " + fireId));
                     return;
                 }
                 switch (action) {
@@ -243,7 +267,7 @@ define([
                         // TODO: find the renderable(s) and set enabled to false
                         break;
                     default:
-                        log.error("WildlandFireViewManager", "onWeatherItemClick", "Unhandled action: " + action);
+                        log.error("WildlandFireView", "onWeatherItemClick", "Unhandled action: " + action);
                 }
             },
             goto: function (fire) {
@@ -286,6 +310,6 @@ define([
             }
 
         };
-        return WildlandFireViewManager;
+        return WildlandFireView;
     }
 );
