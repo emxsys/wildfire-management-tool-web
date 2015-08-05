@@ -39,8 +39,8 @@
  * @param {LayerMenu} LayerMenu Shows the layer list sidebar.
  * @param {MarkerView} MarkerView Shows the marker list sidebar.
  * @param {SearchBox} SearchBox Shows the search box in the nav bar
- * @param {WeatherScoutViewManager} weatherScoutViewManager Shows the weather scouts.
- * @returns {MainMenu}
+ * @param {WeatherScoutViewManager} weatherScoutView Shows the weather scouts.
+ * @returns {LayoutManager}
  * 
  * @author Bruce Schubert
  * @author Theodore Walton
@@ -52,14 +52,14 @@ define([
     'wmt/ui/DateTimeControls',
     'wmt/view/FireLookoutViewer',
     'wmt/view/FuelModelCatalogViewer',
-    'wmt/view/FireLookoutViewManager',
+    'wmt/view/FireLookoutView',
     'wmt/ui/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
     'wmt/ui/SearchBox',
     'wmt/view/TimeView',
-    'wmt/view/WeatherScoutViewManager',
-    'wmt/view/WildlandFireViewManager'],
+    'wmt/view/WeatherScoutView',
+    'wmt/view/WildlandFireView'],
     function (
         aboutBox,
         controller,
@@ -67,16 +67,16 @@ define([
         dateTimeControls,
         fireLookoutViewer,
         fuelModelCatalogViewer,
-        fireLookoutViewManager,
+        fireLookoutView,
         LayerMenu,
         locationView,
         MarkerView,
         SearchBox,
         timeView,
-        weatherScoutViewManager,
-        wildlandFireViewManager) {
+        weatherScoutView,
+        wildlandFireView) {
         "use strict";
-        var MainMenu = {
+        var LayoutManager = {
             /**
              * Initializes the main menu and its constituents.
              * @param {Controller} controller 
@@ -160,9 +160,9 @@ define([
                     this.controlPanel = new ControlPanel();
                     this.layerMenu = new LayerMenu();
                     this.markerPanel = new MarkerView();                   
-                    fireLookoutViewManager.initialize();
-                    weatherScoutViewManager.initialize();
-                    wildlandFireViewManager.initialize();
+                    fireLookoutView.initialize();
+                    weatherScoutView.initialize();
+                    wildlandFireView.initialize();
 
                     // Screen Widgets
                     dateTimeControls.initialize();
@@ -197,6 +197,6 @@ define([
             }
 
         };
-        return MainMenu;
+        return LayoutManager;
     }
 );
