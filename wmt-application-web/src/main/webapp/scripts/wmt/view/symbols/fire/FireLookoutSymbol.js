@@ -32,10 +32,11 @@
 
 define([
     'wmt/controller/Controller',
-    'wmt/view/symbols/DirOfSpread',
-    'wmt/view/symbols/FlameLengthHead',
-    'wmt/view/symbols/FuelModelNo',
-    'wmt/view/symbols/WildfireDiamond',
+    'wmt/view/symbols/fire/DirOfSpread',
+    'wmt/view/symbols/fire/FlameLengthHead',
+    'wmt/util/Formatter',
+    'wmt/view/symbols/fire/FuelModelNo',
+    'wmt/view/symbols/fire/WildfireDiamond',
     'wmt/util/Log',
     'wmt/Wmt',
     'worldwind'],
@@ -43,6 +44,7 @@ define([
         controller,
         DirOfSpread,
         FlameLengthHead,
+        formatter,
         FuelModelNo,
         WildfireDiamond,
         logger,
@@ -55,7 +57,7 @@ define([
             // Inherit Renderable properties
             WorldWind.Renderable.call(this);
 
-            // Maintain a reference to the weather object this symbol represents
+            // Maintain a reference to the fire lookout object this symbol represents
             this.lookout = lookout;
 
             var self = this,
@@ -67,11 +69,16 @@ define([
                 ros = surfaceFire ? lookout.surfaceFire.rateOfSpreadMax.value : null,
                 modelNo = surfaceFire ? lookout.surfaceFire.fuelBed.fuelModel.modelCode : '-';
 
-            // Create the weather map symbol components
+            // Create the fire lookout symbol components
             this.diamond = new WildfireDiamond(lookout.latitude, lookout.longitude, Math.round(head), Math.round(flanks), Math.round(heal));
             this.dirOfSpread = new DirOfSpread(lookout.latitude, lookout.longitude, Math.round(dir));
             this.flameLengthHead = new FlameLengthHead(lookout.latitude, lookout.longitude, head || '-');
             this.fuelModelNo = new FuelModelNo(lookout.latitude, lookout.longitude, modelNo);
+
+            if (wmt.configuration.fireLookoutLabels === wmt.FIRE_LOOKOUT_LABEL_NAME) {
+                this.diamond.label = lookout.name;
+            }
+
 
             // Add a reference to our lookout object to the principle renderables.
             // The "movable" wxModel will generate EVENT_OBJECT_MOVED events. See SelectController.
@@ -93,12 +100,12 @@ define([
             };
             // EVENT_FIRE_BEHAVIOR_CHANGED handler 
             this.handleFireBehaviorChangedEvent = function (lookout) {
-                var head = lookout.surfaceFire.flameLength.value,
-                    flanks = lookout.surfaceFire.flameLengthFlanking.value,
-                    heal = lookout.surfaceFire.flameLengthBacking.value,
-                    dir = lookout.surfaceFire.directionMaxSpread.value,
-                    ros = lookout.surfaceFire.rateOfSpreadMax.value,
-                    modelNo = lookout.surfaceFire.fuelBed.fuelModel.modelCode;
+                head = lookout.surfaceFire.flameLength.value;
+                flanks = lookout.surfaceFire.flameLengthFlanking.value;
+                heal = lookout.surfaceFire.flameLengthBacking.value;
+                dir = lookout.surfaceFire.directionMaxSpread.value;
+                ros = lookout.surfaceFire.rateOfSpreadMax.value;
+                modelNo = lookout.surfaceFire.fuelBed.fuelModel.modelCode;
 
                 this.diamond.updateWildfireDiamondImage(head, flanks, heal);
                 this.dirOfSpread.updateDirOfSpreadImage(head > 0 ? Math.round(dir) : null);
@@ -111,9 +118,12 @@ define([
             };
             // EVENT_PLACE_CHANGED handler
             this.handlePlaceChangedEvent = function (lookout) {
-                // Display the place name
-                if (lookout.toponym) {
-                    self.diamond.label = lookout.toponym;
+                if (wmt.configuration.fireLookoutLabels === wmt.FIRE_LOOKOUT_LABEL_PLACE) {
+                    // Display the place name
+                    self.diamond.label = lookout.toponym || null;
+                } else if (wmt.configuration.fireLookoutLabels === wmt.FIRE_LOOKOUT_LABEL_LATLON) {
+                    // Display "Lat Lon"
+                    self.diamond.label = lookout.latitude.toFixed(3) + ' ' + lookout.longitude.toFixed(3);
                 }
             };
 

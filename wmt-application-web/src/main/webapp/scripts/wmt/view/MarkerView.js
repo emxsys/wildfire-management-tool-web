@@ -339,7 +339,8 @@ define([
                 //markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
                 markerItem =
                     '<div class="btn-group btn-block btn-group-sm">' +
-                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto">' + markerNode.name + '</button>' +
+                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto" markerName="' + markerNode.name + '">' 
+                    + markerNode.name + ': ' + markerNode.latitude.toFixed(3) + ',' + markerNode.longitude.toFixed(3) + '</button>' +
                     ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerName="' + markerNode.name + '"></button>' +
                     ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerName="' + markerNode.name + '"></button>' +
                     '</div>';
@@ -347,7 +348,7 @@ define([
             }
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
-                self.onMarkerItemClick($(this).text(), "goto");
+                self.onMarkerItemClick($(this).attr('markerName'), "goto");
             });
             markerList.find('button.mkr-edit').on('click', function (event) {
                 self.onMarkerItemClick($(this).attr('markerName'), "edit");

@@ -102,6 +102,10 @@ define([],
             EVENT_WEATHER_SCOUT_ADDED: "weatherScoutAdded",
             EVENT_WEATHER_SCOUT_CHANGED: "weatherScoutChanged",
             EVENT_WEATHER_SCOUT_REMOVED: "weatherScoutRemoved",
+            FIRE_LOOKOUT_LABEL_LATLON: "fireLookoutLabelLatLon", 
+            FIRE_LOOKOUT_LABEL_NAME: "fireLookoutLabelName",
+            FIRE_LOOKOUT_LABEL_NONE: "fireLookoutLabelNone",
+            FIRE_LOOKOUT_LABEL_PLACE: "fireLookoutLabelPlace", 
             /**
              * The URL for the fuel models REST service.
              */
@@ -151,6 +155,10 @@ define([],
             LAYER_NAME_WILDLAND_FIRE_PERIMETERS: "Active Fire Permimeters",
             MAP_SYMBOL_ALTITUDE_WEATHER: 500,
             MAP_SYMBOL_ALTITUDE_WILDFIRE: 250,
+            MARKER_LABEL_LATLON: "markerLabelLatLon", 
+            MARKER_LABEL_NAME: "markerLabelName",
+            MARKER_LABEL_NONE: "markerLabelNone",
+            MARKER_LABEL_PLACE: "markerLabelPlace", 
             /**
              * The maximum range that the globe can be zoomed out to.
              * @default 20,000,000 meters.
@@ -195,6 +203,10 @@ define([],
              * The URL for the weather REST service.
              */
             WEATHER_REST_SERVICE: "/wmt-rest/rs/weather",
+            WEATHER_SCOUT_LABEL_LATLON: "weatherScoutLabelLatLon", 
+            WEATHER_SCOUT_LABEL_NAME: "weatherScoutLabelName",
+            WEATHER_SCOUT_LABEL_NONE: "weatherScoutLabelNone",
+            WEATHER_SCOUT_LABEL_PLACE: "weatherScoutLabelPlace", 
             WILDLAND_FIRE_POINT: "point",
             WILDLAND_FIRE_PERIMETER: "perimeter",
             /**
@@ -224,6 +236,8 @@ define([],
         Wmt.configuration = {
             defaultFuelModelNo: 5, // Brush
             defaultFuelMoistureScenario: 'Very Low Dead, Fully Cured Herb',
+            fireLookoutLabels: Wmt.FIRE_LOOKOUT_LABEL_LATLON,
+            markerLabels: Wmt.MARKER_LABEL_NAME,
             startupLatitude: 34.29,
             startupLongitude: -119.29,
             startupAltitude: 1000000,
@@ -234,6 +248,7 @@ define([],
             showPanControl: false,
             showExaggerationControl: false,
             showFieldOfViewControl: false,
+            weatherScoutLabels: Wmt.WEATHER_SCOUT_LABEL_PLACE,
             wxForecastDurationHours: 48
         };
 

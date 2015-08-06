@@ -69,7 +69,7 @@ define([
             });
 
             /**
-             * The unique id used to identify this particular weather object
+             * The unique id used to identify this particular marker object
              */
             this.id = id || util.guid();
 

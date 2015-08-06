@@ -46,7 +46,7 @@
  */
 define([
     'wmt/controller/Controller',
-    'wmt/view/symbols/FireBehaviorSymbol',
+    'wmt/view/symbols/fire/FireLookoutSymbol',
     'wmt/model/FireLookout',
     'wmt/util/Log',
     'wmt/util/Messenger',
@@ -54,7 +54,7 @@ define([
     'worldwind'],
     function (
         controller,
-        FireBehaviorSymbol,
+        FireLookoutSymbol,
         FireLookout,
         logger,
         messenger,
@@ -82,11 +82,11 @@ define([
                 // Event handler for new FireLookouts
                 $(".createFireLookoutButton").on("click", function (event) {
                     controller.dropFireLookoutOnGlobe(new FireLookout());
-                });  
-                        
+                });
+
                 // Initially show the Lookouts tab
                 $('#fireLookoutsBody').collapse('show');
-                
+
             },
             /**
              * Creates a renderable and UI representatiions for the given lookout object
@@ -137,7 +137,7 @@ define([
              */
             createRenderable: function (lookout) {
                 // Add the fire lookout symbol on the globe
-                this.lookoutLayer.addRenderable(new FireBehaviorSymbol(lookout));
+                this.lookoutLayer.addRenderable(new FireLookoutSymbol(lookout));
             },
             /**
              * Synchronize the fire list with the fire lookout model.
@@ -154,7 +154,8 @@ define([
                     lookout = lookouts[i];
                     item =
                         '<div class="btn-group btn-block btn-group-sm">' +
-                        ' <button type="button" class="col-sm-8 btn btn-default lookout-goto" lookoutId="' + lookout.id + '">' + lookout.name + '</button>' +
+                        ' <button type="button" class="col-sm-8 btn btn-default lookout-goto" lookoutId="' + lookout.id + '">'
+                            + lookout.name + ': ' + lookout.latitude.toFixed(3) + ',' + lookout.longitude.toFixed(3) + '</button>' +
                         ' <button type="button" class="col-sm-2 btn btn-default lookout-open glyphicon glyphicon-pencil" style="top: 0" lookoutId="' + lookout.id + '"></button>' +
                         ' <button type="button" class="col-sm-2 btn btn-default lookout-remove glyphicon glyphicon-trash" style="top: 0" lookoutId="' + lookout.id + '"></button>' +
                         '</div>';

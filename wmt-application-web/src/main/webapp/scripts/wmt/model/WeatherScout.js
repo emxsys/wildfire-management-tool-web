@@ -309,8 +309,6 @@ define([
                         if (place[i].type !== "Zip Code") {
                             self.toponym = place[i].name;
 
-                            // Until we have an editor, use the placename for the name
-                            self.name = self.toponym;
                             break;
                         }
                     }

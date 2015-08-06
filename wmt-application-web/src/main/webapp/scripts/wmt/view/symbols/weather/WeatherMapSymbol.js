@@ -97,6 +97,11 @@ define([
             this.forecastTime.pickDelegate = wxScout;
 
 
+            if (wmt.configuration.weatherScoutLabels === wmt.WEATHER_SCOUT_LABEL_NAME) {
+                this.skyCover.label = wxScout.name;
+            }
+
+
             // EVENT_OBJECT_MOVED handler that synchronizes the composite renderables with the model's location
             this.handleObjectMovedEvent = function (wxModel) {
                 self.skyCover.position.latitude = wxModel.latitude;
@@ -124,15 +129,12 @@ define([
 
             // EVENT_PLACE_CHANGED handler that updates the label
             this.handlePlaceChangedEvent = function (wxScout) {
-                // Display the place name
-                if (wxScout.place) {
-                    // Use the first place name (ordered by granularity) that's not a zip code
-                    for (i = 0, max = wxScout.place.length; i < max; i++) {
-                        if (wxScout.place[i].type !== "Zip Code") {
-                            self.skyCover.label = wxScout.place[i].name;
-                            return;
-                        }
-                    }
+                if (wmt.configuration.weatherScoutLabels === wmt.WEATHER_SCOUT_LABEL_PLACE) {
+                    // Display the place name
+                    self.skyCover.label = wxScout.toponym || null;
+                } else if (wmt.configuration.weatherScoutLabels === wmt.WEATHER_SCOUT_LABEL_LATLON) {
+                    // Display "Lat Lon"
+                    self.skyCover.label = wxScout.latitude.toFixed(3) + ' ' + wxScout.longitude.toFixed(3);
                 }
             };
 
@@ -156,7 +158,7 @@ define([
             wxScout.on(wmt.EVENT_PLACE_CHANGED, this.handlePlaceChangedEvent, this);
             wxScout.on(wmt.EVENT_WEATHER_CHANGED, this.handleWeatherChangedEvent, this);
             controller.model.on(wmt.EVENT_TIME_CHANGED, this.handleTimeChangedEvent, this);
-            
+
             // Set the initial values to the current application time
             this.handleTimeChangedEvent(controller.model.applicationTime);
         };
@@ -174,10 +176,10 @@ define([
             //this.windBarb.imageTilt = dc.navigatorState.tilt;
 
             this.skyCover.render(dc);
-            this.windBarb.render(dc);
             this.airTemperature.render(dc);
             this.relHumidity.render(dc);
             this.forecastTime.render(dc);
+            this.windBarb.render(dc);
         };
 
         return WeatherMapSymbol;

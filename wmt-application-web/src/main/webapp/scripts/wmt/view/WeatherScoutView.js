@@ -86,11 +86,11 @@ define([
                 // Add button event handlers
                 $(".createWeatherScoutButton").on("click", function (event) {
                     controller.dropWeatherScoutOnGlobe(new WeatherScout());
-                });               
-                
+                });
+
                 // Initially show the Scouts tab
                 $('#weatherScoutsBody').collapse('show');
-                
+
             },
             /**
              * Creates a renderable and UI representatiions for the given scout object
@@ -158,7 +158,8 @@ define([
                     scout = scouts[i];
                     item =
                         '<div class="btn-group btn-block btn-group-sm">' +
-                        ' <button type="button" class="col-sm-8 btn btn-default wxscout-goto" scoutId="' + scout.id + '">' + scout.name + '</button>' +
+                        ' <button type="button" class="col-sm-8 btn btn-default wxscout-goto" scoutId="' + scout.id + '">'
+                            + scout.name + ': ' + scout.latitude.toFixed(3) + ',' + scout.longitude.toFixed(3) + '</button>' +
                         ' <button type="button" class="col-sm-2 btn btn-default wxscout-open glyphicon glyphicon-pencil" style="top: 0" scoutId="' + scout.id + '"></button>' +
                         ' <button type="button" class="col-sm-2 btn btn-default wxscout-remove glyphicon glyphicon-trash" style="top: 0" scoutId="' + scout.id + '"></button>' +
                         '</div>';
