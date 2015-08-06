@@ -54,6 +54,7 @@ define([
         var WindBarbPlacemark = function (latitude, longitude, windSpdKts, windDirDeg, eyeDistanceScaling) {
 
             EnhancedPlacemark.call(this, new WorldWind.Position(latitude, longitude, wmt.MAP_SYMBOL_ALTITUDE_WEATHER), eyeDistanceScaling);
+            //WorldWind.Placemark.call(this, new WorldWind.Position(latitude, longitude, wmt.MAP_SYMBOL_ALTITUDE_WEATHER), eyeDistanceScaling);
 
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
@@ -72,6 +73,7 @@ define([
         };
         // Inherit the Placemark methods (Note: calls the Placemark constructor a 2nd time).
         WindBarbPlacemark.prototype = Object.create(EnhancedPlacemark.prototype);
+        //WindBarbPlacemark.prototype = Object.create(WorldWind.Placemark.prototype);
 
         /**
          * 
@@ -97,7 +99,7 @@ define([
                 canvas.width = size;
                 canvas.height = size;
 
-                // Draw the image at the center of the canvas
+//                // Draw the image at the center of the canvas
                 self.rotateAbout(context, ccwRadians, center, center);
 
                 // Execute drawImage after delay for ID 11 compatitiblity
@@ -121,7 +123,7 @@ define([
             // Set the image -- which fires the onload event
             imgName = 'wind_spd-' + util.pad(knots, 2) + 'kts.svg';
             img.src = wmt.IMAGE_PATH + 'weather/' + imgName;
-
+            
             this.enabled = true;
         };
 

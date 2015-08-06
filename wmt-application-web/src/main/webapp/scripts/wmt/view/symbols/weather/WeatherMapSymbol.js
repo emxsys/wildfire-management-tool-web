@@ -47,13 +47,13 @@
  * @author Bruce Schubert
  */
 define([
-    'wmt/view/symbols/AirTemperature',
+    'wmt/view/symbols/weather/AirTemperature',
     'wmt/controller/Controller',
-    'wmt/view/symbols/ForecastTime',
-    'wmt/view/symbols/RelativeHumidity',
-    'wmt/view/symbols/SkyCover',
+    'wmt/view/symbols/weather/ForecastTime',
+    'wmt/view/symbols/weather/RelativeHumidity',
+    'wmt/view/symbols/weather/SkyCover',
     'wmt/model/WeatherScout',
-    'wmt/view/symbols/WindBarb',
+    'wmt/view/symbols/weather/WindBarb',
     'wmt/Wmt',
     'worldwind'],
     function (
@@ -171,7 +171,7 @@ define([
 
             // Rotate and tilt the wind barb to match the view
             this.windBarb.imageRotation = dc.navigatorState.heading;
-            this.windBarb.imageTilt = dc.navigatorState.tilt;
+            //this.windBarb.imageTilt = dc.navigatorState.tilt;
 
             this.skyCover.render(dc);
             this.windBarb.render(dc);
