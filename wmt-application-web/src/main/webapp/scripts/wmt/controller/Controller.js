@@ -249,6 +249,9 @@ define([
                 this.restoreSessionView();
                 // Update all time sensitive objects
                 this.changeDateTime(new Date());
+                
+                // Force a refresh now that everything is setup.
+                this.globe.redraw();
             },
             // Internal method
             restoreSessionView: function () {
