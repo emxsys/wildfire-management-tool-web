@@ -43,11 +43,15 @@ define([
     'wmt/util/Log',
     'wmt/globe/Terrain',
     'wmt/util/WmtMath',
+    'wmt/util/WmtUtil',
+    'wmt/Wmt',
     'worldwind'],
     function (
         log,
         Terrain,
         wmtMath,
+        wmtUtil,
+        wmt,
         ww) {
         "use strict";
         /**
@@ -150,14 +154,17 @@ define([
          * Computes a normal vector for a point on the terrain.
          * @param {Number} latitude Degrees.
          * @param {Number} longitude Degrees.
+         * @param {Number} sampleRadius Optional distance from lat/lon to sample elevation. 
+         *  Default: Wmt.configuration.terrainSampleRadius
          * @returns {Vec3} Terrain normal vector at lat/lon
          */
-        TerrainProvider.prototype.terrainNormalAtLatLon = function (latitude, longitude) {
+        TerrainProvider.prototype.terrainNormalAtLatLon = function (latitude, longitude, sampleRadius) {
             if (!latitude || !longitude) {
                 throw new WorldWind.ArgumentError(
                     log.error("Terrain", "terrainNormalAtLatLon", "missingCoordinate(s)"));
             }
-            var n0 = new WorldWind.Location(latitude, longitude),
+            var radianDistance = (sampleRadius || wmt.configuration.terrainSampleRadius) * wmtUtil.METERS_TO_RADIANS,
+                n0 = new WorldWind.Location(latitude, longitude),
                 n1 = new WorldWind.Location(),
                 n2 = new WorldWind.Location(),
                 n3 = new WorldWind.Location(),
@@ -171,10 +178,13 @@ define([
 
 
             // Establish three points that define a triangle around the center position
-            // to be used for determining the slope and aspect of the terrain (roughly 10 meters per side)        
-            WorldWind.Location.rhumbLocation(n0, SOUTH, -0.00005 * WorldWind.Angle.DEGREES_TO_RADIANS, n1);
-            WorldWind.Location.rhumbLocation(n1, NW, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n2);
-            WorldWind.Location.rhumbLocation(n1, NE, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n3);
+            // to be used for determining the slope and aspect of the terrain    
+            WorldWind.Location.rhumbLocation(n0, SOUTH, radianDistance, n1);
+            WorldWind.Location.rhumbLocation(n0, NW, radianDistance, n2);
+            WorldWind.Location.rhumbLocation(n0, NE, radianDistance, n3);
+//            WorldWind.Location.rhumbLocation(n0, SOUTH, -0.00005 * WorldWind.Angle.DEGREES_TO_RADIANS, n1);
+//            WorldWind.Location.rhumbLocation(n1, NW, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n2);
+//            WorldWind.Location.rhumbLocation(n1, NE, -0.0001 * WorldWind.Angle.DEGREES_TO_RADIANS, n3);
             // Get the cartesian coords for the points
             this.wwGlobe.computePointFromPosition(n1.latitude, n1.longitude, this.elevationAtLatLon(n1.latitude, n1.longitude), p1);
             this.wwGlobe.computePointFromPosition(n2.latitude, n2.longitude, this.elevationAtLatLon(n2.latitude, n2.longitude), p2);

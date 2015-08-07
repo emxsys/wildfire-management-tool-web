@@ -150,6 +150,7 @@ define([
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new LandfireLayer(null), enabled: false},
+                    //{layer: new WorldWind.ShowTessellationLayer(), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true, pickEnabled: false},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true, pickEnabled: true},

@@ -245,10 +245,11 @@ define([],
             startupHeading: 0,
             startupTilt: 0,
             startupRoll: 0,
-            viewControlOrientation: "vertical",
             showPanControl: false,
             showExaggerationControl: false,
             showFieldOfViewControl: false,
+            terrainSampleRadius: 30, 
+            viewControlOrientation: "vertical",
             weatherScoutLabels: Wmt.WEATHER_SCOUT_LABEL_PLACE,
             wxForecastDurationHours: 48
         };

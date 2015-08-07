@@ -43,6 +43,10 @@ define(['worldwind'],
             HOURS_TO_MILLISECS: 1000 * 60 * 60,
             METERS_TO_FEET: 3.28084,
             METERS_TO_MILES: 0.000621371,
+            /**
+             * Distance in meters on surface of globe to angular distance.
+             */
+            METERS_TO_RADIANS: 1 / WorldWind.EARTH_RADIUS,
             MILLISECS_TO_MINUTES: 1 / (1000 * 60),
             MILLISECS_TO_HOURS: 1 / (1000 * 60 * 60),
             EPSILON_TOLERANCE: 0.0000001,
