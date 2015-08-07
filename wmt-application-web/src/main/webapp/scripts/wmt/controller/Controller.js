@@ -181,7 +181,7 @@ define([
              * @param {Number} latitude
              * @param {Number} longitude
              */
-            lookAtLatLon: function (latitude, longitude) {
+            lookAtLatLon: function (latitude, longitude, eyeAltitude) {
                 if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
                     log.error("Controller", "lookAtLatLon", "Invalid Latitude and/or Longitude.");
                     return;
@@ -192,8 +192,8 @@ define([
                 var self = this,
                     eyeAltMsl = this.model.viewpoint.eye.altitude,
                     eyePosGrdElev = this.globe.terrainProvider.elevationAtLatLon(this.model.viewpoint.eye.latitude, this.model.viewpoint.eye.longitude),
-                    eyeAltAgl = Math.max(eyeAltMsl - eyePosGrdElev, 100),
                     tgtPosElev = this.globe.terrainProvider.elevationAtLatLon(latitude, longitude),
+                    eyeAltAgl = eyeAltitude ||Math.max(eyeAltMsl - eyePosGrdElev, 100),
                     tgtEyeAltMsl = Math.max(tgtPosElev + eyeAltAgl, 100);
 
                 // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.

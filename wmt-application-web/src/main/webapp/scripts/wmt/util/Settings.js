@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*global define */
+/*global define, WorldWind */
 
 /**
  * The Settings module is responsible for saving and restoring the globe view between sessions.
@@ -60,7 +60,8 @@ define([
                     return;
                 }
 
-                var pos = controller.wwd.navigator.lookAtLocation,
+                var target = controller.getTargetTerrain(),
+                    pos = new WorldWind.Location(target.latitude, target.longitude), // controller.wwd.navigator.lookAtLocation,
                     alt = controller.wwd.navigator.range,
                     heading = controller.wwd.navigator.heading,
                     tilt = controller.wwd.navigator.tilt,
@@ -109,13 +110,25 @@ define([
                         tilt = Wmt.configuration.startupTilt;
                         roll = Wmt.configuration.startupRoll;
                     }
-                    controller.wwd.navigator.lookAtLocation.latitude = lat;
-                    controller.wwd.navigator.lookAtLocation.longitude = lon;
-                    controller.wwd.navigator.range = alt;
-                    controller.wwd.navigator.heading = head;
-                    controller.wwd.navigator.tilt = tilt;
-                    controller.wwd.navigator.roll = roll;
-                    controller.wwd.redraw();
+                    
+                    // Initiate animation to target
+                    // The animation routine does a better job of 
+                    // preparing the map layers than does setting
+                    // the view of the target (below) because it
+                    // drills down through the various levels-of detail.
+                    controller.lookAtLatLon(lat, lon, alt);
+                    
+                    // Restore view of target
+                    // This routine doesn't always load the map level-of-detail
+                    // appropriate for low alitudes. And you can't call this
+                    // routine while lookAtLatLon is animiating.
+//                    controller.wwd.navigator.lookAtLocation.latitude = lat;
+//                    controller.wwd.navigator.lookAtLocation.longitude = lon;
+//                    controller.wwd.navigator.range = alt;
+//                    controller.wwd.navigator.heading = head;
+//                    controller.wwd.navigator.tilt = tilt;
+//                    controller.wwd.navigator.roll = roll;
+//                    controller.wwd.redraw();
                     
                 } catch (e) {
                     Log.error("Settings", "restoreSessionSettings",
