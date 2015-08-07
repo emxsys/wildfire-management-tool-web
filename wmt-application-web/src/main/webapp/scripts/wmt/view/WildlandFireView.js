@@ -204,7 +204,7 @@ define([
                         headingId = 'wildfire-state-heading-' + currState;
                         collapseId = 'wildfire-state-body-' + currState;
                         $stateDiv = $('<div class="panel panel-default"></div>');
-                        $heading = $('<div class="panel-heading" role="tab" id="' + headingId + '"></div>');
+                        $heading = $('<div class="panel-heading" data-toggle="collapse" data-target="#' + collapseId + '" role="tab" id="' + headingId + '"></div>');
                         $title = $('<h4 class="panel-title"></h4>');
                         $anchor = $('<a data-toggle="collapse" href="#' + collapseId + '"' +
                             ' aria-expanded="true" aria-controls="' + collapseId + '">' + currState + '</a>');
