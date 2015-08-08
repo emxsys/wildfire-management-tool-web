@@ -554,7 +554,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </button>
                 </div>
                 <div class="col-xs-10 col-sm-10 btn-group" role="group">
-                    <button id="selectAllWildlandFires" 
+                    <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Wildland Fires</h3>
+                    
+<!--                    <button id="selectAllWildlandFires" 
                             type="button"
                             class="btn btn-default btn-sm " 
                             data-toggle="tooltip" 
@@ -580,7 +582,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             title="Adds all wildland fire perimeters that are in the current view.">
                         <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
                         Viewable
-                    </button>
+                    </button>-->
                     <button id="refreshWildlandFires" 
                             type="button"
                             class="btn btn-default btn-sm " 
