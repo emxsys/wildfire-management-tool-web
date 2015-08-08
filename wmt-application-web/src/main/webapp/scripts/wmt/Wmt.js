@@ -237,7 +237,7 @@ define([],
             defaultFuelModelNo: 5, // Brush
             defaultFuelMoistureScenario: 'Very Low Dead, Fully Cured Herb',
             fireLookoutLabels: Wmt.FIRE_LOOKOUT_LABEL_LATLON,
-            imageryDetailHint: (window.screen.width < 736 ? -0.1 : (window.screen.width < 1024 ? 0.0 : (window.screen.width < 1280 ? 0.1 : 0.2))),
+            imageryDetailHint: (window.screen.width < 768 ? -0.1 : (window.screen.width < 1024 ? 0.0 : (window.screen.width < 1280 ? 0.1 : 0.2))),
             markerLabels: Wmt.MARKER_LABEL_NAME,
             startupLatitude: 34.29,
             startupLongitude: -119.29,
