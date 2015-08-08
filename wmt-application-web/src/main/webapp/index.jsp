@@ -190,12 +190,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="row" style="padding-top: 10px">
                         <div class="col-xs-9 col-sm-9"
                              <ul class="c-menu__items">
-                                <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
-                                <!--<li class="c-menu__item"><a id="mobileLayersButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>-->
-                                <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
-                                <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
+                                <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Wildland Fires</a></li>
+                                <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default"><span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span> Fire Lookouts</a></li>
                                 <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
-                                <li class="c-menu__item"><a id="mobileFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Fires</a></li>            
+                                <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
+                                <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
+                                <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             </ul>
                         </div>                    
                     </div>
@@ -501,24 +501,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </nav>    
     <!-- /Mobile Weather Scouts Menu -->
 
-    <!-- Mobile Fires Menu -->
-    <nav id="mobileFires" class="c-menu hidden">
-        <div class="container-fluid" style="margin-top:37px">                
-            <div class="row" style="margin-top:10px;">            
-                <div class="col-xs-11 col-sm-11">
-                    <div class="panel-group" id="firesAccordion" role="tablist" aria-multiselectable="false">                                   
-                    </div>
-                    <ul class="c-menu__items">
-                        <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default">Fire Lookouts</a></li>
-                        <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default">Wildland Fires</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div id="c-maskMobileFires" class="c-mask"></div>
-    <!-- /Mobile Fires Menu -->
 
     <!-- Mobile Fire Lookouts Menu -->
     <nav id="mobileFireLookouts" class="c-menu hidden">
@@ -799,7 +781,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                             data-placement="top" 
                                             title="Add a fire lookout to the globe.">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                                        <span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span>
                                     </button>          
                                 </div>   
                             </div>
