@@ -123,7 +123,7 @@ define([
                 var self = this,
                     onDropCallback;
 
-                if (this.lookoutDnDCount < 2) {
+                if (this.lookoutDnDCount < 1) {
                     this.lookoutDnDCount++;
                     messenger.infoGrowl("Click on the globe to place the fire lookout.", "Instructions");
                 }
@@ -144,7 +144,7 @@ define([
                 var self = this,
                     onDropCallback;
 
-                if (this.markerDnDCount < 2) {
+                if (this.markerDnDCount < 1) {
                     this.markerDnDCount++;
                     messenger.infoGrowl("Click on the globe to place the marker.", "Instructions");
                 }
@@ -163,7 +163,7 @@ define([
                 var self = this,
                     onDropCallback;
 
-                if (this.scoutDnDCount < 2) {
+                if (this.scoutDnDCount < 1) {
                     this.scoutDnDCount++;
                     messenger.infoGrowl("Click on the globe to place the weather scout.", "Instructions");
                 }
