@@ -128,7 +128,9 @@ define([
             this.dndController = new DnDController(this.wwd);
             this.keyboardControls = new KeyboardControls(this);
             
-
+            this.resizeTimer = null;
+            this.canvasWidth = null;
+            
             // Add terrain services (aspect, slope) to the globe
             this.terrainProvider = new TerrainProvider(this);
             
@@ -187,13 +189,18 @@ define([
                     }
 
                     // Hide background and control layers in the menu 
-                    if (defaultLayers[i].hide) {
-                        defaultLayers[i].layer.hide = defaultLayers[i].hide;
-                    }
+//                    if (defaultLayers[i].hide) {
+//                        defaultLayers[i].layer.hide = defaultLayers[i].hide;
+//                    }
                     
                     this.wwd.addLayer(defaultLayers[i].layer);
                 }
             }
+            
+            
+            // Adjust the level of detail based on screen properties
+            this.adjustTiledImageLayerDetailHints();
+            
             // Add optional reticule
             if (showReticule || showReticule === undefined) {
                 layer = new ReticuleLayer();
@@ -213,19 +220,29 @@ define([
                 this.wwd.addLayer(layer);
             }
             // Redraw the WorldWindow during resize events
-            // to prevent the canvas from looking distorted
-            window.onresize = function () {
+            // to prevent the canvas from looking distorted.
+            // Adjust the level of detail proportional to the 
+            // window size.
+            $(window).resize(function () {
                 self.wwd.redraw();
-            };
+                
+                clearTimeout(self.resizeTimer);
+                self.resizeTimer = setTimeout(function() {
+                    self.adjustTiledImageLayerDetailHints();
+                }, 2000);
+            });         
+            
             // Ensure keyboard controls are operational by 
             // setting focus to the globe 
             this.wwd.addEventListener("click", function (event) {
                 self.setFocus();
             });
+            
             // Internals
             this.lastEyePoint = new WorldWind.Vec3();
             this.lastViewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
         };
+        
         /**
          * Adds the given layer to the globe
          * @param {WorldWind.Layer} layer Layer to add.
@@ -235,7 +252,37 @@ define([
             layer.hide = hide === undefined ? false : hide;
             this.wwd.addLayer(layer);
         };
-
+        
+        /**
+         * Adjusts the level of detail to be proportional to the window size.
+         * If the window is twice the size of the base, then the detailHint should be 0.2;
+         * if the window half the size then the detail level should be -0.2.
+         */
+        Globe.prototype.adjustTiledImageLayerDetailHints = function () {
+            if (this.canvasWidth === $(this.wwd.canvas).width()) {
+                return;
+            }
+            var base = 1024,
+                width = $(this.wwd.canvas).width(),
+                delta = width - base,
+                ratio = width > base ? (width / base) : 0,
+//                ratio = delta >= 0 ? (delta / base) : 0,
+                detailHint = ratio * 0.1,
+                i, len, layer;
+            
+            this.canvasWidth = width;
+            
+            // $(window).width() / parseFloat($("body").css("font-size"));
+            
+            // Process TiledImageLayers
+            for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+                layer = this.wwd.layers[i];
+                if (layer instanceof WorldWind.TiledImageLayer) {
+                    layer.detailHint = detailHint;
+                }
+            }
+        };
+        
         /**
          * Finds the World Wind Layer in the layer list with the given display name.
          * @param {String} name Display name of the layer
@@ -252,6 +299,7 @@ define([
                 }
             }
         };
+        
         /**
          * Gets terrain at the given latitude and longitude.
          * @param {Number} latitude
@@ -273,6 +321,7 @@ define([
         Globe.prototype.getTerrainAtLatLonHiRes = function (latitude, longitude, targetResolution) {
             return this.terrainProvider.terrainAtLatLon(latitude, longitude, targetResolution || 1 / WorldWind.EARTH_RADIUS);
         };
+        
         /**
          * Gets terrain at the screen point.
          * @param {Vec2} screenPoint Point in screen coordinates for which to get terrain.
@@ -295,6 +344,7 @@ define([
             }
             return terrain;
         };
+        
         /**
          * Gets the current viewpoint at the center of the viewport.
          * @@returns {Viewpoint} A Viewpoint representing the the eye position and the target position.
@@ -325,6 +375,7 @@ define([
                 return Viewpoint.INVALID;
             }
         };
+        
         /**
          * Updates the globe via animation.
          * @param {Number} latitude Reqd.
@@ -349,8 +400,9 @@ define([
                 }
             });
         };
+        
         /**
-         * Updates the globe withoug animation.
+         * Updates the globe without animation.
          * @param {Number} latitude Reqd.
          * @param {Number} longitude Reqd.
          * @param {Number} range Optional.
@@ -367,12 +419,14 @@ define([
             }
             this.wwd.redraw();
         };
+        
         /** 
          * Redraws the globe.
          */
         Globe.prototype.redraw = function () {
             this.wwd.redraw();
         };
+        
         /**
          * Resets the viewpoint to the startup configuration settings.
          */
@@ -385,6 +439,7 @@ define([
             this.wwd.navigator.roll = Number(wmt.configuration.startupRoll);
             this.wwd.redraw();
         };
+        
         /**
          * Resets the viewpoint to north up.
          */
@@ -392,6 +447,7 @@ define([
             this.wwd.navigator.heading = Number(0);
             this.wwd.redraw();
         };
+        
         /**
          * Resets the viewpoint to north up and nadir.
          */
@@ -408,9 +464,11 @@ define([
 
             this.lookAt(lat, lon);
         };
+        
         Globe.prototype.setFocus = function () {
             this.wwd.canvas.focus();
         };
+        
         /**
          * Establishes the projection for this globe.
          * @param {String} projectionName A PROJECTION_NAME_* constant.
@@ -449,6 +507,7 @@ define([
             }
             this.wwd.redraw();
         };
+        
         return Globe;
     }
 );
