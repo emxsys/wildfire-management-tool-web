@@ -72,7 +72,7 @@ define([
                     + "&time=" + this.toOffsetTime(datetime)
                     + "&latitude=" + latitude
                     + "&longitude=" + longitude;
-                console.log(url + '?' + query);
+//                console.log(url + '?' + query);
                 $.get(url, query, callback);
 
             },

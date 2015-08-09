@@ -131,16 +131,6 @@ define([
                 'calc(39vh + 50px)',
                 '100%'
                 );
-            var mobileFires = new mobileMenu.Menu(
-                '#mobileFires',
-                'slide-right',
-                '#c-maskMobileFires',
-                ['#mobileFiresButton'],
-                ['#firesFireLookoutsButton', '#firesWildlandFiresButton'],
-                '100',
-                '100%',
-                '85%'
-                );
             var mobileFireLookouts = new mobileMenu.Menu(
                 '#mobileFireLookouts',
                 'slide-top',

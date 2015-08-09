@@ -242,7 +242,8 @@ define([
             this.sunlight = sunlight;
             // Reset our "processing flag"
             this.processingSunlight = false;
-            log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
+            //log.info("Model", "handleSunlight", "Sunrise: " + sunlight.sunriseTime + ", Sunset: " + sunlight.sunsetTime);
+             
             // Update sunlightChanged subscribers
             this.fire(wmt.EVENT_SUNLIGHT_CHANGED, sunlight);
 

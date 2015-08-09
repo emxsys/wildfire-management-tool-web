@@ -174,7 +174,8 @@ define([
                     fires = this.manager.fires.slice(0), // naive copy
                     fire, i, len, item,
                     currState, collapseId, headingId,
-                    $stateDiv, $heading, $title, $anchor, $bodyParent, $body;
+                    $stateDiv, $heading, $title, $anchor, $bodyParent, $body,
+                    name1, name2;
 
                 // This preliminary implemenation does a brute force "clear and repopulate" of the list
                 $list.children().remove();
@@ -187,10 +188,12 @@ define([
                     if (a.state > b.state) {
                         return 1;
                     }
-                    if (a.name < b.name) {
+                    name1 = a.name.toLowerCase();
+                    name2 = b.name.toLowerCase();
+                    if (name1 < name2) {
                         return -1;
                     }
-                    if (a.name > b.name) {
+                    if (name1 > name2) {
                         return 1;
                     }
                     return 0;
