@@ -522,7 +522,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <!-- Mobile Fire Lookouts Menu -->
     <nav id="mobileFireLookouts" class="c-menu hidden">
-        <div class="container-fluid" style="margin-top:5px">
+        <div class="container-fluid" style="margin-top:5px; height: 100%">
             <div class="row">
                 <div class="col-xs-2 col-sm-2" style="float:left;">
                     <button id="fireLookoutsCheck" class="c-check">
@@ -530,30 +530,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <span class="span2"></span>
                     </button>
                 </div>
+                <div class="col-xs-10">
+                    <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Lookouts</h3>
+                    <button id="createFireLookout" 
+                            type="button" 
+                            class="btn btn-default btn-sm createFireLookoutButton" 
+                            data-toggle="tooltip" 
+                            data-placement="top" 
+                            title="Add a fire lookout to the globe.">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Add
+                    </button>
+                </div>
             </div>
-            <div class="row" style="padding-top: 5px">
-                <div class="col-xs-12 col-sm-12">
-                    <div class="panel panel-default">                            
-                        <div id="fireLookoutsBody" 
-                             class="panel-collapse collapse" 
-                             role="tabpanel" 
-                             aria-labelledby="fireLookoutsHeading">
-                            <div class="panel-body">
-                                <button id="createFireLookout" 
-                                        type="button"
-                                        class="btn btn-default createFireLookoutButton" 
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
-                                        title="Add a fire lookout to the globe.">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                    Add
-                                </button>
-                                <ul class="list-group pre-scrollable"
-                                    style="margin-top: 5px;max-height: calc(15vh);"
-                                    id="fireLookoutList">
-                                </ul>                              
-                            </div>
-                        </div>
+            <div class="row" style="padding-top: 5px; height: calc(100% - 50px)">
+                <div class="col-xs-12 col-sm-12" style="height: 100%">
+                    <div class="panel panel-default" style="height: 100%">                            
+                        <ul class="list-group"
+                            style="overflow-y: scroll; height: 100%"
+                            id="fireLookoutList">
+                        </ul>                              
                     </div>       
                 </div>
             </div>
