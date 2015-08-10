@@ -72,6 +72,23 @@ define(['worldwind'],
                 return angleRad * WorldWind.EARTH_RADIUS;
             },
             /**
+             * 
+             * @param {type} value
+             * @param {type} value1
+             * @param {type} value2
+             * @param {type} range1
+             * @param {type} range2
+             * @returns A number along the range number line
+             */
+            linearInterpolation: function (value, value1, value2, range1, range2) {
+                // Avoid divide by zero
+                if (value === value1) {
+                    return range1; 
+                }
+                var amount = (value1 - value2) / (value1 - value);
+                return ((1 - amount) * range1) + (amount * range2);
+            },
+            /**
              * Generates a GUID-like string.
              * http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
              * @returns {String} Generated GUID.
