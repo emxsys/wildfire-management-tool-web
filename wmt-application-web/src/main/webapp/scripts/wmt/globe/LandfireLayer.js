@@ -35,6 +35,12 @@
  * @exports LandfireLayer
  * 
  * @returns {LandfireLayer}
+ * 
+ * See: http://landfire.gov/data_access.php
+ * 
+ * WMS Capabilities:
+ * http://landfire.cr.usgs.gov/arcgis/services/Landfire/US_130/MapServer/WMSServer?service=wms&request=GetCapabilities&version=1.3.0
+ * 
  */
 
 define([
