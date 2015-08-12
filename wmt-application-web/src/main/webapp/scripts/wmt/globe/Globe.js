@@ -58,7 +58,11 @@ define([
     'wmt/globe/EnhancedTextSupport',
     'wmt/globe/EnhancedViewControlsLayer',
     'wmt/globe/KeyboardControls',
+    'wmt/globe/GenericXYZTileLayer',
     'wmt/globe/GeoMacCurrentPerimetersLayer',
+    'wmt/globe/GeoMacHmsThermalSatelliteLayer',
+    'wmt/globe/GeoMacModisThermalSatelliteLayer',
+    'wmt/globe/GeoMacPreviousPerimetersLayer',
     'wmt/globe/LandfireLayer',
     'wmt/util/Log',
     'wmt/globe/ReticuleLayer',
@@ -76,7 +80,11 @@ define([
         EnhancedTextSupport,
         EnhancedViewControlsLayer,
         KeyboardControls,
+        GenericXYZTileLayer,
         GeoMacCurrentPerimetersLayer,
+        GeoMacHmsThermalSatelliteLayer,
+        GeoMacModisThermalSatelliteLayer,
+        GeoMacPreviousPerimetersLayer,
         LandfireLayer,
         log,
         ReticuleLayer,
@@ -153,8 +161,13 @@ define([
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new LandfireLayer(null), enabled: false},
-                    //{layer: new WorldWind.ShowTessellationLayer(), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
+                    {layer: new LandfireLayer(), enabled: false},
+                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true},
+                    {layer: new GeoMacPreviousPerimetersLayer(), enabled: false},
+                    {layer: new GeoMacModisThermalSatelliteLayer(), enabled: true, detailHint: 0},
+                    {layer: new GeoMacHmsThermalSatelliteLayer(), enabled: true, detailHint: 0},
+//                    {layer: new GenericXYZTileLayer(), enabled: true, detailHint: 0},
+//                    {layer: new WorldWind.ShowTessellationLayer(), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true, pickEnabled: false},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true, pickEnabled: true},
@@ -191,16 +204,16 @@ define([
                     }
 
                     // Hide background and control layers in the menu 
-//                    if (defaultLayers[i].hide) {
-//                        defaultLayers[i].layer.hide = defaultLayers[i].hide;
-//                    }
+                    if (defaultLayers[i].hide) {
+                        defaultLayers[i].layer.hide = defaultLayers[i].hide;
+                    }
 
                     this.wwd.addLayer(defaultLayers[i].layer);
                 }
             }
 
             // Adjust the level of detail based on screen properties
-            this.adjustTiledImageLayerDetailHints();
+//            this.adjustTiledImageLayerDetailHints();
 
             // Add optional reticule
             if (showReticule || showReticule === undefined) {
@@ -227,10 +240,10 @@ define([
             $(window).resize(function () {
                 self.wwd.redraw();
 
-                clearTimeout(self.resizeTimer);
-                self.resizeTimer = setTimeout(function () {
-                    self.adjustTiledImageLayerDetailHints();
-                }, 2000);
+//                clearTimeout(self.resizeTimer);
+//                self.resizeTimer = setTimeout(function () {
+//                    self.adjustTiledImageLayerDetailHints();
+//                }, 2000);
             });
 
             // Ensure keyboard controls are operational by 
