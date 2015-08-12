@@ -31,10 +31,9 @@
 /*global define */
 
 /**
- * The LandfireLayer renders LANDFIRE fuel models.
- * @exports LandfireLayer
+ * The GeoMAC HMS Thermal Satellite map layer.
  * 
- * @returns {GeoMacHmlThermalSatelliteLayer}
+ * @returns {GeoMacHmsThermalSatelliteLayer}
  */
 
 define([
@@ -50,7 +49,7 @@ define([
          * @constructor
          * @augments WmsLayer
          */
-        var GeoMacHmlThermalSatelliteLayer = function () {
+        var GeoMacHmsThermalSatelliteLayer = function () {
             var cfg = {
                 title: "HMS Thermal Satellite",
                 version: "1.3.0",
@@ -72,8 +71,8 @@ define([
 
         };
 
-        GeoMacHmlThermalSatelliteLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
+        GeoMacHmsThermalSatelliteLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
 
-        return GeoMacHmlThermalSatelliteLayer;
+        return GeoMacHmsThermalSatelliteLayer;
     }
 );

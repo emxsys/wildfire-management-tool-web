@@ -31,8 +31,7 @@
 /*global define */
 
 /**
- * The LandfireLayer renders LANDFIRE fuel models.
- * @exports LandfireLayer
+ * The GeoMAC MODIS Thermal Satellite map layer.
  * 
  * @returns {GeoMacModisThermalSatelliteLayer}
  */
