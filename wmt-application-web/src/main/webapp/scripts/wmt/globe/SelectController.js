@@ -162,7 +162,7 @@ define([
                 case 'mousemove':
                     if (this.pickedItem) {
                         // Handle left-clicks and touch device 
-                        if (button === 0 || type === 'touchmove') {
+                        if (this.isMovable(this.pickedItem) && (button === 0 || type === 'touchmove')) {
                             // To prevent confustion with clicks and taps,
                             // start dragging only if the mouse or touch
                             // point has moved a few pixels.
@@ -263,6 +263,9 @@ define([
             }
         };
 
+        SelectController.prototype.isMovable = function (pickedItem) {
+            return pickedItem.userObject.isMovable;
+        };
         SelectController.prototype.startMove = function (pickedItem) {
             if (pickedItem.userObject.moveStarted) {
                 // Fires EVENT_OBJECT_MOVE_STARTED
