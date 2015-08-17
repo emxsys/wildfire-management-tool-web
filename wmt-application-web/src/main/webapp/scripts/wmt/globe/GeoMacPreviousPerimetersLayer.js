@@ -31,7 +31,7 @@
 /*global define */
 
 /**
- * The GeoMAC Current Fire Perimeters map layer.
+ * The GeoMAC Previous Fire Perimeters map layer.
  * 
  * @returns {GeoMacCurrentPerimetersLayer}
  */
@@ -51,10 +51,10 @@ define([
          */
         var GeoMacCurrentPerimetersLayer = function () {
             var cfg = {
-                title: "Current Perimeters",
+                title: "Previous Perimeters",
                 version: "1.3.0",
                 service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "25",
+                layerNames: "21",
                 sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
                 levelZeroDelta: new WorldWind.Location(36, 36),
                 numLevels: 19,

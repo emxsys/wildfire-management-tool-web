@@ -31,9 +31,9 @@
 /*global define */
 
 /**
- * The GeoMAC Current Fire Perimeters map layer.
+ * The GeoMAC MODIS Thermal Satellite map layer.
  * 
- * @returns {GeoMacCurrentPerimetersLayer}
+ * @returns {GeoMacModisThermalSatelliteLayer}
  */
 
 define([
@@ -49,15 +49,15 @@ define([
          * @constructor
          * @augments WmsLayer
          */
-        var GeoMacCurrentPerimetersLayer = function () {
+        var GeoMacModisThermalSatelliteLayer = function () {
             var cfg = {
-                title: "Current Perimeters",
+                title: "MODIS Thermal Satellite",
                 version: "1.3.0",
                 service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "25",
+                layerNames: "24",
                 sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
                 levelZeroDelta: new WorldWind.Location(36, 36),
-                numLevels: 19,
+                numLevels: 8,
                 format: "image/png",
                 size: 512,
                 coordinateSystem: "EPSG:4326", // optional
@@ -71,8 +71,8 @@ define([
 
         };
 
-        GeoMacCurrentPerimetersLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
+        GeoMacModisThermalSatelliteLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
 
-        return GeoMacCurrentPerimetersLayer;
+        return GeoMacModisThermalSatelliteLayer;
     }
 );
