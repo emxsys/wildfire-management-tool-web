@@ -60,6 +60,7 @@ define([
     'wmt/globe/KeyboardControls',
     'wmt/globe/GenericXYZTileLayer',
     'wmt/globe/GeoMacCurrentPerimetersLayer',
+    'wmt/globe/GeoMacHistoricPerimetersLayer',
     'wmt/globe/GeoMacHmsThermalSatelliteLayer',
     'wmt/globe/GeoMacModisThermalSatelliteLayer',
     'wmt/globe/GeoMacPreviousPerimetersLayer',
@@ -82,6 +83,7 @@ define([
         KeyboardControls,
         GenericXYZTileLayer,
         GeoMacCurrentPerimetersLayer,
+        GeoMacHistoricPerimetersLayer,
         GeoMacHmsThermalSatelliteLayer,
         GeoMacModisThermalSatelliteLayer,
         GeoMacPreviousPerimetersLayer,
@@ -159,11 +161,12 @@ define([
                     {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
                     {layer: new WorldWind.BMNGLandsatLayer(), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.BingRoadsLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
+                    {layer: new WorldWind.BingRoadsLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
+                    {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new LandfireLayer(), enabled: false},
-                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true},
+                    {layer: new GeoMacHistoricPerimetersLayer(), enabled: false},
                     {layer: new GeoMacPreviousPerimetersLayer(), enabled: false},
+                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true},
                     {layer: new GeoMacModisThermalSatelliteLayer(), enabled: true, detailHint: 0},
                     {layer: new GeoMacHmsThermalSatelliteLayer(), enabled: true, detailHint: 0},
 //                    {layer: new GenericXYZTileLayer(), enabled: true, detailHint: 0},
@@ -201,6 +204,11 @@ define([
                     // Apply the level-of-detail hint, if provided
                     if (defaultLayers[i].detailHint) {
                         defaultLayers[i].layer.detailHint = defaultLayers[i].detailHint;
+                    }
+
+                    // Apply the level-of-detail hint, if provided
+                    if (defaultLayers[i].opacity) {
+                        defaultLayers[i].layer.opacity = defaultLayers[i].opacity;
                     }
 
                     // Hide background and control layers in the menu 
