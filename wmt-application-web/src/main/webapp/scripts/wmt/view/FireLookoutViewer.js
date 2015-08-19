@@ -36,6 +36,7 @@
  *  * @author Bruce Schubert
  */
 define([
+    'require',
     'wmt/model/FuelModelCatalog',
     'wmt/model/FuelMoistureCatalog',
     'wmt/util/Formatter',
@@ -43,6 +44,7 @@ define([
     'wmt/Wmt',
     'worldwind'],
     function (
+        require,
         fuelModelCatalog,
         fuelMoistureCatalog,
         formatter,
@@ -89,6 +91,12 @@ define([
                     lookout.moistureScenarioName = scenarioName;
                     // Update the views
                     lookout.refresh();
+                };
+
+                // Delete button callback
+                this.deleteAction = function () {
+                    var model = require("wmt/controller/Controller").model;
+                    model.fireLookoutManager.removeLookout(lookout);
                 };
 
                 // Show the modal dialog
@@ -151,6 +159,14 @@ define([
                             icon: 'fa-save',
                             click: function () {
                                 self.saveAction();
+                                $('#lookout-dlg').puidialog('hide');
+                            }
+                        },
+                        {
+                            text: wmt.BUTTON_TEXT_DELETE,
+                            icon: ' fa-minus-circle',
+                            click: function () {
+                                self.deleteAction();
                                 $('#lookout-dlg').puidialog('hide');
                             }
                         },

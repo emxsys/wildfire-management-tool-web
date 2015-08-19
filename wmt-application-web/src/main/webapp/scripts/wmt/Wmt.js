@@ -50,6 +50,7 @@ define([],
              */
             VERSION: "0.4.0",
             BUTTON_TEXT_CANCEL: 'Cancel',
+            BUTTON_TEXT_DELETE: 'Delete',
             BUTTON_TEXT_GOTO: 'Go To',
             BUTTON_TEXT_NO: 'No',
             BUTTON_TEXT_OK: 'OK',
