@@ -72,7 +72,7 @@ define([
             var imgName = 'unkn';
 
             // if burnable
-            if (head) {
+            if (!isNan(head)) {
                 imgName = WildfireDiamond.getColorCode(head)
                     + WildfireDiamond.getColorCode(flanks)
                     + WildfireDiamond.getColorCode(flanks)
