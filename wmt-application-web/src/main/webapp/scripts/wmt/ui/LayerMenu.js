@@ -48,6 +48,10 @@ define(['wmt/controller/Controller'],
             $('#layerList').find('li').on('click', function (event) {
                 self.onLayerClick($(this));
             });
+            // Attach a click handler to the layer refresh button
+            $('#refreshLayers').on('click', function (event) {
+                controller.globe.refreshLayers();
+            });
         };
 
         LayerMenu.prototype.onLayerClick = function (layerItem) {

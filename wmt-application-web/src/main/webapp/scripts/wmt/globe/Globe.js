@@ -164,11 +164,11 @@ define([
                     {layer: new WorldWind.BingRoadsLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new LandfireLayer(), enabled: false},
-                    {layer: new GeoMacHistoricPerimetersLayer(), enabled: false},
-                    {layer: new GeoMacPreviousPerimetersLayer(), enabled: false},
-                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true},
-                    {layer: new GeoMacModisThermalSatelliteLayer(), enabled: true, detailHint: 0},
-                    {layer: new GeoMacHmsThermalSatelliteLayer(), enabled: true, detailHint: 0},
+                    {layer: new GeoMacHistoricPerimetersLayer(), enabled: false, isTemporal: false},
+                    {layer: new GeoMacPreviousPerimetersLayer(), enabled: false, isTemporal: true},
+                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true, isTemporal: true},
+                    {layer: new GeoMacModisThermalSatelliteLayer(), enabled: true, isTemporal: true, detailHint: 0},
+                    {layer: new GeoMacHmsThermalSatelliteLayer(), enabled: true, isTemporal: true, detailHint: 0},
 //                    {layer: new GenericXYZTileLayer(), enabled: true, detailHint: 0},
 //                    {layer: new WorldWind.ShowTessellationLayer(), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
                     {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
@@ -200,6 +200,10 @@ define([
                     // Propagate enabled option to the layer object
                     defaultLayers[i].layer.enabled = defaultLayers[i].enabled;
                     defaultLayers[i].layer.pickEnabled = defaultLayers[i].pickEnabled;
+
+                    if (defaultLayers[i].isTemporal) {
+                        defaultLayers[i].layer.isTemporal = true;
+                    }
 
                     // Apply the level-of-detail hint, if provided
                     if (defaultLayers[i].detailHint) {
@@ -455,6 +459,34 @@ define([
          * Redraws the globe.
          */
         Globe.prototype.redraw = function () {
+            this.wwd.redraw();
+        };
+
+        /** 
+         * Refreshes temporal layers.
+         */
+        Globe.prototype.refreshLayers = function () {
+            var i, len, layer;
+            
+            // Process TiledImageLayers
+            for (i = 0, len = this.wwd.layers.length; i < len; i++) {
+                layer = this.wwd.layers[i];
+                //if (layer instanceof WorldWind.TiledImageLayer) {
+                if (layer.isTemporal) {
+                    // Setting the expiration to the current time and causes the layer's imagery to expire now            
+                    layer.expiration = new Date(); 
+                }
+                this.wwd.redraw();
+            }
+            
+        };
+
+        /** 
+         * Refreshes temporal layers.
+         */
+        Globe.prototype.refreshTiledMapLayer = function (layer) {
+            // Setting the expiration to the current time and causes the layer's imagery to expire now            
+            layer.expiration = new Date(); 
             this.wwd.redraw();
         };
 

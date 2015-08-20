@@ -190,11 +190,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     <div class="row" style="padding-top: 10px">
                         <div class="col-xs-9 col-sm-9"
                              <ul class="c-menu__items">
+                                <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
                                 <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Wildland Fires</a></li>
                                 <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default"><span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span> Fire Lookouts</a></li>
                                 <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                                 <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
-                                <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
                                 <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             </ul>
                         </div>                    
@@ -381,6 +381,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
                 <div class="col-xs-10">
                     <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Layers</h3>
+                    <button id="refreshLayers" 
+                            type="button"
+                            class="btn btn-default btn-sm " 
+                            data-toggle="tooltip" 
+                            data-placement="top" 
+                            title="Refresh temporal map layers.">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    </button>
                 </div>
             </div>
             <div class="row" style="margin-top:5px; height: calc(100% - 50px)">
