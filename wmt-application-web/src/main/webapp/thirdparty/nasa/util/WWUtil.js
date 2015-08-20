@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: WWUtil.js 3133 2015-06-02 16:48:25Z tgaskins $
+ * @version $Id: WWUtil.js 3402 2015-08-14 17:28:09Z tgaskins $
  */
 define([
         '../error/ArgumentError',
@@ -39,6 +39,9 @@ define([
                     return "jpg";
 
                 if (mimeType === "application/bil16")
+                    return "bil";
+
+                if (mimeType === "application/bil32")
                     return "bil";
 
                 return null;

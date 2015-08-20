@@ -4,30 +4,30 @@
  */
 /**
  * @exports TiledImageLayer
- * @version $Id: TiledImageLayer.js 3409 2015-08-16 19:19:42Z tgaskins $
+ * @version $Id: TiledImageLayer.js 3414 2015-08-20 19:09:19Z tgaskins $
  */
 define([
-    '../util/AbsentResourceList',
-    '../error/ArgumentError',
-    '../render/ImageTile',
-    '../layer/Layer',
-    '../util/LevelSet',
-    '../util/Logger',
-    '../cache/MemoryCache',
-    '../render/Texture',
-    '../util/Tile',
-    '../util/WWUtil'
-],
+        '../util/AbsentResourceList',
+        '../error/ArgumentError',
+        '../render/ImageTile',
+        '../layer/Layer',
+        '../util/LevelSet',
+        '../util/Logger',
+        '../cache/MemoryCache',
+        '../render/Texture',
+        '../util/Tile',
+        '../util/WWUtil'
+    ],
     function (AbsentResourceList,
-        ArgumentError,
-        ImageTile,
-        Layer,
-        LevelSet,
-        Logger,
-        MemoryCache,
-        Texture,
-        Tile,
-        WWUtil) {
+              ArgumentError,
+              ImageTile,
+              Layer,
+              LevelSet,
+              Logger,
+              MemoryCache,
+              Texture,
+              Tile,
+              WWUtil) {
         "use strict";
 
         /**
@@ -63,8 +63,7 @@ define([
          * null or undefined, or if the specified number of levels, tile width or tile height is less than 1.
          *
          */
-        var TiledImageLayer = function (sector, levelZeroDelta, numLevels, imageFormat, cachePath, tileWidth,
-            tileHeight) {
+        var TiledImageLayer = function (sector, levelZeroDelta, numLevels, imageFormat, cachePath, tileWidth, tileHeight) {
             if (!sector) {
                 throw new ArgumentError(
                     Logger.logMessage(Logger.LEVEL_SEVERE, "TiledImageLayer", "constructor", "missingSector"));
@@ -118,11 +117,10 @@ define([
              */
             this.detailHint = 0;
 
-            /**
+            /* Intentionally not documented.
              * Indicates the time at which this layer's imagery expire. Expired images are re-retrieved
-             * when the current time exceeds the specified expiry time. If set to null, images do not expire.
+             * when the current time exceeds the specified expiry time. If null, images do not expire.
              * @type {Date}
-             * @default null
              */
             this.expiration = null;
 
@@ -138,6 +136,12 @@ define([
 
         TiledImageLayer.prototype = Object.create(Layer.prototype);
 
+        // Inherited from Layer.
+        TiledImageLayer.prototype.refresh = function (){
+            this.expiration = new Date();
+            this.currentTilesInvalid = true;
+        };
+
         // Intentionally not documented.
         TiledImageLayer.prototype.createTile = function (sector, level, row, column) {
             var path = this.cachePath + "-layer/" + level.levelNumber + "/" + row + "/" + row + "_" + column + "."
@@ -150,9 +154,6 @@ define([
         TiledImageLayer.prototype.doRender = function (dc) {
             if (!dc.terrain)
                 return;
-
-            if (this.expiration && (Date.now() >= this.expiration.getTime()))
-                this.currentTilesInvalid = true;
 
             if (this.currentTilesInvalid
                 || !this.lasTtMVP || !dc.navigatorState.modelviewProjection.equals(this.lasTtMVP)
@@ -297,14 +298,7 @@ define([
 
         // Intentionally not documented.
         TiledImageLayer.prototype.isTextureExpired = function (texture) {
-            //return this.expiration && (Date.now() >= this.expiration.getTime());
-
-            // BDS: Temporal layer HACK with retrieveTileImage(): texture.retrievedTimestamp = Date.now();
-            if (this.expiration && (Date.now() >= this.expiration.getTime())) {
-                return (texture.retrievedTimestamp === undefined) 
-                    || (this.expiration.getTime() >= texture.retrievedTimestamp);
-            }
-            return false;
+            return this.expiration && (texture.creationTime.getTime() <= this.expiration.getTime());
         };
 
         /**
@@ -335,13 +329,6 @@ define([
                 image.onload = function () {
                     Logger.log(Logger.LEVEL_INFO, "Image retrieval succeeded: " + url);
                     var texture = layer.createTexture(dc, tile, image);
-
-                    // BDS: Temporal layer HACK with isTextureExpired()
-                    // Assign a timestamp if this is a "temporal" layer
-                    if (layer.expiration) {
-                        texture.retrievedTimestamp = Date.now();
-                    }
-
                     layer.removeFromCurrentRetrievals(imagePath);
 
                     if (texture) {
