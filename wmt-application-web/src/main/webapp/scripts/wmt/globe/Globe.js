@@ -471,24 +471,14 @@ define([
             // Process TiledImageLayers
             for (i = 0, len = this.wwd.layers.length; i < len; i++) {
                 layer = this.wwd.layers[i];
-                //if (layer instanceof WorldWind.TiledImageLayer) {
                 if (layer.isTemporal) {
-                    // Setting the expiration to the current time and causes the layer's imagery to expire now            
-                    layer.expiration = new Date(); 
+                    layer.refresh();
                 }
                 this.wwd.redraw();
             }
             
         };
 
-        /** 
-         * Refreshes temporal layers.
-         */
-        Globe.prototype.refreshTiledMapLayer = function (layer) {
-            // Setting the expiration to the current time and causes the layer's imagery to expire now            
-            layer.expiration = new Date(); 
-            this.wwd.redraw();
-        };
 
         /**
          * Resets the viewpoint to the startup configuration settings.
