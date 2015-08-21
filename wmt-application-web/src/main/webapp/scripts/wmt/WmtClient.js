@@ -37,7 +37,7 @@
  * 
  * @param {Object} controller
  * @param {Object} Globe
- * @param {Object} layoutManager
+ * @param {Object} uiManager
  * 
  * @author Bruce Schubert
  * @author Theodore Walton
@@ -45,14 +45,14 @@
 define([
     'wmt/controller/Controller',
     'wmt/globe/Globe',
-    'wmt/ui/LayoutManager',
-    'wmt/ui/MobileMenu'
+    'wmt/ui/MobileMenu',
+    'wmt/ui/UIManager'
 ],
     function (
         controller,
         Globe,
-        layoutManager,
-        mobileMenu) {
+        mobileMenu,
+        uiManager) {
         "use strict";
         var WmtClient = function () {
 
@@ -66,7 +66,7 @@ define([
 
             // Initialize the Navbar, Sidebars and UI controls.
             // Do this AFTER the controller is initialized.
-            layoutManager.initialize();
+            uiManager.initialize();
 
             // Initialize the Mobile Slide Menus
             mobileMenu.initialize();

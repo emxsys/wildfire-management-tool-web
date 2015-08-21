@@ -40,7 +40,7 @@
  * @param {MarkerView} MarkerView Shows the marker list sidebar.
  * @param {SearchBox} SearchBox Shows the search box in the nav bar
  * @param {WeatherScoutViewManager} weatherScoutView Shows the weather scouts.
- * @returns {LayoutManager}
+ * @returns {UIManager}
  * 
  * @author Bruce Schubert
  * @author Theodore Walton
@@ -76,7 +76,7 @@ define([
         weatherScoutView,
         wildlandFireView) {
         "use strict";
-        var LayoutManager = {
+        var UIManager = {
             /**
              * Initializes the main menu and its constituents.
              * @param {Controller} controller 
@@ -197,6 +197,6 @@ define([
             }
 
         };
-        return LayoutManager;
+        return UIManager;
     }
 );
