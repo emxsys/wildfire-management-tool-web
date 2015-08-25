@@ -61,6 +61,10 @@ public class ApplicationConfig extends Application {
         resources.add(com.emxsys.wmt.web.FuelMoistureResource.class);
         resources.add(com.emxsys.wmt.web.SunlightMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.SunlightResource.class);
+        resources.add(com.emxsys.wmt.web.SurfaceFireResource.class);
+        resources.add(com.emxsys.wmt.web.SurfaceFuelMessageBodyReader.class);
+        resources.add(com.emxsys.wmt.web.SurfaceFuelResource.class);
+        resources.add(com.emxsys.wmt.web.TerrainMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.TerrainResource.class);
         resources.add(com.emxsys.wmt.web.WeatherMessageBodyReader.class);
         resources.add(com.emxsys.wmt.web.WeatherResource.class);
