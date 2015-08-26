@@ -69,10 +69,7 @@ define(["require",
         /**
          * Creates a FireLookout.
          * @constructor
-         * @param {String} name
-         * @param {String} latitude
-         * @param {String} longitude
-         * @param {String} id
+         * @param {Object} params
          * @returns {FireLookout}
          */
         var FireLookout = function (params) {
@@ -154,7 +151,7 @@ define(["require",
             }
             var self = this;
             landfireResource.FBFM13(this.latitude, this.longitude, function (fuelModelNo) {
-                self.fuelModel = fuelModelCatalog.getFuelModel(parseInt(fuelModelNo,10));
+                self.fuelModel = fuelModelCatalog.getFuelModel(parseInt(fuelModelNo, 10));
                 self.refreshFireBehavior();
             });
         };
@@ -197,8 +194,9 @@ define(["require",
             this.refreshSunlight(deferredSunlight);
 
             // Get conditioned fuel using current environmental values
-            // when the deferred sunlight is resolved
+            // after the deferred sunlight is resolved
             $.when(deferredSunlight).done(function (resolvedSunlight) {
+                
                 // Get conditioned fuel at this location,
                 // resolving deferredFuel when complete
                 self.refreshSurfaceFuel(
@@ -211,9 +209,13 @@ define(["require",
                     deferredFuel);
             });
 
-            // Compute the fire behaivor after the 
+            // Compute the fire behavior after the 
             // conditioned fuel is resolved.
             $.when(deferredFuel).done(function (resolvedFuel) {
+                if (resolvedFuel === null) { // null on failure
+                    self.refreshInProgress = false;
+                    return;
+                }
                 // Retrieve the computed fire behavior using 
                 // conditioned fuel, weather and terrain.
                 surfaceFireResource.surfaceFire(
@@ -279,7 +281,7 @@ define(["require",
             // Get the conditioned fuel at this location
             surfaceFuelResource.conditionedSurfaceFuel(
                 fuelModel, sunlight, weatherTuple, terrainTuple, shaded, fuelMoisture,
-                function (json) { // Callback to process JSON result
+                function (json, textStatus, jqXHR) { // Callback to process JSON result
                     //log.info('FireLookout', 'processSurfaceFuel', JSON.stringify(json));
                     self.surfaceFuel = json;
                     if (deferredFuel) {
