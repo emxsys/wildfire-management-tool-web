@@ -56,6 +56,7 @@ define([
     'wmt/resource/PlaceResource',
     'wmt/util/Removable',
     'wmt/resource/WeatherResource',
+    'wmt/view/WeatherScoutViewer',
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
@@ -67,20 +68,24 @@ define([
         PlaceResource,
         removable,
         WeatherResource,
+        weatherScoutViewer,
         util,
         wmt) {
         "use strict";
 
-        var WeatherScout = function (name, duration, rules, latitude, longitude, id) {
-
+        var WeatherScout = function (params) {
+            var arg = params || {},
+                self = this;
+            
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             movable.makeMovable(this);
 
             // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
             openable.makeOpenable(this, function () {
-                messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
-                return false;
+                weatherScoutViewer.show(self);
+                return true; // return true to fire EVENT_OBJECT_OPENED event.
             });
+            
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
             removable.makeRemovable(this, function () {
                 // TODO: Ask for confirmation; return false if veto'd
@@ -94,14 +99,15 @@ define([
             /**
              * The unique id used to identify this particular weather object
              */
-            this.id = id || util.guid();
+            this.id = arg.id || util.guid();
             /**
              * The display name
              */
-            this.name = name || 'Wx Scout';
-            this.duration = duration || wmt.configuration.wxForecastDurationHours;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.name = arg.name || 'Wx Scout';
+            this.duration = arg.duration || wmt.configuration.wxForecastDurationHours;
+            this.latitude = arg.latitude;
+            this.longitude = arg.longitude;
+            this.isMovable = arg.isMovable === undefined ? true : arg.isMovable;
 
             this.rules = [];
 
@@ -270,17 +276,13 @@ define([
          * Updates this object's place attributes. 
          */
         WeatherScout.prototype.refreshPlace = function (deferred) {
-//            this.fire(wmt.EVENT_PLACE_CHANGED, this);
-//            if (deferred) {
-//                deferred.resolve(this);
-//            }
-// Did the Yahoo places service block my ip address due to overuse?
-//             
-            if (!this.latitude || !this.longitude || !this.duration) {
+            
+            if (!this.latitude || !this.longitude) {
                 return;
             }
             var self = this,
-                i, max, item, place = [];
+                i, max, item, place = [], 
+                placename = '';
 
             // Get the place name(s) at this location
             PlaceResource.places(
@@ -302,16 +304,18 @@ define([
                             place[i] = {"name": item.name, "type": item.placeTypeName.content};
                         }
                     }
-                    self.place = place;
+                    self.place = place; // Saving the place results for testing... not currently used
 
-                    // Apply the first place name (ordered by granularity) that's not a zip code
+                    // Find the first place name (they're ordered by granularity) that's not a zip code
                     for (i = 0, max = place.length; i < max; i++) {
                         if (place[i].type !== "Zip Code") {
-                            self.toponym = place[i].name;
-
+                            placename = place[i].name;
                             break;
                         }
                     }
+                    // Update the placename property: toponym
+                    self.toponym = placename;
+                    
                     log.info('WeatherScout', 'refreshPlace', self.name + ': EVENT_PLACE_CHANGED');
                     self.fire(wmt.EVENT_PLACE_CHANGED, self);
                     if (deferred) {

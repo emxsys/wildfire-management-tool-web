@@ -50,30 +50,32 @@ define([
     'wmt/controller/Controller',
     'wmt/ui/ControlPanel',
     'wmt/ui/DateTimeControls',
+    'wmt/view/FireLookoutView',
     'wmt/view/FireLookoutViewer',
     'wmt/view/FuelModelCatalogViewer',
-    'wmt/view/FireLookoutView',
     'wmt/ui/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
     'wmt/ui/SearchBox',
     'wmt/view/TimeView',
     'wmt/view/WeatherScoutView',
+    'wmt/view/WeatherScoutViewer',
     'wmt/view/WildlandFireView'],
     function (
         aboutBox,
         controller,
         ControlPanel,
         dateTimeControls,
+        fireLookoutView,
         fireLookoutViewer,
         fuelModelCatalogViewer,
-        fireLookoutView,
         LayerMenu,
         locationView,
         MarkerView,
         SearchBox,
         timeView,
         weatherScoutView,
+        weatherScoutViewer,
         wildlandFireView) {
         "use strict";
         var UIManager = {
@@ -169,10 +171,11 @@ define([
                     locationView.initialize();
                     timeView.initialize();
 
-                    // Dialogs
+                    // Modals/Dialogs/Viewers
                     aboutBox.initialize();
                     fireLookoutViewer.initialize();
                     fuelModelCatalogViewer.initialize();
+                    weatherScoutViewer.initialize();
                 });
             },
             /**

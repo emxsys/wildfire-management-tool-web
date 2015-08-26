@@ -110,7 +110,7 @@ define([
             }
             return false;
         };
-        
+
         /**
          * Invokes refresh on all the scouts managed by this manager.
          */
@@ -121,7 +121,7 @@ define([
                 this.scouts[i].refresh();
             }
         };
-        
+
         /**
          * Saves the weather scouts collection to local storage.
          */
@@ -130,7 +130,16 @@ define([
                 function (scout) {
                     return !scout.invalid;
                 }),
-                string = JSON.stringify(validScouts, ['id', 'name', 'duration', 'rules', 'latitude', 'longitude']);
+                string = JSON.stringify(validScouts,
+                    [
+                        'id',
+                        'name',
+                        'duration',
+                        'rules',
+                        'latitude',
+                        'longitude',
+                        'isMovable'
+                    ]);
 
             localStorage.setItem(wmt.STORAGE_KEY_WEATHER_SCOUTS, string);
         };
@@ -148,13 +157,15 @@ define([
             // Convert JSON array to array of WeatherScout objects
             array = JSON.parse(string);
             for (i = 0, max = array.length; i < max; i++) {
-                this.addScout(new WeatherScout(
-                    array[i].name,
-                    array[i].duration,
-                    array[i].rules,
-                    array[i].latitude,
-                    array[i].longitude,
-                    array[i].id));
+                this.addScout(new WeatherScout({
+                    id: array[i].id,
+                    name: array[i].name,
+                    duration: array[i].duration,
+                    rules: array[i].rules,
+                    latitude: array[i].latitude,
+                    longitude: array[i].longitude,
+                    isMovable: array[i].isMovable
+                }));
             }
         };
 
