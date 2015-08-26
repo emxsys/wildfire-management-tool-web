@@ -77,8 +77,8 @@ define(["require",
                 self = this,
                 model = require("wmt/controller/Controller").model;
 
-            // Inherit the weather forecasting capabilites of the WeatherScout
-            WeatherScout.call(this, arg.name, 24, null, arg.latitude, arg.longitude, arg.id);
+            // FireLookout inherits the weather forecasting capabilites of the WeatherScout
+            WeatherScout.call(this, params);
 
             /**
              * Override the WeatherScout name set by the parent

@@ -49,7 +49,7 @@ define([
             WorldWind.GeographicText.call(this, new WorldWind.Position(latitude, longitude, wmt.MAP_SYMBOL_ALTITUDE_WEATHER), airTempF);
             
             this.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-            this.alwaysOnTop = true;
+            this.alwaysOnTop = false;
             this.attributes =  new WorldWind.TextAttributes(null);
             this.attributes.scale = 1.0;
             this.attributes.offset = new WorldWind.Offset(

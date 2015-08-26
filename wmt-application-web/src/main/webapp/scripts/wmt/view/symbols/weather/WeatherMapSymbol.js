@@ -147,7 +147,7 @@ define([
                 self.airTemperature.text = wx.airTemperatureF + 'F';
                 self.relHumidity.text = wx.relaltiveHumidityPct + '%';
                 if (wx.time === WeatherScout.INVALID_WX.time) {
-                    self.forecastTime.text = '-';
+                    self.forecastTime.text = '-'; // empty labels not allowed
                 } else {
                     self.forecastTime.text = '@ ' + wx.time.toLocaleTimeString('en', timeOptions);
                 }
@@ -171,9 +171,10 @@ define([
          */
         WeatherMapSymbol.prototype.render = function (dc) {
 
-            // Rotate and tilt the wind barb to match the view
+            // Rotate the wind barb to match the view
             this.windBarb.imageRotation = dc.navigatorState.heading;
-            //this.windBarb.imageTilt = dc.navigatorState.tilt;
+            // Tilt the wind barb to match the view
+            //this.windBarb.imageTilt = dc.navigatorState.tilt; -- Disabled: visbility diminished when tilted
 
             this.skyCover.render(dc);
             this.airTemperature.render(dc);

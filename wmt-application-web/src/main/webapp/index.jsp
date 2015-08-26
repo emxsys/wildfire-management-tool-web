@@ -193,7 +193,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
                                 <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Wildland Fires</a></li>
                                 <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default"><span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span> Fire Lookouts</a></li>
-                                <li class="c-menu__item"><a id="mobileWeatherButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
+                                <li class="c-menu__item"><a id="weatherWeatherScoutsButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                                 <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                                 <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
                             </ul>
@@ -407,72 +407,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- /Mobile Layers List Menu -->
 
 
-
-    <!-- Mobile Weather Menu -->
-    <nav id="mobileWeather" class="c-menu hidden">
-        <div class="container-fluid" style="margin-top:37px">                
-            <div class="row" style="margin-top:10px;">            
-                <div class="col-xs-11 col-sm-11">
-                    <div class="panel-group" id="weatherAccordion" role="tablist" aria-multiselectable="false">                                   
-                        <!--Weather Stations-->
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#weatherAccordion" 
-                                 href="#weatherStationsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="weatherStationsBody"
-                                 role="tab" 
-                                 id="weatherStationsHeading">
-                                <h4 class="panel-title">
-                                    Stations
-                                </h4>
-                            </div>
-                            <div id="weatherStationsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="weatherStationsHeading">
-                                <div class="panel-body">
-                                    <ul class="list-group pre-scrollable" 
-                                        id="weatherStationList">
-                                    </ul>                              
-                                </div>
-                            </div>
-                        </div>
-                        <!--Weather Settings-->
-                        <div class="panel panel-default">
-                            <div class="panel-heading collapsed" 
-                                 data-toggle="collapse" 
-                                 data-parent="#weathersAccordion" 
-                                 href="#weathersSettingsBody" 
-                                 aria-expanded="false" 
-                                 aria-controls="weathersSettingsBody" 
-                                 role="tab" 
-                                 id="weatherSettingsHeading">
-                                <h4 class="panel-title">
-                                    Settings
-                                </h4>
-                            </div>
-                            <div id="weatherSettingsBody" 
-                                 class="panel-collapse collapse" 
-                                 role="tabpanel" 
-                                 aria-labelledby="weatherSettingsHeading">
-                                <div class="panel-body">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul class="c-menu__items">
-                        <li class="c-menu__item"><a id="weatherWeatherScoutsButton" href="#" class="c-menu__link panel panel-default">Weather Scouts</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div id="c-maskMobileWeather" class="c-mask"></div>
-    <!-- /Mobile Weather Menu -->
-
     <!-- Mobile Weather Scouts Menu -->
     <nav id="mobileWeatherScouts" class="c-menu hidden">
         <div class="container-fluid" style="margin-top:5px">
@@ -483,25 +417,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <span class="span2"></span>
                     </button>
                 </div>
+                <div class="col-xs-10">
+                    <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Weather Scouts</h3>
+                    <button id="createWeatherScout" 
+                            type="button" 
+                            class="btn btn-default btn-sm createWeatherScoutButton" 
+                            data-toggle="tooltip" 
+                            data-placement="top" 
+                            title="Add a weather scout to the globe.">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Add
+                    </button>
+                </div>            
             </div>
             <div class="row" style="padding-top: 5px">
                 <div class="col-xs-12 col-sm-12">
                     <div class="panel panel-default">                            
-                        <div class="panel-body">
-                            <button id="createWeatherScout" 
-                                    type="button"
-                                    class="btn btn-default createWeatherScoutButton" 
-                                    data-toggle="tooltip" 
-                                    data-placement="top" 
-                                    title="Add a weather scout to the globe.">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Add
-                            </button>
-                            <ul class="list-group pre-scrollable" 
-                                style="margin-top: 5px;max-height: calc(15vh);"
-                                id="weatherScoutList">
-                            </ul>                              
-                        </div>
+                        <ul class="list-group" 
+                            style="overflow-y: scroll; height: 100%"
+                            id="weatherScoutList">
+                        </ul>                              
                     </div>
                 </div>
             </div>
@@ -521,7 +456,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </button>
                 </div>
                 <div class="col-xs-10">
-                    <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Lookouts</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Fire Lookouts</h3>
                     <button id="createFireLookout" 
                             type="button" 
                             class="btn btn-default btn-sm createFireLookoutButton" 
@@ -559,34 +494,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </div>
                 <div class="col-xs-10 col-sm-10 btn-group" role="group">
                     <h3 style="margin-top: 0; margin-bottom: 0; float:left;">Wildland Fires</h3>
-                    
-<!--                    <button id="selectAllWildlandFires" 
-                            type="button"
-                            class="btn btn-default btn-sm " 
-                            data-toggle="tooltip" 
-                            data-placement="top" 
-                            title="Adds all wildland fire perimeters to the globe.">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        All
-                    </button>
-                    <button id="deselectAllWildlandFires" 
-                            type="button"
-                            class="btn btn-default btn-sm " 
-                            data-toggle="tooltip" 
-                            data-placement="top" 
-                            title="Removes all wildland fire perimeters from the globe.">
-                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                        All
-                    </button>
-                    <button id="selectViewableWildlandFires" 
-                            type="button"
-                            class="btn btn-default btn-sm  " 
-                            data-toggle="tooltip" 
-                            data-placement="top" 
-                            title="Adds all wildland fire perimeters that are in the current view.">
-                        <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
-                        Viewable
-                    </button>-->
+
+                    <!--                    <button id="selectAllWildlandFires" 
+                                                type="button"
+                                                class="btn btn-default btn-sm " 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Adds all wildland fire perimeters to the globe.">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            All
+                                        </button>
+                                        <button id="deselectAllWildlandFires" 
+                                                type="button"
+                                                class="btn btn-default btn-sm " 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Removes all wildland fire perimeters from the globe.">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                            All
+                                        </button>
+                                        <button id="selectViewableWildlandFires" 
+                                                type="button"
+                                                class="btn btn-default btn-sm  " 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Adds all wildland fire perimeters that are in the current view.">
+                                            <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                                            Viewable
+                                        </button>-->
                     <button id="refreshWildlandFires" 
                             type="button"
                             class="btn btn-default btn-sm " 
@@ -1006,6 +941,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <div id="lookout-behavior-tab" >
                             </div>
                             <div id="lookout-alerts-tab" >
+                            </div>
+                        </div>                    
+                    </div>
+                </form>
+            </div>    
+            <!--Prime UI Weather Scout Viewer--> 
+            <div id="scout-viewer" title="Weather Scout" style="display: none;">
+                <form id="scout-frm">
+                    <div id="scout-tabs">      
+                        <ul>
+                            <li><a href="#scout-general-tab">General</a></li>
+                            <li><a href="#scout-weather-tab">Weather</a></li>
+                            <li><a href="#scout-alerts-tab">Alerts</a></li>
+                        </ul>
+                        <div>
+                            <div id="scout-general-tab">
+                                <div class="form_entry">
+                                    <h4>Name</h4>
+                                    <input name="scout-name" type="text" id="scout-name" placeholder="Unique name" required>
+                                </div>
+                                <div class="form_entry">
+                                    <h4>Location</h4>
+                                    <p id="scout-placename"></p> 
+                                    <p id="scout-latitude"></p> 
+                                    <p id="scout-longitude"></p> 
+                                    <input id="scout-movable" type="checkbox" />
+                                </div>
+                            </div>
+                            <div id="scout-weather-tab" >
+                                <div id="scout-weather-tbl"></div>
+                            </div>
+                            <div id="scout-alerts-tab" >
                             </div>
                         </div>                    
                     </div>

@@ -111,22 +111,12 @@ define([
                 'calc(35vh + 50px)',
                 '100%'
                 );
-            var mobileWeather = new mobileMenu.Menu(
-                '#mobileWeather',
-                'slide-right',
-                '#c-maskMobileWeather',
-                Array('#mobileWeatherButton'),
-                Array('#weatherWeatherScoutsButton'),
-                '100',
-                '100%',
-                '85%'
-                );
             var mobileWeatherScouts = new mobileMenu.Menu(
                 '#mobileWeatherScouts',
                 'slide-top',
                 '',
-                Array('#weatherWeatherScoutsButton', '#globeWeatherScoutsButton'),
-                Array('#weatherScoutsCheck'),
+                ['#weatherWeatherScoutsButton'],
+                ['#weatherScoutsCheck'],
                 '110',
                 'calc(39vh + 50px)',
                 '100%'
@@ -135,7 +125,7 @@ define([
                 '#mobileFireLookouts',
                 'slide-top',
                 '',
-                ['#firesFireLookoutsButton', '#globeFireLookoutsButton'],
+                ['#firesFireLookoutsButton'],
                 ['#fireLookoutsCheck'],
                 '110',
                 'calc(39vh + 50px)',
