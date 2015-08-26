@@ -946,6 +946,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </form>
             </div>    
+            <!--Prime UI Weather Scout Viewer--> 
+            <div id="scout-viewer" title="Weather Scout" style="display: none;">
+                <form id="scout-frm">
+                    <div id="scout-tabs">      
+                        <ul>
+                            <li><a href="#scout-general-tab">General</a></li>
+                            <li><a href="#scout-weather-tab">Weather</a></li>
+                            <li><a href="#scout-alerts-tab">Alerts</a></li>
+                        </ul>
+                        <div>
+                            <div id="scout-general-tab">
+                                <div class="form_entry">
+                                    <h4>Name</h4>
+                                    <input name="scout-name" type="text" id="scout-name" placeholder="Unique name" required>
+                                </div>
+                                <div class="form_entry">
+                                    <h4>Location</h4>
+                                    <p id="scout-placename"></p> 
+                                    <p id="scout-latitude"></p> 
+                                    <p id="scout-longitude"></p> 
+                                    <input id="scout-movable" type="checkbox" />
+                                </div>
+                            </div>
+                            <div id="scout-weather-tab" >
+                                <div id="scout-weather-tbl"></div>
+                            </div>
+                            <div id="scout-alerts-tab" >
+                            </div>
+                        </div>                    
+                    </div>
+                </form>
+            </div>    
             <!--Prime UI Fuel Model Dialog--> 
             <form id="fuelModel-frm">
                 <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
