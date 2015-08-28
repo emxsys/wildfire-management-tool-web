@@ -894,57 +894,56 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             <!--Prime UI Fire Lookout Viewer--> 
             <div id="lookout-dlg" title="Fire Lookout" style="display: none;">
-                <form id="lookout-frm">
-                    <div id="lookout-tabs">      
-                        <ul>
-                            <li><a href="#lookout-general-tab">General</a></li>
-                            <li><a href="#lookout-fuel-tab">Fuel</a></li>
-                            <li><a href="#lookout-forces-tab">Forces</a></li>
-                            <li><a href="#lookout-weather-tab">Weather</a></li>
-                            <li><a href="#lookout-behavior-tab">Behavior</a></li>
-                            <li><a href="#lookout-alerts-tab">Alerts</a></li>
-                        </ul>
-                        <div>
-                            <div id="lookout-general-tab">
+                <div id="lookout-tabs">      
+                    <ul>
+                        <li><a href="#lookout-general-tab">General</a></li>
+                        <li><a href="#lookout-fuel-tab">Fuel</a></li>
+                        <li><a href="#lookout-forces-tab">Forces</a></li>
+                        <li><a href="#lookout-weather-tab">Weather</a></li>
+                        <li><a href="#lookout-behavior-tab">Behavior</a></li>
+                        <li><a href="#lookout-alerts-tab">Alerts</a></li>
+                    </ul>
+                    <div>
+                        <div id="lookout-general-tab">
+                            <form id="lookout-frm">
+                                <h4>Name</h4>
                                 <div class="form_entry">
-                                    <h4>Name</h4>
                                     <input name="lookout-name" type="text" id="lookout-name" placeholder="Unique name" required>
                                 </div>
+                                <h4>Location</h4>
+                                <p id="lookout-placename"></p> 
+                                <p id="lookout-latitude"></p> 
+                                <p id="lookout-longitude"></p> 
                                 <div class="form_entry">
-                                    <h4>Location</h4>
-                                    <p id="lookout-placename"></p> 
-                                    <p id="lookout-latitude"></p> 
-                                    <p id="lookout-longitude"></p> 
                                     <input id="lookout-movable" type="checkbox" />
                                 </div>
+                            </form>
+                        </div>
+                        <div id="lookout-fuel-tab">
+                            <h5>Fuel Model</h5>
+                            <input type="checkbox" id="lookout-fuelmodel-auto" name="lookout-fuelmodel-auto" value="1"/>
+                            <label for="lookout-fuelmodel-auto">Automatic Selection</label>
+                            <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
+                            <h5>Fuel Moisture</h5>
+                            <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
+                        </div>
+                        <div id="lookout-forces-tab">
+                            <h5>CPS Primary Forces</h5>
+                            <div>
+                                <canvas id="lookout-forces-canvas">
+                                    <h1>Your browser does not support HTML5 Canvas.</h1>
+                                </canvas>                
                             </div>
-                            <div id="lookout-fuel-tab">
-                                <h5>Fuel Model</h5>
-
-                                <input type="checkbox" id="lookout-fuelmodel-auto" name="lookout-fuelmodel-auto" value="1"/>
-                                <label for="lookout-fuelmodel-auto">Automatic Selection</label>
-                                <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
-                                <h5>Fuel Moisture</h5>
-                                <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
-                            </div>
-                            <div id="lookout-forces-tab">
-                                <h5>CPS Primary Forces</h5>
-                                <div>
-                                    <canvas id="lookout-forces-canvas">
-                                        <h1>Your browser does not support HTML5 Canvas.</h1>
-                                    </canvas>                
-                                </div>
-                            </div>
-                            <div id="lookout-weather-tab" >
-                                <div id="lookout-weather-tbl"></div>
-                            </div>
-                            <div id="lookout-behavior-tab" >
-                            </div>
-                            <div id="lookout-alerts-tab" >
-                            </div>
-                        </div>                    
-                    </div>
-                </form>
+                        </div>
+                        <div id="lookout-weather-tab" >
+                            <div id="lookout-weather-tbl"></div>
+                        </div>
+                        <div id="lookout-behavior-tab" >
+                        </div>
+                        <div id="lookout-alerts-tab" >
+                        </div>
+                    </div>                    
+                </div>
             </div>    
             <!--Prime UI Weather Scout Viewer--> 
             <div id="scout-viewer" title="Weather Scout" style="display: none;">

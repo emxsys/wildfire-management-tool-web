@@ -107,6 +107,7 @@ define([
              */
             initialize: function () {
                 var self = this,
+                    $viewer = $('#lookout-dlg'),
                     options = [],
                     i, max, item;
 
@@ -143,7 +144,7 @@ define([
                 $('#lookout-tabs').puitabview();
 
                 // The dialog
-                $('#lookout-dlg').puidialog({
+                $viewer.puidialog({
                     location: 'top',
                     width: '360px',
                     height: 'auto',
@@ -158,8 +159,9 @@ define([
                             text: wmt.BUTTON_TEXT_SAVE,
                             icon: 'fa-save',
                             click: function () {
-                                self.saveAction();
-                                $('#lookout-dlg').puidialog('hide');
+                                $viewer.submit();
+                                //self.saveAction();
+                                //$viewer.puidialog('hide');
                             }
                         },
                         {
@@ -167,16 +169,23 @@ define([
                             icon: ' fa-minus-circle',
                             click: function () {
                                 self.deleteAction();
-                                $('#lookout-dlg').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         },
                         {
                             text: wmt.BUTTON_TEXT_CANCEL,
                             icon: 'fa-close',
                             click: function () {
-                                $('#lookout-dlg').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         }]
+                });
+                // Enter key handler
+                $viewer.off('submit').on('submit', function () {
+                    // TODO: Validation
+                    self.saveAction();
+                    $viewer.puidialog('hide');
+                    return false;   // return false to prevent form submission to server
                 });
             },
             drawCpsForces: function (lookout) {
