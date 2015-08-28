@@ -203,8 +203,12 @@ define([
                     dataType: "json", // tell the server what kind of response we want
                     processData: false, // tell jQuery not to transform data into query string
                     type: 'POST',
-                    success: function (data) {
+                    timeout: 2000,
+                    success: function (data, textStatus, jqXHR) {
                         callback(data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        callback(null);
                     }
                 });
             }
