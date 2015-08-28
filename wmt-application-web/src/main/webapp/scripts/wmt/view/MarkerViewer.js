@@ -64,6 +64,7 @@ define([
                 this.saveAction = function () {
                     marker.name = $('#marker-name').val();
                     marker.isMovable = !($('#marker-movable').puitogglebutton('isChecked'));
+                    marker.fire(wmt.EVENT_OBJECT_CHANGED, marker);
                 };
 
                 // Delete button callback

@@ -303,7 +303,7 @@ define([
             placemark.markerType = template.type;
 
             // EVENT_MARKER_CHANGED handler that updates the symbology
-            placemark.handleMarkerChangedEvent = function (marker) {
+            placemark.handleObjectChangedEvent = function (marker) {
                 placemark.displayName = marker.name;
                 if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_NAME) {
                     // Display the marker name
@@ -327,7 +327,7 @@ define([
                 }
             };
             // Establish the Publisher/Subscriber relationship between this symbol and its node
-            marker.on(wmt.EVENT_MARKER_CHANGED, placemark.handleMarkerChangedEvent, placemark);
+            marker.on(wmt.EVENT_OBJECT_CHANGED, placemark.handleObjectChangedEvent, placemark);
             marker.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
             marker.on(wmt.EVENT_PLACE_CHANGED, placemark.handlePlaceChangedEvent, placemark);
 
