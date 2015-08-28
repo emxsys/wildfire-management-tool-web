@@ -66,7 +66,7 @@ define([
             this.attributes.labelAttributes.offset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
                 WorldWind.OFFSET_FRACTION, 1.0);
-            this.attributes.labelAttributes.color = WorldWind.Color.YELLOW;
+            this.attributes.labelAttributes.color = WorldWind.Color.WHITE;
             this.attributes.labelAttributes.depthTest = true;
             this.attributes.drawLeaderLine = true;
             this.attributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;

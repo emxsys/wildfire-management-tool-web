@@ -59,14 +59,14 @@ define([
             // Establish the common attributes for pushpins
             this.attributes = new WorldWind.PlacemarkAttributes(null);
             this.attributes.depthTest = true;
-            this.attributes.imageScale = 0.8;
+            this.attributes.imageScale = 0.7;
             this.attributes.imageOffset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.3,
                 WorldWind.OFFSET_FRACTION, 0.0);
             this.attributes.labelAttributes.offset = new WorldWind.Offset(
                 WorldWind.OFFSET_FRACTION, 0.5,
                 WorldWind.OFFSET_FRACTION, 1.0);
-            this.attributes.labelAttributes.color = WorldWind.Color.YELLOW;
+            this.attributes.labelAttributes.color = WorldWind.Color.WHITE;
             this.attributes.labelAttributes.depthTest = true;
             this.attributes.drawLeaderLine = true;
             this.attributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;

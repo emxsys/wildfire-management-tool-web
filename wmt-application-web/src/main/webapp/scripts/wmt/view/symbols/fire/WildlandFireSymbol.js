@@ -80,6 +80,7 @@ define([
                 marker = new IcsMarker(fire.geometry.y, fire.geometry.x, "ics-fire-location");
                 marker.pickDelegate = fire;
                 marker.label = fire.name;
+                marker.attributes.labelAttributes.color = WorldWind.Color.YELLOW;
                 this.shapes.push(marker);
 
             } else if (fire.geometryType === wmt.GEOMETRY_POLYGON) {

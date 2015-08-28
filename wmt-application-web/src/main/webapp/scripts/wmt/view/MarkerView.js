@@ -291,20 +291,41 @@ define([
             if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_NAME) {
                 placemark.label = marker.name;
             }
-            
+
             // Inject OUR own marker properties 
+            placemark.pickDelegate = marker;
             placemark.marker = marker;
             placemark.markerCategory = template.category;
             placemark.markerType = template.type;
 
-            // Establish the Publisher/Subscriber relationship between this symbol and its node
-            placemark.pickDelegate = marker;
+            // EVENT_MARKER_CHANGED handler that updates the symbology
+            placemark.handleMarkerChangedEvent = function (marker) {
+                placemark.displayName = marker.name;
+                if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_NAME) {
+                    // Display the marker name
+                    placemark.label = marker.name;
+                }
+            };
+            // EVENT_OBJECT_MOVED handler that synchronizes the composite renderables with the model's location            
             placemark.handleObjectMovedEvent = function (marker) {
                 placemark.position.latitude = marker.latitude;
                 placemark.position.longitude = marker.longitude;
+                if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_LATLON) {
+                    // Display "Lat Lon"
+                    placemark.label = marker.latitude.toFixed(3) + ' ' + marker.longitude.toFixed(3);
+                }
             };
+            // EVENT_PLACE_CHANGED handler that updates the label
+            placemark.handlePlaceChangedEvent = function (marker) {
+                if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_PLACE) {
+                    // Display the place name
+                    placemark.label = marker.toponym || null;
+                }
+            };
+            // Establish the Publisher/Subscriber relationship between this symbol and its node
+            marker.on(wmt.EVENT_MARKER_CHANGED, placemark.handleMarkerChangedEvent, placemark);
             marker.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
-
+            marker.on(wmt.EVENT_PLACE_CHANGED, placemark.handlePlaceChangedEvent, placemark);
 
             // Render the marker on the globe
             this.markerLayer.addRenderable(placemark);
