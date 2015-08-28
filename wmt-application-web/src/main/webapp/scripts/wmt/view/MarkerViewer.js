@@ -51,7 +51,6 @@ define([
          * @returns {MarkerViewer}
          */
         var MarkerViewer = {
-
             show: function (marker) {
 
                 // Load the controls
@@ -81,8 +80,7 @@ define([
              */
             initialize: function () {
                 var self = this,
-                    options = [],
-                    i, max, item;
+                    $viewer = $('#marker-viewer');
 
 
                 // Toggle buttons
@@ -97,7 +95,7 @@ define([
                 $('#marker-tabs').puitabview();
 
                 // The dialog
-                $('#marker-viewer').puidialog({
+                $viewer.puidialog({
                     location: 'top',
                     width: '360px',
                     height: 'auto',
@@ -113,7 +111,7 @@ define([
                             icon: 'fa-save',
                             click: function () {
                                 self.saveAction();
-                                $('#marker-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         },
                         {
@@ -121,19 +119,26 @@ define([
                             icon: ' fa-minus-circle',
                             click: function () {
                                 self.deleteAction();
-                                $('#marker-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         },
                         {
                             text: wmt.BUTTON_TEXT_CANCEL,
                             icon: 'fa-close',
                             click: function () {
-                                $('#marker-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         }]
                 });
-            }
 
+                // Enter key handler
+                $viewer.off('submit').on('submit', function () {
+                    self.saveAction();
+                    $viewer.puidialog('hide');
+                    return false;
+                });
+
+            }
         };
         return MarkerViewer;
     }
