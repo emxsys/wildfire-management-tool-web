@@ -52,7 +52,6 @@ define([
          * @returns {WeatherScoutViewer}
          */
         var WeatherScoutViewer = {
-
             show: function (scout) {
                 var forecasts = scout.getForecasts();
 
@@ -87,8 +86,7 @@ define([
              */
             initialize: function () {
                 var self = this,
-                    options = [],
-                    i, max, item;
+                    $viewer = $('#scout-viewer');
 
                 this.initWeatherTable();
 
@@ -104,7 +102,7 @@ define([
                 $('#scout-tabs').puitabview();
 
                 // The dialog
-                $('#scout-viewer').puidialog({
+                $viewer.puidialog({
                     location: 'top',
                     width: '360px',
                     height: 'auto',
@@ -120,7 +118,7 @@ define([
                             icon: 'fa-save',
                             click: function () {
                                 self.saveAction();
-                                $('#scout-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         },
                         {
@@ -128,16 +126,22 @@ define([
                             icon: ' fa-minus-circle',
                             click: function () {
                                 self.deleteAction();
-                                $('#scout-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         },
                         {
                             text: wmt.BUTTON_TEXT_CANCEL,
                             icon: 'fa-close',
                             click: function () {
-                                $('#scout-viewer').puidialog('hide');
+                                $viewer.puidialog('hide');
                             }
                         }]
+                });
+                // Enter key handler
+                $viewer.off('submit').on('submit', function () {
+                    self.saveAction();
+                    $viewer.puidialog('hide');
+                    return false;
                 });
             },
             /**
