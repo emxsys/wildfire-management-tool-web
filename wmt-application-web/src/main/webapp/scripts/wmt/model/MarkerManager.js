@@ -48,7 +48,7 @@ define([
 
             // Mix-in Publisher capability for publish/subscribe subject/observer pattern
             publisher.makePublisher(this);
-            
+
             this.model = model;
             this.markers = [];
         };
@@ -57,22 +57,46 @@ define([
             // Add marker to managed list
             marker.name = this.generateUniqueName(marker.name);
 
+            // Subscribe to marker.remove() notifications
+            marker.on(wmt.EVENT_OBJECT_REMOVED, this.removeMarker, this);
+
             this.markers.push(marker);
             this.fire(wmt.EVENT_MARKER_ADDED, marker);
         };
+        /**
+         * Finds the marker with the given id.
+         * @param {String} id System assigned id for the marker.
+         * @returns {MarkerNode} The marker object if found, else null.
+         */
+        MarkerManager.prototype.findMarker = function (id) {
+            var marker, i, len;
 
-        MarkerManager.prototype.removeMarker = function (uniqueName) {
-            var i,
-                max,
-                removed;
+            for (i = 0, len = this.markers.length; i < len; i += 1) {
+                marker = this.markers[i];
+                if (marker.id === id) {
+                    return marker;
+                }
+            }
+            return null;
+        };
+
+        MarkerManager.prototype.removeMarker = function (marker) {
+            var i, max, removed;
 
             for (i = 0, max = this.markers.length; i < max; i++) {
-                if (this.markers[i].name === uniqueName) {
+                if (this.markers[i].id === marker.id) {
                     removed = this.markers.splice(i, 1);
                     break;
                 }
             }
-            this.fire(wmt.EVENT_MARKER_REMOVED, removed[0]);
+
+            if (removed && removed.length > 0) {
+                // Remove our subscription/reference to the scout
+                marker.cancelSubscription(wmt.EVENT_OBJECT_REMOVED, this.removeMarker, this);
+                // Notify others.
+                this.fire(wmt.EVENT_MARKER_REMOVED, removed[0]);
+                return true;
+            }
         };
 
 
@@ -81,7 +105,9 @@ define([
          */
         MarkerManager.prototype.saveMarkers = function () {
             // Ignore markers that have been flagged as "invalid"
-            var validMarkers = this.markers.filter(function (marker) { return !marker.invalid; }),
+            var validMarkers = this.markers.filter(function (marker) {
+                return !marker.invalid;
+            }),
                 markersString = JSON.stringify(validMarkers, ['id', 'name', 'type', 'latitude', 'longitude']);
             // Set the key/value pair
             localStorage.setItem(wmt.STORAGE_KEY_MARKERS, markersString);

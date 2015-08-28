@@ -56,6 +56,7 @@ define([
     'wmt/ui/LayerMenu',
     'wmt/view/LocationView',
     'wmt/view/MarkerView',
+    'wmt/view/MarkerViewer',
     'wmt/ui/SearchBox',
     'wmt/view/TimeView',
     'wmt/view/WeatherScoutView',
@@ -72,6 +73,7 @@ define([
         LayerMenu,
         locationView,
         MarkerView,
+        markerViewer,
         SearchBox,
         timeView,
         weatherScoutView,
@@ -174,6 +176,7 @@ define([
                     // Modals/Dialogs/Viewers
                     aboutBox.initialize();
                     fireLookoutViewer.initialize();
+                    markerViewer.initialize();
                     fuelModelCatalogViewer.initialize();
                     weatherScoutViewer.initialize();
                 });

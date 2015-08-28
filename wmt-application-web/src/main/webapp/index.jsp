@@ -978,6 +978,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     </div>
                 </form>
             </div>    
+            <!--Prime UI Marker Viewer--> 
+            <div id="marker-viewer" title="Marker" style="display: none;">
+                <form id="marker-frm">
+                    <div id="marker-tabs">      
+                        <ul>
+                            <li><a href="#marker-general-tab">General</a></li>
+                            <li><a href="#marker-details-tab">Details</a></li>
+                        </ul>
+                        <div>
+                            <div id="marker-general-tab">
+                                <div class="form_entry">
+                                    <h4>Name</h4>
+                                    <input name="marker-name" type="text" id="marker-name" placeholder="Unique name" required>
+                                </div>
+                                <div class="form_entry">
+                                    <h4>Location</h4>
+                                    <p id="marker-placename"></p> 
+                                    <p id="marker-latitude"></p> 
+                                    <p id="marker-longitude"></p> 
+                                    <input id="marker-movable" type="checkbox" />
+                                </div>
+                            </div>
+                            <div id="marker-details-tab" >
+                            </div>
+                        </div>                    
+                    </div>
+                </form>
+            </div>       
             <!--Prime UI Fuel Model Dialog--> 
             <form id="fuelModel-frm">
                 <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">

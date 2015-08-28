@@ -34,6 +34,7 @@ define([
     'wmt/util/ContextSensitive',
     'wmt/util/Openable',
     'wmt/util/Log',
+    'wmt/view/MarkerViewer',
     'wmt/util/Messenger',
     'wmt/util/Movable',
     'wmt/util/Removable',
@@ -42,6 +43,7 @@ define([
         contextSensitive,
         openable,
         log,
+        markerViewer,
         messenger,
         movable,
         removable,
@@ -55,8 +57,8 @@ define([
 
             // Make openable via menus: Fires the EVENT_OBJECT_OPENED event on success.
             openable.makeOpenable(this, function () {
-                messenger.infoGrowl("The open feature has not been implemented yet.", "Sorry");
-                return false;
+                markerViewer.show(this);
+                return true; // return true to fire EVENT_OBJECT_OPENED event.
             });
             // Make deletable via menu: Fires the EVENT_OBJECT_REMOVED event on success.
             removable.makeRemovable(this, function () {

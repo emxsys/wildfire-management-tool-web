@@ -189,13 +189,11 @@ define([
         };
 
         /**
-         * Removes the given marker from the globe and the marker list.
-         * @param {Object} markerNode
+         * Removes the deleted marker from the globe and the marker list.
+         * @param {MarkerNode} marker The deleted marker.
          */
-        MarkerView.prototype.handleMarkerRemovedEvent = function (markerNode) {
-            var i,
-                max,
-                placename;
+        MarkerView.prototype.handleMarkerRemovedEvent = function (marker) {
+            var i, max, placemark;
 
             // Handle if the model is initialized before this panel is initialized
             if (!this.markerLayer) {
@@ -203,9 +201,9 @@ define([
             }
             try {
                 for (i = 0, max = this.markerLayer.renderables.length; i < max; i++) {
-                    placename = this.markerLayer.renderables[i];
+                    placemark = this.markerLayer.renderables[i];
 
-                    if (placename.displayName === markerNode.name) {
+                    if (placemark.marker.id === marker.id) {
                         this.markerLayer.renderables.splice(i, 1);
                         break;
                     }
@@ -223,39 +221,28 @@ define([
          * @param {$(li)} markerName List item element
          * @param {string} action "goto", "edit", or remove
          */
-        MarkerView.prototype.onMarkerItemClick = function (markerName, action) {
-            var placemarks = this.markerLayer.renderables,
-                placemark,
-                position,
-                i,
-                len;
+        MarkerView.prototype.onMarkerItemClick = function (markerId, action) {
+            var marker = this.manager.findMarker(markerId);
 
-            for (i = 0, len = placemarks.length; i < len; i += 1) {
-                placemark = placemarks[i];
-                if (placemark.displayName === markerName) {
-                    switch (action) {
-                        case 'goto':
-                            position = placemark.position;
-                            if (position) {
-                                controller.lookAtLatLon(position.latitude, position.longitude);
-                            } else {
-                                log.error("MarkerView", "onMarkerItemClick", "Marker position is undefined.");
-                            }
-                            break;
-                        case 'edit':
-                            messenger.infoGrowl('Rename is not implemented yet.');
-                            log.error("MarkerView", "onMarkerItemClick", "Not implemented action: " + action);
-                            break;
-                        case 'remove':
-                            this.manager.removeMarker(placemark.displayName);
-                            break;
-                        default:
-                            log.error("MarkerView", "onMarkerItemClick", "Unhandled action: " + action);
-                    }
-                    return;
-                }
+            if (!marker) {
+                messenger.notify(log.error("MarkerView", "onMarkerItemClick", "Could not find selected marker with ID: " + markerId));
+                return;
             }
-            log.error("MarkerView", "onMarkerItemClick", "Could not find selected marker in Markers layer.");
+            switch (action) {
+                case 'goto':
+                    controller.lookAtLatLon(marker.latitude, marker.longitude);
+                    break;
+                case 'edit':
+                    marker.open();
+                    break;
+                case 'remove':
+                    marker.remove();
+                    break;
+                default:
+                    log.error("MarkerView", "onMarkerItemClick", "Unhandled action: " + action);
+            }
+            return;
+
         };
 
 
@@ -284,35 +271,39 @@ define([
          * Creates a WebWorldWind Placemark renderable for the given marker properties, and adds
          * the renderable to the globe.
          * 
-         * @param {MarkerNode} node Marker model object
+         * @param {MarkerNode} marker Marker model object
          * @param {Object} template Palette item
          */
-        MarkerView.prototype.createRenderable = function (node, template) {
+        MarkerView.prototype.createRenderable = function (marker, template) {
             var placemark;
 
             // Set up the common placemark attributes.
             switch (template.category) {
                 case 'ics':
-                    placemark = new IcsMarker(node.latitude, node.longitude, template.type);
+                    placemark = new IcsMarker(marker.latitude, marker.longitude, template.type);
                     break;
                 case 'pushpin':
-                    placemark = new Pushpin(node.latitude, node.longitude, template.type);
+                    placemark = new Pushpin(marker.latitude, marker.longitude, template.type);
                     break;
             }
             // TODO: Initialize pushpins and markers from marker node
-            placemark.displayName = node.name;
-
+            placemark.displayName = marker.name;
+            if (wmt.configuration.markerLabels === wmt.MARKER_LABEL_NAME) {
+                placemark.label = marker.name;
+            }
+            
             // Inject OUR own marker properties 
+            placemark.marker = marker;
             placemark.markerCategory = template.category;
             placemark.markerType = template.type;
 
             // Establish the Publisher/Subscriber relationship between this symbol and its node
-            placemark.pickDelegate = node;
-            placemark.handleObjectMovedEvent = function (node) {
-                placemark.position.latitude = node.latitude;
-                placemark.position.longitude = node.longitude;
+            placemark.pickDelegate = marker;
+            placemark.handleObjectMovedEvent = function (marker) {
+                placemark.position.latitude = marker.latitude;
+                placemark.position.longitude = marker.longitude;
             };
-            node.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
+            marker.on(wmt.EVENT_OBJECT_MOVED, placemark.handleObjectMovedEvent, placemark);
 
 
             // Render the marker on the globe
@@ -339,22 +330,22 @@ define([
                 //markerItem = $('<li class="list-group-item btn btn-block">' + marker.displayName + '</li>');
                 markerItem =
                     '<div class="btn-group btn-block btn-group-sm">' +
-                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto" markerName="' + markerNode.name + '">' 
+                    ' <button type="button" class="col-sm-8 btn btn-default mkr-goto" markerId="' + markerNode.id + '">'
                     + markerNode.name + ': ' + markerNode.latitude.toFixed(3) + ',' + markerNode.longitude.toFixed(3) + '</button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerName="' + markerNode.name + '"></button>' +
-                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerName="' + markerNode.name + '"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-edit glyphicon glyphicon-pencil" style="top: 0" markerId="' + markerNode.id + '"></button>' +
+                    ' <button type="button" class="col-sm-2 btn btn-default mkr-remove glyphicon glyphicon-trash" style="top: 0" markerId="' + markerNode.id + '"></button>' +
                     '</div>';
                 markerList.append(markerItem);
             }
             // Add event handler to the buttons
             markerList.find('button.mkr-goto').on('click', function (event) {
-                self.onMarkerItemClick($(this).attr('markerName'), "goto");
+                self.onMarkerItemClick($(this).attr('markerId'), "goto");
             });
             markerList.find('button.mkr-edit').on('click', function (event) {
-                self.onMarkerItemClick($(this).attr('markerName'), "edit");
+                self.onMarkerItemClick($(this).attr('markerId'), "edit");
             });
             markerList.find('button.mkr-remove').on('click', function (event) {
-                self.onMarkerItemClick($(this).attr('markerName'), "remove");
+                self.onMarkerItemClick($(this).attr('markerId'), "remove");
             });
         };
 
