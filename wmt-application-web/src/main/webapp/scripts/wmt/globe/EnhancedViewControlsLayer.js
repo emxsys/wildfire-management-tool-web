@@ -125,8 +125,8 @@ define([
             if (this.orientation === "vertical") {
                 // Top-right placement
                 this.placement = new WorldWind.Offset(
-                    WorldWind.OFFSET_INSET_PIXELS, 10, // Leave a margin to accomodate bezels on phones
-                    WorldWind.OFFSET_INSET_PIXELS, 10); // ditto
+                    WorldWind.OFFSET_INSET_PIXELS, 10,  // Leave an x margin to accomodate bezels on phones
+                    WorldWind.OFFSET_INSET_PIXELS, 15); // Leave a y margin to WMT accomodate logo
             } else {
                 // Lower-left horizontal
                 this.placement = new WorldWind.Offset(

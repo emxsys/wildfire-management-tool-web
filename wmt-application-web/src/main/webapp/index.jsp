@@ -656,7 +656,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <a class="btn btn-link interactive" 
                                href="#" 
                                title="About WMTweb"
-                               style="padding-right: 15px; padding-top: 0px; padding-left: 0; height:32px; float:right;">
+                               style="padding-right: 15px; padding-top: 0px; padding-left: 0; height:24px; float:right;">
                                 <img id="wmt-logo" alt="WMTweb" src="./images/wmt-web-white-53x24.png" style='float:right;'>
                             </a>
                         </div>
