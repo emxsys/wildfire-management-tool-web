@@ -44,21 +44,67 @@
  */
 define([
     'wmt/controller/Controller',
+    'wmt/globe/layers/GeoMacCurrentPerimetersLayer',
+    'wmt/globe/layers/GeoMacHistoricPerimetersLayer',
+    'wmt/globe/layers/GeoMacHmsThermalSatelliteLayer',
+    'wmt/globe/layers/GeoMacModisThermalSatelliteLayer',
+    'wmt/globe/layers/GeoMacPreviousPerimetersLayer',
     'wmt/globe/Globe',
+    'wmt/globe/layers/LandfireLayer',
     'wmt/ui/MobileMenu',
-    'wmt/ui/UIManager'
+    'wmt/ui/UIManager',
+    'wmt/Wmt'
 ],
     function (
         controller,
+        GeoMacCurrentPerimetersLayer,
+        GeoMacHistoricPerimetersLayer,
+        GeoMacHmsThermalSatelliteLayer,
+        GeoMacModisThermalSatelliteLayer,
+        GeoMacPreviousPerimetersLayer,
         Globe,
+        LandfireLayer,
         mobileMenu,
-        uiManager) {
+        uiManager,
+        wmt) {
         "use strict";
         var WmtClient = function () {
 
 
             // Create the primary globe
-            this.globe = new Globe("canvasOne");
+            var globeOptions = {
+                showBackground: true,
+                showReticule: true,
+                showViewControls: true,
+                includePanControls: wmt.configuration.showPanControl,
+                includeRotateControls: true,
+                includeTiltControls: true,
+                includeZoomControls: true,
+                includeExaggerationControls: wmt.configuration.showExaggerationControl,
+                includeFieldOfViewControls: wmt.configuration.showFiewOfViewControl};
+
+            this.globe = new Globe("canvasOne", globeOptions);
+
+            this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLayer(), {enabled: true, hide: true, detailHint: wmt.configuration.imageryDetailHint});            
+            this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLandsatLayer(), {enabled: false, detailHint: wmt.configuration.imageryDetailHint});
+            this.globe.layerManager.addBaseLayer(new WorldWind.BingAerialWithLabelsLayer(null), {enabled: true, detailHint: wmt.configuration.imageryDetailHint});
+            this.globe.layerManager.addBaseLayer(new WorldWind.BingRoadsLayer(null), {enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint});
+            this.globe.layerManager.addBaseLayer(new WorldWind.OpenStreetMapImageLayer(null), {enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint});
+
+            this.globe.layerManager.addOverlayLayer(new LandfireLayer(), {enabled: false});
+            this.globe.layerManager.addOverlayLayer(new GeoMacHistoricPerimetersLayer(), {enabled: false, isTemporal: false});
+            this.globe.layerManager.addOverlayLayer(new GeoMacPreviousPerimetersLayer(), {enabled: false, isTemporal: true});
+            this.globe.layerManager.addOverlayLayer(new GeoMacCurrentPerimetersLayer(), {enabled: true, isTemporal: true});
+            this.globe.layerManager.addOverlayLayer(new GeoMacModisThermalSatelliteLayer(), {enabled: false, isTemporal: true});
+            this.globe.layerManager.addOverlayLayer(new GeoMacHmsThermalSatelliteLayer(), {enabled: false, isTemporal: true});
+
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), {enabled: true, pickEnabled: true});
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), {enabled: true, pickEnabled: false});
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), {enabled: true, pickEnabled: true});
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_WEATHER), {enabled: true, pickEnabled: true});
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), {enabled: true, pickEnabled: true});
+
+            this.globe.layerManager.addWidgetLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_WIDGETS), {enabled: true, pickEnabled: false});
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views on the primary globe. 

@@ -89,13 +89,9 @@ define([
                     includeRotateControls: false,
                     includeTiltControls: false,
                     includeZoomControls: true
-                },
-                [// Choose any one of these imagery layers plus the renderable layer (to show hits):
-                    //new WorldWind.BingAerialWithLabelsLayer(null),
-                    //new WorldWind.BingRoadsLayer(null),
-                    new WorldWind.OpenStreetMapImageLayer(null),
-                    new WorldWind.RenderableLayer("Results")
-                ]);
+                });
+            this.globe.layerManager.addBaseLayer(new WorldWind.OpenStreetMapImageLayer(null));
+            this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer("Results"));
             this.globe.setProjection(wmt.PROJECTION_NAME_MERCATOR);
             this.globe.wwd.addLayer(this.resultsLayer);
             this.resultsLayer = this.globe.findLayer("Results");

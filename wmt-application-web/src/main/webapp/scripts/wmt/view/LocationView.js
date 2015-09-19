@@ -50,7 +50,7 @@ define([
                 this.layer = new WorldWind.RenderableLayer("Location");
                 this.widget = new LocationWidget();
                 this.layer.addRenderable(this.widget);
-                controller.globe.addLayer(this.layer, false); // False: hide in layer list
+                controller.globe.layerManager.addWidgetLayer(this.layer); 
                 
                 // Listen for mouse clicks.
                 selectable.makeSelectable(this.widget.reset, function () {

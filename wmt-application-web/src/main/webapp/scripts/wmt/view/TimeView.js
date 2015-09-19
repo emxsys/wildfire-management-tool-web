@@ -50,7 +50,7 @@ define([
                 this.layer = new WorldWind.RenderableLayer("Time");
                 this.widget = new TimeWidget();
                 this.layer.addRenderable(this.widget);
-                controller.globe.addLayer(this.layer, false); // False: hide in layer list
+                controller.globe.layerManager.addWidgetLayer(this.layer); // False: hide in layer list
                 
 // The reset button has been superseded by the time control buttons 
 //                selectable.makeSelectable(this.widget.reset, function () {

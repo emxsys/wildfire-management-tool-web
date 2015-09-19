@@ -56,19 +56,13 @@ define([
     'wmt/globe/DnDController',
     'wmt/globe/EnhancedLookAtNavigator',
     'wmt/globe/EnhancedTextSupport',
-    'wmt/globe/EnhancedViewControlsLayer',
+    'wmt/globe/layers/EnhancedViewControlsLayer',
     'wmt/globe/KeyboardControls',
-//    'wmt/globe/GenericXYZTileLayer',
-    'wmt/globe/GeoMacCurrentPerimetersLayer',
-    'wmt/globe/GeoMacHistoricPerimetersLayer',
-    'wmt/globe/GeoMacHmsThermalSatelliteLayer',
-    'wmt/globe/GeoMacModisThermalSatelliteLayer',
-    'wmt/globe/GeoMacPreviousPerimetersLayer',
-    'wmt/globe/LandfireLayer',
+    'wmt/globe/LayerManager',
     'wmt/util/Log',
-    'wmt/globe/ReticuleLayer',
+    'wmt/globe/layers/ReticuleLayer',
     'wmt/globe/SelectController',
-    'wmt/globe/SkyBackgroundLayer',
+    'wmt/globe/layers/SkyBackgroundLayer',
     'wmt/globe/Terrain',
     'wmt/globe/TerrainProvider',
     'wmt/globe/Viewpoint',
@@ -81,13 +75,7 @@ define([
         EnhancedTextSupport,
         EnhancedViewControlsLayer,
         KeyboardControls,
-//        GenericXYZTileLayer,
-        GeoMacCurrentPerimetersLayer,
-        GeoMacHistoricPerimetersLayer,
-        GeoMacHmsThermalSatelliteLayer,
-        GeoMacModisThermalSatelliteLayer,
-        GeoMacPreviousPerimetersLayer,
-        LandfireLayer,
+        LayerManager,
         log,
         ReticuleLayer,
         SelectController,
@@ -115,11 +103,9 @@ define([
          *      includeExaggerationControls: false, 
          *      includeFieldOfViewControls: false, 
          *  }
-         * @param {WorldWind.Layer[]} layers Optional. A list of layers to load. If not provided a
-         * default collection of layers is loaded.
          * @returns {Globe}
          */
-        var Globe = function (canvasName, options, layers) {
+        var Globe = function (canvasName, options) {
             // Create the World Window
             this.wwd = new WorldWind.WorldWindow(canvasName);
 
@@ -139,6 +125,7 @@ define([
             this.selectController = new SelectController(this.wwd);
             this.dndController = new DnDController(this.wwd);
             this.keyboardControls = new KeyboardControls(this);
+            this.layerManager = new LayerManager(this);
 
             this.resizeTimer = null;
             this.canvasWidth = null;
@@ -157,71 +144,11 @@ define([
                 includeZoomControls = options ? options.includeZoomControls : true,
                 includeExaggerationControls = options ? options.includeExaggerationControls : wmt.configuration.showExaggerationControl,
                 includeFieldOfViewControls = options ? options.includeFieldOfViewControls : wmt.configuration.showFiewOfViewControl,
-                defaultLayers = [
-                    {layer: new WorldWind.BMNGLayer(), enabled: true, hide: true},
-                    {layer: new WorldWind.BMNGLandsatLayer(), enabled: false, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.BingRoadsLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.OpenStreetMapImageLayer(null), enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new LandfireLayer(), enabled: false},
-                    {layer: new GeoMacHistoricPerimetersLayer(), enabled: false, isTemporal: false},
-                    {layer: new GeoMacPreviousPerimetersLayer(), enabled: false, isTemporal: true},
-                    {layer: new GeoMacCurrentPerimetersLayer(), enabled: true, isTemporal: true},
-                    {layer: new GeoMacModisThermalSatelliteLayer(), enabled: true, isTemporal: true, detailHint: 0},
-                    {layer: new GeoMacHmsThermalSatelliteLayer(), enabled: true, isTemporal: true, detailHint: 0},
-//                    {layer: new GenericXYZTileLayer(), enabled: true, detailHint: 0},
-//                    {layer: new WorldWind.ShowTessellationLayer(), enabled: true, detailHint: wmt.configuration.imageryDetailHint},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRES), enabled: true, pickEnabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WILDLAND_FIRE_PERIMETERS), enabled: true, pickEnabled: false},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_FIRE_BEHAVOR), enabled: true, pickEnabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WEATHER), enabled: true, pickEnabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), enabled: true, pickEnabled: true},
-                    {layer: new WorldWind.RenderableLayer(wmt.LAYER_NAME_WIDGETS), enabled: true, hide: true}
-                ],
                 layer,
                 i, max;
             // Add optional background layer
             if (showBackground || showBackground === undefined) {
-                layer = new SkyBackgroundLayer(this.wwd);
-                layer.hide = true; // hidden in layer list
-                this.wwd.addLayer(layer);
-            }
-            // If the globe constructor was supplied with layers
-            // then we add them here...
-            if (layers && layers.length > 0) {
-                for (i = 0, max = layers.length; i < max; i++) {
-                    this.wwd.addLayer(layers[i]);
-                }
-            }
-            else {
-                // ... otherwise, we use the default layers
-                for (i = 0, max = defaultLayers.length; i < max; i++) {
-
-                    // Propagate enabled option to the layer object
-                    defaultLayers[i].layer.enabled = defaultLayers[i].enabled;
-                    defaultLayers[i].layer.pickEnabled = defaultLayers[i].pickEnabled;
-
-                    if (defaultLayers[i].isTemporal) {
-                        defaultLayers[i].layer.isTemporal = true;
-                    }
-
-                    // Apply the level-of-detail hint, if provided
-                    if (defaultLayers[i].detailHint) {
-                        defaultLayers[i].layer.detailHint = defaultLayers[i].detailHint;
-                    }
-
-                    // Apply the level-of-detail hint, if provided
-                    if (defaultLayers[i].opacity) {
-                        defaultLayers[i].layer.opacity = defaultLayers[i].opacity;
-                    }
-
-                    // Hide background and control layers in the menu 
-                    if (defaultLayers[i].hide) {
-                        defaultLayers[i].layer.hide = defaultLayers[i].hide;
-                    }
-
-                    this.wwd.addLayer(defaultLayers[i].layer);
-                }
+                this.layerManager.addBackgroundLayer(new SkyBackgroundLayer(this.wwd));
             }
 
             // Adjust the level of detail based on screen properties
@@ -229,9 +156,7 @@ define([
 
             // Add optional reticule
             if (showReticule || showReticule === undefined) {
-                layer = new ReticuleLayer();
-                layer.hide = true; // hidden in layer list
-                this.wwd.addLayer(layer);
+                this.layerManager.addWidgetLayer(new ReticuleLayer());
             }
             // Add optional view controls layer
             if (showViewControls || showViewControls === undefined) {
@@ -242,10 +167,9 @@ define([
                 layer.showZoomControl = (includeZoomControls === undefined) ? true : includeZoomControls;
                 layer.showExaggerationControl = (includeExaggerationControls === undefined) ? wmt.configuration.showExaggerationControl : includeExaggerationControls;
                 layer.showFieldOfViewControl = (includeFieldOfViewControls === undefined) ? wmt.configuration.showFieldOfViewControl : includeFieldOfViewControls;
-                layer.hide = true; // hidden in layer list
-                this.wwd.addLayer(layer);
+                this.layerManager.addWidgetLayer(layer);
             }
-            // Redraw the WorldWindow during resize events
+            // Add handler to redraw the WorldWindow during resize events
             // to prevent the canvas from looking distorted.
             // Adjust the level of detail proportional to the 
             // window size.
@@ -269,15 +193,6 @@ define([
             this.lastViewpoint = new Viewpoint(WorldWind.Position.ZERO, Terrain.ZERO);
         };
 
-        /**
-         * Adds the given layer to the globe
-         * @param {WorldWind.Layer} layer Layer to add.
-         * @param {Boolean} hide Hides the layer from layer list if true. Default: false.
-         */
-        Globe.prototype.addLayer = function (layer, hide) {
-            layer.hide = hide === undefined ? false : hide;
-            this.wwd.addLayer(layer);
-        };
 
         /**
          * Adjusts the level of detail to be proportional to the window size.
