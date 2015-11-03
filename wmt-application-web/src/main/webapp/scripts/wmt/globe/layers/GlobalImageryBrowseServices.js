@@ -31,11 +31,9 @@
 /*global define */
 
 /**
- * The GIBS Earth at Night product. 
- * This layer is a single composite of data from nine days in April 2012 and 13 days in October 2012. 
- * It does not vary over time.
+ * The GlobalImageryBrowseServices (GIBS) products. 
  * 
- * @returns {EarthAtNightLayer}
+ * @returns {GlobalImageryBrowseServices}
  */
 
 define([
@@ -47,17 +45,20 @@ define([
         "use strict";
 
         /**
-         * Constructs a EarthAtNight map layer.
+         * Constructs a GlobalImageryBrowseServices product (layer) collection.
          * @constructor
          * @augments WmtsLayer
          */
-        var EarthAtNightLayer = function () {
+        var GlobalImageryBrowseServices = function (globe) {
 
+            this.layers = {};
+            
             var request = new XMLHttpRequest(),
                 url = 'http://map1.vis.earthdata.nasa.gov/wmts-geo/1.0.0/WMTSCapabilities.xml',
                 wmtsCaps,
                 layerCaps,
-                i, max, layer;
+                i, max, layer,
+                self = this;
 
 
             request.open("GET", url, true);
@@ -76,8 +77,13 @@ define([
 
                     wmtsCaps = new WorldWind.WmtsCapabilities(xmlDom);
                     for (i = 0, max = wmtsCaps.contents.layer.length; i < max; i++) {
-                        if (wmtsCaps.contents.layer[i].title === 'VIIRS_EarthAtNight_2012') {
-                            layerCaps = wmtsCaps.contents.layer[i];
+                        if (wmtsCaps.contents.layer[i].identifier === 'VIIRS_CityLights_2012') {
+                            layerCaps = wmtsCaps.contents.layer[i];                            
+                            layer = new WorldWind.WmtsLayer(layerCaps, null, null);
+                            self.layers[layerCaps.title] = layer;
+                            
+                            globe.layerManager.addBaseLayer(layer);
+                            
                             break;
                         }
                     }
@@ -91,16 +97,8 @@ define([
                 }
             };
             request.send(null);
-
-            WorldWind.WmtsLayer.call(this, layerCaps, null, null);
-
-            // Make this layer translucent
-            this.opacity = 0.5;
-
         };
 
-        EarthAtNightLayer.prototype = Object.create(WorldWind.WmtsLayer.prototype);
-
-        return EarthAtNightLayer;
+        return GlobalImageryBrowseServices;
     }
 );
