@@ -840,7 +840,6 @@ define([
 
             // Fill the interior of the shape.
             if (!this._isInteriorInhibited && attributes.drawInterior) {
-//                ctx2D.fillStyle = isPicking ? this.pickColor.toHexString(false) : attributes.interiorColor.toHexString(true);
                 ctx2D.fillStyle = isPicking ? this.pickColor.toRgbaString() : attributes.interiorColor.toRgbaString();
 
                 for (idx = 0, len = this._interiorGeometry.length; idx < len; idx += 1) {

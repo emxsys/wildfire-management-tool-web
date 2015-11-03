@@ -4,7 +4,6 @@
  */
 /**
  * @exports TiledImageLayer
- * @version $Id: TiledImageLayer.js 3414 2015-08-20 19:09:19Z tgaskins $
  */
 define([
         '../util/AbsentResourceList',
@@ -129,7 +128,6 @@ define([
             this.tileCache = new MemoryCache(500000, 400000);
             this.currentRetrievals = [];
             this.absentResourceList = new AbsentResourceList(3, 50e3);
-            this.mapAncestorToTile = true;
 
             this.pickEnabled = false;
         };
@@ -137,9 +135,62 @@ define([
         TiledImageLayer.prototype = Object.create(Layer.prototype);
 
         // Inherited from Layer.
-        TiledImageLayer.prototype.refresh = function (){
+        TiledImageLayer.prototype.refresh = function () {
             this.expiration = new Date();
             this.currentTilesInvalid = true;
+        };
+
+        /**
+         * Initiates retrieval of this layer's level 0 images. Use
+         * [isPrePopulated]{@link TiledImageLayer#isPrePopulated} to determine when the images have been retrieved
+         * and associated with the level 0 tiles.
+         * Pre-populating is not required. It is used to eliminate the visual effect of loading tiles incrementally,
+         * but only for level 0 tiles. An application might pre-populate a layer in order to delay displaying it
+         * within a time series until all the level 0 images have been retrieved and added to memory.
+         * @param {WorldWindow} wwd The world window for which to pre-populate this layer.
+         * @throws {ArgumentError} If the specified world window is null or undefined.
+         */
+        TiledImageLayer.prototype.prePopulate = function (wwd) {
+            if (!wwd) {
+                throw new ArgumentError(
+                    Logger.logMessage(Logger.LEVEL_SEVERE, "TiledImageLayer", "prePopulate", "missingWorldWindow"));
+            }
+
+            var dc = wwd.drawContext;
+
+            if (!this.topLevelTiles || (this.topLevelTiles.length === 0)) {
+                this.createTopLevelTiles(dc);
+            }
+
+            for (var i = 0; i < this.topLevelTiles.length; i++) {
+                var tile = this.topLevelTiles[i];
+
+                if (!this.isTileTextureInMemory(dc, tile)) {
+                    this.retrieveTileImage(dc, tile);
+                }
+            }
+        };
+
+        /**
+         * Indicates whether this layer's level 0 tile images have been retrieved and associated with the tiles.
+         * Use [prePopulate]{@link TiledImageLayer#prePopulate} to initiate retrieval of level 0 images.
+         * @param {WorldWindow} wwd The world window associated with this layer.
+         * @returns {Boolean} true if all level 0 images have been retrieved, otherwise false.
+         * @throws {ArgumentError} If the specified world window is null or undefined.
+         */
+        TiledImageLayer.prototype.isPrePopulated = function (wwd) {
+            if (!wwd) {
+                throw new ArgumentError(
+                    Logger.logMessage(Logger.LEVEL_SEVERE, "TiledImageLayer", "isPrePopulated", "missingWorldWindow"));
+            }
+
+            for (var i = 0; i < this.topLevelTiles.length; i++) {
+                if (!this.isTileTextureInMemory(wwd.drawContext, this.topLevelTiles[i])) {
+                    return false;
+                }
+            }
+
+            return true;
         };
 
         // Intentionally not documented.
@@ -259,16 +310,9 @@ define([
 
             if (this.currentAncestorTile) {
                 if (this.isTileTextureInMemory(dc, this.currentAncestorTile)) {
-                    if (this.mapAncestorToTile) {
-                        // Set up to map the ancestor tile into the current one.
-                        tile.fallbackTile = this.currentAncestorTile;
-                        this.currentTiles.push(tile);
-                    } else {
-                        // Just enque the ancestor tile and don't enque the current one. This is necessary when the
-                        // texture coordinate mapping from the current tile to its ancestor is not straightforward,
-                        // as is the case for Mercator tiles.
-                        this.currentTiles.push(this.currentAncestorTile);
-                    }
+                    // Set up to map the ancestor tile into the current one.
+                    tile.fallbackTile = this.currentAncestorTile;
+                    this.currentTiles.push(tile);
                 }
             }
         };
@@ -358,7 +402,7 @@ define([
 
         // Intentionally not documented.
         TiledImageLayer.prototype.createTexture = function (dc, tile, image) {
-            return  new Texture(dc.currentGlContext, image);
+            return new Texture(dc.currentGlContext, image);
         };
 
         // Intentionally not documented.
