@@ -49,6 +49,7 @@ define([
     'wmt/globe/layers/GeoMacHmsThermalSatelliteLayer',
     'wmt/globe/layers/GeoMacModisThermalSatelliteLayer',
     'wmt/globe/layers/GeoMacPreviousPerimetersLayer',
+    'wmt/globe/layers/GlobalImageryBrowseServices',
     'wmt/globe/Globe',
     'wmt/globe/layers/LandfireLayer',
     'wmt/ui/MobileMenu',
@@ -62,6 +63,7 @@ define([
         GeoMacHmsThermalSatelliteLayer,
         GeoMacModisThermalSatelliteLayer,
         GeoMacPreviousPerimetersLayer,
+        GlobalImageryBrowseServices,
         Globe,
         LandfireLayer,
         mobileMenu,
@@ -85,7 +87,7 @@ define([
 
             this.globe = new Globe("canvasOne", globeOptions);
 
-            this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLayer(), {enabled: true, hide: true, detailHint: wmt.configuration.imageryDetailHint});            
+            this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLayer(), {enabled: true, hideInMenu: true, detailHint: wmt.configuration.imageryDetailHint});            
             this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLandsatLayer(), {enabled: false, detailHint: wmt.configuration.imageryDetailHint});
             this.globe.layerManager.addBaseLayer(new WorldWind.BingAerialWithLabelsLayer(null), {enabled: true, detailHint: wmt.configuration.imageryDetailHint});
             this.globe.layerManager.addBaseLayer(new WorldWind.BingRoadsLayer(null), {enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint});
@@ -105,6 +107,9 @@ define([
             this.globe.layerManager.addDataLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_MARKERS), {enabled: true, pickEnabled: true});
 
             this.globe.layerManager.addWidgetLayer(new WorldWind.RenderableLayer(wmt.LAYER_NAME_WIDGETS), {enabled: true, pickEnabled: false});
+            
+            // TODO: Get collection of layers from GIBS
+            //new GlobalImageryBrowseServices(this.globe);
 
             // Now that the globe is setup, initialize the Model-View-Controller framework.
             // The controller will create model and the views on the primary globe. 

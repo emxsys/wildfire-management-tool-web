@@ -63,14 +63,13 @@ define([
 
         /**
          * Background layers are always enabled and are not shown in the layer menu.
-         * @param {type} layer
+         * @param {category} layer
          * @returns {undefined}
          */
         LayerManager.prototype.addBackgroundLayer = function (layer) {
             var index = this.backgroundLayers.length;
 
-            layer.hide = true;
-            layer.enabled = true;
+            LayerManager.applyOptionsToLayer(layer, {hideInMenu: true, enabled: true}, wmt.LAYER_CATEGORY_BACKGROUND);
 
             this.globe.wwd.insertLayer(index, layer);
             this.backgroundLayers.push(layer);
@@ -78,13 +77,13 @@ define([
 
         /**
          * Base layers are opaque and should be shown exclusive of other base layers.
-         * @param {type} layer
+         * @param {category} layer
          * @returns {undefined}
          */
         LayerManager.prototype.addBaseLayer = function (layer, options) {
             var index = this.backgroundLayers.length + this.baseLayers.length;
 
-            LayerManager.applyOptionsToLayer(layer, options);
+            LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_BASE);
 
             this.globe.wwd.insertLayer(index, layer);
             this.baseLayers.push(layer);
@@ -92,13 +91,13 @@ define([
 
         /**
          * Overlay layers may be translucent and/or contain sparce content, and may be stacked with other layers.
-         * @param {type} layer
+         * @param {category} layer
          * @returns {undefined}
          */
         LayerManager.prototype.addOverlayLayer = function (layer, options) {
             var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length;
 
-            LayerManager.applyOptionsToLayer(layer, options);
+            LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_OVERLAY);
 
             this.globe.wwd.insertLayer(index, layer);
             this.overlayLayers.push(layer);
@@ -106,14 +105,14 @@ define([
 
         /**
          * Data layers are shapes and markers.
-         * @param {type} layer
+         * @param {category} layer
          * @returns {undefined}
          */
         LayerManager.prototype.addDataLayer = function (layer, options) {
             var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length
                 + this.dataLayers.length;
 
-            LayerManager.applyOptionsToLayer(layer, options);
+            LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_DATA);
 
             this.globe.wwd.insertLayer(index, layer);
             this.dataLayers.push(layer);
@@ -121,26 +120,31 @@ define([
 
         /**
          * Widget layers are always enabled and are not shown in the layer menu.
-         * @param {type} layer
+         * @param {category} layer
          * @returns {undefined}
          */
         LayerManager.prototype.addWidgetLayer = function (layer) {
             var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length
                 + this.dataLayers.length + this.widgetLayers.length;
 
-            layer.hide = true;
+            LayerManager.applyOptionsToLayer(layer, {hideInMenu: true, enabled: true}, wmt.LAYER_CATEGORY_BACKGROUND);
+            
             this.globe.wwd.insertLayer(index, layer);
             this.widgetLayers.push(layer);
         };
 
         /**
          * Applys or adds the options to the given layer.
-         * @param {type} layer
-         * @param {type} options
+         * @param {WorldWind.Layer} layer
+         * @param {Object} options
+         * @param {String} category
          */
-        LayerManager.applyOptionsToLayer = function (layer, options) {
+        LayerManager.applyOptionsToLayer = function (layer, options, category) {
             var opt = (options === undefined) ? {} : options;
-            
+
+            // WMT layer type
+            layer.category = category
+
             // Propagate enabled and pick options to the layer object
             layer.enabled = opt.enabled === undefined ? true : opt.enabled;
             layer.pickEnabled = opt.pickEnabled === undefined ? true : opt.enabled;
@@ -161,8 +165,8 @@ define([
             }
 
             // Hide the layer in the menu 
-            if (opt.hide) {
-                layer.hide = opt.hide;
+            if (opt.hideInMenu) {
+                layer.hideInMenu = opt.hideInMenu;
             }
         };
 

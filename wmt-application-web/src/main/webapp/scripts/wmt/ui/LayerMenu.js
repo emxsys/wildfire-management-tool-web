@@ -40,6 +40,7 @@ define(['wmt/controller/Controller'],
             var self = this;
 
             this.wwd = controller.wwd;
+            this.layerManager = controller.globe.layerManager;
 
             // Populate the Layers menu with menu items
             this.synchronizeLayerList();
@@ -65,7 +66,7 @@ define(['wmt/controller/Controller'],
                 layer = this.wwd.layers[i];
                 if (layer.displayName === layerName) {
                     layer.enabled = !layer.enabled;
-                    this.highlightLayer(layer, layerItem);
+                    LayerMenu.highlightItemIfEnabled(layer, layerItem);
 
                     controller.globe.redraw();
                 }
@@ -73,27 +74,62 @@ define(['wmt/controller/Controller'],
         };
 
         LayerMenu.prototype.synchronizeLayerList = function () {
-            var layerListItem = $("#layerList"),
-                layerItem,
-                layer,
-                i,
-                len;
+            var $list = $("#layerList"),
+                item,
+                layer, i, len,
+                currCategory, collapseId, headingId,
+                $categoryDiv, $heading, $title, $anchor, $bodyParent, $body;
 
-            layerListItem.remove('a');
+            //$list.remove('a');
+            $list.children().remove();
 
             // Synchronize the displayed layer list with the World Window's layer list.
             for (i = 0, len = this.wwd.layers.length; i < len; i++) {
                 layer = this.wwd.layers[i];
-                if (layer.hide) {
+                if (layer.hideInMenu) {
                     continue;
                 }
-                layerItem = $('<li class="list-group-item">' + layer.displayName + '</li>');
-                layerListItem.append(layerItem);
-                this.highlightLayer(layer, layerItem);
+
+                if (layer.category !== currCategory) {
+
+                    // Create an accordion panel for the category
+                    currCategory = layer.category;
+                    headingId = 'layer-category-heading-' + currCategory;
+                    collapseId = 'layer-category-body-' + currCategory;
+                    $categoryDiv = $('<div class="panel panel-default"></div>');
+                    $heading = $('<div class="panel-heading" data-toggle="collapse" data-target="#' + collapseId + '" role="tab" id="' + headingId + '"></div>');
+                    $title = $('<h4 class="panel-title"></h4>');
+                    $anchor = $('<a data-toggle="collapse" href="#' + collapseId + '"' +
+                        ' aria-expanded="true" aria-controls="' + collapseId + '">' + currCategory + ' Layers</a>');
+                    $bodyParent = $('<div id="' + collapseId + '" class="panel-collapse collapse" role="tabpanel"' +
+                        ' aria-labelledby="' + headingId + '"></div>');
+                    $body = $('<div style=""></div>');
+
+                    // Assemble the accordion panel
+                    $title.append($anchor);
+                    $heading.append($title);
+                    $categoryDiv.append($heading);
+                    $bodyParent.append($body);
+                    $categoryDiv.append($bodyParent);
+
+                    $list.append($categoryDiv);
+                }
+                item = $('<li class="list-group-item">' + layer.displayName + '</li>');
+//                    item =
+//                        '<div class= "btn-group btn-block btn-group-sm">' +
+//                        ' <button type="button" class="col-xs-8 btn btn-default wildland-fire-goto" fireId="' + fire.id + '">' + fire.state + ' ' + fire.name + ' (' + fire.featureType + ') </button>' +
+//                        ' <button type="button" class="col-xs-2 btn btn-default wildland-fire-open glyphicon glyphicon-open" style="top: 0" fireId="' + fire.id + '"></button>' +
+////                        ' <button type="button" class="col-sm-2 btn btn-default wildland-fire-remove glyphicon glyphicon-trash" style="top: 0" fireId="' + fire.id + '"></button>' +
+//                        '</div>';
+
+                $body.append(item);
+                LayerMenu.highlightItemIfEnabled(layer, item);
             }
+
+
         };
 
-        LayerMenu.prototype.highlightLayer = function (layer, layerItem) {
+        LayerMenu.highlightItemIfEnabled = function (layer, layerItem) {
             if (layer.enabled) {
                 layerItem.addClass("active");
             } else {

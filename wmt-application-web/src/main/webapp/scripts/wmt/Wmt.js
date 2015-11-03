@@ -133,6 +133,14 @@ define([],
              */
             LANDFIRE_REST_SERVICE: "http://landfire.cr.usgs.gov/arcgis/rest/services/Landfire/US_130/MapServer",
             /**
+             * Layer categories
+             */
+            LAYER_CATEGORY_BACKGROUND: "Background",
+            LAYER_CATEGORY_BASE: "Base",
+            LAYER_CATEGORY_DATA: "Data",
+            LAYER_CATEGORY_OVERLAY: "Overlay",
+            LAYER_CATEGORY_WIDGET: "Widget",
+            /**
              * The display name for the layer that displays markers.
              */
             LAYER_NAME_COMPASS: "Compass",
@@ -249,7 +257,7 @@ define([],
             showPanControl: false,
             showExaggerationControl: false,
             showFieldOfViewControl: false,
-            terrainSampleRadius: 30, 
+            terrainSampleRadius: 30,
             viewControlOrientation: "vertical",
             weatherScoutLabels: Wmt.WEATHER_SCOUT_LABEL_PLACE,
             wxForecastDurationHours: 48
