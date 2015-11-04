@@ -32,38 +32,29 @@
 
 /**
  * 
- * @param {type} FuelModelManager
- * @param {type} LocationManager
  * @param {type} log
  * @param {type} messenger
  * @param {type} Model
- * @param {type} Settings
- * @param {type} SolarView
- * @param {type} TimeManager
- * @param {type} WeatherManager
- * @param {type} Wmt
+ * @param {type} settings
+ * @param {type} wmt
  * @param {type} ww
- * @returns {Controller_L50.Controller}
+ * @returns {Controller}
  */
 define([
-    'wmt/controller/LocationManager',
+    'wmt/resource/GeoMacResource',
     'wmt/util/Log',
     'wmt/util/Messenger',
     'wmt/model/Model',
     'wmt/util/Settings',
-    'wmt/controller/TimeManager',
-    'wmt/controller/WeatherManager',
     'wmt/Wmt',
     'worldwind'],
     function (
-        LocationManager,
+        geoMacResource,
         log,
         messenger,
         Model,
-        Settings,
-        TimeManager,
-        WeatherManager,
-        Wmt,
+        settings,
+        wmt,
         ww) {
         "use strict";
         var Controller = {
@@ -75,11 +66,6 @@ define([
                 // The WorldWindow (globe) provides the spatial input 
                 this.globe = globe;
                 this.wwd = globe.wwd;
-
-                // Create the other input managers
-                this.timeManager = new TimeManager(this);
-                this.locationManager = new LocationManager(this);
-                this.weatherManager = new WeatherManager(this);
 
                 this.goToAnimator = new WorldWind.GoToAnimator(this.wwd);
                 this.isAnimating = false;
@@ -177,7 +163,26 @@ define([
                 this.globe.dndController.armDrop(wxScout, onDropCallback);
             },
             /**
-             * Updates the globe view.
+             * 
+             * @param {type} latitude
+             * @param {type} longitude
+             * @param {type} params
+             * @returns {undefined}
+             */
+            identifyFeaturesAtLatLon: function (latitude, longitude, params) {
+                var arg = params || {};
+
+                if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+                    log.error("Controller", "identifyFeaturesAtLatLon", "Invalid Latitude and/or Longitude.");
+                    return;
+                }
+                geoMacResource.identifyPoint(latitude, longitude, arg.layerId, function (json) {
+                    
+                });
+
+            },
+            /**
+             * Centers the globe on the given lat/lon via animation.
              * @param {Number} latitude
              * @param {Number} longitude
              */
@@ -193,7 +198,7 @@ define([
                     eyeAltMsl = this.model.viewpoint.eye.altitude,
                     eyePosGrdElev = this.globe.terrainProvider.elevationAtLatLon(this.model.viewpoint.eye.latitude, this.model.viewpoint.eye.longitude),
                     tgtPosElev = this.globe.terrainProvider.elevationAtLatLon(latitude, longitude),
-                    eyeAltAgl = eyeAltitude ||Math.max(eyeAltMsl - eyePosGrdElev, 100),
+                    eyeAltAgl = eyeAltitude || Math.max(eyeAltMsl - eyePosGrdElev, 100),
                     tgtEyeAltMsl = Math.max(tgtPosElev + eyeAltAgl, 100);
 
                 // HACK: Force the view to nadir to avoid bug where navigator looks at target at 0 MSL.
@@ -242,27 +247,27 @@ define([
              * updating. See the use Pace.on("done",...) in WmtClient.
              */
             restoreSession: function () {
-                log.info('Controller','restoreSession','Restoring the model and view.');
+                log.info('Controller', 'restoreSession', 'Restoring the model and view.');
                 this.model.markerManager.restoreMarkers();
                 this.model.weatherScoutManager.restoreScouts();
                 this.model.fireLookoutManager.restoreLookouts();
                 this.restoreSessionView();
                 // Update all time sensitive objects
                 this.changeDateTime(new Date());
-                
+
                 // Force a refresh now that everything is setup.
                 this.globe.redraw();
             },
             // Internal method
             restoreSessionView: function () {
-                Settings.restoreSessionSettings(this);
+                settings.restoreSessionSettings(this);
             },
             /**
              * Saves the current session to the persistent store.
              * See the call to window.onUnload(...) in WmtClient.
              */
             saveSession: function () {
-                log.info('Controller','saveSession','Saving the model and view.');
+                log.info('Controller', 'saveSession', 'Saving the model and view.');
                 this.saveSessionView();
                 this.model.markerManager.saveMarkers();
                 this.model.weatherScoutManager.saveScouts();
@@ -270,7 +275,7 @@ define([
             },
             // Internal method.
             saveSessionView: function () {
-                Settings.saveSessionSettings(this);
+                settings.saveSessionSettings(this);
             },
             /**
              * Updates the model with current globe viewpoint.
