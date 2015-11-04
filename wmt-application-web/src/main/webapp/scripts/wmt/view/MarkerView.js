@@ -142,7 +142,11 @@ define([
          */
         MarkerView.prototype.createMarkerCallback = function (mkrTmpl, context) {
             // TODO: Palette should return template
-            controller.dropMarkerOnGlobe(new MarkerNode(mkrTmpl.name, mkrTmpl.type));
+            controller.dropMarkerOnGlobe(new MarkerNode(
+                {
+                    name: mkrTmpl.name,
+                    type: mkrTmpl.type
+                }));
         };
 
 
