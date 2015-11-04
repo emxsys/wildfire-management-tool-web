@@ -50,7 +50,9 @@ define([
         util) {
         "use strict";
 
-        var MarkerNode = function (uniqueName, type, lat, lon, id) {
+        var MarkerNode = function (params) {
+            
+            var arg = params || {};
 
             // Make movable by the SelectController: Fires the EVENT_OBJECT_MOVE... events.
             movable.makeMovable(this);
@@ -73,12 +75,12 @@ define([
             /**
              * The unique id used to identify this particular marker object
              */
-            this.id = id || util.guid();
-
-            this.name = uniqueName;
-            this.type = type;
-            this.latitude = lat;
-            this.longitude = lon;
+            this.id = arg.id || util.guid();
+            this.name = arg.name === undefined ? 'Marker' : arg.name;
+            this.type = arg.type;
+            this.latitude = arg.latitude;
+            this.longitude = arg.longitude;
+            this.isMovable = arg.isMovable === undefined ? true : arg.isMovable;
         };
 
 

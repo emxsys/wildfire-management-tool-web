@@ -108,7 +108,15 @@ define([
             var validMarkers = this.markers.filter(function (marker) {
                 return !marker.invalid;
             }),
-                markersString = JSON.stringify(validMarkers, ['id', 'name', 'type', 'latitude', 'longitude']);
+                markersString = JSON.stringify(validMarkers,
+                    [
+                        'id',
+                        'name',
+                        'type',
+                        'latitude',
+                        'longitude',
+                        'isMovable'
+                    ]);
             // Set the key/value pair
             localStorage.setItem(wmt.STORAGE_KEY_MARKERS, markersString);
         };
@@ -126,12 +134,14 @@ define([
             if (array && array.length !== 0)
             {
                 for (i = 0, max = array.length; i < max; i++) {
-                    this.addMarker(new MarkerNode(
-                        array[i].name,
-                        array[i].type,
-                        array[i].latitude,
-                        array[i].longitude,
-                        array[i].id));
+                    this.addMarker(new MarkerNode({
+                        id: array[i].id,
+                        name: array[i].name,
+                        type: array[i].type,
+                        latitude: array[i].latitude,
+                        longitude: array[i].longitude,
+                        isMovable: array[i].isMovable
+                    }));
                 }
             }
         };
