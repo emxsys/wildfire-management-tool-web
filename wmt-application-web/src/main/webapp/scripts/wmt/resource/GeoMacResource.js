@@ -413,8 +413,8 @@ define([
              * @param {String} objectId
              * @param {Function} callback
              */
-            getFeature: function(layerId, objectId, callback) {
-                var url = wmt.GEOMAC_REST_SERVICE + '/' + layerId + '/' +objectId,
+            getFeature: function (layerId, objectId, callback) {
+                var url = wmt.GEOMAC_REST_SERVICE + '/' + layerId + '/' + objectId,
                     query = 'f=json';
 
                 console.log(url + '?' + query);
@@ -481,7 +481,7 @@ define([
              * @param {Function(String)} callback Callback: function(value){} receives map layer value at lat/lon.
              */
             identifyEnvelope: function (minLat, minLon, maxLat, maxLon, layerId, callback) {
-                var url = wmt.LANDFIRE_REST_SERVICE + '/identify',
+                var url = wmt.GEOMAC_REST_SERVICE + '/identify',
                     query = 'geometry=' + minLon + ',' + minLat + ',' + maxLon + ',' + maxLat    // x,y
                     + '&geometryType=esriGeometryEnvelope'
                     + '&sr=4326'
@@ -492,6 +492,29 @@ define([
                     + '&tolerance=1'
                     + '&f=json';
 
+                console.log(url + '?' + query);
+
+                $.ajax({
+                    url: url,
+                    data: query,
+                    success: function (response) {
+                        var json = JSON.parse(response);
+
+                        callback(json);
+                    }
+                });
+            },
+            identifyPoint: function (latitude, longitude, layerId, callback) {
+                var url = wmt.GEOMAC_REST_SERVICE + '/identify',
+                    query = 'geometry=' + longitude + ',' + latitude    // x,y
+                    + '&geometryType=esriGeometryPoint'
+                    + '&sr=4326'
+                    + '&layers=all:' + layerId
+                    + '&mapExtent=' + longitude + ',' + latitude + ',' + longitude + ',' + latitude
+                    + '&imageDisplay=1,1,96'    // width, height, dpi
+                    + '&returnGeometry=false'
+                    + '&tolerance=1'
+                    + '&f=json';
                 console.log(url + '?' + query);
 
                 $.ajax({
