@@ -126,7 +126,7 @@ define([],
             /**
              * Base URL for WMT application images. (Do not use a relative path.)
              */
-            IMAGE_PATH: "js/wmt/images/",
+            IMAGE_PATH: "js/modules/images/",
             /**
              * The URL for the LANDFIRE MapServer REST service.
              * LANDFIRE 2012 (LF 2012 - LF_1.3.0) 

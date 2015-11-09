@@ -43,39 +43,58 @@ requirejs.config({
     baseUrl: 'js/libs/webworldwind',
     // Paths are essentially named variables used in define and requre 
     paths: {
-//        // Specify a path to jquery, the second declaration is local fallback
-//        jquery: [
-//            "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min",
-//            "../../thirdparty/jquery-2.1.4.min"],
-//        jqueryui: [
-//            "//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min",
-//            "../../thirdparty/jquery-ui-1.11.4/jquery-ui.min"],
-//        primeui: "../../thirdparty/primeui-1.1/production/primeui-1.1-min",
-        wmt: "../../wmt", // WMT path prefix
-        worldwind: [
+        'knockout': 'libs/knockout/knockout-3.3.0',
+        'jquery': 'libs/jquery/jquery-2.1.4.min',
+        'jqueryui-amd': 'libs/jquery/jqueryui-amd-1.11.4.min',
+        'promise': 'libs/es6-promise/promise-1.0.0.min',
+        'hammerjs': 'libs/hammer/hammer-2.0.4.min',
+//        'ojdnd': 'libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
+//        'ojs': 'libs/oj/v1.1.2/debug',
+//        'ojL10n': 'libs/oj/v1.1.2/ojL10n',
+//        'ojtranslations': 'libs/oj/v1.1.2/resources',
+        'primeui': "libs/primeui/production/primeui-2.0-min",
+        'signals': 'libs/js-signals/signals.min',
+        'text': 'libs/require/text',
+        'wmt': "../../modules", // WMT root path
+        'worldwind': [
             "WorldWind"//,
-            //"http://worldwindserver.net/webworldwind/worldwindlib"
+                //"http://worldwindserver.net/webworldwind/worldwindlib"
         ]
-    }
-    // shim should not be used on AMD scripts
-//    shim: {
-//        "primeui": {
-//            deps: ["jqueryui"]
-//        },
-//        "jqueryui": {
-//            deps: ["jquery"]
+    },
+    // Shim configurations for modules that do not expose AMD
+    shim: {
+        'jquery': {
+            exports: ['jQuery', '$']
+        },
+        'crossroads': {
+            deps: ['signals'],
+            exports: 'crossroads'
+        }
+    },
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // resources with a custom translation file.
+    // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
+    // a path that is relative to the location of this main.js file.
+    config: {
+//        ojL10n: {
+//            merge: {
+//                //'ojtranslations/nls/ojtranslations': 'resources/nls/menu'
+//            }
 //        }
-//    }
+    }
 });
 
-requirejs(['wmt/Wmt', 'wmt/WmtClient', '../../libs/webworldwind/WorldWind'],
-    function (Wmt, WmtClient, worldwind) {
+/**
+ * A top-level require call executed by the Application.
+ */
+requirejs(['wmt/Wmt', 'wmt/WmtClient', 'worldwind'],
+    function (wmt, WmtClient, ww) {
         "use strict";
 
         // Specify the where the World Wind resources are located.
-        worldwind.configuration.baseUrl = Wmt.WORLD_WIND_PATH;
+        ww.configuration.baseUrl = wmt.WORLD_WIND_PATH;
         // Set the logging level for the World Wind library
-        worldwind.Logger.setLoggingLevel(worldwind.Logger.LEVEL_WARNING);
+        ww.Logger.setLoggingLevel(ww.Logger.LEVEL_WARNING);
 
         // Create the WMT app and make it accessable via a global variable.
         // This is the only global variable created by the WMT.
