@@ -42,13 +42,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--During development, using local copies, and sometimes development versions of libraries. -->
         <!--Note: font-awesome and jquery-ui are required by prime-ui. -->
         <!--Style note: prime-ui themes compatible with bootstrap-slate include afterdark and afterwork (alt. cruze and ui-darkness). -->
-        <link rel="stylesheet" type="text/css" href="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.css" />         
-        <link rel="stylesheet" type="text/css" href="./thirdparty/font-awesome-4.3.0/css/font-awesome.min.css"  />
-        <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/themes/afterdark/theme.css" />   
-        <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/production/primeui-2.0-min.css" />   
-        <link rel="stylesheet" type="text/css" href="./thirdparty/primeui-2.0/production/css/datagrid/datagrid.css" />   
-        <link rel="stylesheet" type="text/css" href="./thirdparty/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
-        <link rel="stylesheet" type="text/css" href="./thirdparty/pace/pace-theme-big-counter.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/libs/jquery/jquery-ui-1.11.4.min.css" />         
+        <link rel="stylesheet" type="text/css" href="./css/libs/font-awesome-4.3.0/css/font-awesome.min.css"  />
+        <link rel="stylesheet" type="text/css" href="./css/libs/primeui/themes/afterdark/theme.css" />   
+        <link rel="stylesheet" type="text/css" href="./css/libs/primeui/primeui-2.0-min.css" />   
+        <link rel="stylesheet" type="text/css" href="./js/libs/primeui/production/css/datagrid/datagrid.css" />   
+        <link rel="stylesheet" type="text/css" href="./js/libs/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/libs/pace/pace-theme-big-counter.css"/>
         <link rel="stylesheet" type="text/css" href="./css/WMT.css"/>
         <link rel="stylesheet" href="./css/MobileMenu.css"/>
 
@@ -62,18 +62,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </script>
 
         <!--TODO: All of these libraries can be specified with RequireJS in main.js-->
-        <script type="text/javascript" src="./thirdparty/pace/pace.min.js"></script>
-        <script type="text/javascript" src="./thirdparty/jquery-2.1.4.min.js" ></script>
+        <script type="text/javascript" src="./js/libs/pace/pace.min.js"></script>
+        <script type="text/javascript" src="./js/libs/jquery/jquery-2.1.4.min.js" ></script>
         <script type="text/javascript">$(document).bind("mobileinit", function () {
                 $.extend($.mobile, {autoInitializePage: false});
             });</script>
-        <script type="text/javascript" src="./thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
-        <script type="text/javascript" src="./thirdparty/jquery-ui-1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="./thirdparty/jquery.ui.touch-punch.js"></script>        
-        <!--        <script type="text/javascript" src="./thirdparty/primeui-2.0/production/primeui-2.0-min.js"></script>-->
-        <script type="text/javascript" src="./thirdparty/primeui-2.0/development/primeui-2.0.js"></script>
-        <script type="text/javascript" src="./thirdparty/primeui-2.0/production/js/datagrid/datagrid.js"></script>
-        <script type="text/javascript" src="./thirdparty/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="./js/libs/jquery.mobile/jquery.mobile-1.4.5.js"></script>
+        <script type="text/javascript" src="./js/libs/jquery/jquery-ui-1.11.4.min.js"></script>
+        <script type="text/javascript" src="./js/libs/jquery/jquery.ui.touch-punch.js"></script>        
+        <!--        <script type="text/javascript" src="./js/libs/primeui-2.0/production/primeui-2.0-min.js"></script>-->
+        <script type="text/javascript" src="./js/libs/primeui/development/primeui-2.0.js"></script>
+        <script type="text/javascript" src="./js/libs/primeui/production/js/datagrid/datagrid.js"></script>
+        <script type="text/javascript" src="./js/libs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
 
 
         <!--For production, use content delivery network (CDN) libraries-->
@@ -192,7 +192,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                              <ul class="c-menu__items">
                                 <li class="c-menu__item"><a id="layersListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-list"></span> Layers</a></li>            
                                 <li class="c-menu__item"><a id="firesWildlandFiresButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-fire"></span> Wildland Fires</a></li>
-                                <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default"><span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span> Fire Lookouts</a></li>
+                                <li class="c-menu__item"><a id="firesFireLookoutsButton" href="#" class="c-menu__link panel panel-default"><span><img src="js/modules/images/fire/unkn.png" width="16px" height="16px"></span> Fire Lookouts</a></li>
                                 <li class="c-menu__item"><a id="weatherWeatherScoutsButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-cloud"></span> Weather</a></li>
                                 <li class="c-menu__item"><a id="markerListButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-flag"></span> Markers</a></li>
                                 <li class="c-menu__item"><a id="mobileControlPanelButton" href="#" class="c-menu__link panel panel-default"><span class="glyphicon glyphicon-globe"></span> Control Panel</a></li>
@@ -722,7 +722,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                             data-placement="top" 
                                             title="Add a fire lookout to the globe.">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        <span><img src="./scripts/wmt/images/fire/unkn.png" width="16px" height="16px"></span>
+                                        <span><img src="js/modules/images/fire/unkn.png" width="16px" height="16px"></span>
                                     </button>          
                                 </div>   
                             </div>
@@ -1088,7 +1088,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </div>
     </div>
     <!--Load the and run WMTweb application-->
-    <script data-main="./scripts/main" src="./thirdparty/require.js"></script>
+    <script data-main="./js/main" src="./js/libs/require/require.js"></script>
 
     <!--Google Analytics-->
     <script>
