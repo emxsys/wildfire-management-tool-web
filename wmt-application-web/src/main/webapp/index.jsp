@@ -39,17 +39,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <title>Wildfire Management Tool (WMT)</title>
         <link rel="icon" type="image/x-icon" href="./favicon.png">
 
-        <!--During development, using local copies, and sometimes development versions of libraries. -->
+        <!--During development, we're using local copies and sometimes development versions of libraries. -->
         <!--Note: font-awesome and jquery-ui are required by prime-ui. -->
         <!--Style note: prime-ui themes compatible with bootstrap-slate include afterdark and afterwork (alt. cruze and ui-darkness). -->
         <link rel="stylesheet" type="text/css" href="./css/libs/jquery/jquery-ui-1.11.4.min.css" />         
         <link rel="stylesheet" type="text/css" href="./css/libs/font-awesome-4.3.0/css/font-awesome.min.css"  />
         <link rel="stylesheet" type="text/css" href="./css/libs/primeui/themes/afterdark/theme.css" />   
         <link rel="stylesheet" type="text/css" href="./css/libs/primeui/primeui-2.0-min.css" />   
-        <link rel="stylesheet" type="text/css" href="./js/libs/primeui/production/css/datagrid/datagrid.css" />   
-        <link rel="stylesheet" type="text/css" href="./js/libs/bootstrap-3.3.4-dist/css/bootstrap-slate.min.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/libs/primeui/datagrid.css" />   
+        <link rel="stylesheet" type="text/css" href="./css/libs/bootstrap/css/bootstrap-slate.min.css"/>
         <link rel="stylesheet" type="text/css" href="./css/libs/pace/pace-theme-big-counter.css"/>
-        <link rel="stylesheet" type="text/css" href="./css/WMT.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/override.css"/>
         <link rel="stylesheet" href="./css/MobileMenu.css"/>
 
         <script>
@@ -73,7 +73,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!--        <script type="text/javascript" src="./js/libs/primeui-2.0/production/primeui-2.0-min.js"></script>-->
         <script type="text/javascript" src="./js/libs/primeui/development/primeui-2.0.js"></script>
         <script type="text/javascript" src="./js/libs/primeui/production/js/datagrid/datagrid.js"></script>
-        <script type="text/javascript" src="./js/libs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="./js/libs/bootstrap/bootstrap-3.3.4.min.js"></script>        
 
 
         <!--For production, use content delivery network (CDN) libraries-->
