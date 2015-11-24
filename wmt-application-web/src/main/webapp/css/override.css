@@ -1,105 +1,60 @@
-/*  WMT.css  
-    author: Theodore Walton
-    author: Bruce Schubert 
-*/
+/*
+ * Base structure
+ */
 
-
-/* Fire Lookout viewer: make the tabs fill the dialog, up to a point*/
-#lookout-tabs .pui-tabview {
-    width: 100%;
-    height: 100%;
-    max-width: 400px;        
-}
-/*Fire Lookout viewer: override the 'auto' width on dropdowns fuel model tab*/
-#lookout-fuel-tab .pui-dropdown {
-    width: 100%
-}
-/*Fire Lookout viewer: allow the weather datatable to fill the entire tab*/
-#lookout-weather-tab {
-    padding-right: 0 !important;
-    padding-left: 0;
-    padding-bottom: 0;
-    padding-top: 0;
+/* Move content down because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
 }
 
-#timeControlButtons {
-    position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
-    bottom: 35px;   
-    left: calc(50% - 98px); 
+/*@media only screen and (min-width: 500px) {
+    .collapse {
+        display: block;
+    }
+
+    .navbar-header {
+        display: none;
+    }
 }
 
-#timeControlSlider {
-    position: absolute;  /*sets it's position relative to the document instead of the container. Allows the bottom property to be used to force the element to the bottom of the view.  */
-    bottom: 20px;   
-    left: 29%;
+@media only screen and (max-width: 500px) {
+     .collapse {
+        display: none;
+     }
+
+     .navbar-header {
+        display: block;
+     }
+}*/
+
+/*
+ * Global add-ons
+ */
+/* 
+ * Phones (width < 768px) 
+ */
+@media (max-width: 767px) {
+    .section-heading .section-toggle:after {
+        /* symbol for "opening" sections */
+        font-family:'Glyphicons Halflings';
+        /* essential for enabling glyphicon */
+        content:"\e114";
+        /* adjust as needed, taken from bootstrap.css */
+        float: right;
+        /* adjust as needed */
+        color: grey;
+        /* adjust as needed */
+    }
+    .section-heading .section-toggle.collapsed:after {
+        /* symbol for "closing" sections */
+        content:"\e080";
+        /* adjust as needed, taken from bootstrap.css */
+    }
 }
 
-#timeControlSlider .ui-slider-handle {
-    background:#3e444c;
-    top:3px;
-}
-
-#sidebar-left.affix-top {
-    position: static;
-    margin-top:30px;
-    width:100px;
-}
-
-#sidebar-left.affix {
-    position: fixed;
-    top:70px;
-    width:228px;
-}
-
-
-.ui-slider-horizontal {
-    background:#272b30;
-    border:#272b30;
-}
-
-.ui-slider-range {
-    background:#272b30;
-    border:#272b30;
-}
-
-
-#canvas-wrap canvas { 
-    position: relative;
-    top: 0;
-    left: 0; 
-    z-index: 0 !important; 
-    width: 100%; 
-    height: 100%;
-    padding-left: 0;
-    padding-right: 0
-}
-
-/*Custom cursor for when the user drags in the globe*/
-#canvasOne:active { 
-    cursor: pointer;
-}
-
-#globe { 
-    padding-left: 0;
-    padding-right: 0        
-}
-
-.container-full {
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-    min-height:100%;
-}
-
-/*Style used in dropdown menus*/
-img.icon {
-    width: 24px;
-    height: 24px;
-}
-
-/*Style used to pull the globe up flush with the navbar*/
-.navbar-nomargin {
-    margin-bottom: 0;   /* override default of 20px */
+.sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 .non-interactive { 
@@ -111,6 +66,7 @@ img.icon {
     -o-user-select: none;
     pointer-events: none;
 }
+
 .interactive {
     -webkit-touch-callout: auto !important;
     -webkit-user-select: auto !important;
@@ -130,62 +86,172 @@ img.icon {
     user-select: none;
 }
 
-.panel-heading:hover {
-    background-color: rgba(0,0,0,0) !important;
+/* Tree 
+ * See: http://stackoverflow.com/questions/11167628/trees-in-twitter-bootstrap#16823729
+ * See: http://jsfiddle.net/jayhilwig/hv8vU/
+ */
+.tree {
+    min-height:20px;
+    /*padding:19px;*/
+    margin-bottom:20px;
+    /*background-color:#fbfbfb;*/
+    /*border:1px solid #999;*/
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05)
+}
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:10px 5px 0 5px;
+    position:relative
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:1px solid #999;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:1px solid #999;
+    height:20px;
+    top:25px;
+    width:25px
+}
+.tree li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border:1px solid #999;
+    border-radius:5px;
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none
+}
+.tree li.parent_li>span {
+    cursor:pointer
+}
+.tree span .badge {
+    cursor:pointer
+}
+.tree>ul>li::before, .tree>ul>li::after {
+    border:0
+}
+.tree li:last-child::before {
+    height:30px
+}
+.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
+    background:#eee;
+    border:1px solid #94a0b4;
+    color:#000
 }
 
-/*Override PrimeUI Growl position to be below Bootstrap Navbar*/
-.pui-growl {
-    top: 50px;
-}
-.rest-panel-bottom {
-    margin: 0 auto;
-    position: absolute;
-    bottom: 0;
-    height: 125px; /* was 25%;*/
-    width: 100%;
-}
-.rest-panel-bottom table {
-    background-color: transparent;
-}
-
-.row {
-    margin-right: 0;
-    margin-left: 0;
-}
-
-.row-full {
-    margin-right: 0;
-    margin-left: 0;
-    height: 100%;
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+    border: 0;
 }
 
 
-#searchResults-globe canvas { 
-    position: relative;
-    top: 0;
-    left: 0; 
-    z-index: 0 !important; 
-    width: 100%; 
-    height: 200px;
-    padding-left: 0;
-    padding-right: 0
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+/*.sidebar-left {
+    display: none;
+}*/
+
+@media (min-width: 768px) {
+    .sidebar-left {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        /*background-color: #f5f5f5;*/
+        border-right: 1px solid #eee;
+    }
+}
+@media (min-width: 768px) {
+    .sidebar-right {
+        position: relative;
+        top: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        border-left: 1px solid #eee;
+    }
 }
 
-#markerList {
-    max-height: calc(75vh - 120px); 
-    /*max-width: calc(10vw);*/
-    max-width: 64px;
-    overflow-y: scroll;
-    border-radius: 6px; 
-    border: 2px #000000 solid;
-    border-top-width: 3px;
-    border-bottom-width: 3px;
+/* Sidebar navigation */
+.nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+.main .page-header {
+    margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.placeholders h4 {
+    margin-bottom: 0;
+}
+.placeholder {
+    margin-bottom: 20px;
+}
+.placeholder img {
     display: inline-block;
-}
-#markerList .pui-panel-content {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
+    border-radius: 50%;
 }
