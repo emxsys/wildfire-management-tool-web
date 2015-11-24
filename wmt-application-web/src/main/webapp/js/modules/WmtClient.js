@@ -119,79 +119,79 @@ define([
             // Do this AFTER the controller is initialized.
             uiManager.initialize();
 
-            // Initialize the Mobile Slide Menus
-            mobileMenu.initialize();
-            var mobileControlPanel = new mobileMenu.Menu(
-                '#mobileControlPanel',
-                'slide-right',
-                '#c-maskCtrlPanel',
-                Array('#mobileControlPanelButton'),
-                Array('#ctrlPanelGlobe', '#findMe'),
-                '100',
-                '100%',
-                '85%'
-                );
-            var mobileGlobeMenu = new mobileMenu.Menu(
-                '#mobileGlobe',
-                'slide-top',
-                '',
-                Array('#ctrlPanelGlobe'),
-                Array('#globeCheck'),
-                '110',
-                'calc(5vh + 180px)',
-                '100%'
-                );
-
-            var mobileLayersList = new mobileMenu.Menu(
-                '#mobileLayersList',
-                'slide-top',
-                '',
-                ['#layersListButton'],
-                ['#layersListCheck'],
-                '110',
-                'calc(39vh + 50px)',
-                '100%'
-                );
-            var mobileMarkerList = new mobileMenu.Menu(
-                '#mobileMarkerList',
-                'slide-top',
-                '',
-                ['#markerListButton'],
-                ['#markerListCheck'],
-                '110',
-                'calc(35vh + 50px)',
-                '100%'
-                );
-            var mobileWeatherScouts = new mobileMenu.Menu(
-                '#mobileWeatherScouts',
-                'slide-top',
-                '',
-                ['#weatherWeatherScoutsButton'],
-                ['#weatherScoutsCheck'],
-                '110',
-                'calc(39vh + 50px)',
-                '100%'
-                );
-            var mobileFireLookouts = new mobileMenu.Menu(
-                '#mobileFireLookouts',
-                'slide-top',
-                '',
-                ['#firesFireLookoutsButton'],
-                ['#fireLookoutsCheck'],
-                '110',
-                'calc(39vh + 50px)',
-                '100%'
-                );
-            var mobileWildlandFires = new mobileMenu.Menu(
-                '#mobileWildlandFires',
-                'slide-top',
-                '',
-                ['#firesWildlandFiresButton'],
-                ['#wildlandFiresCheck'],
-                '110',
-                'calc(39vh + 50px)',
-                '100%'
-                );
+//            // Initialize the Mobile Slide Menus
+//            mobileMenu.initialize();
+//            var mobileControlPanel = new mobileMenu.Menu(
+//                '#mobileControlPanel',
+//                'slide-right',
+//                '#c-maskCtrlPanel',
+//                Array('#mobileControlPanelButton'),
+//                Array('#ctrlPanelGlobe', '#findMe'),
+//                '100',
+//                '100%',
+//                '85%'
+//                );
+//            var mobileGlobeMenu = new mobileMenu.Menu(
+//                '#mobileGlobe',
+//                'slide-top',
+//                '',
+//                Array('#ctrlPanelGlobe'),
+//                Array('#globeCheck'),
+//                '110',
+//                'calc(5vh + 180px)',
+//                '100%'
+//                );
+//
+//            var mobileLayersList = new mobileMenu.Menu(
+//                '#mobileLayersList',
+//                'slide-top',
+//                '',
+//                ['#layersListButton'],
+//                ['#layersListCheck'],
+//                '110',
+//                'calc(39vh + 50px)',
+//                '100%'
+//                );
+//            var mobileMarkerList = new mobileMenu.Menu(
+//                '#mobileMarkerList',
+//                'slide-top',
+//                '',
+//                ['#markerListButton'],
+//                ['#markerListCheck'],
+//                '110',
+//                'calc(35vh + 50px)',
+//                '100%'
+//                );
+//            var mobileWeatherScouts = new mobileMenu.Menu(
+//                '#mobileWeatherScouts',
+//                'slide-top',
+//                '',
+//                ['#weatherWeatherScoutsButton'],
+//                ['#weatherScoutsCheck'],
+//                '110',
+//                'calc(39vh + 50px)',
+//                '100%'
+//                );
+//            var mobileFireLookouts = new mobileMenu.Menu(
+//                '#mobileFireLookouts',
+//                'slide-top',
+//                '',
+//                ['#firesFireLookoutsButton'],
+//                ['#fireLookoutsCheck'],
+//                '110',
+//                'calc(39vh + 50px)',
+//                '100%'
+//                );
+//            var mobileWildlandFires = new mobileMenu.Menu(
+//                '#mobileWildlandFires',
+//                'slide-top',
+//                '',
+//                ['#firesWildlandFiresButton'],
+//                ['#wildlandFiresCheck'],
+//                '110',
+//                'calc(39vh + 50px)',
+//                '100%'
+//                );
 
 
             //initialize the hold events for the globe scout and lookout buttons
