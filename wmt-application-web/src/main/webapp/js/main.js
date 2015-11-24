@@ -43,21 +43,21 @@ requirejs.config({
     baseUrl: 'js/libs/webworldwind',
     // Paths are essentially named variables used in define and requre 
     paths: {
-        'knockout': 'libs/knockout/knockout-3.3.0',
-        'jquery': 'libs/jquery/jquery-2.1.4.min',
-        'jqueryui-amd': 'libs/jquery/jqueryui-amd-1.11.4.min',
-        'promise': 'libs/es6-promise/promise-1.0.0.min',
-        'hammerjs': 'libs/hammer/hammer-2.0.4.min',
+        'knockout': '../knockout/knockout-3.3.0',
+        'jquery': '../jquery/jquery-2.1.4.min',
+        'jqueryui-amd': '../jquery/jqueryui-amd-1.11.4.min',
+        'promise': '../es6-promise/promise-1.0.0.min',
+        'hammerjs': '../hammer/hammer-2.0.4.min',
 //        'ojdnd': 'libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
 //        'ojs': 'libs/oj/v1.1.2/debug',
 //        'ojL10n': 'libs/oj/v1.1.2/ojL10n',
 //        'ojtranslations': 'libs/oj/v1.1.2/resources',
-        'primeui': "libs/primeui/production/primeui-2.0-min",
-        'signals': 'libs/js-signals/signals.min',
-        'text': 'libs/require/text',
+        'primeui': "../primeui/production/primeui-2.0-min",
+        'signals': '../js-signals/signals.min',
+        'text': '../require/text',
         'wmt': "../../modules", // WMT root path
         'worldwind': [
-            "WorldWind"//,
+            "WorldWind",    // Global 
                 //"http://worldwindserver.net/webworldwind/worldwindlib"
         ]
     },
