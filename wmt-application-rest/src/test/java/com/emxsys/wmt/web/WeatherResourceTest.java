@@ -263,6 +263,7 @@ public class WeatherResourceTest extends JerseyTest {
     }
 
     @Test
+    @Ignore
     public void testGetAreaObservationsTEXT() {
         System.out.println(
             "========================"
@@ -283,6 +284,7 @@ public class WeatherResourceTest extends JerseyTest {
     }
 
     @Test
+    @Ignore
     public void testGetAreaObservationsJSON() {
         System.out.println(
             "========================"
@@ -303,6 +305,7 @@ public class WeatherResourceTest extends JerseyTest {
     }
 
     @Test
+    @Ignore
     public void testGetAreaObservationsXML() {
         System.out.println(
             "========================"
