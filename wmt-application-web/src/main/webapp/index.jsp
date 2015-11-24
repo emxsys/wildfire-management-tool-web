@@ -58,16 +58,37 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">WMT</a>
+                <a class="navbar-brand" href="#">
+                    <img src="images/wmt-web-white-53x24.png" alt="WMT"/>
+                </a>
             </div>
             <div id="main-navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-                    <li><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
-                    <li><a href="#incidents" aria-controls="incidents" role="tab" data-toggle="tab">Incidents</a></li>
-                    <li><a href="#lookouts" aria-controls="weather" role="tab" data-toggle="tab">Lookouts</a></li>
-                    <li><a href="#weather" aria-controls="weather" role="tab" data-toggle="tab">Weather</a></li>
-                    <li><a href="#markers" aria-controls="markers" role="tab" data-toggle="tab">Markers</a></li>
+                    <li class="active">
+                        <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-home visible-sm-block" aria-hidden="true" style="padding-top: 4px; padding-bottom: 4px" ></span>
+                            <span class="hidden-sm" aria-hidden="true" >Home</span>
+                        </a></li>
+                    <li><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-list visible-sm-block" aria-hidden="true" style="padding-top: 4px; padding-bottom: 4px"></span>
+                            <span class="hidden-sm" aria-hidden="true" >Layers</span>
+                        </a></li>
+                    <li><a href="#incidents" aria-controls="incidents" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-fire visible-sm-block" aria-hidden="true" style="padding-top: 4px; padding-bottom: 4px"></span>
+                            <span class="hidden-sm" aria-hidden="true" >Incidents</span>
+                        </a></li>
+                    <li><a href="#lookouts" aria-controls="weather" role="tab" data-toggle="tab">
+                            <span class="visible-sm-block"><img src="js/modules/images/fire/unkn.png" width="18px" height="20px"></span>
+                            <span class="hidden-sm" aria-hidden="true" >Lookouts</span>
+                        </a></li>
+                    <li><a href="#weather" aria-controls="weather" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-cloud visible-sm-block" aria-hidden="true" style="padding-top: 4px; padding-bottom: 4px" ></span>
+                            <span class="hidden-sm" aria-hidden="true" >Weather</span>
+                        </a></li>
+                    <li><a href="#markers" aria-controls="markers" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-map-marker visible-sm-block" aria-hidden="true" style="padding-top: 4px; padding-bottom: 4px"></span>
+                            <span class="hidden-sm" aria-hidden="true" >Markers</span>
+                        </a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -81,14 +102,14 @@
                         </ul>
                     </li>
                 </ul>
-                <!--                <form class="navbar-form navbar-left" role="search">        
-                                    <div class="form-group">
-                                        <input type="text" 
-                                               class="form-control interactive"
-                                               placeholder="Go To..."
-                                               id="searchText" />
-                                    </div>
-                                </form>-->
+<!--                <form class="navbar-form navbar-right" role="search">        
+                    <div class="form-group">
+                        <input type="text" 
+                               class="form-control interactive"
+                               placeholder="Go To..."
+                               id="searchText" />
+                    </div>
+                </form>-->
             </div>
         </div>
     </nav>
@@ -253,6 +274,8 @@
 
             <!-- Main content -->
             <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
+
+                <!--TODO: Fix this row--it causes a horizontal scrollbar in xs sizes-->
                 <div class="row">
                     <!--Globe-->
                     <div class="col-sm-12 col-md-8 col-lg-9">
@@ -336,7 +359,7 @@
                     <!--/Globe-->
 
                     <!-- Details-->
-                    <div class="col-sm-4 col-md-4 col-lg-3 ">
+                    <div class="col-sm-12 col-md-4 col-lg-3 ">
                         <div class="section-heading">
                             <h3 class="sub-header">
                                 <span class="glyphicon glyphicon-cog" aria-hidden="true" style="padding-right: 5px;"></span>Details<a class="section-toggle" data-toggle="collapse"  href="#details"></a></h3>
@@ -347,7 +370,7 @@
                     <!-- /Details-->
 
                     <!-- Summary -->
-                    <div class="col-sm-8 col-md-12">
+                    <div class="col-sm-12 col-md-12">
                         <div class="section-heading">
                             <h3 class="sub-header">
                                 <span class="glyphicon glyphicon-th" aria-hidden="true" style="padding-right: 5px;"></span>
@@ -400,13 +423,20 @@
     <script data-main="./js/main" src="./js/libs/require/require.js"></script>
 
     <script language="javascript">
-        // Expand collapsed section bodies when not small
+            // Expand collapsed section bodies when not small
             $(window).resize(function () {
                 if ($(window).width() >= 768) {
                     $('.section-body').collapse('show');
                 }
             });
+            // Auto-collapse nav-bar when collapsed
+            $('.navbar-collapse a:not(.dropdown-toggle)').click(function () {
+                $(".navbar-collapse").collapse('hide');
+            });
+            $('.navbar-collapse .dropdown-menu').click(function () {
+                $(".navbar-collapse").collapse('hide');
+            });
     </script>
-    
+
 </body>
 </html>
