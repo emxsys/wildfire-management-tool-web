@@ -61,7 +61,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">
-                    <img src="images/wmt-web-white-53x24.png" alt="WMT"/>
+                    <img src="images/wmt-web-white-53x24.png" alt="WMT" id="wmt-logo"/>
                 </a>
             </div>
             <div id="main-navbar" class="navbar-collapse collapse">
