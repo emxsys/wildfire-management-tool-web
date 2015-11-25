@@ -167,8 +167,8 @@ define(['knockout',
 //                    this.controlPanel = new ControlPanel();
 //                    this.layerMenu = new LayerMenu();
 //                    this.markerPanel = new MarkerView();                   
-//                    fireLookoutView.initialize();
-//                    weatherScoutView.initialize();
+                    fireLookoutView.initialize();
+                    weatherScoutView.initialize();
                     wildlandFireView.initialize();
 
                     // Screen Widgets

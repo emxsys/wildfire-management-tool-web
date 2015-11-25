@@ -49,7 +49,9 @@
     </head>
 
     <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
+
+    <!--Main Menu NavBar-->
+    <nav class="navbar navbar-default navbar-fixed-top" style=" z-index: 1000">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false" aria-controls="main-navbar">
@@ -102,21 +104,22 @@
                         </ul>
                     </li>
                 </ul>
-<!--                <form class="navbar-form navbar-right" role="search">        
-                    <div class="form-group">
-                        <input type="text" 
-                               class="form-control interactive"
-                               placeholder="Go To..."
-                               id="searchText" />
-                    </div>
-                </form>-->
+                <!--                <form class="navbar-form navbar-right" role="search">        
+                                    <div class="form-group">
+                                        <input type="text" 
+                                               class="form-control interactive"
+                                               placeholder="Go To..."
+                                               id="searchText" />
+                                    </div>
+                                </form>-->
             </div>
         </div>
     </nav>
 
+    <!--Content-->
     <div class="container-fluid">
         <div class="row">
-            <!-- left-sidebar -->
+            <!-- Sidebar -->
             <div id="left-sidebar" class="col-sm-4 col-md-3 sidebar-left tab-content">
 
                 <!--Home-->
@@ -237,6 +240,10 @@
                         </h3>
                     </div>
                     <div class="section-body collapse in" id="lookouts-body" >
+                        <div class="panel panel-default">                            
+                            <ul style="padding-left: 0" id="fireLookoutList">
+                            </ul>                              
+                        </div>       
                     </div>
                 </div>
                 <!--/Fire Lookouts-->
@@ -251,6 +258,10 @@
                         </h3>
                     </div>
                     <div class="section-body collapse in" id="weather-body" >
+                        <div class="panel panel-default">                            
+                            <ul style="padding-left: 0" id="weatherScoutList">
+                            </ul>                              
+                        </div>       
                     </div>
                 </div>
                 <!--/Weather Scouts-->
@@ -270,9 +281,9 @@
                 <!--/Markers-->
 
             </div>
-            <!-- /left-sidebar -->
+            <!-- /Sidebar -->
 
-            <!-- Main content -->
+            <!-- Main -->
             <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
 
                 <!--TODO: Fix this row--it causes a horizontal scrollbar in xs sizes-->
@@ -350,11 +361,6 @@
                             </div>
                         </div>
                         <!-- /WebWorldWind -->
-
-                        <!--Prime UI Notify Widget--> 
-                        <div id="notify"></div>
-                        <!--Prime UI Growl Widget--> 
-                        <div id="growl" style="z-index:1000;"></div>  
                     </div>
                     <!--/Globe-->
 
@@ -409,6 +415,10 @@
                         </div>
                     </div>
                     <!-- /Summary-->
+                    <!--Prime UI Notify Widget--> 
+                    <div id="notify"></div>
+                    <!--Prime UI Growl Widget--> 
+                    <div id="growl" style="z-index:1000; top: 50px"></div>  
                 </div>
                 <!--/row-->
             </div> 
@@ -416,8 +426,338 @@
 
         </div>
         <!--/row-->
-    </div> 
+    </div>
+
+    <!--Prime UI About Box Dialog--> 
+    <div id="aboutBox-dlg" title="About WMT" style="display: none;">
+        <div id="aboutBox-tabs">      
+            <ul>
+                <li><a href="#aboutBox-tab1">Copyright</a></li>
+                <li><a href="#aboutBox-credit-tabs">Credits</a></li>
+                <li><a href="#aboutBox-license-tabs">Licenses</a></li>
+            </ul>
+            <div>
+                <div id="aboutBox-tab1">
+                    <div>      
+                        <!--<img alt="WMT" src="./images/wmt-web-logo.png" width="50%" height="50%">-->
+                        <img alt="Emxsys" src="./images/emxsys_small_rect.jpg">
+                        <p>Copyright (c) 2015, Bruce Schubert <a href="mailto:bruce@emxsys.com">(bruce@emxsys.com)</a> All rights reserved.</p>
+                        <!--                                    <p>Redistribution and use in source and binary forms, with or without
+                                                                modification, are permitted provided that the following conditions are met:</p>
+                                                            <ul>
+                                                                <li>Redistributions of source code must retain the above copyright
+                                                                    notice, this list of conditions and the following disclaimer.</li>
+                        
+                                                                <li>Redistributions in binary form must reproduce the above copyright
+                                                                    notice, this list of conditions and the following disclaimer in the
+                                                                    documentation and/or other materials provided with the distribution.</li>
+                        
+                                                                <li>Neither the name of Bruce Schubert, Emxsys nor the names of its 
+                                                                    contributors may be used to endorse or promote products derived
+                                                                    from this software without specific prior written permission.</li>
+                                                            </ul>-->
+                        <p> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+                            ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                            WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                            DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+                            ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                            (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                            LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                            ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                            (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                            SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- /container -->
+
+    <!--Prime UI Location Dialog--> 
+    <div id="location-dlg" title="Set Location" style="display: none;">
+        <div class="latitude">
+            <label for="latitude" class="required">Latitude:</label>
+            <input type="text" placeholder="[+/-] Latitude" 
+                   name="latitude" id="latitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
+        </div>
+        <div class="longitude">
+            <label for="longitude" class="required">Longitude:</label>
+            <input type="text" placeholder="[+/-] Longitude" 
+                   name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
+        </div>
+    </div> 
+
+    <!--Prime UI ICS Marker Dialog--> 
+    <div id="icsMarkerDialog" title="ICS Marker" style="display: none;">
+        <div>
+            <label for="markerName" class="required">Name:</label>
+            <input type="text" placeholder="Unique name" 
+                   name="markerName" id="markerName" required>
+        </div>
+        <div id="icsMarkerGrid">
+
+        </div>
+        <!--            <div class="btn-group" 
+                         role="group"
+                         id="icsMarkerTypeDropdown">
+                        <button type="button" 
+                                class="btn btn-default dropdown-toggle" 
+                                data-toggle="dropdown" 
+                                aria-expanded="false"
+                                >
+                            Select... 
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" 
+                            role="menu">
+                        </ul>
+                    </div> -->
+    </div>
+
+    <!--Prime-UI ICS Marker Palette --> 
+    <div id="icsMarkerPalette" style="z-index: 2000;" title="Select an ICS Marker" style="display: none;">
+        <div id="markerGrid"></div>
+    </div>
+
+    <!--Prime UI Pushpin Dialog--> 
+    <div id="pushpin-dlg" title="Pushpin" style="display: none;">
+        <form id="pushpin-form">
+            <div class="form_entry">
+                <label for="pushpinName" class="required">Name:</label>
+                <input name="pushpinName" type="text" id="pushpinName" placeholder="Unique name" required>
+            </div>
+            <div class="form_entry">
+                <h5>Location</h5>
+                <p id="pushpinLatitude">Latitude:</p> 
+                <p id="pushpinLongitude">Longitude:</p> 
+                <input id="pushpinMovable" type="checkbox" />
+            </div>
+        </form>
+
+    </div>    
+
+    <!-- Remove confirmation dialog -->
+    <div id="remove-dlg" title="Remove..." style="display: none;">
+        <p>Do you really want to remove the selected item?</p>
+        <div class="pui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button id="bt_remove_yes" type="button">Yes</button>
+            <button id="bt_remove_no" type="button">No</button>
+        </div>
+    </div>
+
+    <!--Prime-UI Pushpin Palette --> 
+    <div id="pushpinPalette" title="Select a Pushpin Style" style="display: none;">
+        <div id="markerGrid"></div>
+    </div>
+
+    <!--Prime UI Date/Time Dialog--> 
+    <div id="datetime-dlg" title="Set Date and Time" style="display: none;">
+        <div class="appdate">
+            <label for="datepicker" class="required">Date:</label>
+            <input type="text" name="datepicker" id="datepicker">
+        </div>
+        <div class="apptime">
+            <label for="time" class="required">Time:</label>
+            <input type="text" name="timepicker" id="timepicker" >
+        </div>
+    </div>        
+
+    <!--Prime UI Fire Lookout Viewer--> 
+    <div id="lookout-dlg" title="Fire Lookout" style="display: none;">
+        <div id="lookout-tabs">      
+            <ul>
+                <li><a href="#lookout-general-tab">General</a></li>
+                <li><a href="#lookout-fuel-tab">Fuel</a></li>
+                <li><a href="#lookout-forces-tab">Forces</a></li>
+                <li><a href="#lookout-weather-tab">Weather</a></li>
+                <li><a href="#lookout-behavior-tab">Behavior</a></li>
+                <li><a href="#lookout-alerts-tab">Alerts</a></li>
+            </ul>
+            <div>
+                <div id="lookout-general-tab">
+                    <form id="lookout-frm">
+                        <h4>Name</h4>
+                        <div class="form_entry">
+                            <input name="lookout-name" type="text" id="lookout-name" placeholder="Unique name" required>
+                        </div>
+                        <h4>Location</h4>
+                        <p id="lookout-placename"></p> 
+                        <p id="lookout-latitude"></p> 
+                        <p id="lookout-longitude"></p> 
+                        <div class="form_entry">
+                            <input id="lookout-movable" type="checkbox" />
+                        </div>
+                    </form>
+                </div>
+                <div id="lookout-fuel-tab">
+                    <h5>Fuel Model</h5>
+                    <input type="checkbox" id="lookout-fuelmodel-auto" name="lookout-fuelmodel-auto" value="1"/>
+                    <label for="lookout-fuelmodel-auto">Automatic Selection</label>
+                    <select id="lookout-fuelmodel-drpdwn" name="lookout-fuelModel"></select>
+                    <h5>Fuel Moisture</h5>
+                    <select id="lookout-fuelmoisture-drpdwn" name="lookout-fuelMoisture"></select>
+                </div>
+                <div id="lookout-forces-tab">
+                    <h5>CPS Primary Forces</h5>
+                    <div>
+                        <canvas id="lookout-forces-canvas">
+                            <h1>Your browser does not support HTML5 Canvas.</h1>
+                        </canvas>                
+                    </div>
+                </div>
+                <div id="lookout-weather-tab" >
+                    <div id="lookout-weather-tbl"></div>
+                </div>
+                <div id="lookout-behavior-tab" >
+                </div>
+                <div id="lookout-alerts-tab" >
+                </div>
+            </div>                    
+        </div>
+    </div>  
+
+    <!--Prime UI Weather Scout Viewer--> 
+    <div id="scout-viewer" title="Weather Scout" style="display: none">
+        <form id="scout-frm">
+            <div id="scout-tabs">      
+                <ul>
+                    <li><a href="#scout-general-tab">General</a></li>
+                    <li><a href="#scout-weather-tab">Weather</a></li>
+                    <li><a href="#scout-alerts-tab">Alerts</a></li>
+                </ul>
+                <div>
+                    <div id="scout-general-tab">
+                        <div class="form_entry">
+                            <h4>Name</h4>
+                            <input name="scout-name" type="text" id="scout-name" placeholder="Unique name" required>
+                        </div>
+                        <div class="form_entry">
+                            <h4>Location</h4>
+                            <p id="scout-placename"></p> 
+                            <p id="scout-latitude"></p> 
+                            <p id="scout-longitude"></p> 
+                            <input id="scout-movable" type="checkbox" />
+                        </div>
+                    </div>
+                    <div id="scout-weather-tab" >
+                        <div id="scout-weather-tbl"></div>
+                    </div>
+                    <div id="scout-alerts-tab" >
+                    </div>
+                </div>                    
+            </div>
+        </form>
+    </div>   
+
+    <!--Prime UI Marker Viewer--> 
+    <div id="marker-viewer" title="Marker" style="display: none;">
+        <form id="marker-frm">
+            <div id="marker-tabs">      
+                <ul>
+                    <li><a href="#marker-general-tab">General</a></li>
+                    <li><a href="#marker-details-tab">Details</a></li>
+                </ul>
+                <div>
+                    <div id="marker-general-tab">
+                        <div class="form_entry">
+                            <h4>Name</h4>
+                            <input name="marker-name" type="text" id="marker-name" placeholder="Unique name" required>
+                        </div>
+                        <div class="form_entry">
+                            <h4>Location</h4>
+                            <p id="marker-placename"></p> 
+                            <p id="marker-latitude"></p> 
+                            <p id="marker-longitude"></p> 
+                            <input id="marker-movable" type="checkbox" />
+                        </div>
+                    </div>
+                    <div id="marker-details-tab" >
+                    </div>
+                </div>                    
+            </div>
+        </form>
+    </div>       
+
+    <!--Prime UI Fuel Model Dialog--> 
+    <form id="fuelModel-frm">
+        <div id="fuelModel-dlg" title="Set Fuel Model" style="display: none;">
+            <div id="fuelModel-tabs">      
+                <ul>
+                    <li><a href="#fuelModel-standard-tab">Standard</a></li>
+                    <li><a href="#fuelModel-original-tab">Original</a></li>
+                    <li><a href="#fuelModel-custom-tab">Custom</a></li>
+                </ul>
+                <div>
+                    <div id="fuelModel-standard-tab">
+                        <div id="fuelModel-standard-tbl"></div>
+                    </div>
+                    <div id="fuelModel-original-tab">
+                        <div id="fuelModel-original-tbl"></div>
+                    </div>
+                    <div id="fuelModel-custom-tab">
+                        <div id="fuelModel-custom-tbl"></div>
+                    </div>
+                </div>                    
+            </div>
+        </div>        
+    </form>
+
+    <!--Prime UI Fuel Moisture Dialog--> 
+    <div id="fuelMoisture-dlg" title="Set Fuel Moisture" style="display: none;">
+        <div id="fuelMoisture-tbl">
+        </div>
+    </div>        
+
+    <!--Prime UI Search Box Results Dialog--> 
+    <div id="searchResults-dlg" title="Search Results" style="z-index: 2000; display: none;">
+        <div id="searchResults-globe" title="Preview" style="width: 100%;"> 
+            <canvas id="canvasPreview">
+                <h1>Your browser does not support HTML5 Canvas.</h1>
+            </canvas>                
+        </div>
+        <div id="searchResults-tbl">
+        </div>
+    </div>        
+
+    <!--Prime UI Weather Editor Dialog--> 
+    <div id="weatherEditor-dlg" title="Edit Weather" style="display: none;">
+        <div class="weatherValues">
+            <div>                
+                <label for="airTemperature" class="required">Air Temperature:</label>
+                <input type="text" name="airTemperature" id="airTemperature">
+            </div>                
+            <div>                
+                <label for="relaltiveHumidity" class="required">Relative Humidity:</label>
+                <input type="text" name="relativeHumidity" id="relativeHumidity">
+            </div>                
+            <div>                
+                <label for="windSpeed" class="required">Wind Speed:</label>
+                <input type="text" name="windSpeed" id="windSpeed">
+            </div>                
+            <div>                
+                <label for="windDirection" class="required">Wind Direction:</label>
+                <input type="text" name="windDirection" id="windDirection">
+            </div>                
+            <div>                
+                <label for="cloudCoer" class="required">Cloud Cover:</label>
+                <input type="text" name="cloudCover" id="cloudCover">
+            </div>            
+        </div>
+    </div>    
+
+    <!--Prime UI Weather Scout Dialog--> 
+    <div id="weatherScout-dlg" title="Weather Scout" style="display: none;">
+        <div >
+            <label for="name" class="required">Name</label>
+            <input type="text" placeholder="" 
+                   name="name" id="name" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [N/S]">
+        </div>
+        <div class="longitude">
+            <label for="longitude" class="required">Longitude:</label>
+            <input type="text" placeholder="[+/-] Longitude" 
+                   name="longitude" id="longitude" required title="[+/-]DD.DDD, DD MM.MMM, or DD MM SS [E/W]">
+        </div>
+    </div> 
 
     <!--Load the and run WMTweb application-->
     <script data-main="./js/main" src="./js/libs/require/require.js"></script>
@@ -437,6 +777,7 @@
                 $(".navbar-collapse").collapse('hide');
             });
     </script>
+
 
 </body>
 </html>
