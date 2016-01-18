@@ -33,6 +33,8 @@
 /**
  * The GeoMAC Historic Fire Perimeters map layer.
  * 
+ * See: http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?request=GetCapabilities&service=WMS
+ * 
  * @returns {GeoMacHistoricPerimetersLayer}
  */
 
@@ -54,7 +56,7 @@ define([
                 title: "Historic Perimeters",
                 version: "1.3.0",
                 service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "6",
+                layerNames: "3",
                 sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
                 levelZeroDelta: new WorldWind.Location(36, 36),
                 numLevels: 19,
