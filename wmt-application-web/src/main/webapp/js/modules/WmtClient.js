@@ -54,6 +54,9 @@ define([
     'wmt/globe/layers/LandfireLayer',
     'wmt/ui/MobileMenu',
     'wmt/ui/UIManager',
+    'wmt/globe/layers/UsgsContoursLayer',
+    'wmt/globe/layers/UsgsImageryTopoBaseMapLayer',
+    'wmt/globe/layers/UsgsTopoBaseMapLayer',
     'wmt/Wmt'
 ],
     function (
@@ -68,6 +71,9 @@ define([
         LandfireLayer,
         mobileMenu,
         uiManager,
+        UsgsContoursLayer,
+        UsgsImageryTopoBaseMapLayer,
+        UsgsTopoBaseMapLayer,
         wmt) {
         "use strict";
         var WmtClient = function () {
@@ -90,10 +96,13 @@ define([
             this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLayer(), {enabled: true, hideInMenu: true, detailHint: wmt.configuration.imageryDetailHint});            
             this.globe.layerManager.addBaseLayer(new WorldWind.BMNGLandsatLayer(), {enabled: false, detailHint: wmt.configuration.imageryDetailHint});
             this.globe.layerManager.addBaseLayer(new WorldWind.BingAerialWithLabelsLayer(null), {enabled: true, detailHint: wmt.configuration.imageryDetailHint});
+            this.globe.layerManager.addBaseLayer(new UsgsImageryTopoBaseMapLayer(), {enabled: false, detailHint: wmt.configuration.imageryDetailHint});
+            this.globe.layerManager.addBaseLayer(new UsgsTopoBaseMapLayer(), {enabled: false, detailHint: wmt.configuration.imageryDetailHint});
             this.globe.layerManager.addBaseLayer(new WorldWind.BingRoadsLayer(null), {enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint});
             this.globe.layerManager.addBaseLayer(new WorldWind.OpenStreetMapImageLayer(null), {enabled: false, opacity: 0.7, detailHint: wmt.configuration.imageryDetailHint});
 
             this.globe.layerManager.addOverlayLayer(new LandfireLayer(), {enabled: false});
+            this.globe.layerManager.addOverlayLayer(new UsgsContoursLayer(), {enabled: false});
             this.globe.layerManager.addOverlayLayer(new GeoMacHistoricPerimetersLayer(), {enabled: false, isTemporal: false});
             this.globe.layerManager.addOverlayLayer(new GeoMacPreviousPerimetersLayer(), {enabled: false, isTemporal: true});
             this.globe.layerManager.addOverlayLayer(new GeoMacCurrentPerimetersLayer(), {enabled: true, isTemporal: true});

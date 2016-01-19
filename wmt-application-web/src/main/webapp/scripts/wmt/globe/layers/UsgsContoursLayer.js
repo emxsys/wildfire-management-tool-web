@@ -31,11 +31,11 @@
 /*global define */
 
 /**
- * The GeoMAC Previous Fire Perimeters map layer.
+ * The USGS Contours layer.
  * 
- * See: http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?request=GetCapabilities&service=WMS
+ * See: http://services.nationalmap.gov/arcgis/services/Contours/MapServer/WMSServer?request=GetCapabilities&service=WMS
  * 
- * @returns {GeoMacPreviousPerimetersLayer}
+ * @returns {UsgsContoursLayer}
  */
 
 define([
@@ -47,17 +47,17 @@ define([
         "use strict";
 
         /**
-         * Constructs a GeoMAC Previous Fire Perimeters map layer.
+         * Constructs a USGS Contours map layer.
          * @constructor
          * @augments WmsLayer
          */
-        var GeoMacPreviousPerimetersLayer = function () {
+        var UsgsContoursLayer = function () {
             var cfg = {
-                title: "Previous Perimeters",
+                title: "USGS Contour Lines",
                 version: "1.3.0",
-                service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "19",
-                sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
+                service: "http://services.nationalmap.gov/arcgis/services/Contours/MapServer/WMSServer?",
+                layerNames: "1,2,4,5,7,8", // lines and labels: large scale, 50' and 100' respectively
+                sector: new WorldWind.Sector(18.915561901, 64.8750000000001, -160.544024274, -66.9502505149999),
                 levelZeroDelta: new WorldWind.Location(36, 36),
                 numLevels: 19,
                 format: "image/png",
@@ -68,13 +68,11 @@ define([
 
             WorldWind.WmsLayer.call(this, cfg);
 
-            // Make this layer translucent
-            this.opacity = 0.5;
-
+            this.urlBuilder.transparent = true;
         };
 
-        GeoMacPreviousPerimetersLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
+        UsgsContoursLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
 
-        return GeoMacPreviousPerimetersLayer;
+        return UsgsContoursLayer;
     }
 );

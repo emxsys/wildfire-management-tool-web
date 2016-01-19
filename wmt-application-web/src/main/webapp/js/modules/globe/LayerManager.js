@@ -159,7 +159,7 @@ define([
                 layer.detailHint = opt.detailHint;
             }
 
-            // Apply the level-of-detail hint, if provided
+            // Apply the opacity, if provided
             if (opt.opacity) {
                 layer.opacity = opt.opacity;
             }
