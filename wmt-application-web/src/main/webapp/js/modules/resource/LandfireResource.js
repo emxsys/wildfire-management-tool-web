@@ -296,10 +296,12 @@
  */
 define([
     'wmt/util/Log',
+    'wmt/util/Messenger',
     'wmt/util/WmtUtil',
     'wmt/Wmt'],
     function (
         log,
+        messenger,
         util,
         wmt) {
         "use strict";
@@ -316,7 +318,7 @@ define([
                     this.FBFM13LayerId = this.getLayerId('FBFM13');
                 }
                 if (this.FBFM13LayerId === null) {
-                    throw new Error('Cannot find FBFM13');
+                    throw new Error('Cannot find FBFM13 layer ID.');
                 }
                 this.identify(latitude, longitude, this.FBFM13LayerId, callback);
             },
@@ -331,13 +333,14 @@ define([
                     this.FBFM40LayerId = this.getLayerId('FBFM40');
                 }
                 if (this.FBFM40LayerId === null) {
-                    throw new Error('Cannot find FBFM40');
+                    throw new Error('Cannot find FBFM40 layer ID.');
                 }
                 this.identify(latitude, longitude, this.FBFM40LayerId, callback);
             },
             getLayerId: function (layerName) {
                 var self = this,
                     json,
+                    msg,
                     i, len, layer,
                     regExp = new RegExp(layerName);
 
@@ -350,6 +353,11 @@ define([
                             json = JSON.parse(response);
                             // Create our 'layers' object
                             self.layers = json.layers;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            msg = 'Unable to access the LANDFIRE web services. Try refreshing this page later to reattempt access.';
+                            log.error('LandfireResource', 'getLayerId', msg);
+                            messenger.notify(msg);
                         }
                     });
                 }
