@@ -150,10 +150,17 @@ define(["require",
                 return;
             }
             var self = this;
-            landfireResource.FBFM13(this.latitude, this.longitude, function (fuelModelNo) {
-                self.fuelModel = fuelModelCatalog.getFuelModel(parseInt(fuelModelNo, 10));
-                self.refreshFireBehavior();
-            });
+            try {
+                landfireResource.FBFM13(this.latitude, this.longitude, function (fuelModelNo) {
+                    self.fuelModel = fuelModelCatalog.getFuelModel(parseInt(fuelModelNo, 10));
+                    self.refreshFireBehavior();
+                });
+            } catch (e) {
+                messenger.warningGrowl("The automated fuel model lookup is service unavailable. You must manually select the fuel model.");
+                log.warning('FireLookout','refreshFuelModel',e.message);
+            }
+
+
         };
 
         /**
@@ -196,7 +203,7 @@ define(["require",
             // Get conditioned fuel using current environmental values
             // after the deferred sunlight is resolved
             $.when(deferredSunlight).done(function (resolvedSunlight) {
-                
+
                 // Get conditioned fuel at this location,
                 // resolving deferredFuel when complete
                 self.refreshSurfaceFuel(
