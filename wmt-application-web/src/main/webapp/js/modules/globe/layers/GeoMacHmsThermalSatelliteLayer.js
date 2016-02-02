@@ -33,6 +33,7 @@
 /**
  * The GeoMAC HMS Thermal Satellite map layer.
  * 
+ * See: http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?request=GetCapabilities&service=WMS
  * @returns {GeoMacHmsThermalSatelliteLayer}
  */
 
@@ -54,7 +55,7 @@ define([
                 title: "HMS Thermal Satellite",
                 version: "1.3.0",
                 service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "23",
+                layerNames: "21",
                 sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
                 levelZeroDelta: new WorldWind.Location(36, 36),
                 numLevels: 8,

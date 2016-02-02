@@ -33,7 +33,9 @@
 /**
  * The GeoMAC Previous Fire Perimeters map layer.
  * 
- * @returns {GeoMacCurrentPerimetersLayer}
+ * See: http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?request=GetCapabilities&service=WMS
+ * 
+ * @returns {GeoMacPreviousPerimetersLayer}
  */
 
 define([
@@ -45,16 +47,16 @@ define([
         "use strict";
 
         /**
-         * Constructs a GeoMAC Current Fire Perimeters map layer.
+         * Constructs a GeoMAC Previous Fire Perimeters map layer.
          * @constructor
          * @augments WmsLayer
          */
-        var GeoMacCurrentPerimetersLayer = function () {
+        var GeoMacPreviousPerimetersLayer = function () {
             var cfg = {
                 title: "Previous Perimeters",
                 version: "1.3.0",
                 service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "21",
+                layerNames: "19",
                 sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
                 levelZeroDelta: new WorldWind.Location(36, 36),
                 numLevels: 19,
@@ -71,8 +73,8 @@ define([
 
         };
 
-        GeoMacCurrentPerimetersLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
+        GeoMacPreviousPerimetersLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
 
-        return GeoMacCurrentPerimetersLayer;
+        return GeoMacPreviousPerimetersLayer;
     }
 );

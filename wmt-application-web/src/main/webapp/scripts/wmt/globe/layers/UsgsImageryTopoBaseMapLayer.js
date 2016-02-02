@@ -31,11 +31,11 @@
 /*global define */
 
 /**
- * The GeoMAC Historic Fire Perimeters map layer.
+ * The USGS Imagery Topo Base Map layer.
  * 
- * See: http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?request=GetCapabilities&service=WMS
+ * See: http://basemap.nationalmap.gov/arcgis/services/USGSImageryTopo/MapServer/WMSServer?request=GetCapabilities&service=WMS
  * 
- * @returns {GeoMacHistoricPerimetersLayer}
+ * @returns {UsgsImageryTopoBaseMapLayer}
  */
 
 define([
@@ -47,19 +47,19 @@ define([
         "use strict";
 
         /**
-         * Constructs a GeoMAC Historic Fire Perimeters map layer.
+         * Constructs a USGS Imagery Topo map layer.
          * @constructor
          * @augments WmsLayer
          */
-        var GeoMacHistoricPerimetersLayer = function () {
+        var UsgsImageryTopoBaseMapLayer = function () {
             var cfg = {
-                title: "Historic Perimeters",
+                title: "USGS Imagery Topo Basemap",
                 version: "1.3.0",
-                service: "http://wildfire.cr.usgs.gov/ArcGIS/services/geomac_dyn/MapServer/WMSServer?",
-                layerNames: "3",
-                sector: new WorldWind.Sector(13.000340, 68.141919, -165.117579, -65.333160),
+                service: "http://basemap.nationalmap.gov/arcgis/services/USGSImageryTopo/MapServer/WmsServer?",
+                layerNames: "0",
+                sector: new WorldWind.Sector(-90.0, 90.0, -180, 180),
                 levelZeroDelta: new WorldWind.Location(36, 36),
-                numLevels: 19,
+                numLevels: 12,
                 format: "image/png",
                 size: 512,
                 coordinateSystem: "EPSG:4326", // optional
@@ -68,13 +68,16 @@ define([
 
             WorldWind.WmsLayer.call(this, cfg);
 
-            // Make this layer translucent
-            this.opacity = 0.5;
+            // Make this layer opaque
+            this.opacity = 1.0;
 
+            // Requesting tiles with transparency (the nominal case) causes the layer's labels to bleed 
+            // the underlying background layer which makes for a rather ugly map.
+            this.urlBuilder.transparent = false;
         };
 
-        GeoMacHistoricPerimetersLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
+        UsgsImageryTopoBaseMapLayer.prototype = Object.create(WorldWind.WmsLayer.prototype);
 
-        return GeoMacHistoricPerimetersLayer;
+        return UsgsImageryTopoBaseMapLayer;
     }
 );
