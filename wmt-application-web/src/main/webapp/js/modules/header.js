@@ -1,7 +1,7 @@
 /**
  * Header module
  */
-define(['knockout','ojs/ojcore', 'ojs/ojknockout', 'ojs/ojnavigationlist', 'ojs/ojoffcanvas', 'ojs/ojdatacollection-common', 'ojs/ojdialog'
+define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojnavigationlist', 'ojs/ojoffcanvas', 'ojs/ojdatacollection-common', 'ojs/ojdialog'
 ], function (ko, oj) {
     /**
      * The view model for the header module
@@ -35,7 +35,7 @@ define(['knockout','ojs/ojcore', 'ojs/ojknockout', 'ojs/ojnavigationlist', 'ojs/
         // Data for application name
         var appName = {
             "id": "qs",
-            "name": "JET QuickStart Basic"
+            "name": "Wildfire Management Tool"
         };
 
         // 
@@ -79,12 +79,12 @@ define(['knockout','ojs/ojcore', 'ojs/ojknockout', 'ojs/ojnavigationlist', 'ojs/
         self.globalNavItems = toolbarData.global_nav_dropdown_items;
 
         self.appDrawer =
-                {
-                    "edge": "start",
-                    "displayMode": "push",
-                    "selector": "#appDrawer",
-                    "selection": "selectedItem"
-                };
+            {
+                "edge": "start",
+                "displayMode": "push",
+                "selector": "#appDrawer",
+                "selection": "selectedItem"
+            };
 
         // 
         // Data for application navigation
@@ -96,28 +96,29 @@ define(['knockout','ojs/ojcore', 'ojs/ojknockout', 'ojs/ojnavigationlist', 'ojs/
                 iconClass: 'demo-home-icon-24 demo-icon-font-24 oj-navigationlist-item-icon'
             },
             {
-                name: 'People',
-                id: 'people',
+                name: 'Layers',
+                id: 'layers',
                 iconClass: 'demo-education-icon-24 demo-icon-font-24 oj-navigationlist-item-icon'
             },
             {
-                name: 'Library',
-                id: 'library',
+                name: 'Lookouts',
+                id: 'lookouts',
                 iconClass: 'demo-library-icon-24 demo-icon-font-24 oj-navigationlist-item-icon'
+            },
+            {
+                name: 'Weather',
+                id: 'weather',
+                iconClass: 'demo-grid-icon-16 demo-icon-font-24 oj-navigationlist-item-icon'
             },
             {
                 name: 'Graphics',
                 id: 'graphics',
                 iconClass: 'demo-palette-icon-24  demo-icon-font-24 oj-navigationlist-item-icon'
             },
-            {
-                name: 'Performance',
-                id: 'performance',
-                iconClass: 'demo-grid-icon-16 demo-icon-font-24 oj-navigationlist-item-icon'
-            }];
+        ];
 
         self.dataSource = new oj.ArrayTableDataSource(appNavData, {idAttribute: 'id'});
-     
+
         self.toggleAppDrawer = function ()
         {
             return oj.OffcanvasUtils.toggle(self.appDrawer);

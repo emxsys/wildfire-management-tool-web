@@ -70,10 +70,10 @@ require(['ojs/ojcore',
             var router = oj.Router.rootInstance;
             router.configure({
                 'home': {label: 'Home', isDefault: true},
-                'people': {label: 'People'},
-                'library': {label: 'Library'},
-                'graphics': {label: 'Graphics'},
-                'performance': {label: 'Performance'}
+                'layers': {label: 'Layers'},
+                'lookouts': {label: 'Lookouts'},
+                'weather': {label: 'Weather'},
+                'graphics': {label: 'Graphics'}
             });
             
 

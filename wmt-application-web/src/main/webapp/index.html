@@ -77,14 +77,14 @@
                         </div>
                     </div>
                     <div class="oj-xl-6 oj-lg-9 oj-sm-12 oj-col"> 
-                        <div role="navigation" class="demo-page-content-area">
-                            <!--  This section is usually used for the Globe Navigation. 
-                              ** If its purpose is changed, the "role" attribute should be changed as well
+                        <div role="region" class="demo-page-content-area">
+                            <!--  This section is usually used for the Globe. 
+                              ** If its purpose is changed, the 'navigation' "role" attribute should be changed as well
                               ** to meet accessibility guidelines.  Using the ojModule binding to load the specific HTML template
                               ** that will be shown on the page. Using the "viewName" option just loads the HTML template 
                               ** while binding it to the existing viewmodel. 
                             -->
-                            <div id="navigationContent" data-bind="ojModule: { viewName: 'navContent'}"></div>
+                            <div id="globeContent" data-bind="ojModule: { viewName: 'globe'}"></div>
                         </div>
                     </div>
 
