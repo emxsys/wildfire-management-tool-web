@@ -43,7 +43,7 @@
           ** loaded into the dynamic sections.  You will see a jQuery .show() method call at the bottom of the main.js 
           ** file which is what finally displays the page content. -->
         <div id="globalBody" style="display: none">
-            
+
             <!-- 
             ** This off-canvas section is used when the browser is resized to a 
             ** medium or smaller media query size. It moves the App Navigation into a drawer.
@@ -66,17 +66,6 @@
             <div id="mainContainer">
                 <div class="oj-row">
                     <div class="oj-xl-3 oj-lg-3 oj-sm-12 oj-col">
-                        <div role="navigation" class="demo-page-content-area">
-                            <!--  This section is usually used for Navigation. 
-                              ** If its purpose is changed, the "role" attribute should be changed as well
-                              ** to meet accessibility guidelines.  Using the ojModule binding to load the specific HTML template
-                              ** that will be shown on the page. Using the "viewName" option just loads the HTML template 
-                              ** while binding it to the existing viewmodel. 
-                            -->
-                            <div id="navigationContent" data-bind="ojModule: { viewName: 'navContent'}"></div>
-                        </div>
-                    </div>
-                    <div class="oj-xl-6 oj-lg-9 oj-sm-12 oj-col"> 
                         <div role="main" class="demo-page-content-area">
                             <!-- Unlike the Navigation and Complementary sections, this ojModule binding is using "name" instead of "viewName". 
                               ** This tells the binding to look for and load the JavaScript module of the same name, 
@@ -87,7 +76,18 @@
                             <div id="mainContent" data-bind="ojModule: { name: router.stateId()}"></div>
                         </div>
                     </div>
-                    
+                    <div class="oj-xl-6 oj-lg-9 oj-sm-12 oj-col"> 
+                        <div role="navigation" class="demo-page-content-area">
+                            <!--  This section is usually used for the Globe Navigation. 
+                              ** If its purpose is changed, the "role" attribute should be changed as well
+                              ** to meet accessibility guidelines.  Using the ojModule binding to load the specific HTML template
+                              ** that will be shown on the page. Using the "viewName" option just loads the HTML template 
+                              ** while binding it to the existing viewmodel. 
+                            -->
+                            <div id="navigationContent" data-bind="ojModule: { viewName: 'navContent'}"></div>
+                        </div>
+                    </div>
+
                     <!-- You will notice that each section in the page has a set of column widths defined by CSS classes.
                       ** These tell the div to take up so much space when it is in a specific media query range. 
                       ** This is part of the responsive grid layout framework provided by JET. As this one is set, 
