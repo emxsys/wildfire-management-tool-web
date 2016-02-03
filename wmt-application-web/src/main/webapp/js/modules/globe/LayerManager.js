@@ -30,44 +30,75 @@
 
 /*global define*/
 
+/**
+ * The LayerManager manages the ordering of Layer objects.  It itself observable, 
+ * and it injects some observable properties into the individual Layer objects.
+ * 
+ * @param {Knockout} ko
+ * @param {Wmt} wmt
+ * @returns {LayerManager}
+ */
 define([
+    'knockout',
     'wmt/Wmt',
     'worldwind'],
     function (
-        wmt,
-        ww) {
+        ko,
+        wmt) {
         "use strict";
+        /**
+         * 
+         * @param {Globe} globe
+         * @returns {LayerManager}
+         */
         var LayerManager = function (globe) {
+            var self = this;
+            
             this.globe = globe;
             /**
              * Background layers are always enabled and are not shown in the layer menu.
              */
-            this.backgroundLayers = [];
+            this.backgroundLayers = ko.observableArray();
             /**
              * Base layers are opaque and should be shown exclusive of other base layers.
              */
-            this.baseLayers = [];
+            this.baseLayers = ko.observableArray();
             /**
              * Overlay layers may be translucent and/or contain sparce content, and may be stacked with other layers.
              */
-            this.overlayLayers = [];
+            this.overlayLayers = ko.observableArray();
             /**
              * Data layers are shapes and markers.
              */
-            this.dataLayers = [];
+            this.dataLayers = ko.observableArray();
             /**
              * Widget layers are fixed controls on the screen and are not shown in the layer menu.
              */
-            this.widgetLayers = [];
+            this.widgetLayers = ko.observableArray();
+
+
+            /**
+             * Toggles a layer on and off.
+             * 
+             * @param {WorldWind.Layer} layer The layer to be toggled on or off.
+             */
+            this.toggleLayer = function (layer) {
+                // Update the WorldWind.Layer object
+                layer.enabled = !layer.enabled;
+
+                // Update the ViewModel
+                layer.layerEnabled(layer.enabled);
+
+                self.globe.redraw();
+            };
         };
 
         /**
          * Background layers are always enabled and are not shown in the layer menu.
-         * @param {category} layer
-         * @returns {undefined}
+         * @param {WorldWind.Layer} layer
          */
         LayerManager.prototype.addBackgroundLayer = function (layer) {
-            var index = this.backgroundLayers.length;
+            var index = this.backgroundLayers().length;
 
             LayerManager.applyOptionsToLayer(layer, {hideInMenu: true, enabled: true}, wmt.LAYER_CATEGORY_BACKGROUND);
 
@@ -77,11 +108,11 @@ define([
 
         /**
          * Base layers are opaque and should be shown exclusive of other base layers.
-         * @param {category} layer
-         * @returns {undefined}
+         * @param {WorldWind.Layer} layer
+         * @param {Object} options
          */
         LayerManager.prototype.addBaseLayer = function (layer, options) {
-            var index = this.backgroundLayers.length + this.baseLayers.length;
+            var index = this.backgroundLayers().length + this.baseLayers().length;
 
             LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_BASE);
 
@@ -90,12 +121,13 @@ define([
         };
 
         /**
-         * Overlay layers may be translucent and/or contain sparce content, and may be stacked with other layers.
-         * @param {category} layer
-         * @returns {undefined}
+         * Overlay layers may be translucent and/or contain sparce content, and 
+         * may be stacked with other layers.
+         * @param {WorldWind.Layer} layer
+         * @param {Object} options
          */
         LayerManager.prototype.addOverlayLayer = function (layer, options) {
-            var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length;
+            var index = this.backgroundLayers().length + this.baseLayers().length + this.overlayLayers().length;
 
             LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_OVERLAY);
 
@@ -105,12 +137,12 @@ define([
 
         /**
          * Data layers are shapes and markers.
-         * @param {category} layer
-         * @returns {undefined}
+         * @param {WorldWind.Layer} layer
+         * @param {Object} options
          */
         LayerManager.prototype.addDataLayer = function (layer, options) {
-            var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length
-                + this.dataLayers.length;
+            var index = this.backgroundLayers().length + this.baseLayers().length + this.overlayLayers().length
+                + this.dataLayers().length;
 
             LayerManager.applyOptionsToLayer(layer, options, wmt.LAYER_CATEGORY_DATA);
 
@@ -120,15 +152,14 @@ define([
 
         /**
          * Widget layers are always enabled and are not shown in the layer menu.
-         * @param {category} layer
-         * @returns {undefined}
+         * @param {WorldWind.Layer} layer
          */
         LayerManager.prototype.addWidgetLayer = function (layer) {
-            var index = this.backgroundLayers.length + this.baseLayers.length + this.overlayLayers.length
-                + this.dataLayers.length + this.widgetLayers.length;
+            var index = this.backgroundLayers().length + this.baseLayers().length + this.overlayLayers().length
+                + this.dataLayers().length + this.widgetLayers().length;
 
             LayerManager.applyOptionsToLayer(layer, {hideInMenu: true, enabled: true}, wmt.LAYER_CATEGORY_BACKGROUND);
-            
+
             this.globe.wwd.insertLayer(index, layer);
             this.widgetLayers.push(layer);
         };
@@ -143,7 +174,7 @@ define([
             var opt = (options === undefined) ? {} : options;
 
             // WMT layer type
-            layer.category = category
+            layer.category = category;
 
             // Propagate enabled and pick options to the layer object
             layer.enabled = opt.enabled === undefined ? true : opt.enabled;
@@ -164,10 +195,9 @@ define([
                 layer.opacity = opt.opacity;
             }
 
-            // Hide the layer in the menu 
-            if (opt.hideInMenu) {
-                layer.hideInMenu = opt.hideInMenu;
-            }
+            // Create the Knockout LayerViewModel for this layer
+            layer.layerEnabled = ko.observable(layer.enabled);
+            layer.showInMenu = ko.observable(opt.hideInMenu === undefined ? true : !opt.hideInMenu);
         };
 
         return LayerManager;

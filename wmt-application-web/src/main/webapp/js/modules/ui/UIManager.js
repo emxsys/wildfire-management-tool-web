@@ -45,7 +45,7 @@
  * @author Bruce Schubert
  * @author Theodore Walton
  */
-define([
+define(['knockout',
     'wmt/ui/AboutBox',
     'wmt/controller/Controller',
     'wmt/ui/ControlPanel',
@@ -58,11 +58,13 @@ define([
     'wmt/view/MarkerView',
     'wmt/view/MarkerViewer',
     'wmt/ui/SearchBox',
+    'wmt/util/Tree',
     'wmt/view/TimeView',
     'wmt/view/WeatherScoutView',
     'wmt/view/WeatherScoutViewer',
     'wmt/view/WildlandFireView'],
     function (
+        ko,
         aboutBox,
         controller,
         ControlPanel,
@@ -75,6 +77,7 @@ define([
         MarkerView,
         markerViewer,
         SearchBox,
+        Tree,
         timeView,
         weatherScoutView,
         weatherScoutViewer,
@@ -92,78 +95,78 @@ define([
                 $(document).ready(function () {
 
                     //Fill out globe to screen if the nav-bar isn't displayed.
-                    if ($('#mainMenu').css("display").indexOf("none") > -1) {
-                        $("body").css("padding-top", "0px");
-                        $('#wmtweb').css('height', 'calc(100vh)');
-                    }
-
-                    // Auto-collapse the navbar when one of its decendents are clicked
-                    $('.nav a').on('click', function () {
-                        $('#navbar').collapse('hide');
-                    });
-
-                    // Add handlers for minimized navbar (navbar-header), 
-                    // in which case the the sidebars appear above the globe.
-                    $('#expandPanelsItem').on('click', function () {
-                        $('html, body').animate({scrollTop: 0}, 'slow');
-                    });
-                    $('#collapsePanelsItem').on('click', function () {
-                        $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
-                        // Set the focus on the WorldWind canvas
-                        // so the globe keyboard controls are active 
-                        $(controller.globe.wwd.canvas).focus();
-                    });
-
-                    // Attach a click handler to the main menu items
-                    $('#controlPanelItem').on('click', function () {
-                        self.highlightButton('#controlPanelItem');
-                        self.showSidebar('#controlPanel');
-                    });
-                    $('#layersItem').on('click', function () {
-                        self.highlightButton('#layersItem');
-                        self.showSidebar('#layersPanel');
-                    });
-                    $('#markersItem').on('click', function () {
-                        self.highlightButton('#markersItem');
-                        self.showSidebar('#markersPanel');
-                    });
-                    $('#weatherItem').on('click', function () {
-                        self.highlightButton('#weatherItem');
-                        self.showSidebar('#weatherPanel');
-                    });
-                    $('#firesItem').on('click', function () {
-                        self.highlightButton('#firesItem');
-                        self.showSidebar('#firesPanel');
-                    });
-
-
-                    // Add +/- icons on the accordion panels
-                    $('.panel-heading[aria-expanded="false"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-down aria-hidden="true"></span>');
-                    $('.panel-heading[aria-expanded="true"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-up aria-hidden="true"></span>');
-
-                    // Add event handlers to panels to toggle the +/- icons in the accordion panel-heading
-                    $('.panel:has([role="tab"])').on('shown.bs.collapse', function () {
-                        $(this).find(".glyphicon-collapse-down").removeClass("glyphicon-collapse-down").addClass("glyphicon-collapse-up");
-                    }).on('hidden.bs.collapse', function () {
-                        $(this).find(".glyphicon-collapse-up").removeClass("glyphicon-collapse-up").addClass("glyphicon-collapse-down");
-                    });
-
-                    // Initially, at startup, activate the Control Panel
-                    $('#controlPanelItem').trigger('click');
-
-                    // But on phones or small portrait mode tablets, we want the activated panel to be hidden
-                    // so we click the Collapse button.
-                    if ($(document).width < 768) {
-                        $('#collapsePanelsItem').trigger('click');
-                    }
-
-                    // Initialize the constituent UI elements.
-                    this.searchBox = new SearchBox();
-
-                    // Panels
-                    this.controlPanel = new ControlPanel();
-                    this.layerMenu = new LayerMenu();
-                    this.markerPanel = new MarkerView();                   
+//                    if ($('#mainMenu').css("display").indexOf("none") > -1) {
+//                        $("body").css("padding-top", "0px");
+//                        $('#wmtweb').css('height', 'calc(100vh)');
+//                    }
+//
+//                    // Auto-collapse the navbar when one of its decendents are clicked
+//                    $('.nav a').on('click', function () {
+//                        $('#navbar').collapse('hide');
+//                    });
+//
+//                    // Add handlers for minimized navbar (navbar-header), 
+//                    // in which case the the sidebars appear above the globe.
+//                    $('#expandPanelsItem').on('click', function () {
+//                        $('html, body').animate({scrollTop: 0}, 'slow');
+//                    });
+//                    $('#collapsePanelsItem').on('click', function () {
+//                        $('html, body').animate({scrollTop: $('#bottom').position().top}, 'slow');
+//                        // Set the focus on the WorldWind canvas
+//                        // so the globe keyboard controls are active 
+//                        $(controller.globe.wwd.canvas).focus();
+//                    });
+//
+//                    // Attach a click handler to the main menu items
+//                    $('#controlPanelItem').on('click', function () {
+//                        self.highlightButton('#controlPanelItem');
+//                        self.showSidebar('#controlPanel');
+//                    });
+//                    $('#layersItem').on('click', function () {
+//                        self.highlightButton('#layersItem');
+//                        self.showSidebar('#layersPanel');
+//                    });
+//                    $('#markersItem').on('click', function () {
+//                        self.highlightButton('#markersItem');
+//                        self.showSidebar('#markersPanel');
+//                    });
+//                    $('#weatherItem').on('click', function () {
+//                        self.highlightButton('#weatherItem');
+//                        self.showSidebar('#weatherPanel');
+//                    });
+//                    $('#firesItem').on('click', function () {
+//                        self.highlightButton('#firesItem');
+//                        self.showSidebar('#firesPanel');
+//                    });
+//
+//
+//                    // Add +/- icons on the accordion panels
+//                    $('.panel-heading[aria-expanded="false"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-down aria-hidden="true"></span>');
+//                    $('.panel-heading[aria-expanded="true"]').find('.panel-title').prepend('<span class="glyphicon glyphicon-collapse-up aria-hidden="true"></span>');
+//
+//                    // Add event handlers to panels to toggle the +/- icons in the accordion panel-heading
+//                    $('.panel:has([role="tab"])').on('shown.bs.collapse', function () {
+//                        $(this).find(".glyphicon-collapse-down").removeClass("glyphicon-collapse-down").addClass("glyphicon-collapse-up");
+//                    }).on('hidden.bs.collapse', function () {
+//                        $(this).find(".glyphicon-collapse-up").removeClass("glyphicon-collapse-up").addClass("glyphicon-collapse-down");
+//                    });
+//
+//                    // Initially, at startup, activate the Control Panel
+//                    $('#controlPanelItem').trigger('click');
+//
+//                    // But on phones or small portrait mode tablets, we want the activated panel to be hidden
+//                    // so we click the Collapse button.
+//                    if ($(document).width < 768) {
+//                        $('#collapsePanelsItem').trigger('click');
+//                    }
+//
+//                    // Initialize the constituent UI elements.
+//                    this.searchBox = new SearchBox();
+//
+//                    // Panels
+//                    this.controlPanel = new ControlPanel();
+//                    this.layerMenu = new LayerMenu();
+//                    this.markerPanel = new MarkerView();                   
                     fireLookoutView.initialize();
                     weatherScoutView.initialize();
                     wildlandFireView.initialize();
@@ -179,6 +182,9 @@ define([
                     markerViewer.initialize();
                     fuelModelCatalogViewer.initialize();
                     weatherScoutViewer.initialize();
+
+                    ko.applyBindings(controller.globe.layerManager);
+                    
                 });
             },
             /**
