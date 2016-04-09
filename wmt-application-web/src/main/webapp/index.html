@@ -18,10 +18,13 @@
 
 <html lang="en-us" class='demo-sticky-footer-layout'>
     <head>
-        <title>Oracle JET Quick Start - Basic</title>
+        <title>Wildfire Management Tool</title>
         <meta charset="UTF-8">
+        <meta name="description" content="Wildfire Management Tool - Web Edition">
+        <meta name="author" content="Bruce Schubert">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="css/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" type="image/x-icon" href="./favicon.png">
+
 
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
@@ -65,38 +68,94 @@
             <!-- This is where your main page content will be loaded -->
             <div id="mainContainer">
                 <div class="oj-row">
-                    <div class="oj-xl-3 oj-lg-3 oj-sm-12 oj-col">
+                    <div class="oj-sm-12 oj-lg-3 oj-col">
+                        <!--Main Sidebar-->
                         <div role="main" class="demo-page-content-area">
-                            <!-- Unlike the Navigation and Complementary sections, this ojModule binding is using "name" instead of "viewName". 
+                            <!-- This ojModule binding is using "name" instead of "viewName". 
                               ** This tells the binding to look for and load the JavaScript module of the same name, 
                               ** before loading the view template file.  The value of the name option is being set to the 
-                              ** current state of the ojRouter object. This is what controls the pages that will be loaded when the App Nav buttons are clicked.
+                              ** current state of the ojRouter object. This is what controls the pages that will be loaded 
+                              ** when the App Nav buttons are clicked.
                               ** See the main.js file for how the ojRouter module is defined
                             -->
                             <div id="mainContent" data-bind="ojModule: { name: router.stateId()}"></div>
                         </div>
                     </div>
-                    <div class="oj-xl-6 oj-lg-9 oj-sm-12 oj-col"> 
-                        <div role="region" class="demo-page-content-area">
-                            <!--  This section is usually used for the Globe. 
-                              ** If its purpose is changed, the 'navigation' "role" attribute should be changed as well
-                              ** to meet accessibility guidelines.  Using the ojModule binding to load the specific HTML template
-                              ** that will be shown on the page. Using the "viewName" option just loads the HTML template 
-                              ** while binding it to the existing viewmodel. 
-                            -->
-                            <div id="globeContent" data-bind="ojModule: { viewName: 'globe'}"></div>
-                        </div>
-                    </div>
+                    <div class="oj-sm-12 oj-lg-9 oj-col">
+                        <div class='oj-row'>
+                            <div class="oj-sm-12 oj-md-9 oj-col"> 
+                                <!--Globe-->
+                                <div role="region" class="demo-page-content-area">
+                                    <h1>Globe</h1>
+                                    <!-- WorldWindow -->
+                                    <div class="noselect" id="canvas-wrap" style="height: 70vh">
+                                        <!--Set canvas' tabindex so keydown events can be captured-->
+                                        <canvas id="canvasOne" tabindex="1" style="width: 100%; height: 100%"> 
+                                            <h2>Try the latest Chrome or Firefox browsers.</h2>
+                                            <p>Your browser does not support HTML5 Canvas.</p>
+                                            <p>The Globe cannot be displayed.</p>
+                                        </canvas> 
+                                        <div class="interactive" style='float: right; margin-top: 130px; margin-right: 15px; max-width: 58px'>
 
-                    <!-- You will notice that each section in the page has a set of column widths defined by CSS classes.
-                      ** These tell the div to take up so much space when it is in a specific media query range. 
-                      ** This is part of the responsive grid layout framework provided by JET. As this one is set, 
-                      ** the div will take up all 12 columns at a small and up media query size. When it hits extra large, 
-                      ** it will only take up 3 columns.
-                    -->
-                    <div class="oj-xl-3 oj-sm-12 oj-col"> 
-                        <div role="complementary" class="demo-page-content-area">
-                            <div id="complementaryContent" data-bind="ojModule: { viewName: 'compContent'}"></div>
+                                            <button id="globeRefreshWeatherForecasts" 
+                                                    type="button"
+                                                    class="btn btn-default refreshWeatherForecastButton" 
+                                                    style="float: right; margin-top: 5px"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="Refresh all weather forecasts.">
+                                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                                <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                                            </button>
+
+                                            <button id="globeCreateWeatherScout" 
+                                                    type="button"
+                                                    class="btn btn-default createWeatherScoutButton" 
+                                                    style="float:right; margin-top: 5px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="Add a weather scout to the globe.">
+                                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                                            </button>
+
+                                            <button id="globeCreateFireLookout" 
+                                                    type="button"
+                                                    class="btn btn-default createFireLookoutButton" 
+                                                    style="float: right; margin-top: 5px"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="Add a fire lookout to the globe.">
+                                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                <span><img src="js/wmt/images/fire/unkn.png" width="16px" height="16px"></span>
+                                            </button>          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oj-sm-12 oj-md-3 oj-col"> 
+                                <!--Location-->
+                                <!-- This section is usually used for the globe location details. 
+                                  ** This ojModule binding is using "name" instead of "viewName". 
+                                  ** This tells the binding to look for and load the JavaScript 
+                                  ** module of the same name, before loading the view template file.  
+                                -->
+                                <div role="complementary" class="demo-page-content-area">
+                                    <div id="locationContent" data-bind="ojModule: { name: 'location'}"></div>
+                                </div>
+                            </div>
+                            <div class="oj-sm-12 oj-col"> 
+                                <!--Details-->
+                                <!--  This section is usually used for the selected item details. 
+                                  ** Using the ojModule binding to load the specific HTML template
+                                  ** that will be shown on the page. Using the "viewName" option 
+                                  ** just loads the HTML template while binding it to the existing 
+                                  ** global viewmodel. 
+                                -->
+                                <div role="complementary" class="demo-page-content-area">
+                                    <div id="detailsContent" data-bind="ojModule: { viewName: 'details'}"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

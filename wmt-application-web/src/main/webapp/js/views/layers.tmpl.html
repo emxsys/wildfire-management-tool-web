@@ -1,0 +1,30 @@
+<div id="layersCollapsiblePage" data-bind="ojComponent: {component: 'ojCollapsible'}">
+    <h1 id="h1">Layers</h1>
+    <div>
+        <div id="innerContent1" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
+            <h4>Base Layers</h4>
+            <ul id="listview" 
+                data-bind="ojComponent: {
+                component: 'ojListView', 
+                data: baseLayers, 
+                selectionMode: 'multiple',
+                item: 
+                {
+                    renderer: function(context)
+                    {
+                        return context['data'].displayName;
+                    }
+                }
+                }">
+            </ul>
+        </div>
+        <div id="innerContent2" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
+            <h4 id="ch2">Nested Collapsible 2</h4>
+            <ul id="c2"></ul>
+        </div>
+        <div id="innerContent3" data-bind="ojComponent: {component: 'ojCollapsible', expanded:false}">
+            <h4 id="ch3">Nested Collapsible 3</h4>
+            <ul id="c3"></ul>
+        </div>
+    </div>
+</div>

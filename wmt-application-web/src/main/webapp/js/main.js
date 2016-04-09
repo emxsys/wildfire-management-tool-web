@@ -6,17 +6,22 @@
 requirejs.config({
     // Path mappings for the logical module names
     paths: {
-        'knockout': 'libs/knockout/knockout-3.3.0',
+        'knockout': 'libs/knockout/knockout-3.3.0.debug',
         'jquery': 'libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd': 'libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': 'libs/es6-promise/promise-1.0.0.min',
         'hammerjs': 'libs/hammer/hammer-2.0.4.min',
         'ojdnd': 'libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
-        'ojs': 'libs/oj/v1.1.2/min',
+        'ojs': 'libs/oj/v1.1.2/debug',
         'ojL10n': 'libs/oj/v1.1.2/ojL10n',
         'ojtranslations': 'libs/oj/v1.1.2/resources',
         'signals': 'libs/js-signals/signals.min',
-        'text': 'libs/require/text'
+        'text': 'libs/require/text',
+        'wmt': "wmt", // WMT root path
+        'worldwind': [
+            //"js/libs/webworldwind/worldwindlib",
+            "http://worldwindserver.net/webworldwind/worldwindlib",
+        ]
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -50,9 +55,13 @@ requirejs.config({
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['ojs/ojcore',
+require([
+    'ojs/ojcore',
     'knockout',
     'jquery',
+    'wmt/Wmt',
+    'wmt/WmtApp',
+    'worldwind',
     'ojs/ojrouter',
     'ojs/ojknockout',
     'ojs/ojbutton',
@@ -60,50 +69,57 @@ require(['ojs/ojcore',
     'ojs/ojmenu',
     'ojs/ojmodule'
 ],
-        function (oj, ko, $) // this callback gets executed when all required modules are loaded
-        {
+    function (oj, ko, $, wmt, app, ww) // this callback gets executed when all required modules are loaded
+    {
+        // Specify the where the World Wind resources are located.
+        ww.configuration.baseUrl = wmt.WORLD_WIND_PATH;
+        // Set the logging level for the World Wind library
+        ww.Logger.setLoggingLevel(ww.Logger.LEVEL_WARNING);
 
-            oj.ModuleBinding.defaults.modelPath = 'modules/';
-            oj.ModuleBinding.defaults.viewPath = 'text!../templates/';
-            oj.ModuleBinding.defaults.viewSuffix = '.tmpl.html';
+        oj.ModuleBinding.defaults.modelPath = 'viewmodels/';
+        oj.ModuleBinding.defaults.viewPath = 'text!views/';
+        oj.ModuleBinding.defaults.viewSuffix = '.tmpl.html';
 
-            var router = oj.Router.rootInstance;
-            router.configure({
-                'home': {label: 'Home', isDefault: true},
-                'layers': {label: 'Layers'},
-                'lookouts': {label: 'Lookouts'},
-                'weather': {label: 'Weather'},
-                'graphics': {label: 'Graphics'}
-            });
-            
+        var router = oj.Router.rootInstance;
+        router.configure({
+            'home': {label: 'Home', isDefault: true},
+            'layers': {label: 'Layers'},
+            'lookouts': {label: 'Lookouts'},
+            'weather': {label: 'Weather'},
+            'graphics': {label: 'Graphics'}
+        });
 
-            function RootViewModel() {
-                var self = this;
-                self.router = router;
 
-                self.optionChangeHandler = function (event, data) {
-                    if (data.value == undefined) {
-                        data.value = 'home';
-                    }
-                    // Only go for user action events
-                    if ('ojAppNav2' === event.target.id && event.originalEvent) {
-                        self.router.go(data.value);
-                    }
-                };
-            }
+        function RootViewModel() {
+            var self = this;
+            self.router = router;
 
-            oj.Router.defaults['urlAdapter'] = new oj.Router.urlParamAdapter();
-            oj.Router.sync().then(
-                    function () {
-                        //bind your ViewModel for the content of the whole page body.
-                        ko.applyBindings(new RootViewModel(), document.getElementById('globalBody'));
-                        $('#globalBody').show();
-                    },
-                    function (error) {
-                        oj.Logger.error('Error in root start: ' + error.message);
-                    });
-
+            self.optionChangeHandler = function (event, data) {
+                if (data.value == undefined) {
+                    data.value = 'home';
+                }
+                // Only go for user action events
+                if ('ojAppNav2' === event.target.id && event.originalEvent) {
+                    self.router.go(data.value);
+                }
+            };
         }
+
+        oj.Router.defaults['urlAdapter'] = new oj.Router.urlParamAdapter();
+        oj.Router.sync().then(
+            function () {
+                //bind your ViewModel for the content of the whole page body.
+                ko.applyBindings(new RootViewModel(), document.getElementById('globalBody'));
+                $('#globalBody').show();
+
+                // Create the web app object and make it accessable via a global variable.
+                window.APP = new app();
+            },
+            function (error) {
+                oj.Logger.error('Error in root start: ' + error.message);
+            });
+
+    }
 );
 
 
