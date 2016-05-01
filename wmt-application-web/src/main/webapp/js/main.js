@@ -95,7 +95,7 @@ require([
             self.router = router;
 
             self.optionChangeHandler = function (event, data) {
-                if (data.value == undefined) {
+                if (data.value === undefined) {
                     data.value = 'home';
                 }
                 // Only go for user action events
