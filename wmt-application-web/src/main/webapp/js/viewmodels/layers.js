@@ -25,7 +25,8 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                     // Query the datasource to get the selected layer object (wrapped in a Promise object)
                     var promise = self.baseLayers.get(ui.value[0]);
                     promise.then(function(item) {
-                        var layer = item.data;
+                        // Caution: item.data is a clone of the layer, use the key to get the real layer object
+                        var layer = self.layerManager.baseLayers()[item.index];
                         self.layerManager.toggleLayer(layer);
                     });
                     
