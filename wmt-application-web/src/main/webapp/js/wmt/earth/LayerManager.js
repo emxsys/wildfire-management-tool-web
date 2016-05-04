@@ -31,7 +31,7 @@
 /*global define*/
 
 /**
- * The LayerManager manages the ordering of Layer objects.  It itself observable, 
+ * The LayerManager manages categorical, observable lists of Layer objects. It itself observable, 
  * and it injects some observable properties into the individual Layer objects.
  * 
  * @param {Knockout} ko
@@ -86,7 +86,7 @@ define([
                 // Update the WorldWind.Layer object
                 layer.enabled = !layer.enabled;
 
-                // Update the ViewModel
+                // Update the observable so UI elements can reflect the new state
                 layer.layerEnabled(layer.enabled);
 
                 self.globe.redraw();

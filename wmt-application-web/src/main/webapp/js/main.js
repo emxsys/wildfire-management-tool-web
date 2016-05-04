@@ -80,6 +80,8 @@ require([
         oj.ModuleBinding.defaults.viewPath = 'text!views/';
         oj.ModuleBinding.defaults.viewSuffix = '.tmpl.html';
 
+        // Configure the router for the left sidebar, who's content is controled by the App Nav buttons
+        // in the header.
         var router = oj.Router.rootInstance;
         router.configure({
             'home': {label: 'Home', isDefault: true},

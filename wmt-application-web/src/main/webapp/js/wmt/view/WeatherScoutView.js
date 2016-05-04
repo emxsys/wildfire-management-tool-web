@@ -83,6 +83,7 @@ define([
                             "Could not find a Layer named " + wmt.LAYER_NAME_WEATHER));
                 }
 
+                //
                 // Add button event handlers
                 $(".createWeatherScoutButton").on("click", function (event) {
                     controller.dropWeatherScoutOnGlobe(new WeatherScout());

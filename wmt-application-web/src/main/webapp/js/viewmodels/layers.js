@@ -7,36 +7,31 @@ define(['ojs/ojcore', 'knockout', 'jquery',
     'ojs/ojlistview', 'ojs/ojdatacollection-common'],
     function (oj, ko, $, controller) {
         /**
-         * The view model for the primary globe content view template
+         * The view model for the Layers View template
          */
-        function layersViewModel() {
+        function layers() {
             var self = this;
-//             Simply assign the LayerManager's observableArrays to this ModelView
-//            self.backgroundLayers = controller.globe.layerManager.backgroundLayers;
-//            self.baseLayers = controller.globe.layerManager.baseLayers;
-//            self.overlayLayers = controller.globe.layerManager.overlayLayers;
-//            self.dataLayers = controller.globe.layerManager.dataLayers;
-//            self.widgetLayers = controller.globe.layerManager.widgetLayers;
             self.layerManager = controller.globe.layerManager;
 
-            self.selectedItems = ko.observableArray([]);
-            self.selectedItem = ko.observable();
+            // Create view data sources from the LayerManager's observable arrays
             self.baseLayers = new oj.ArrayTableDataSource(self.layerManager.baseLayers, {idAttribute: "displayName"});
             self.overlayLayers = new oj.ArrayTableDataSource(self.layerManager.overlayLayers, {idAttribute: "displayName"});
             self.dataLayers = new oj.ArrayTableDataSource(self.layerManager.dataLayers, {idAttribute: "displayName"});
 
+            // The view calls this method when a list item is selected.
             self.toggleSelected = function (event, ui) {
+                
                 if (ui.option === 'selection' && ui.value[0] !== null) {
-                    // Promise
+                    // Query the datasource to get the selected layer object (wrapped in a Promise object)
                     var promise = self.baseLayers.get(ui.value[0]);
                     promise.then(function(item) {
-                        self.layerManager.toggleLayer(item.data);
-                        self.selectedItem(item.data);                     
+                        var layer = item.data;
+                        self.layerManager.toggleLayer(layer);
                     });
                     
                 }
             };
         }
 
-        return layersViewModel;
+        return layers;
     });

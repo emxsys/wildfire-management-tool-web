@@ -88,6 +88,7 @@ define([
                 var self = this,
                     $viewer = $('#scout-viewer');
 
+               
                 this.initWeatherTable();
 
                 // Toggle buttons

@@ -182,8 +182,8 @@ define(['knockout',
 //                    fireLookoutViewer.initialize();
 //                    markerViewer.initialize();
 //                    fuelModelCatalogViewer.initialize();
-
-                    weatherScoutViewer.initialize();
+                    
+//                    weatherScoutViewer.initialize(); 
                     
                 });
             },

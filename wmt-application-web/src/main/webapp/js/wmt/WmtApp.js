@@ -51,7 +51,7 @@ define([
     'wmt/layers/GeoMacPreviousPerimetersLayer',
     'wmt/earth/Globe',
     'wmt/layers/LandfireLayer',
-    'wmt/ui/UIManager',
+//    'wmt/ui/UIManager',
     'wmt/layers/UsgsContoursLayer',
     'wmt/layers/UsgsImageryTopoBaseMapLayer',
     'wmt/layers/UsgsTopoBaseMapLayer',
@@ -67,7 +67,7 @@ define([
         GeoMacPreviousPerimetersLayer,
         Globe,
         LandfireLayer,
-        uiManager,
+//        uiManager,
         UsgsContoursLayer,
         UsgsImageryTopoBaseMapLayer,
         UsgsTopoBaseMapLayer,
@@ -122,7 +122,7 @@ define([
 
             // Initialize the Navbar, Sidebars and UI controls.
             // Do this AFTER the controller is initialized.
-            uiManager.initialize();
+            //uiManager.initialize();
 
             // Add event handler to save the current view (eye position) when the window closes
             window.onbeforeunload = function () {

@@ -19,13 +19,13 @@
                 }">
             </ul>
         </div>
-        <div id="innerContent2" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
+        <div id="innerContent2" data-bind="ojComponent: {component: 'ojCollapsible', expanded:false}">
             <h4>Overlays</h4>
             <ul id="listview" 
                 data-bind="ojComponent: {
                     component: 'ojListView', 
                     data: overlayLayers, 
-                    selectionMode: 'multiple',
+                    selectionMode: 'single',
                     item: 
                     {
                         renderer: function(context)
@@ -42,7 +42,7 @@
                 data-bind="ojComponent: {
                     component: 'ojListView', 
                     data: dataLayers, 
-                    selectionMode: 'multiple',
+                    selectionMode: 'single',
                     item: 
                     {
                         renderer: function(context)
