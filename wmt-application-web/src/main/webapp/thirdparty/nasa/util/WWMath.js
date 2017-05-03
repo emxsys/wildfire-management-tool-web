@@ -60,7 +60,7 @@ define([
                 if (typeof Math.cbrt == 'function') {
                     return Math.cbrt(x);
                 } else {
-                    return Math.pow(x, 1/3);
+                    return Math.pow(x, 1 / 3);
                 }
             },
 
@@ -143,7 +143,7 @@ define([
                 }
 
                 // Taken from Moller and Trumbore
-                // http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
+                // https://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
 
                 var vx = line.direction[0],
                     vy = line.direction[1],
@@ -297,7 +297,7 @@ define([
                 }
 
                 // Taken from Moller and Trumbore
-                // http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
+                // https://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
 
                 // Adapted from the original ray-triangle intersection algorithm to optimize for ray-triangle strip
                 // intersection. We optimize by reusing constant terms, replacing use of Vec3 with inline primitives,
@@ -769,6 +769,16 @@ define([
                     WWMath.clamp(latRadians * Angle.RADIANS_TO_DEGREES, -90, 90),
                     WWMath.clamp(lonRadians * Angle.RADIANS_TO_DEGREES, -180, 180)
                 ];
+            },
+
+            /**
+             * Returns the value that is the nearest power of 2 less than or equal to the given value.
+             * @param {Number} value the reference value. The power of 2 returned is less than or equal to this value.
+             * @returns {Number} the value that is the nearest power of 2 less than or equal to the reference value
+             */
+            powerOfTwoFloor: function (value) {
+                var power = Math.floor(Math.log(value) / Math.log(2));
+                return Math.pow(2, power);
             }
         };
 
